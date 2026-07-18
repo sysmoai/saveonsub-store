@@ -361,7 +361,7 @@ pages['sitemap'] = dict(title="Sitemap — All Pages | SAVEONSUB", desc="Every S
 
 count = 0
 for slug, p in pages.items():
-    html_out = SHELL.format(slug=slug, title=p['title'], desc=p['desc'], crumb=p['crumb'], body=p['body'], schema=p['schema'], robots=p['robots']).replace('{nav_en()}', nav_en())
+    html_out = SHELL.format(slug=slug, title=p['title'], desc=p['desc'], crumb=p['crumb'], body=p['body'], schema=p['schema'], robots=p['robots']).replace('{nav_en()}', nav_en()).replace('{footer_en()}', footer_en())
     open(f"{slug}.html", 'w').write(html_out)
     count += 1
 print(f"OK: generated {count} trust pages")
