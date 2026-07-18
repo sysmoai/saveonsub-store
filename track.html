@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Your Order — SAVEONSUB</title>
+<meta name="description" content="Enter your order ID and check status instantly on WhatsApp. Instant products deliver in 5–15 minutes with warranty.">
+<link rel="canonical" href="https://saveonsub.com/track.html">
+<link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/track.html">
+<link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/track.html">
+<link rel="alternate" hreflang="x-default" href="https://saveonsub.com/track.html">
+<meta name="geo.region" content="BD"><meta name="geo.placename" content="Dhaka">
+<meta property="og:title" content="Track Your Order — SAVEONSUB"><meta property="og:description" content="Enter your order ID and check status instantly on WhatsApp. Instant products deliver in 5–15 minutes with warranty.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/track.html">
+<meta name="theme-color" content="#06181a">
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="assets/site.webmanifest">
+<meta property="og:image" content="https://saveonsub.com/assets/og-image.png">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav><div class="wrap navin">
+  <a class="logo" href="index.html">SAVE<em>ON</em>SUB</a>
+  <div class="navlinks">
+    <a href="all.html">Subscriptions</a>
+    <div class="navdrop">
+      <a href="all.html#categories" class="dropbtn">Categories ▾</a>
+      <div class="dropmenu">
+        <a href="c/ai-assistants.html">🤖 AI Assistants</a>
+        <a href="c/ai-image-design.html">🎨 Image &amp; Design</a>
+        <a href="c/ai-video.html">🎬 AI Video</a>
+        <a href="c/ai-voice-music.html">🎙️ Voice &amp; Music</a>
+        <a href="c/ai-code-dev.html">💻 Code &amp; Dev</a>
+        <a href="c/ai-writing.html">✍️ AI Writing</a>
+        <a href="c/workspace-productivity.html">🗂️ Workspace</a>
+        <a href="c/entertainment.html">🍿 Entertainment</a>
+        <a href="c/education-career.html">🎓 Education</a>
+        <a href="c/vpn-security.html">🔒 VPN</a>
+        <a href="c/bundles.html">🎁 Bundles</a>
+      </div>
+    </div>
+    <a href="all.html#bundles">Bundles</a>
+    <a href="quiz.html">Find My AI</a>
+    <a href="blog/index.html">Guides</a>
+    <a href="faq.html">FAQ</a>
+  </div>
+  <div class="navright">
+    <a href="track.html" class="navtrack">📦 Track</a>
+    <button class="cartbtn" onclick="location.href='checkout.html'" aria-label="Cart">🛒<span class="cartn" style="display:none">0</span></button>
+    <button class="hamb" onclick="navToggle()" aria-label="Menu">☰</button>
+  </div>
+</div></nav>
+<main id="main"><div class="wrap" style="max-width:820px">
+  <div class="crumbs"><a href="index.html">Home</a> › Track Order</div>
+  <span class="pill">📦 TRACK YOUR ORDER</span>
+<h1 style="font-size:clamp(26px,4vw,38px)">Where's my order? <span class="grad-text">One tap to find out.</span></h1>
+<p class="sub mt2">Every order has an ID like <b style="color:var(--gold);font-family:ui-monospace">SOS-260713-4821</b> (shown at checkout and in your WhatsApp confirmation).</p>
+<div class="box" style="background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;max-width:520px;margin:22px 0">
+  <label for="oid">Your order ID</label>
+  <input id="oid" placeholder="SOS-260713-4821" autocomplete="off" style="text-transform:uppercase">
+  <button class="btn btn-wa mt2" style="width:100%" onclick="var v=document.getElementById('oid').value.trim();location.href='https://wa.me/8801305869242?text='+encodeURIComponent('📦 Order status check: '+(v||'(my order)')+' — koto dur?')">💬 Check status on WhatsApp →</button>
+</div>
+<div id="myorders" style="max-width:520px"></div>
+<script>
+(function(){
+  var box=document.getElementById('myorders'); if(!box) return;
+  var h; try{h=JSON.parse(localStorage.getItem('sos_orders')||'[]')}catch(e){h=[]}
+  if(!h.length) return;
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function fmt(iso){try{return new Date(iso).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return ''}}
+  var rows=h.map(function(o){
+    var items=(o.items||[]).map(function(i){return esc(i.name)+' ('+esc(i.plan)+' ×'+i.qty+')'}).join(', ');
+    var wa='https://wa.me/8801305869242?text='+encodeURIComponent('📦 Order status check: '+o.oid+' — koto dur?');
+    return '<div style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px">'
+      +'<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><span style="font-family:ui-monospace;color:var(--gold);font-weight:800">'+esc(o.oid)+'</span>'
+      +'<span style="color:var(--muted);font-size:12.5px">'+fmt(o.at)+'</span></div>'
+      +'<div style="font-size:13.5px;color:var(--muted);margin:8px 0">'+items+'</div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">'
+      +'<b style="color:var(--green2)">৳'+(o.total||0).toLocaleString()+' · '+esc(o.method||'')+'</b>'
+      +'<a href="'+wa+'" style="color:var(--green2);font-weight:700;font-size:13px">Check status →</a></div></div>';
+  }).join('');
+  box.innerHTML='<h2 class="mt3" style="font-size:21px">Your recent orders <span style="color:var(--muted);font-weight:500;font-size:14px">(on this device)</span></h2>'
+    +'<p class="sub" style="font-size:13.5px;margin:6px 0 14px">Saved privately in your browser — no login, never on our servers.</p>'+rows;
+})();
+</script>
+<h2 class="mt3" style="font-size:21px">What the statuses mean</h2>
+<div class="tbl mt2"><table>
+<tr><th>Status</th><th>Meaning</th></tr>
+<tr><td>⏳ Payment received</td><td>We got your bKash/Nagad — preparing your access now</td></tr>
+<tr><td>🚀 Delivered</td><td>Login/invite sent to your WhatsApp — warranty active</td></tr>
+<tr><td>🛡️ Under warranty</td><td>7 days (shared) / 30 days (personal) — one message replaces any issue</td></tr>
+</table></div>
+<p class="sub mt2" style="font-size:14px">Instant products deliver in 5–15 minutes. If it's been longer, tap the button above — we'll sort it immediately.</p>
+</div></main>
+<button class="fab fab-wa" onclick="location.href='https://wa.me/8801305869242?text=Hi!'" aria-label="WhatsApp">💬 WhatsApp</button>
+{footer_en()}
+<script src="assets/app.js"></script>
+</body>
+</html>

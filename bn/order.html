@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>অর্ডার সম্পন্ন — আপনার রসিদ | SAVEONSUB</title>
+<meta name="description" content="আপনার অর্ডার রেকর্ড করা হয়েছে। অর্ডার আইডি, আইটেম ও টোটাল সহ রসিদ — স্ক্রিনশট নিন — screenshot it, then confirm on WhatsApp for 5–15 minute delivery.">
+<link rel="canonical" href="https://saveonsub.com/bn/order.html">
+<meta name="robots" content="noindex,follow">
+<meta name="theme-color" content="#06181a">
+<meta property="og:title" content="অর্ডার Received — SAVEONSUB"><meta property="og:description" content="Your receipt with order ID, items and total.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/bn/order.html">
+<meta property="og:locale" content="bn_BD">
+<link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/bn/order.html">
+<link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn/order.html">
+<link rel="alternate" hreflang="x-default" href="https://saveonsub.com/bn/order.html">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="manifest" href="../assets/site.webmanifest">
+<meta property="og:image" content="https://saveonsub.com/assets/og-image.png">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .receipt{max-width:640px;margin:22px auto 0;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+  .rhead{background:var(--bg3);padding:26px;text-align:center;border-bottom:1px solid var(--line)}
+  .rtick{width:64px;height:64px;border-radius:50%;background:rgba(20,212,184,.12);border:2px solid var(--green);
+    display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px}
+  .oid{font-family:ui-monospace,monospace;background:var(--bg3);padding:4px 12px;border-radius:8px;color:var(--gold);font-weight:800;font-size:16px}
+  .rbody{padding:26px}
+  .rrow{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .rrow:last-of-type{border-bottom:0}
+  .rtot{display:flex;justify-content:space-between;font-size:19px;font-weight:900;padding-top:14px;margin-top:6px;border-top:2px solid var(--line)}
+  .steps{counter-reset:s;margin:18px 0 0;padding:0;list-style:none}
+  .steps li{counter-increment:s;position:relative;padding:8px 0 8px 40px;font-size:14.5px;color:var(--muted)}
+  .steps li b{color:var(--ink)}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:26px;height:26px;border-radius:50%;
+    background:var(--bg3);border:1px solid var(--green);color:var(--green2);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .bn{color:var(--sky);font-size:13.5px;margin-top:4px}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">মূল কন্টেন্টে যান</a>
+<nav><div class="wrap navin">
+  <a class="logo" href="../bn.html">SAVE<em>ON</em>SUB</a>
+  <div class="navlinks">
+    <a href="../all.html">সাবস্ক্রিপশন</a>
+    <div class="navdrop">
+      <a href="../all.html#categories" class="dropbtn">ক্যাটাগরি ▾</a>
+      <div class="dropmenu">
+        <a href="../c/ai-assistants.html">🤖 এআই অ্যাসিস্ট্যান্ট</a>
+        <a href="../c/ai-image-design.html">🎨 ইমেজ ও ডিজাইন</a>
+        <a href="../c/ai-video.html">🎬 এআই ভিডিও</a>
+        <a href="../c/ai-voice-music.html">🎙️ ভয়েস ও মিউজিক</a>
+        <a href="../c/ai-code-dev.html">💻 কোডিং</a>
+        <a href="../c/ai-writing.html">✍️ এআই রাইটিং</a>
+        <a href="../c/workspace-productivity.html">🗂️ ওয়ার্কস্পেস</a>
+        <a href="../c/entertainment.html">🍿 স্ট্রিমিং</a>
+        <a href="../c/education-career.html">🎓 শিক্ষা</a>
+        <a href="../c/vpn-security.html">🔒 ভিপিএন</a>
+        <a href="../c/bundles.html">🎁 বান্ডেল</a>
+      </div>
+    </div>
+    <a href="../all.html#bundles">বান্ডেল</a>
+    <a href="../quiz.html">কুইজ</a>
+    <a href="../blog/index.html">গাইড</a>
+    <a href="../faq.html">প্রশ্নোত্তর</a>
+  </div>
+  <div class="navright">
+    <a href="../track.html" class="navtrack">📦 ট্র্যাক</a>
+    <button class="cartbtn" onclick="location.href='../checkout.html'" aria-label="কার্ট">🛒<span class="cartn" style="display:none">0</span></button>
+    <button class="hamb" onclick="navToggle()" aria-label="মেনু">☰</button>
+  </div>
+</div></nav>
+
+<main id="main"><div class="wrap">
+  <div class="crumbs"><a href="../bn.html">হোম</a> › <a href="checkout.html">Checkout</a> › অর্ডার received</div>
+  <h1 style="font-size:clamp(24px,4vw,34px);text-align:center">অর্ডার <span class="grad-text">গৃহীত।</span></h1>
+
+  <div class="receipt" id="receipt">
+    <div class="rhead">
+      <div class="rtick">✅</div>
+      <p style="margin:0 0 8px;color:var(--muted);font-size:14px">আপনার অর্ডার আইডি — সংরক্ষণ করুন</p>
+      <span class="oid" id="oid">SOS-…</span>
+      <p style="margin:10px 0 0;font-size:13px;color:var(--muted)"><span id="kind">অর্ডার</span> · <span id="method">bKash</span> · <span id="when"></span></p>
+    </div>
+    <div class="rbody">
+      <div id="items"></div>
+      <div class="rtot"><span>Total</span><span id="total" style="color:var(--green2)">৳0</span></div>
+
+      <div class="notice green mt3" style="text-align:center">
+        <b>আরও একটি ধাপ:</b> confirm on WhatsApp so we can deliver.
+        <p class="bn">শেষ ধাপ: হোয়াটসঅ্যাপে কনফার্ম করুন — ৫–১৫ মিনিটে ডেলিভারি।</p>
+      </div>
+      <a class="btn btn-wa" id="waBtn" style="width:100%;font-size:16px;margin-top:12px" href="#">💬 হোয়াটসঅ্যাপে কনফার্ম করুন →</a>
+      <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="copyReceipt()">📋 অর্ডার কপি করুন</button>
+
+      <ol class="steps">
+        <li>We reply on WhatsApp to confirm your <b>order ID</b> and payment.</li>
+        <li>Send money via <b id="method2">bKash</b> (or use <b>Pay-After-Testing</b> on your first order).</li>
+        <li>Get your <b>access + setup</b> — usually in 5–15 minutes.</li>
+        <li>Something off? <b>1-hour replacement warranty</b> from minute one.</li>
+      </ol>
+
+      <p style="text-align:center;font-size:12.5px;color:var(--muted);margin-top:16px">
+        💡 Tip: screenshot this receipt. No account needed — your order lives on this device.
+      </p>
+      <div style="text-align:center;margin-top:14px">
+        <a href="../all.html" style="color:var(--green2);font-weight:700">← কেনাকাটা চালিয়ে যান</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="empty" style="display:none;max-width:640px;margin:22px auto;text-align:center">
+    <div class="notice">No recent order found on this device. Your receipt appears here right after checkout.</div>
+    <a class="btn btn-primary mt2" href="../all.html">Browse products →</a>
+  </div>
+</div></main>
+
+<button class="fab fab-wa" onclick="location.href='https://wa.me/8801305869242?text=Hi!%20About%20my%20order%20'" aria-label="WhatsApp">💬 Help</button>
+
+<footer><div class="wrap">
+  <div class="fcols">
+    <div>
+      <span class="logo">SAVE<em>ON</em>SUB</span>
+      <p style="margin-top:10px;max-width:280px">বাংলাদেশের সাবস্ক্রিপশন অপারেটিং সিস্টেম — ঢাকা, বাংলাদেশ।</p>
+    </div>
+    <div>
+      <b>স্টোর</b>
+      <a href="../all.html">সাবস্ক্রিপশন</a>
+      <a href="../all.html#bundles">বান্ডেল</a>
+      <a href="../quiz.html">কুইজ</a>
+      <a href="../blog/index.html">গাইড</a>
+      <a href="../offers.html">অফার</a>
+    </div>
+    <div>
+      <b>সাহায্য</b>
+      <a href="../how-to-order.html">কীভাবে অর্ডার</a>
+      <a href="../track.html">অর্ডার ট্র্যাক</a>
+      <a href="../contact.html">যোগাযোগ</a>
+      <a href="../students.html">স্টুডেন্ট</a>
+    </div>
+    <div>
+      <b>ভরসা</b>
+      <a href="../warranty.html">ওয়ারেন্টি</a>
+      <a href="../refund.html">রিফান্ড</a>
+      <a href="../faq.html">প্রশ্নোত্তর</a>
+      <a href="../sitemap.html">সাইটম্যাপ</a>
+    </div>
+    <div>
+      <b>কোম্পানি</b>
+      <a href="../about.html">আমাদের সম্পর্কে</a>
+      <a href="https://wa.me/8801305869242">হোয়াটসঅ্যাপ</a>
+    </div>
+  </div>
+  <p class="fine">&copy; 2026 SAVEONSUB &middot; একটি SYSmoAI উদ্যোগ। সব প্রোডাক্টের নাম ও ট্রেডমার্ক তাদের মালিকদের।</p>
+</div></footer>
+
+<script src="../assets/app.js"></script>
+<script>
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function fmtDate(iso){try{const d=new Date(iso);return d.toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
+(function(){
+  const o=lastOrder();
+  if(!o){document.getElementById('receipt').style.display='none';document.getElementById('empty').style.display='block';return;}
+  document.getElementById('oid').textContent=o.oid;
+  document.getElementById('kind').textContent=o.kind==='pay-after-testing'?'pay-after-testing':'Order';
+  document.getElementById('method').textContent=o.method;
+  document.getElementById('method2').textContent=o.method;
+  document.getElementById('when').textContent=fmtDate(o.at);
+  document.getElementById('total').textContent='৳'+(o.total||0).toLocaleString();
+  document.getElementById('items').innerHTML=(o.items||[]).map(i=>`<div class="rrow">
+    <span><b>${esc(i.name)}</b><br><span style="color:var(--muted);font-size:12.5px">${esc(i.plan)} ×${i.qty}</span></span>
+    <b>৳${(i.bdt*i.qty).toLocaleString()}</b></div>`).join('');
+  // WhatsApp confirm link (fallback if the auto-opened tab was blocked)
+  const lines=(o.items||[]).map(i=>`• ${i.name} — ${i.plan} ×${i.qty} = ৳${i.bdt*i.qty}`).join('\n');
+  const msg=`🛒 ORDER ${o.oid}\n${lines}\nTOTAL: ৳${o.total}\nPayment: ${o.method}${o.txn?(' TxnID: '+o.txn):''}\n— sent from saveonsub store`;
+  document.getElementById('waBtn').href='https://wa.me/8801305869242?text='+encodeURIComponent(msg);
+  window.copyReceipt=function(){copyText(msg,'Order details copied');};
+})();
+</script>
+</body>
+</html>

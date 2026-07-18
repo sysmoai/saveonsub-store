@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>কুইজ — ৬০ সেকেন্ডে AI খুঁজুন | SAVEONSUB</title>
+<meta name="description" content="কোন AI সাবস্ক্রিপশন কিনবেন বুঝতে পারছেন না? Answer 4 questions — get one honest recommendation with BD price. Free, 60 seconds, no signup.">
+<link rel="canonical" href="https://saveonsub.com/bn/quiz.html">
+<link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/quiz.html">
+<link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn/quiz.html">
+<link rel="alternate" hreflang="x-default" href="https://saveonsub.com/bn/quiz.html">
+<meta property="og:title" content="কুইজ — 60-Second Quiz">
+<meta property="og:description" content="4 questions → your perfect subscription at BD price.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/bn/quiz.html">
+<meta name="theme-color" content="#06181a">
+<meta property="og:locale" content="bn_BD">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="manifest" href="../assets/site.webmanifest">
+<meta property="og:image" content="https://saveonsub.com/assets/og-image.png">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"হোম","item":"https://saveonsub.com/"},{"@type":"ListItem","position":2,"name":"কুইজ Quiz","item":"https://saveonsub.com/bn/quiz.html"}]}
+</script>
+<style>
+  .qbox{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:34px;max-width:620px;margin:30px auto}
+  .qopt{display:block;width:100%;text-align:left;background:var(--bg3);border:1.5px solid var(--line);border-radius:13px;padding:15px 18px;margin-bottom:10px;color:var(--ink);font-size:15.5px;font-weight:600;cursor:pointer;transition:.15s}
+  .qopt:hover{border-color:var(--green)}
+  .prog{height:6px;background:var(--bg3);border-radius:99px;margin-bottom:24px;overflow:hidden}
+  .prog b{display:block;height:100%;background:var(--grad);border-radius:99px;transition:.3s}
+  .rec{text-align:center}
+  .rec .icon{font-size:52px}
+  .why{background:var(--bg3);border-radius:12px;padding:14px 18px;font-size:14px;color:var(--muted);text-align:left;margin:16px 0}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">মূল কন্টেন্টে যান</a>
+<nav><div class="wrap navin">
+  <a class="logo" href="../bn.html">SAVE<em>ON</em>SUB</a>
+  <div class="navlinks">
+    <a href="../all.html">সাবস্ক্রিপশন</a>
+    <div class="navdrop">
+      <a href="../all.html#categories" class="dropbtn">ক্যাটাগরি ▾</a>
+      <div class="dropmenu">
+        <a href="../c/ai-assistants.html">🤖 এআই অ্যাসিস্ট্যান্ট</a>
+        <a href="../c/ai-image-design.html">🎨 ইমেজ ও ডিজাইন</a>
+        <a href="../c/ai-video.html">🎬 এআই ভিডিও</a>
+        <a href="../c/ai-voice-music.html">🎙️ ভয়েস ও মিউজিক</a>
+        <a href="../c/ai-code-dev.html">💻 কোডিং</a>
+        <a href="../c/ai-writing.html">✍️ এআই রাইটিং</a>
+        <a href="../c/workspace-productivity.html">🗂️ ওয়ার্কস্পেস</a>
+        <a href="../c/entertainment.html">🍿 স্ট্রিমিং</a>
+        <a href="../c/education-career.html">🎓 শিক্ষা</a>
+        <a href="../c/vpn-security.html">🔒 ভিপিএন</a>
+        <a href="../c/bundles.html">🎁 বান্ডেল</a>
+      </div>
+    </div>
+    <a href="../all.html#bundles">বান্ডেল</a>
+    <a href="../quiz.html">কুইজ</a>
+    <a href="../blog/index.html">গাইড</a>
+    <a href="../faq.html">প্রশ্নোত্তর</a>
+  </div>
+  <div class="navright">
+    <a href="../track.html" class="navtrack">📦 ট্র্যাক</a>
+    <button class="cartbtn" onclick="location.href='../checkout.html'" aria-label="কার্ট">🛒<span class="cartn" style="display:none">0</span></button>
+    <button class="hamb" onclick="navToggle()" aria-label="মেনু">☰</button>
+  </div>
+</div></nav>
+
+<main id="main"><div class="wrap">
+  <div class="crumbs"><a href="../bn.html">হোম</a> › কুইজ</div>
+  <div class="center"><span class="pill">🧭 FIND MY AI</span>
+  <h1 style="font-size:clamp(26px,4vw,40px)">৪টি প্রশ্ন। <span class="grad-text">একটি সৎ উত্তর।</span></h1>
+  <p class="sub" style="margin:0 auto">No email needed. If a free tier fits you, we'll say so.</p></div>
+
+  <div class="qbox" id="qbox">
+    <div class="prog"><b id="pbar" style="width:25%"></b></div>
+    <div id="qarea"></div>
+  </div>
+</div></main>
+
+<button class="fab fab-wa" onclick="location.href='https://wa.me/8801305869242?text=Hi!%20Help%20me%20choose%20a%20subscription'" aria-label="WhatsApp">💬 WhatsApp</button>
+
+<footer><div class="wrap">
+  <div class="fcols">
+    <div>
+      <span class="logo">SAVE<em>ON</em>SUB</span>
+      <p style="margin-top:10px;max-width:280px">বাংলাদেশের সাবস্ক্রিপশন অপারেটিং সিস্টেম — ঢাকা, বাংলাদেশ।</p>
+    </div>
+    <div>
+      <b>স্টোর</b>
+      <a href="../all.html">সাবস্ক্রিপশন</a>
+      <a href="../all.html#bundles">বান্ডেল</a>
+      <a href="../quiz.html">কুইজ</a>
+      <a href="../blog/index.html">গাইড</a>
+      <a href="../offers.html">অফার</a>
+    </div>
+    <div>
+      <b>সাহায্য</b>
+      <a href="../how-to-order.html">কীভাবে অর্ডার</a>
+      <a href="../track.html">অর্ডার ট্র্যাক</a>
+      <a href="../contact.html">যোগাযোগ</a>
+      <a href="../students.html">স্টুডেন্ট</a>
+    </div>
+    <div>
+      <b>ভরসা</b>
+      <a href="../warranty.html">ওয়ারেন্টি</a>
+      <a href="../refund.html">রিফান্ড</a>
+      <a href="../faq.html">প্রশ্নোত্তর</a>
+      <a href="../sitemap.html">সাইটম্যাপ</a>
+    </div>
+    <div>
+      <b>কোম্পানি</b>
+      <a href="../about.html">আমাদের সম্পর্কে</a>
+      <a href="https://wa.me/8801305869242">হোয়াটসঅ্যাপ</a>
+    </div>
+  </div>
+  <p class="fine">&copy; 2026 SAVEONSUB &middot; একটি SYSmoAI উদ্যোগ। সব প্রোডাক্টের নাম ও ট্রেডমার্ক তাদের মালিকদের।</p>
+</div></footer>
+
+<script src="../assets/catalog.js"></script>
+<script src="../assets/app.js"></script>
+<script>
+const QS=[
+ {q:"আপনি মূলত কী করতে চান?",k:"goal",opts:[["content","🎬 কন্টেন্ট তৈরি (ভিডিও, পোস্ট, ডিজাইন)"],["study","📚 পড়াশোনা / রিসার্চ / থিসিস"],["business","💼 ব্যবসা / ফ্রিল্যান্সিং / মার্কেটিং"],["code","👨‍💻 কোডিং / অ্যাপ বানানো"],["fun","🍿 বিনোদন (সিনেমা, গান)"]]},
+ {q:"মাসিক বাজেট?",k:"budget",opts:[["low","৳৫০০-এর নিচে"],["mid","৳৫০০ – ৳১,০০০"],["high","৳১,০০০+"]]},
+ {q:"কত বেশি ব্যবহার করবেন?",k:"usage",opts:[["heavy","প্রতিদিন, ঘণ্টার পর ঘণ্টা"],["regular","বেশিরভাগ দিন, সাধারণ ব্যবহার"],["light","মাঝে মাঝে"]]},
+ {q:"অ্যাকাউন্ট পছন্দ?",k:"risk",opts:[["own","🔒 শুধু নিজের অ্যাকাউন্ট (সবচেয়ে নিরাপদ)"],["cheap","💸 সবচেয়ে সস্তা চলবে (শেয়ার্ড OK)"]]}
+];
+let step=0, ans={};
+const byId=id=>CATALOG.products.find(p=>p.id===id);
+
+function resolve(a){
+  // goal → base pick (id, or bundle); budget/usage/risk adjust
+  let pick, alt, why;
+  if(a.goal==="content"){
+    if(a.budget==="low") {pick="chatgpt-plus"; alt="bundle-starter"; why="ChatGPT writes scripts/captions; add Canva later via the Starter Bundle.";}
+    else if(a.budget==="mid"){pick="bundle-creator"; alt="bundle-video"; why="Grok for ideas + Midjourney for visuals — the full content pipeline at bundle price.";}
+    else {pick="bundle-video"; alt="heygen"; why="Invideo generates the video, CapCut Pro polishes it — the Reels machine BD channels use.";}
+  } else if(a.goal==="study"){
+    if(a.budget==="low"){pick="bundle-research"; alt="perplexity-pro"; why="Perplexity finds cited sources, ChatGPT drafts — thesis mode at bundle price.";}
+    else {pick="claude-pro"; alt="bundle-research"; why="Claude handles long PDFs and careful academic writing better than anything.";}
+  } else if(a.goal==="business"){
+    if(a.budget==="low"){pick="google-ai-pro"; alt="canva-pro"; why="Our #1 seller: Gemini Pro + 2TB storage at ৳500 — the best business value in AI.";}
+    else if(a.budget==="mid"){pick="supergrok"; alt="bundle-creator"; why="Real-time market data + strong reasoning for business decisions.";}
+    else {pick="chatgpt-business"; alt="jasper"; why="Admin workspace + team seats — built for client work.";}
+  } else if(a.goal==="code"){
+    if(a.budget==="low"){pick="github-copilot"; alt="windsurf"; why="Copilot Personal on YOUR own GitHub. Students get it FREE via Student Pack.";}
+    else {pick="bundle-dev"; alt="cursor"; why="Cursor agent-mode + Copilot autocomplete — the 2026 dev stack at bundle price.";}
+  } else { // fun
+    if(a.budget==="low"){pick="spotify"; alt="youtube-premium"; why="Spotify Family slot ৳129 on your own account — or official BD ৳219, we'll tell you both.";}
+    else {pick="netflix"; alt="prime-video"; why="Private-profile Netflix from ৳349 with warranty.";}
+  }
+  // risk override: own-account → force personal-capable pick
+  if(a.risk==="own"){
+    const p=byId(pick);
+    const hasPersonal=p&&p.plans.some(pl=>pl.tos==="personal"||pl.tos==="official");
+    if(!hasPersonal){
+      const map={"bundle-research":"claude-pro","bundle-creator":"midjourney","bundle-video":"invideo","bundle-starter":"chatgpt-plus","bundle-dev":"github-copilot","spotify":"spotify"};
+      pick=map[pick]||pick;
+      why+=" You chose own-account-only, so we picked the personal plan — zero sharing risk.";
+    } else { why+=" Take the Personal plan for zero sharing risk."; }
+  }
+  // heavy usage upsell note
+  if(a.usage==="heavy") why+=" Heavy daily use? Personal plans avoid shared usage limits.";
+  if(a.usage==="light" && a.goal!=="fun") why+=" Light use? Honestly, try the FREE tier first — upgrade when you hit limits.";
+  return {pick, alt, why};
+}
+
+function draw(){
+  const area=document.getElementById('qarea');
+  document.getElementById('pbar').style.width=((step)/QS.length*100||8)+"%";
+  if(step<QS.length){
+    const q=QS[step];
+    area.innerHTML=`<h2 style="font-size:21px;margin-bottom:18px">${step+1}. ${q.q}</h2>`+
+      q.opts.map(o=>`<button class="qopt" onclick="pick('${q.k}','${o[0]}')">${o[1]}</button>`).join('')+
+      (step>0?`<button class="btn btn-ghost btn-sm mt2" onclick="step--;draw()">← Back</button>`:'');
+  } else {
+    const r=resolve(ans), p=byId(r.pick), alt=byId(r.alt);
+    const cheap=p.plans.reduce((a,b)=>a.bdt<b.bdt?a:b);
+    const personal=p.plans.find(pl=>pl.tos==="personal"||pl.tos==="official");
+    const chosen=(ans.risk==="own"&&personal)?personal:cheap;
+    document.getElementById('pbar').style.width="100%";
+    area.innerHTML=`<div class="rec">
+      <span class="icon">${p.icon}</span>
+      <h2 style="margin:8px 0">${p.name.replace('🎁 ','')}</h2>
+      <div style="font-size:26px;font-weight:900;color:var(--green2)">৳${chosen.bdt.toLocaleString()} <span style="font-size:13px;color:var(--muted);font-weight:600">${chosen.label}</span></div>
+      <span class="tos ${chosen.tos}">${chosen.tos.replace('-','·')}</span>
+      <div class="why">💡 ${r.why}</div>
+      <div class="heroctas" style="justify-content:center">
+        <button class="btn btn-primary" onclick="cartAdd('${p.id}','${chosen.label.replace(/'/g,"\\'")}',${chosen.bdt},'${p.name.replace(/'/g,"\\'").replace('🎁 ','')}');location.href='checkout.html'">Order now — ৳${chosen.bdt.toLocaleString()}</button>
+        <a class="btn btn-ghost" href="../p/${p.id}.html">Full details</a>
+      </div>
+      ${alt?`<p style="font-size:13.5px;color:var(--muted);margin-top:14px">Also consider: <a href="../p/${alt.id}.html" style="color:var(--green2);font-weight:700">${alt.name.replace('🎁 ','')}</a> (৳${Math.min(...alt.plans.map(x=>x.bdt)).toLocaleString()})</p>`:''}
+      <p style="font-size:13px;color:var(--muted);margin-top:10px">Still unsure? <a href="${waLink('Quiz said '+p.name+' — can we talk it through?')}" style="color:var(--green2)">Ask a human →</a></p>
+      <button class="btn btn-ghost btn-sm mt2" onclick="step=0;ans={};draw()">↻ Restart quiz</button>
+    </div>`;
+  }
+}
+function pick(k,v){ ans[k]=v; step++; draw(); }
+draw();
+</script>
+</body>
+</html>

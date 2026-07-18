@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /checkout.html
+
+# AI crawlers welcome — see llms.txt for structured store facts
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://saveonsub.com/sitemap.xml

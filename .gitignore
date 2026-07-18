@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+.DS_Store?
+node_modules/
+.svelte-kit/
+dist/
+.env
+.env.*
+!.env.example
