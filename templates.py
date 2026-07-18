@@ -23,6 +23,8 @@ def nav_en(rel=""):
         <a href="{rel}c/entertainment.html">🍿 Entertainment</a>
         <a href="{rel}c/education-career.html">🎓 Education</a>
         <a href="{rel}c/vpn-security.html">🔒 VPN</a>
+        <a href="{rel}c/gaming.html">🎮 Gaming</a>
+        <a href="{rel}c/bd-lifestyle.html">🇧🇩 Lifestyle</a>
         <a href="{rel}c/bundles.html">🎁 Bundles</a>
       </div>
     </div>

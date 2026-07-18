@@ -54,7 +54,9 @@
     "Entertainment",
     "Education & Career",
     "VPN & Security",
-    "Bundles"
+    "Bundles",
+    "Gaming",
+    "BD Lifestyle"
   ],
   "products": [
     {
@@ -9132,6 +9134,595 @@
         "notion-ai"
       ],
       "save_bdt": 0
+    },
+    {
+      "id": "chorki",
+      "name": "Chorki",
+      "icon": "🎬",
+      "category": "Entertainment",
+      "plans": [
+        {
+          "label": "Yearly (official)",
+          "bdt": 599,
+          "duration": "year",
+          "tos": "official",
+          "sla": "instant"
+        },
+        {
+          "label": "Monthly activation",
+          "bdt": 99,
+          "duration": "month",
+          "tos": "official",
+          "sla": "instant"
+        }
+      ],
+      "official_usd": 5,
+      "official_url": "https://chorki.com/subscribe",
+      "brand": "Chorki",
+      "price_source": "verified-jul26",
+      "keywords": [
+        "chorki subscription bangladesh",
+        "chorki price bd",
+        "chorki bKash",
+        "বাংলা স্ট্রিমিং"
+      ],
+      "orders": 85,
+      "bestseller_rank": 0,
+      "faq": [
+        {
+          "q": "What is Chorki and how much does it cost?",
+          "a": "Chorki is Bangladesh's own streaming platform with original Bangla content. Official yearly subscription is ৳599 — we help activate it via bKash if you don't have a card."
+        },
+        {
+          "q": "Is Chorki worth it vs Netflix?",
+          "a": "Different content. Chorki has Bangla originals, dramas and films you won't find on Netflix. Official ৳599/year is already cheap — buy direct, or let us activate it for you via bKash."
+        },
+        {
+          "q": "Can I pay for Chorki with bKash?",
+          "a": "We can activate Chorki on your account via bKash/Nagad — same ৳599 yearly official price. No card needed."
+        }
+      ],
+      "seo": {
+        "short_tail": [
+          "chorki subscription bangladesh",
+          "chorki price bd",
+          "chorki bKash payment"
+        ],
+        "long_tail": [
+          "how to buy chorki without card bangladesh",
+          "chorki vs netflix bd"
+        ],
+        "bangla": [
+          "চরকি সাবস্ক্রিপশন বাংলাদেশ",
+          "চরকি দাম বাংলাদেশে"
+        ],
+        "transliteration": [
+          "chorki kivabe kinbo bangladesh"
+        ]
+      },
+      "market": {
+        "surveyed": true,
+        "low": 599,
+        "high": 599,
+        "who": "Official Chorki pricing (no reseller market — buy direct or we activate for card-less users)",
+        "src": "chorki.com/subscribe"
+      },
+      "status": "gap-fill"
+    },
+    {
+      "id": "bongo-bd",
+      "name": "Bongo BD Premium",
+      "icon": "🎬",
+      "category": "Entertainment",
+      "plans": [
+        {
+          "label": "Monthly Premium",
+          "bdt": 149,
+          "duration": "month",
+          "tos": "official",
+          "sla": "instant"
+        },
+        {
+          "label": "Yearly Premium",
+          "bdt": 999,
+          "duration": "year",
+          "tos": "official",
+          "sla": "instant"
+        }
+      ],
+      "official_usd": 3,
+      "official_url": "https://bongobd.com/",
+      "brand": "Bongo BD",
+      "price_source": "verified-jul26",
+      "keywords": [
+        "bongo bd subscription",
+        "bongo premium price",
+        "bangla movies streaming bd"
+      ],
+      "orders": 60,
+      "bestseller_rank": 0,
+      "faq": [
+        {
+          "q": "What is Bongo BD Premium?",
+          "a": "Bongo BD is Bangladesh's largest Bangla entertainment app — movies, dramas, music videos. Premium removes ads at ৳149/month or ৳999/year."
+        },
+        {
+          "q": "Is Bongo BD worth paying for?",
+          "a": "If you watch Bangla movies and dramas regularly, the ad-free experience at ৳149/month is good value. But the free tier works — if ads don't bother you, save the money."
+        },
+        {
+          "q": "How to pay for Bongo BD with bKash?",
+          "a": "We activate Bongo Premium on your account via bKash/Nagad — same official price, no card needed."
+        }
+      ],
+      "seo": {
+        "short_tail": [
+          "bongo bd premium price",
+          "bongo subscription bd",
+          "bongo bangla movies"
+        ],
+        "long_tail": [
+          "bongo bd premium without card",
+          "bangla streaming app bd"
+        ],
+        "bangla": [
+          "বঙ্গ বিডি প্রিমিয়াম",
+          "বাংলা মুভি স্ট্রিমিং অ্যাপ"
+        ],
+        "transliteration": [
+          "bongo bd kivabe kinbo"
+        ]
+      },
+      "market": {
+        "surveyed": true,
+        "low": 149,
+        "high": 999,
+        "who": "Official Bongo pricing",
+        "src": "bongobd.com"
+      },
+      "status": "gap-fill"
+    },
+    {
+      "id": "truecaller-premium",
+      "name": "Truecaller Premium",
+      "icon": "📞",
+      "category": "VPN & Security",
+      "plans": [
+        {
+          "label": "Premium Monthly",
+          "bdt": 350,
+          "duration": "month",
+          "tos": "shared-low",
+          "sla": "instant"
+        },
+        {
+          "label": "Premium Personal",
+          "bdt": 790,
+          "duration": "month",
+          "tos": "personal",
+          "sla": "fast"
+        }
+      ],
+      "official_usd": 9.99,
+      "official_url": "https://www.truecaller.com/premium",
+      "brand": "Truecaller",
+      "price_source": "verified-jul26",
+      "keywords": [
+        "truecaller premium bangladesh",
+        "truecaller price bd",
+        "truecaller premium bKash",
+        "truecaller gold bd"
+      ],
+      "orders": 120,
+      "bestseller_rank": 0,
+      "faq": [
+        {
+          "q": "How much is Truecaller Premium in Bangladesh?",
+          "a": "Official Truecaller Premium is ~$9.99/month (international card). Via SAVEONSUB: shared seat from ৳350/month or personal on your own number at ৳790/month, paid with bKash."
+        },
+        {
+          "q": "Is Truecaller Premium worth it?",
+          "a": "For BD users who get dozens of unknown calls daily: yes. Premium shows who's calling before you pick up, blocks spam automatically, and gives you the premium badge. The free version already covers basics."
+        },
+        {
+          "q": "Can I pay for Truecaller with bKash?",
+          "a": "Truecaller doesn't accept bKash directly. SAVEONSUB offers it at ৳350 shared or ৳790 personal via bKash/Nagad."
+        }
+      ],
+      "seo": {
+        "short_tail": [
+          "truecaller premium bangladesh",
+          "truecaller price in bd",
+          "truecaller premium bKash"
+        ],
+        "long_tail": [
+          "how to buy truecaller premium in bangladesh without card",
+          "truecaller premium vs free bd"
+        ],
+        "bangla": [
+          "ট্রুকলার প্রিমিয়াম বাংলাদেশ",
+          "ট্রুকলার প্রিমিয়াম দাম"
+        ],
+        "transliteration": [
+          "truecaller premium kivabe kinbo bd"
+        ]
+      },
+      "market": {
+        "surveyed": true,
+        "low": 350,
+        "high": 499,
+        "who": "BD Facebook/Telegram resellers",
+        "src": "BD market survey july 2026"
+      },
+      "status": "gap-fill"
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "icon": "🔍",
+      "category": "AI Assistants",
+      "plans": [
+        {
+          "label": "API Access — Starter",
+          "bdt": 199,
+          "duration": "month",
+          "tos": "shared-low",
+          "sla": "instant"
+        },
+        {
+          "label": "API Access — Pro",
+          "bdt": 599,
+          "duration": "month",
+          "tos": "shared-low",
+          "sla": "instant"
+        }
+      ],
+      "official_usd": 2,
+      "official_url": "https://chat.deepseek.com/",
+      "brand": "DeepSeek",
+      "price_source": "verified-jul26",
+      "keywords": [
+        "deepseek bangladesh",
+        "deepseek price bd",
+        "deepseek api bKash",
+        "deepseek vs chatgpt bd"
+      ],
+      "orders": 45,
+      "bestseller_rank": 0,
+      "faq": [
+        {
+          "q": "Is DeepSeek free?",
+          "a": "DeepSeek's web chat at chat.deepseek.com is FREE — and it competes with paid AI assistants. We tell you this first because paying for API access is only for developers who need to integrate it."
+        },
+        {
+          "q": "How much is DeepSeek API in Bangladesh?",
+          "a": "DeepSeek API is very cheap — roughly $0.14/million input tokens. SAVEONSUB offers API access setup from ৳199/month if you need higher rate limits than the free tier."
+        },
+        {
+          "q": "Is DeepSeek better than ChatGPT?",
+          "a": "For coding and reasoning: DeepSeek V3/R1 are extremely competitive. For creative writing and image generation: ChatGPT has more features. The free tier of both is excellent — start there."
+        }
+      ],
+      "seo": {
+        "short_tail": [
+          "deepseek price bangladesh",
+          "deepseek api bd",
+          "deepseek vs chatgpt bd"
+        ],
+        "long_tail": [
+          "how to access deepseek in bangladesh",
+          "deepseek r1 api price bd"
+        ],
+        "bangla": [
+          "ডিপসিক বাংলাদেশ",
+          "ডিপসিক দাম"
+        ],
+        "transliteration": [
+          "deepseek bangladesh kivabe use korbo"
+        ]
+      },
+      "market": {
+        "surveyed": false,
+        "low": 0,
+        "high": 0,
+        "who": "",
+        "src": ""
+      },
+      "status": "new"
+    },
+    {
+      "id": "adobe-creative-cloud",
+      "name": "Adobe Creative Cloud",
+      "icon": "🎨",
+      "category": "AI Image & Design",
+      "plans": [
+        {
+          "label": "Photography Plan (20GB)",
+          "bdt": 990,
+          "duration": "month",
+          "tos": "shared-low",
+          "sla": "fast"
+        },
+        {
+          "label": "All Apps Plan",
+          "bdt": 4990,
+          "duration": "month",
+          "tos": "shared-med",
+          "sla": "fast"
+        }
+      ],
+      "official_usd": 54.99,
+      "official_url": "https://www.adobe.com/creativecloud/plans.html",
+      "brand": "Adobe",
+      "price_source": "verified-jul26",
+      "keywords": [
+        "adobe creative cloud bangladesh",
+        "adobe photoshop price bd",
+        "adobe all apps bd price",
+        "adobe creative cloud bKash"
+      ],
+      "orders": 70,
+      "bestseller_rank": 0,
+      "faq": [
+        {
+          "q": "How much is Adobe Creative Cloud in Bangladesh?",
+          "a": "Official Adobe All Apps is ~$55/month (~৳6,050) requiring an international card. Via SAVEONSUB: Photography (PS + Lightroom) ৳990 or All Apps from ৳4,990, both via bKash."
+        },
+        {
+          "q": "Which Adobe plan for BD freelancers?",
+          "a": "Photography plan (৳990) covers Photoshop + Lightroom — enough for most photo editors and thumbnail designers. All Apps (৳4,990) if you need Premiere Pro, Illustrator and more. Adobe Firefly (৳190) is a separate AI-only plan we also carry."
+        },
+        {
+          "q": "Can I pay for Adobe CC with bKash?",
+          "a": "Adobe doesn't accept bKash. SAVEONSUB provides access from ৳990/month via bKash/Nagad with warranty."
+        }
+      ],
+      "seo": {
+        "short_tail": [
+          "adobe creative cloud bangladesh",
+          "adobe photoshop price bd",
+          "adobe all apps bd"
+        ],
+        "long_tail": [
+          "how to buy adobe creative cloud in bangladesh with bKash",
+          "adobe freelancer plan bd"
+        ],
+        "bangla": [
+          "এডোবি ক্রিয়েটিভ ক্লাউড বাংলাদেশ",
+          "ফটোশপ দাম বাংলাদেশে"
+        ],
+        "transliteration": [
+          "adobe photoshop kivabe kinbo bd"
+        ]
+      },
+      "market": {
+        "surveyed": true,
+        "low": 990,
+        "high": 2990,
+        "who": "BD Facebook/Telegram Adobe sellers",
+        "src": "BD market survey july 2026"
+      },
+      "status": "gap-fill"
+    },
+    {
+      "id": "tinder-plus",
+      "name": "Tinder Plus",
+      "icon": "❤️",
+      "category": "BD Lifestyle",
+      "plans": [
+        {
+          "label": "Plus Monthly",
+          "bdt": 399,
+          "duration": "month",
+          "tos": "personal",
+          "sla": "instant"
+        },
+        {
+          "label": "Gold Monthly",
+          "bdt": 690,
+          "duration": "month",
+          "tos": "personal",
+          "sla": "instant"
+        }
+      ],
+      "official_usd": 7.99,
+      "official_url": "https://tinder.com/",
+      "brand": "Tinder",
+      "price_source": "verified-jul26",
+      "keywords": [
+        "tinder plus bangladesh",
+        "tinder gold price bd",
+        "tinder subscription bKash"
+      ],
+      "orders": 50,
+      "bestseller_rank": 0,
+      "faq": [
+        {
+          "q": "How much is Tinder Plus in Bangladesh?",
+          "a": "Tinder Plus is roughly $8/month through the app (Google Play/App Store billing). Via SAVEONSUB: we activate Plus at ৳399/month or Gold at ৳690/month on your OWN account via bKash."
+        },
+        {
+          "q": "Is Tinder Gold worth it for BD users?",
+          "a": "Gold's main feature is seeing who already liked you — which saves swiping time. If you get matches normally, Plus (unlimited likes + 1 Boost/month) is better value at ৳399."
+        },
+        {
+          "q": "Can I pay for Tinder with bKash?",
+          "a": "Tinder bills through App Store/Google Play which don't take bKash. SAVEONSUB activates it on your account via bKash at BD-friendly prices."
+        }
+      ],
+      "seo": {
+        "short_tail": [
+          "tinder plus price bangladesh",
+          "tinder gold bd",
+          "tinder subscription bKash"
+        ],
+        "long_tail": [
+          "how to pay for tinder in bangladesh without credit card",
+          "tinder plus vs gold bd"
+        ],
+        "bangla": [
+          "টিন্ডার প্রিমিয়াম বাংলাদেশ",
+          "টিন্ডার প্লাস দাম"
+        ],
+        "transliteration": [
+          "tinder premium kivabe kinbo bangladesh"
+        ]
+      },
+      "market": {
+        "surveyed": false,
+        "low": 0,
+        "high": 0,
+        "who": "",
+        "src": ""
+      },
+      "status": "new"
+    },
+    {
+      "id": "pandapro",
+      "name": "Foodpanda pro",
+      "icon": "🛵",
+      "category": "BD Lifestyle",
+      "plans": [
+        {
+          "label": "Monthly",
+          "bdt": 299,
+          "duration": "month",
+          "tos": "personal",
+          "sla": "instant"
+        },
+        {
+          "label": "6 Months",
+          "bdt": 1299,
+          "duration": "6months",
+          "tos": "personal",
+          "sla": "instant"
+        }
+      ],
+      "official_usd": 3.49,
+      "official_url": "https://www.foodpanda.com.bd/",
+      "brand": "Foodpanda",
+      "price_source": "verified-jul26",
+      "keywords": [
+        "foodpanda pro bangladesh",
+        "pandapro price bd",
+        "foodpanda subscription bKash"
+      ],
+      "orders": 95,
+      "bestseller_rank": 0,
+      "faq": [
+        {
+          "q": "What is pandapro in Bangladesh?",
+          "a": "pandapro is Foodpanda's subscription that gives free delivery on orders over ৳150, plus extra discounts at selected restaurants. Official price ৳299/month — pays for itself in 3-4 orders."
+        },
+        {
+          "q": "Is pandapro worth it for Dhaka users?",
+          "a": "If you order 4+ times a month: yes, the free delivery alone covers the ৳299 cost. Heavy users save ৳500-1,500/month in delivery fees."
+        },
+        {
+          "q": "How to buy pandapro with bKash?",
+          "a": "We activate pandapro on your Foodpanda account via bKash/Nagad — same ৳299 official monthly price. Especially useful if you don't have a card linked to your Foodpanda account."
+        }
+      ],
+      "seo": {
+        "short_tail": [
+          "pandapro bangladesh",
+          "foodpanda pro price bd",
+          "foodpanda subscription bKash"
+        ],
+        "long_tail": [
+          "is pandapro worth it in dhaka",
+          "foodpanda free delivery subscription bd"
+        ],
+        "bangla": [
+          "পান্ডাপ্রো বাংলাদেশ",
+          "ফুডপান্ডা প্রো দাম"
+        ],
+        "transliteration": [
+          "pandapro kivabe kinbo"
+        ]
+      },
+      "market": {
+        "surveyed": true,
+        "low": 299,
+        "high": 299,
+        "who": "Official Foodpanda BD pricing",
+        "src": "foodpanda.com.bd app"
+      },
+      "status": "gap-fill"
+    },
+    {
+      "id": "pubg-royale-pass",
+      "name": "PUBG Mobile Royal Pass",
+      "icon": "🎮",
+      "category": "Gaming",
+      "plans": [
+        {
+          "label": "Elite Pass (monthly)",
+          "bdt": 550,
+          "duration": "month",
+          "tos": "personal",
+          "sla": "instant"
+        },
+        {
+          "label": "Elite Pass Plus",
+          "bdt": 990,
+          "duration": "month",
+          "tos": "personal",
+          "sla": "instant"
+        }
+      ],
+      "official_usd": 5.99,
+      "official_url": "https://www.pubgmobile.com/",
+      "brand": "PUBG Mobile",
+      "price_source": "verified-jul26",
+      "keywords": [
+        "pubg royal pass price bd",
+        "pubg uc bangladesh",
+        "pubg elite pass bKash",
+        "pubg mobile bd"
+      ],
+      "orders": 150,
+      "bestseller_rank": 0,
+      "faq": [
+        {
+          "q": "How much is PUBG Royal Pass in Bangladesh?",
+          "a": "PUBG Mobile Royal Pass Elite is 360 UC (~$6-$7 via in-app purchase). Via SAVEONSUB: Elite Pass at ৳550 or Elite Plus at ৳990 — paid with bKash/Nagad, delivered instantly to your PUBG ID."
+        },
+        {
+          "q": "How to buy PUBG UC with bKash in Bangladesh?",
+          "a": "PUBG Mobile doesn't accept bKash directly. SAVEONSUB tops up UC to your account at competitive BD rates — Elite Pass ৳550, UC packs start at ৳199, via bKash/Nagad with instant delivery."
+        },
+        {
+          "q": "Is PUBG Royal Pass worth it?",
+          "a": "If you play PUBG Mobile regularly: yes. You get exclusive skins, outfits, weapon finishes and in-game currency that would cost 3-5x more if bought individually. Each season (month) has a new pass."
+        }
+      ],
+      "seo": {
+        "short_tail": [
+          "pubg royal pass price bd",
+          "pubg uc bangladesh bKash",
+          "pubg elite pass price bd"
+        ],
+        "long_tail": [
+          "how to buy pubg uc in bangladesh without credit card",
+          "pubg royal pass elite vs plus bd"
+        ],
+        "bangla": [
+          "পাবজি রয়েল পাস বাংলাদেশ",
+          "পাবজি ইউসি দাম"
+        ],
+        "transliteration": [
+          "pubg uc kivabe kinbo bangladesh"
+        ]
+      },
+      "market": {
+        "surveyed": true,
+        "low": 500,
+        "high": 650,
+        "who": "BD Facebook/Telegram game top-up sellers",
+        "src": "BD gaming community survey july 2026"
+      },
+      "status": "gap-fill"
     }
   ]
 }
