@@ -1,0 +1,30 @@
+{
+  "name": "saveonsub",
+  "version": 2,
+  "buildCommand": "bash build_all.sh",
+  "outputDirectory": ".",
+  "installCommand": "pip3 install Pillow --break-system-packages",
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/subscriptions.html", "destination": "/all.html", "permanent": true },
+    { "source": "/home", "destination": "/", "permanent": true },
+    { "source": "/shop", "destination": "/all.html", "permanent": true },
+    { "source": "/products", "destination": "/all.html", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://wa.me; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://wa.me" },
+        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    },
+    {
+      "source": "/(.*).(html|css|js|svg|png|jpg|ico|webmanifest|json|xml|txt)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400" }
+      ]
+    }
+  ]
+}
