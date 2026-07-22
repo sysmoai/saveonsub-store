@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#14d4b8"/><stop offset="1" stop-color="#7cc7ff"/></linearGradient></defs>
+<rect width="64" height="64" rx="14" fill="#06181a"/>
+<g transform="rotate(-12 32 32)">
+<path d="M18 14 h20 a6 6 0 0 1 6 6 v24 a6 6 0 0 1 -6 6 h-20 a6 6 0 0 1 -6 -6 v-24 a6 6 0 0 1 6 -6 z" fill="none" stroke="url(#g)" stroke-width="4"/>
+<circle cx="24" cy="22" r="3" fill="#ffb648"/>
+<text x="30" y="44" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="900" text-anchor="middle" fill="url(#g)">৳</text>
+</g>
+</svg>
