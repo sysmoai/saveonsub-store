@@ -1,0 +1,21 @@
+name: Deploy SAVEONSUB to Cloudflare Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install Pillow
+      - run: bash build_all.sh
+      - run: python3 audit_all.py
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: \${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: \${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=saveonsub-store
