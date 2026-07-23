@@ -1,9 +1,0 @@
-/home /index.html 301
-/shop /all.html 301
-/products /all.html 301
-/subscriptions.html /all.html 301
-
-# Block build-source files if they ever get deployed (internal price_source/survey data)
-/catalog.json /404.html 404
-/*.py /404.html 404
-/*.sh /404.html 404
