@@ -100,7 +100,7 @@ page=f'''<!DOCTYPE html>
   <div>
     <span class="pill">🇧🇩 BANGLADESH'S HONEST SUBSCRIPTION STORE</span>
     <h1>Premium subscriptions at <span class="grad-text">prices that make sense</span> in Bangladesh.</h1>
-    <p class="sub">ChatGPT, Netflix, Canva, Midjourney and {len(nonb)-4}+ more — authentic, delivered to WhatsApp in 5–15 minutes, paid with bKash. Every plan honestly labeled. Every seat covered by warranty.</p>
+    <p class="sub">ChatGPT, Claude, Netflix, Canva, Midjourney and {len(nonb)-4}+ more — authentic, delivered to WhatsApp in 5–15 minutes, paid with bKash. Every plan honestly labeled. Every seat covered by warranty.</p>
     <div class="heroctas">
       <a href="all.html" class="btn btn-primary">Browse Subscriptions →</a>
       <a href="quiz.html" class="btn btn-ghost">🧭 Not sure? Find My AI</a>
