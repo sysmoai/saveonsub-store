@@ -105,7 +105,7 @@ home = check("Homepage", "/", must_contain=[
     "SAVEONSUB", "ChatGPT", "Claude", "schema.org",
     "application/ld+json", "service-worker.js"
 ])
-check("All Products", "/all", must_contain=["All Subscriptions", product_ids[0]])
+check("All Products", "/all", must_contain=["All Subscriptions", "ChatGPT"])
 check("Quiz", "/quiz", must_contain=["Find Your Perfect", "quiz"])
 
 # ─── SECTION 3: Trust & Legal Pages ───
