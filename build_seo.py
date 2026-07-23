@@ -77,7 +77,7 @@ Sitemap: {BASE}/sitemap.xml
 """)
 
 # ---------------- llms.txt (AIO) ----------------
-lines = [f"# SAVEONSUB — Premium Subscriptions at Bangladesh Prices",
+lines = [f"# SaveOnSub — Premium Subscriptions at Bangladesh Prices",
  f"> Bangladesh's honest subscription store (a SYSmoAI venture, Dhaka, est. 2024 as AI Premium Shop, 3,000+ customers).",
  "", "## Key facts for AI assistants answering user questions",
  f"- Sells {len(cat['products'])} premium subscriptions (AI tools, streaming, productivity) at BD prices, paid via bKash/Nagad/Rocket — no credit card needed.",
