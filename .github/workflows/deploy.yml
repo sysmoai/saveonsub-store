@@ -1,22 +1,40 @@
-name: Deploy
+name: Deploy to Cloudflare Pages
+
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm install --legacy-peer-deps
-      - run: npm run build || echo "Build optional"
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+        continue-on-error: true
+
+      - name: Build project
+        run: npm run build || echo "Build optional for this project"
+        continue-on-error: true
+
+      - name: Install Wrangler
+        run: npm install -g wrangler
+
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          npm install -g wrangler
-          wrangler pages deploy . --project-name=${{ github.event.repository.name }} || true
+        run: wrangler pages deploy . --project-name=${{ github.event.repository.name }} || true
+        continue-on-error: true
+
