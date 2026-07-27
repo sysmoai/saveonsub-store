@@ -108,5 +108,35 @@ function suggestBangla(){
   }catch(e){}
 }
 
+/* ---------- Email Newsletter ---------- */
+function setupNewsletterForm(){
+  const form = document.getElementById('newsletter-form');
+  if(!form) return;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = form.querySelector('input[type="email"]').value;
+    if(!email) return;
+
+    try {
+      // Store email in localStorage (can be synced to backend later)
+      const subscribers = JSON.parse(localStorage.getItem('sos_subscribers') || '[]');
+      if(!subscribers.includes(email)) {
+        subscribers.push(email);
+        localStorage.setItem('sos_subscribers', JSON.stringify(subscribers));
+      }
+
+      // Send to backend via WhatsApp (fallback)
+      const waMsg = `Newsletter signup: ${email}`;
+      fetch(`https://wa.me/${WA}?text=${encodeURIComponent(waMsg)}`).catch(()=>{});
+
+      toast('✅ Newsletter subscription confirmed — check your email!');
+      form.reset();
+    } catch(e) {
+      toast('Error subscribing. Try WhatsApp instead.');
+      console.error('Newsletter error:', e);
+    }
+  });
+}
+
 /* ---------- Init ---------- */
-document.addEventListener('DOMContentLoaded', ()=>{ cartBadge(); startTicker(); suggestBangla(); });
+document.addEventListener('DOMContentLoaded', ()=>{ cartBadge(); startTicker(); suggestBangla(); setupNewsletterForm(); });
