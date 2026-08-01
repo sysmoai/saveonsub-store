@@ -10,3 +10,9 @@ dist/
 .env.*
 !.env.example
 .vercel
+
+# staged deploy output (built by stage_deploy.py)
+_site/
+
+# wrangler local cache (contains Cloudflare account id)
+.wrangler/

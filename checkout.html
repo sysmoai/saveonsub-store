@@ -83,7 +83,7 @@
           <p class="sub" style="font-size:15px">Cart is empty. Grab a bestseller:</p>
           <div class="heroctas mt2">
             <a class="btn btn-primary btn-sm" href="p/google-ai-pro.html">💎 Google AI Pro ৳500</a>
-            <a class="btn btn-ghost btn-sm" href="p/chatgpt-plus.html">🤖 ChatGPT ৳350</a>
+            <a class="btn btn-ghost btn-sm" href="p/chatgpt-plus.html">🤖 ChatGPT ৳499</a>
             <a class="btn btn-ghost btn-sm" href="all.html">Browse all →</a>
           </div>
         </div>
@@ -209,6 +209,12 @@ function recordOrder(kind, txn){
   saveOrder({oid:OID, kind:kind, method:PAY, txn:txn||'', total:cartTotal(),
     items:c.map(i=>({name:i.name, plan:i.plan, qty:i.qty, bdt:i.bdt})),
     at:new Date().toISOString()});
+  // The order is now persisted in sos_orders, so the cart has served its
+  // purpose. Leaving it populated let a buyer return from the receipt, add one
+  // item, and be re-quoted a total that included goods they had already paid
+  // for. Cleared here because this is the single path both confirmWA() and
+  // payAfterTesting() funnel through.
+  cartSet([]);
 }
 function confirmWA(){
   if(!cartGet().length){toast('Cart is empty');return;}

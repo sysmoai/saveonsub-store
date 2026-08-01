@@ -54,7 +54,7 @@ const TICKS=[
   "201+ lifetime orders — Grammarly Premium ৳470",
   "178+ lifetime orders — Leonardo AI ৳599",
   "156+ lifetime orders — Midjourney from ৳1,199",
-  "145+ lifetime orders — ChatGPT Plus from ৳350",
+  "145+ lifetime orders — ChatGPT Plus from ৳499",
   "1,600+ total orders delivered since 2024",
   "Warranty promise: replacement within 1 hour",
   "Pay-after-testing available on first orders",

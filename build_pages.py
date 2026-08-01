@@ -22,6 +22,13 @@ TOS_CLASS = {"official": "official", "personal": "personal", "shared-low": "shar
 
 def esc(s): return html.escape(str(s), quote=True)
 def jstr(s): return json.dumps(s, ensure_ascii=False)
+# JS string literal safe to embed inside a DOUBLE-quoted HTML attribute.
+# jstr() alone emits "..." which terminates the attribute early: the browser
+# parsed onclick="cartAdd("id",...)" as onclick='cartAdd(' — a SyntaxError that
+# nulled every Add-to-cart handler on all 144 product pages. The browser
+# HTML-unescapes attribute values before compiling the handler, so &quot;
+# arrives at the JS parser as a real double quote.
+def jattr(s): return html.escape(json.dumps(s, ensure_ascii=False), quote=True)
 def cslug(c): return re.sub(r'[^a-z0-9]+', '-', c.lower()).strip('-')
 
 products = cat['products']
@@ -85,7 +92,7 @@ def page(p):
           <span style="font-size:12px;color:var(--muted)"> · {esc(pl['duration'])} · delivery {esc(sla_meta[pl['sla']])}</span></div>
         <div style="display:flex;align-items:center;gap:14px">
           <span style="font-size:22px;font-weight:900;color:var(--green2)">৳{pl['bdt']:,}</span>
-          <button class="btn btn-primary btn-sm" onclick="cartAdd({jstr(p['id'])},{jstr(pl['label'])},{pl['bdt']},{jstr(name)})">Add to cart</button>
+          <button class="btn btn-primary btn-sm" onclick="cartAdd({jattr(p['id'])},{jattr(pl['label'])},{pl['bdt']},{jattr(name)})">Add to cart</button>
         </div></div>"""
 
     tos_notes = "".join(f'<p style="margin-top:6px"><span class="tos {TOS_CLASS[t]}">{TOS_LABEL[t]}</span> <span style="color:var(--muted);font-size:13.5px">{esc(tos_meta.get(t,""))}</span></p>'
@@ -297,7 +304,7 @@ def bn_page(p):
           <span style="font-size:12px;color:var(--muted)"> · {esc(pl['duration'])} · ডেলিভারি {sla_bn(pl['sla'])}</span></div>
         <div style="display:flex;align-items:center;gap:14px">
           <span style="font-size:22px;font-weight:900;color:var(--green2)">৳{pl['bdt']:,}</span>
-          <button class="btn btn-primary btn-sm" onclick="cartAdd({jstr(p['id'])},{jstr(pl['label'])},{pl['bdt']},{jstr(name)})">কার্টে যোগ করুন</button>
+          <button class="btn btn-primary btn-sm" onclick="cartAdd({jattr(p['id'])},{jattr(pl['label'])},{pl['bdt']},{jattr(name)})">কার্টে যোগ করুন</button>
         </div></div>"""
 
     faq_html = "".join(f"<details{' open' if i==0 else ''}><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for i, (q, a) in enumerate(faqs))

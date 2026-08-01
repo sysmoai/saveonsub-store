@@ -83,7 +83,7 @@
           <p class="sub" style="font-size:15px">কার্ট খালি। বেস্টসেলার নিন:</p>
           <div class="heroctas mt2">
             <a class="btn btn-primary btn-sm" href="../p/google-ai-pro.html">💎 Google AI Pro ৳500</a>
-            <a class="btn btn-ghost btn-sm" href="../p/chatgpt-plus.html">🤖 ChatGPT ৳350</a>
+            <a class="btn btn-ghost btn-sm" href="../p/chatgpt-plus.html">🤖 ChatGPT ৳499</a>
             <a class="btn btn-ghost btn-sm" href="../all.html">সব দেখুন →</a>
           </div>
         </div>
@@ -100,8 +100,8 @@
           1. Open <b id="paymethod">bKash</b> → <b>Send Money</b><br>
           2. Send <b id="payamount" style="color:var(--green2)">৳0</b> to our merchant number:<br>
         </div>
-        <div class="merchant"><span>+880 1305-869242</span><button class="btn btn-primary btn-sm" onclick="কপিText('+8801305869242','নম্বর কপি হয়েছে')">📋 কপি</button></div>
-        <div class="steps-mini">3. In <b>Reference</b>, put your order ID <span class="oid" id="oid2">…</span> <button class="btn btn-ghost btn-sm" onclick="কপিText(OID,'অর্ডার আইডি কপি হয়েছে')" style="padding:4px 10px;font-size:12px">কপি</button><br>4. Enter the TxnID below (optional but speeds delivery):</div>
+        <div class="merchant"><span>+880 1305-869242</span><button class="btn btn-primary btn-sm" onclick="copyText('+8801305869242','নম্বর কপি হয়েছে')">📋 কপি</button></div>
+        <div class="steps-mini">3. In <b>Reference</b>, put your order ID <span class="oid" id="oid2">…</span> <button class="btn btn-ghost btn-sm" onclick="copyText(OID,'অর্ডার আইডি কপি হয়েছে')" style="padding:4px 10px;font-size:12px">কপি</button><br>4. Enter the TxnID below (optional but speeds delivery):</div>
         <label for="txn">বিকাশ/নগদ TxnID (ঐচ্ছিক)</label>
         <input id="txn" placeholder="e.g. 9H7X2K1LMN" autocomplete="off">
         <button class="btn btn-wa mt2" style="width:100%;font-size:16px" onclick="confirmWA()">💬 হোয়াটসঅ্যাপে অর্ডার কনফার্ম করুন →</button>
@@ -206,6 +206,12 @@ function recordOrder(kind, txn){
   saveOrder({oid:OID, kind:kind, method:PAY, txn:txn||'', total:cartTotal(),
     items:c.map(i=>({name:i.name, plan:i.plan, qty:i.qty, bdt:i.bdt})),
     at:new Date().toISOString()});
+  // The order is now persisted in sos_orders, so the cart has served its
+  // purpose. Leaving it populated let a buyer return from the receipt, add one
+  // item, and be re-quoted a total that included goods they had already paid
+  // for. Cleared here because this is the single path both confirmWA() and
+  // payAfterTesting() funnel through.
+  cartSet([]);
 }
 function confirmWA(){
   if(!cartGet().length){toast('Cart is empty');return;}
