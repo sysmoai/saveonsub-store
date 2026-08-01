@@ -118,21 +118,34 @@ function setupNewsletterForm(){
     if(!email) return;
 
     try {
-      // Store email in localStorage (can be synced to backend later)
+      // Local copy only — the merchant cannot read this. It exists so a repeat
+      // visitor is not prompted twice on the same device.
       const subscribers = JSON.parse(localStorage.getItem('sos_subscribers') || '[]');
       if(!subscribers.includes(email)) {
         subscribers.push(email);
         localStorage.setItem('sos_subscribers', JSON.stringify(subscribers));
       }
 
-      // Send to backend via WhatsApp (fallback)
+      // This was previously fetch('https://wa.me/...'), which delivered nothing
+      // and told the visitor otherwise. It failed twice over: CSP connect-src
+      // 'self' blocked the request outright, and wa.me is a click-to-chat
+      // REDIRECTOR, not an ingest endpoint — it would not have recorded the
+      // address even if allowed. The .catch(()=>{}) swallowed the violation, so
+      // every signup was silently discarded under a success message.
+      // window.open is a navigation, not a fetch, so connect-src does not apply
+      // and the lead actually reaches the merchant.
       const waMsg = `Newsletter signup: ${email}`;
-      fetch(`https://wa.me/${WA}?text=${encodeURIComponent(waMsg)}`).catch(()=>{});
+      const win = window.open(`https://wa.me/${WA}?text=${encodeURIComponent(waMsg)}`, '_blank');
 
-      toast('✅ Newsletter subscription confirmed — check your email!');
-      form.reset();
+      if (win) {
+        toast('Opening WhatsApp — send the message to confirm your signup.');
+        form.reset();
+      } else {
+        // Popup blocked: say so rather than claim success.
+        toast('Please allow popups, or message us on WhatsApp to subscribe.');
+      }
     } catch(e) {
-      toast('Error subscribing. Try WhatsApp instead.');
+      toast('Could not subscribe — please message us on WhatsApp.');
       console.error('Newsletter error:', e);
     }
   });

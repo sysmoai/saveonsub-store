@@ -174,6 +174,19 @@ page=f'''<!DOCTYPE html>
   <p class="mt2 center"><a href="faq.html" class="btn btn-ghost">All 22 questions answered →</a></p>
 </div></section>
 
+<!-- Deal alerts. Delivered over WhatsApp, not email: there is no mail backend,
+     and the previous version told visitors "check your email" while silently
+     discarding every address. Copy here must describe what actually happens. -->
+<section style="padding:44px 0;background:var(--bg2);border-block:1px solid var(--line)"><div class="wrap" style="max-width:620px">
+  <h2 class="center" style="margin-bottom:6px">Get honest deals first.</h2>
+  <p class="sub center" style="margin:0 auto 20px">Price drops and restocks, sent on WhatsApp.</p>
+  <form id="newsletter-form" style="display:flex;gap:8px;flex-wrap:wrap">
+    <input type="email" placeholder="your@email.com" required style="flex:1;min-width:200px;padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:14px">
+    <button type="submit" class="btn btn-primary" style="white-space:nowrap">Subscribe →</button>
+  </form>
+  <p class="fine" style="text-align:center;margin-top:14px;font-size:12px">Subscribing opens WhatsApp so you can confirm — we never share your address, and you can stop any time by messaging us.</p>
+</div></section>
+
 <section class="center"><div class="wrap">
   <h2>Stop overpaying. <span class="grad-text">Start today.</span></h2>
   <p class="sub" style="margin:0 auto 26px">{len(nonb)} products · bKash/Nagad · 5–15 min delivery · warranty on everything.</p>

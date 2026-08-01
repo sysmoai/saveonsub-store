@@ -17,6 +17,31 @@
   Cache-Control: public, max-age=86400
   Content-Type: application/manifest+json
 
-# Fingerprint-free static assets — cache a week, SW keeps them fresh
-/assets/*
+# Images and icons carry no prices and change only when re-exported, so a long
+# cache is safe for them.
+/assets/*.png
   Cache-Control: public, max-age=604800
+/assets/*.jpg
+  Cache-Control: public, max-age=604800
+/assets/*.svg
+  Cache-Control: public, max-age=604800
+/assets/*.ico
+  Cache-Control: public, max-age=604800
+/assets/*.woff2
+  Cache-Control: public, max-age=604800
+
+# Code and price data MUST revalidate.
+#
+# These files are not fingerprinted (no assets/catalog.<hash>.js), so a long
+# max-age pins whatever the visitor first downloaded. The previous rule was
+# `/assets/* max-age=604800` with the comment "SW keeps them fresh" — but the
+# service worker was cache-first, so it did the opposite. That gave a price
+# correction two independent ways to never reach a customer: the HTTP cache and
+# the SW cache. assets/catalog.js is the price database for the entire store.
+#
+# must-revalidate still serves from cache after an ETag check, so this costs a
+# conditional request and usually returns 304 — cheap, and never stale.
+/assets/*.js
+  Cache-Control: public, max-age=0, must-revalidate
+/assets/*.css
+  Cache-Control: public, max-age=0, must-revalidate
