@@ -1,0 +1,20 @@
+{
+  "record_type": "provisional_launch_control",
+  "as_of": "2026-08-10",
+  "timezone": "Asia/Dhaka",
+  "authority_basis": "SAVEONSUB Business Omni-Harness v2.0 uploaded 2026-08-10",
+  "state": "L0_BOOTSTRAP_PRIVATE",
+  "production_classification": "UNKNOWN",
+  "launch_authorization": "UNPROVEN",
+  "commerce_authorized": false,
+  "public_price_authorized": false,
+  "indexing_authorized": false,
+  "payment_instructions_authorized": false,
+  "owner_transition_required": true,
+  "notes": [
+    "Bootstrap authority does not establish public launch authority.",
+    "The latest Cloudflare workflow runs observed for main failed.",
+    "GitHub Pages is enabled but the gh-pages branch currently contains only .nojekyll.",
+    "Custom-domain DNS/live behavior was not independently verified from the execution environment."
+  ]
+}
