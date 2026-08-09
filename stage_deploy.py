@@ -1,52 +1,72 @@
 #!/usr/bin/env python3
-"""Stage a publishable copy of the site into ./_site  —  python stage_deploy.py
+"""Stage an explicit public copy of SAVEONSUB into ./_site.
 
-Why this exists
----------------
-`wrangler pages deploy .` publishes the REPO ROOT. That would ship every build
-script, catalog.json (internal pricing precedence, competitor watchlist, survey
-method) and internal strategy docs (PRICING-DECISIONS-PROPOSED-10.md,
-marketing/FB-POST-BANK.md) to the public site.
-
-_redirects does NOT save you: Cloudflare Pages serves a static file that exists
-BEFORE redirect rules are evaluated, so `/*.py /404.html 404` never fires for a
-.py file that was actually uploaded.
-
-So we build an allowlisted copy and deploy that instead. Local runs and CI both
-call this script, so the two can never drift apart.
+The repository root is never publishable. Internal strategy, source data, scripts,
+pricing provenance and control records must not enter Cloudflare Pages output.
+Runtime JSON is fail-closed: browser code may fetch only files listed in
+PUBLIC_JSON_ALLOWLIST.
 """
-import os, shutil, pathlib, sys, re, glob
+import glob
+import os
+import pathlib
+import re
+import shutil
+import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent
 DEST = ROOT / '_site'
 
-EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
-                '__pycache__', 'node_modules', 'marketing', 'reports', '_site'}
-EXCLUDE_EXT = {'.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml'}
-EXCLUDE_FILES = {'.replit', '.gitignore', '.env.example', 'catalog.json',
-                 'package.json', 'package-lock.json', 'vercel.json', 'AGENTS.md'}
+EXCLUDE_DIRS = {
+    '.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
+    '__pycache__', 'node_modules', 'marketing', 'reports', 'docs', '_site'
+}
+EXCLUDE_EXT = {
+    '.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml', '.json'
+}
+EXCLUDE_FILES = {
+    '.replit', '.gitignore', '.env.example', 'package.json', 'package-lock.json',
+    'vercel.json', 'AGENTS.md'
+}
+
+# Public JSON must be deliberately named here. Empty is correct until a reviewed
+# browser feature genuinely requires a JSON endpoint. site.webmanifest is not .json.
+PUBLIC_JSON_ALLOWLIST = set()
 
 
 def runtime_fetched_json():
-    """Any *.json the shipped site fetches at runtime must NOT be excluded."""
-    keep = set()
-    for f in glob.glob('**/*.html', recursive=True) + glob.glob('**/*.js', recursive=True):
-        if any(p in f.replace('\\', '/').split('/') for p in EXCLUDE_DIRS):
+    """Return JSON paths referenced by shipped HTML/JS browser fetch() calls."""
+    requested = set()
+    paths = glob.glob('**/*.html', recursive=True) + glob.glob('**/*.js', recursive=True)
+    for path in paths:
+        parts = path.replace('\\', '/').split('/')
+        if any(part in EXCLUDE_DIRS for part in parts):
             continue
         try:
-            s = open(f, encoding='utf-8', errors='replace').read()
+            text = open(path, encoding='utf-8', errors='replace').read()
         except OSError:
             continue
-        for m in re.finditer(r"""fetch\(\s*['"`]([^'"`]+\.json)""", s):
-            keep.add(m.group(1).lstrip('/'))
-    return keep
+        for match in re.finditer(r"""fetch\(\s*['"`]([^'"`]+\.json)""", text):
+            requested.add(match.group(1).lstrip('/'))
+    return requested
 
 
 def main():
     os.chdir(ROOT)
-    keep = runtime_fetched_json()
-    if keep:
-        print(f"runtime-fetched JSON (kept): {sorted(keep)}")
+
+    requested_json = runtime_fetched_json()
+    unauthorized_json = requested_json - PUBLIC_JSON_ALLOWLIST
+    if unauthorized_json:
+        print('REFUSING TO DEPLOY - browser code fetches non-allowlisted JSON:')
+        for path in sorted(unauthorized_json):
+            print(f'  {path}')
+        return 1
+
+    missing_allowlisted = [p for p in PUBLIC_JSON_ALLOWLIST if not pathlib.Path(p).is_file()]
+    if missing_allowlisted:
+        print('REFUSING TO DEPLOY - PUBLIC_JSON_ALLOWLIST contains missing file(s):')
+        for path in sorted(missing_allowlisted):
+            print(f'  {path}')
+        return 1
 
     if DEST.exists():
         shutil.rmtree(DEST)
@@ -56,45 +76,46 @@ def main():
     for base, dirs, files in os.walk(ROOT):
         dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
         rel_base = pathlib.Path(base).relative_to(ROOT)
-        for fn in files:
-            rel = (rel_base / fn).as_posix().lstrip('./')
-            if rel in keep:
-                pass  # explicitly required at runtime
-            elif fn in EXCLUDE_FILES or pathlib.Path(fn).suffix.lower() in EXCLUDE_EXT:
+        for filename in files:
+            rel = (rel_base / filename).as_posix().lstrip('./')
+            suffix = pathlib.Path(filename).suffix.lower()
+
+            if rel in PUBLIC_JSON_ALLOWLIST:
+                pass
+            elif filename in EXCLUDE_FILES or suffix in EXCLUDE_EXT:
                 continue
-            out = DEST / rel_base / fn
+
+            out = DEST / rel_base / filename
             out.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(pathlib.Path(base) / fn, out)
+            shutil.copy2(pathlib.Path(base) / filename, out)
             copied += 1
 
-    # Fail loudly rather than publish something internal.
     leaks = []
-    for f in DEST.rglob('*'):
-        if not f.is_file():
+    for file in DEST.rglob('*'):
+        if not file.is_file():
             continue
-        rel = f.relative_to(DEST).as_posix()
-        if rel in keep:
+        rel = file.relative_to(DEST).as_posix()
+        if rel in PUBLIC_JSON_ALLOWLIST:
             continue
-        if f.suffix.lower() in EXCLUDE_EXT or f.name in EXCLUDE_FILES:
+        if file.suffix.lower() in EXCLUDE_EXT or file.name in EXCLUDE_FILES:
             leaks.append(rel)
-        if any(part in EXCLUDE_DIRS for part in f.relative_to(DEST).parts):
+        if any(part in EXCLUDE_DIRS for part in file.relative_to(DEST).parts):
             leaks.append(rel)
 
-    size = sum(f.stat().st_size for f in DEST.rglob('*') if f.is_file())
-    print(f"staged {copied} files, {size/1024/1024:.2f} MB -> {DEST}")
+    size = sum(file.stat().st_size for file in DEST.rglob('*') if file.is_file())
+    print(f'staged {copied} files, {size/1024/1024:.2f} MB -> {DEST}')
 
     if leaks:
-        print(f"REFUSING TO DEPLOY — {len(leaks)} internal file(s) staged:")
-        for l in leaks[:20]:
-            print(f"  {l}")
+        print(f'REFUSING TO DEPLOY - {len(leaks)} internal file(s) staged:')
+        for rel in sorted(set(leaks))[:50]:
+            print(f'  {rel}')
         return 1
 
-    index = DEST / 'index.html'
-    if not index.exists():
-        print("REFUSING TO DEPLOY — no index.html in staged output")
+    if not (DEST / 'index.html').exists():
+        print('REFUSING TO DEPLOY - no index.html in staged output')
         return 1
 
-    print("staging clean")
+    print('staging clean; runtime JSON allowlist verified')
     return 0
 
 
