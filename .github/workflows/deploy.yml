@@ -3,8 +3,7 @@ name: Deploy to Cloudflare Pages
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -19,33 +18,28 @@ jobs:
         with:
           python-version: '3.12'
 
-      # Fails the build if a retired price (e.g. ChatGPT ৳350 after the move to
-      # ৳499) still appears next to its product name in any shipped page.
+      # Fail closed on launch/commercial truth before any publishable output is staged.
+      # Pull requests deliberately do not deploy; previews must use a separate, explicit workflow.
+      - name: Release integrity gate
+        run: python validate_release.py
+
       - name: Price consistency check
         run: python check_prices.py
 
-      # Builds are NOT re-run here on purpose: build_assets.py needs Pillow and
-      # system fonts, and re-generating in CI would deploy something nobody
-      # reviewed. Generated pages are committed, so CI ships exactly what was
-      # reviewed locally. Run the build_*.py scripts before committing.
+      # Generated pages are committed. CI verifies/stages the reviewed output rather than
+      # silently regenerating assets with a different local toolchain.
       - name: Stage publishable files
         run: python stage_deploy.py
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22'
 
       - name: Install Wrangler
         run: npm install -g wrangler
 
-      # Deploys ./_site, never the repo root. `wrangler pages deploy .` would
-      # publish every build script, catalog.json and internal strategy doc —
-      # _redirects cannot stop it, because Pages serves an existing static file
-      # before redirect rules are evaluated.
-      # Project name is pinned: the Pages project is "saveonsub" while the repo
-      # is "saveonsub-store", so github.event.repository.name resolved to a
-      # project that does not exist and every CI deploy failed.
+      # Deploy only the explicit staged public tree. Never deploy the repository root.
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
