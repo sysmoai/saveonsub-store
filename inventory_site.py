@@ -72,15 +72,44 @@ def collect():
     urls = sitemap_urls()
     sitemap_groups = collections.Counter(route_group(u) for u in urls)
 
-    catalog_ids = {p.get("id") for p in products if p.get("id")}
+    catalog_id_list = [p.get("id") for p in products if p.get("id")]
+    catalog_ids = set(catalog_id_list)
+    duplicate_product_ids = sorted(k for k, v in collections.Counter(catalog_id_list).items() if v > 1)
     product_en = stems("p/*.html")
     product_bn = stems("bn/p/*.html")
     product_social = stems("assets/social/*.png")
+
+    # Plan census. Current v1 catalog plans generally do not yet carry stable
+    # plan IDs; these readiness metrics quantify the migration gap without
+    # failing the existing site merely because v2 has not been introduced yet.
+    plans = []
+    for product in products:
+        for plan in product.get("plans", []):
+            plans.append((product, plan))
+
+    plan_ids = [str(plan.get("id")) for _, plan in plans if plan.get("id")]
+    plan_id_counts = collections.Counter(plan_ids)
+    duplicate_plan_ids = sorted(k for k, v in plan_id_counts.items() if v > 1)
+    plan_type_counts = collections.Counter(str(plan.get("type", "unknown")) for _, plan in plans)
+    plan_tos_counts = collections.Counter(str(plan.get("tos", "unknown")) for _, plan in plans)
+    product_status_counts = collections.Counter(str(p.get("status", "unknown")) for p in products)
+
+    products_without_plans = sorted(p.get("id") for p in products if not p.get("plans"))
+    products_with_media_field = sorted(p.get("id") for p in products if p.get("media"))
+    products_with_gallery_field = sorted(p.get("id") for p in products if p.get("gallery"))
+    products_with_video_field = sorted(p.get("id") for p in products if p.get("video") or p.get("videos"))
+
+    # Target dedicated plan routes are nested below the existing product slug.
+    # These should remain zero until the v3 plan-page generator is introduced.
+    plan_pages_en = visible_files("p/*/*.html")
+    plan_pages_bn = visible_files("bn/p/*/*.html")
 
     route_files = {
         "root_html": len(visible_files("*.html")),
         "product_en": len(visible_files("p/*.html")),
         "product_bn": len(visible_files("bn/p/*.html")),
+        "plan_en": len(plan_pages_en),
+        "plan_bn": len(plan_pages_bn),
         "category_en": len(visible_files("c/*.html")),
         "category_bn": len(visible_files("bn/c/*.html")),
         "blog": len(visible_files("blog/*.html")),
@@ -89,12 +118,25 @@ def collect():
     }
 
     parity = {
+        "duplicate_product_ids": duplicate_product_ids,
         "catalog_missing_en_page": sorted(catalog_ids - product_en),
         "en_page_missing_catalog": sorted(product_en - catalog_ids),
         "catalog_missing_bn_page": sorted(catalog_ids - product_bn),
         "bn_page_missing_catalog": sorted(product_bn - catalog_ids),
         "catalog_missing_social_png": sorted(catalog_ids - product_social),
         "social_png_missing_catalog": sorted(product_social - catalog_ids),
+    }
+
+    readiness = {
+        "products_without_plans": products_without_plans,
+        "plans_with_stable_id": len(plan_ids),
+        "plans_missing_stable_id": len(plans) - len(plan_ids),
+        "duplicate_plan_ids": duplicate_plan_ids,
+        "products_with_media_field": len(products_with_media_field),
+        "products_with_gallery_field": len(products_with_gallery_field),
+        "products_with_video_field": len(products_with_video_field),
+        "dedicated_plan_pages_en": len(plan_pages_en),
+        "dedicated_plan_pages_bn": len(plan_pages_bn),
     }
 
     data = {
@@ -105,6 +147,7 @@ def collect():
             "html_files_total": len(html_files),
             "sitemap_urls_total": len(urls),
             "products": len(products),
+            "plans": len(plans),
             "categories": len(categories),
             "python_scripts_root": len(py_files),
             "javascript_files": len(js_files),
@@ -114,6 +157,10 @@ def collect():
         "route_files": route_files,
         "sitemap_groups": dict(sorted(sitemap_groups.items())),
         "category_product_counts": {c: category_counts.get(c, 0) for c in categories},
+        "product_status_counts": dict(sorted(product_status_counts.items())),
+        "plan_type_counts": dict(sorted(plan_type_counts.items())),
+        "plan_tos_counts": dict(sorted(plan_tos_counts.items())),
+        "readiness": readiness,
         "parity": parity,
     }
     return data
@@ -131,6 +178,7 @@ def markdown(data):
         f"- HTML files: **{c['html_files_total']}**",
         f"- Sitemap/indexable URLs: **{c['sitemap_urls_total']}**",
         f"- Catalog products: **{c['products']}**",
+        f"- Catalog plans: **{c['plans']}**",
         f"- Catalog categories: **{c['categories']}**",
         f"- Product social images: **{c['product_social_png']}**",
         f"- Root Python scripts: **{c['python_scripts_root']}**",
@@ -148,6 +196,17 @@ def markdown(data):
     lines += ["", "## Product distribution", ""]
     for key, value in data["category_product_counts"].items():
         lines.append(f"- {key}: **{value}**")
+    lines += ["", "## Plan distribution", ""]
+    for key, value in data["plan_type_counts"].items():
+        lines.append(f"- type `{key}`: **{value}**")
+    for key, value in data["plan_tos_counts"].items():
+        lines.append(f"- tos `{key}`: **{value}**")
+    lines += ["", "## v3 readiness", ""]
+    for key, value in data["readiness"].items():
+        if isinstance(value, list):
+            lines.append(f"- `{key}`: {', '.join(value) if value else 'none'}")
+        else:
+            lines.append(f"- `{key}`: **{value}**")
     lines += ["", "## Product parity", ""]
     bad = False
     for key, values in data["parity"].items():
@@ -156,7 +215,14 @@ def markdown(data):
             lines.append(f"- `{key}`: {', '.join(values)}")
     if not bad:
         lines.append("- Catalog IDs, EN product pages, BN product pages, and product social PNGs are in parity.")
-    lines += ["", "## Safety rule", "", "Any future product addition/removal must keep catalog, EN/BN product routes, sitemap, category counts and social assets in parity before merge.", ""]
+    lines += [
+        "",
+        "## Safety rule",
+        "",
+        "Any future product addition/removal must keep catalog, EN/BN product routes, sitemap, category counts and social assets in parity before merge.",
+        "Plan IDs/media fields are readiness metrics until the v3 normalized model is introduced; they become hard gates only after migration activation.",
+        "",
+    ]
     return "\n".join(lines)
 
 
