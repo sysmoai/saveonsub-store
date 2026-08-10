@@ -1,0 +1,23 @@
+{
+  "record_type": "legal_authority",
+  "as_of": "2026-08-10",
+  "brand": "SAVEONSUB",
+  "domain_owner": {
+    "name": "Emon Hossain",
+    "status": "CEO_FOUNDATION_RECORDED",
+    "source": "SAVEONSUB Foundation Decisions — CEO Authorized 2026-07-26"
+  },
+  "legal_operator": {
+    "status": "PENDING_PRIMARY_LEGAL_EVIDENCE",
+    "name": null
+  },
+  "prohibited_until_verified": [
+    "SYSmoAI Private Limited",
+    "operated by SYSmoAI group",
+    "registered company",
+    "official distributor",
+    "official reseller",
+    "authorized partner"
+  ],
+  "public_rule": "Use neutral SAVEONSUB brand wording and trademark/provider disclaimers until exact legal operator evidence is supplied and approved."
+}
