@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 
 from build_public_info_v3 import DEST, product_card, shell
 from catalog_model import load_catalog
+from enhance_discovery_v3 import enhance_discovery
 from enhance_social_metadata_v3 import enhance_social_metadata
 from harden_security_headers_v3 import harden_security_headers
 from routes_v3 import DOMAIN
@@ -214,6 +215,7 @@ def extend_public_info() -> dict[str, int]:
         "accessible_nav_pages": enhance_mobile_navigation(),
         "service_worker_updated": update_service_worker(),
     }
+    result.update(enhance_discovery())
     result.update(enhance_social_metadata())
     result.update(harden_security_headers())
     return result
