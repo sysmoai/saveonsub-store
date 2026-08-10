@@ -20,9 +20,14 @@ def main() -> int:
     if not MANIFEST.is_file():
         raise SystemExit("_public_v3/BUILD-MANIFEST.txt missing; build strict artifact first")
 
-    sha = (os.getenv("GITHUB_SHA") or os.getenv("SAVEONSUB_RELEASE_SHA") or "").strip().lower()
+    sha = (
+        os.getenv("GITHUB_SHA")
+        or os.getenv("SAVEONSUB_RELEASE_SHA")
+        or os.getenv("VERCEL_GIT_COMMIT_SHA")
+        or ""
+    ).strip().lower()
     if not re.fullmatch(r"[0-9a-f]{40}", sha):
-        raise SystemExit("release SHA missing or invalid; set GITHUB_SHA or SAVEONSUB_RELEASE_SHA")
+        raise SystemExit("release SHA missing or invalid; set GITHUB_SHA, SAVEONSUB_RELEASE_SHA, or VERCEL_GIT_COMMIT_SHA")
 
     lines = []
     for line in MANIFEST.read_text(encoding="utf-8").splitlines():
