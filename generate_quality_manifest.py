@@ -47,6 +47,7 @@ SOURCE_FILES = (
     "validate_compare_quality.py",
     "validate_related_quality.py",
     "validate_content_quality.py",
+    "validate_editorial_freshness.py",
     "verify_build_determinism.py",
     "assets/style.css",
     "assets/app.js",
@@ -170,8 +171,9 @@ def main() -> int:
     missing_source_contract = [rel for rel in SOURCE_FILES if not (ROOT / rel).is_file()]
     if missing_source_contract:
         raise SystemExit(f"quality manifest source contract missing files: {missing_source_contract}")
-    if not (ROOT / "content" / "resources_v1.json").is_file():
-        raise SystemExit("quality manifest editorial source contract missing content/resources_v1.json")
+    for rel in ("content/resources_v1.json", "content/editorial_policy_v1.json"):
+        if not (ROOT / rel).is_file():
+            raise SystemExit(f"quality manifest editorial source contract missing {rel}")
 
     manifest = {
         "manifest_version": 1,
