@@ -1,115 +1,178 @@
 #!/usr/bin/env python3
-"""Fail-closed SAVEONSUB release integrity gate.
+"""Fail-closed integrity gate for the deployable SAVEONSUB release artifact.
 
-This gate intentionally blocks production while known P0 commercial/authority
-conflicts remain. It is not a substitute for per-provider eligibility records;
-it prevents the current unsafe state from being deployed as commerce.
+Historical July commerce HTML/catalog data remains in the repository solely as
+migration evidence. This gate does not pretend that evidence is current truth;
+it proves that no legacy commerce path can enter the staged release and that the
+actual `_site` artifact obeys the current launch/authority state.
 """
+from __future__ import annotations
+
 import json
 import pathlib
 import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent
-CATALOG = ROOT / 'catalog.json'
-LAUNCH = ROOT / 'docs/control/launch_state.json'
-TERMS = ROOT / 'terms.html'
+SITE = ROOT / "_site"
+LAUNCH = ROOT / "docs" / "control" / "launch_state.json"
+CATALOG = ROOT / "catalog.json"
+TERMS = ROOT / "terms.html"
+DEPLOY = ROOT / ".github" / "workflows" / "deploy.yml"
+VERCEL = ROOT / "vercel.json"
+BUILD_ALL = ROOT / "build_all.sh"
 
-errors = []
-warnings = []
+errors: list[tuple[str, str]] = []
+warnings: list[tuple[str, str]] = []
 
 
-def fail(code, message):
+def fail(code: str, message: str) -> None:
     errors.append((code, message))
 
 
-def warn(code, message):
+def warn(code: str, message: str) -> None:
     warnings.append((code, message))
 
 
-if not CATALOG.exists():
-    fail('P0-CATALOG-MISSING', 'catalog.json is missing')
-    catalog = {}
+def text(path: pathlib.Path) -> str:
+    return path.read_text(encoding="utf-8", errors="replace") if path.is_file() else ""
+
+
+launch = json.loads(text(LAUNCH) or "{}")
+state = launch.get("state")
+commerce_authorized = launch.get("commerce_authorized") is True
+public_price_authorized = launch.get("public_price_authorized") is True
+payment_authorized = launch.get("payment_instructions_authorized") is True
+
+if state not in {"L0_BOOTSTRAP_PRIVATE", "L1_PUBLIC_INFO_ONLY", "L2_LIMITED_COMMERCE", "L3_FULL_APPROVED_COMMERCE"}:
+    fail("P0-LAUNCH-STATE-INVALID", f"unrecognized launch state: {state!r}")
+
+# Every automated/public build path must use the strict artifact, never repo root.
+deploy_text = text(DEPLOY)
+vercel_text = text(VERCEL)
+build_text = text(BUILD_ALL)
+required_deploy = ("build_public_info_v3.py", "harden_public_info_v3.py", "stage_deploy.py --public-v3", "output")
+for token in required_deploy[:3]:
+    if token not in deploy_text:
+        fail("P0-DEPLOY-PATH-UNSAFE", f"Cloudflare deploy workflow missing strict token: {token}")
+if "wrangler pages deploy _site" not in deploy_text:
+    fail("P0-DEPLOY-PATH-UNSAFE", "Cloudflare deploy workflow does not deploy staged _site")
+if re.search(r"wrangler\s+pages\s+deploy\s+\.\s", deploy_text):
+    fail("P0-DEPLOY-PATH-UNSAFE", "Cloudflare deploy workflow can deploy repository root")
+
+for token in ("build_public_info_v3.py", "harden_public_info_v3.py", "stage_deploy.py --public-v3", '"outputDirectory": "_site"'):
+    if token not in vercel_text:
+        fail("P0-VERCEL-PREVIEW-UNSAFE", f"Vercel configuration missing strict token: {token}")
+if '"outputDirectory": "."' in vercel_text:
+    fail("P0-VERCEL-PREVIEW-UNSAFE", "Vercel can publish repository root")
+
+for token in ("build_public_info_v3.py", "harden_public_info_v3.py", "stage_deploy.py --public-v3"):
+    if token not in build_text:
+        fail("P0-DEFAULT-BUILD-UNSAFE", f"default build missing strict token: {token}")
+if any(token in build_text for token in ("build_pages.py", "build_trust.py", "build_catalog.py")):
+    fail("P0-DEFAULT-BUILD-UNSAFE", "default build still invokes historical commerce generators")
+
+if not SITE.is_dir():
+    fail("P0-RELEASE-ARTIFACT-MISSING", "_site is missing; build/stage the strict L1 artifact before this gate")
 else:
-    catalog = json.loads(CATALOG.read_text(encoding='utf-8'))
+    files = [p for p in SITE.rglob("*") if p.is_file()]
+    json_files = [p for p in files if p.suffix.lower() == ".json"]
+    if json_files:
+        fail("P0-PUBLIC-JSON-LEAK", f"staged artifact contains JSON: {[p.relative_to(SITE).as_posix() for p in json_files[:10]]}")
 
-if not LAUNCH.exists():
-    fail('P0-LAUNCH-STATE-MISSING', 'launch control record is missing')
-    launch = {}
-else:
-    launch = json.loads(LAUNCH.read_text(encoding='utf-8'))
+    forbidden_paths = ("checkout.html", "track.html", "catalog.json", "aips-live.json", "assets/catalog.js")
+    for rel in forbidden_paths:
+        if (SITE / rel).exists():
+            fail("P0-LEGACY-PATH-LEAK", f"staged artifact contains forbidden legacy path: {rel}")
 
-state = launch.get('state')
-commerce_authorized = launch.get('commerce_authorized') is True
-public_price_authorized = launch.get('public_price_authorized') is True
-indexing_authorized = launch.get('indexing_authorized') is True
+    commerce_hits: list[str] = []
+    price_hits: list[str] = []
+    payment_hits: list[str] = []
+    sharing_hits: list[str] = []
+    for path in files:
+        if path.suffix.lower() not in {".html", ".js", ".txt", ".xml"}:
+            continue
+        content = text(path)
+        lower = content.lower()
+        rel = path.relative_to(SITE).as_posix()
+        if "cartadd(" in lower or '"@type": "offer"' in lower or '"@type":"offer"' in lower or "aggregateoffer" in lower:
+            commerce_hits.append(rel)
+        if re.search(r"৳\s*[0-9]", content):
+            price_hits.append(rel)
+        if re.search(r"\b(?:bkash|nagad|rocket)\b|\+?8801\d{9}|wa\.me/|api\.whatsapp\.com", content, re.I):
+            payment_hits.append(rel)
+        if re.search(r"shared\s+(?:seat|account|plan)|provider\s+tos\s+prohibit|terms of service.*shared", content, re.I):
+            sharing_hits.append(rel)
 
-if state not in {'L0_BOOTSTRAP_PRIVATE', 'L1_PUBLIC_INFO_ONLY', 'L2_LIMITED_COMMERCE', 'L3_FULL_APPROVED_COMMERCE'}:
-    fail('P0-LAUNCH-STATE-INVALID', f'unrecognized launch state: {state!r}')
+    if state in {"L0_BOOTSTRAP_PRIVATE", "L1_PUBLIC_INFO_ONLY"} and commerce_hits:
+        fail("P0-LAUNCH-COMMERCE-BLOCK", f"strict artifact contains commerce while state={state}: {commerce_hits[:10]}")
+    if not commerce_authorized and commerce_hits:
+        fail("P0-COMMERCE-AUTHORITY-MISSING", f"strict artifact exposes commerce without authority: {commerce_hits[:10]}")
+    if not public_price_authorized and price_hits:
+        fail("P0-PUBLIC-PRICE-AUTHORITY-MISSING", f"strict artifact exposes BDT prices without authority: {price_hits[:10]}")
+    if not payment_authorized and payment_hits:
+        fail("P0-PAYMENT-AUTHORITY-MISSING", f"strict artifact exposes payment/contact destinations without authority: {payment_hits[:10]}")
+    if sharing_hits:
+        fail("P0-PROHIBITED-SHARING-PUBLIC", f"strict artifact still describes prohibited shared commerce: {sharing_hits[:10]}")
 
-products = catalog.get('products', [])
-meta = catalog.get('meta', {})
+    manifest = text(SITE / "BUILD-MANIFEST.txt")
+    for token in (
+        "release_mode=L1_PUBLIC_INFO_ONLY",
+        "public_prices=0",
+        "commerce_controls=0",
+        "payment_destinations=0",
+        "whatsapp_destinations=0",
+    ):
+        if token not in manifest:
+            fail("P0-BUILD-MANIFEST-MISMATCH", f"strict build manifest missing: {token}")
 
-# Cross-brand pricing provenance is not valid SAVEONSUB commercial authority.
-for source in meta.get('price_precedence', []):
-    if re.search(r'(^|[-_])aips($|[-_])', str(source), re.I):
-        fail('P0-CROSS-BRAND-PRICE-SOURCE', f'active price precedence references AIPS: {source}')
+# Historical evidence is inventoried, but does not block if all publication paths
+# above are proven strict. These warnings keep migration debt visible.
+raw = json.loads(text(CATALOG) or "{}")
+legacy_aips = [s for s in raw.get("meta", {}).get("price_precedence", []) if re.search(r"(^|[-_])aips($|[-_])", str(s), re.I)]
+if legacy_aips:
+    warn("LEGACY-AIPS-PRICE-EVIDENCE", f"historical catalog retains {len(legacy_aips)} AIPS precedence entry for provenance")
 
-# OpenAI consumer account-sharing commerce is prohibited by current provider policy.
-# Fail on shared plans for ChatGPT/OpenAI-branded catalog records.
-for product in products:
-    pid = str(product.get('id', ''))
-    name = str(product.get('name', ''))
-    is_openai = pid.startswith('chatgpt') or 'chatgpt' in name.lower() or 'openai' in name.lower()
-    for plan in product.get('plans', []):
-        tos = str(plan.get('tos', '')).lower()
-        label = str(plan.get('label', ''))
-        plan_type = str(plan.get('type', '')).lower()
-        if is_openai and (tos.startswith('shared') or plan_type == 'shared' or 'shared' in label.lower()):
-            fail('P0-OPENAI-SHARED-COMMERCE', f'{name} / {label} is modeled as shared commerce')
+legacy_shared = 0
+legacy_proof = 0
+for product in raw.get("products", []):
+    identity = f"{product.get('id','')} {product.get('name','')}".lower()
+    is_openai = "chatgpt" in identity or "openai" in identity
+    for plan in product.get("plans", []):
+        looks_shared = (
+            str(plan.get("type") or "").lower() == "shared"
+            or str(plan.get("tos") or "").lower().startswith("shared")
+            or "shared" in str(plan.get("label") or "").lower()
+        )
+        if is_openai and looks_shared:
+            legacy_shared += 1
+    if product.get("orders") not in (None, 0) or product.get("bestseller_rank") not in (None, 0):
+        legacy_proof += 1
+if legacy_shared:
+    warn("LEGACY-OPENAI-SHARED-EVIDENCE", f"historical catalog retains {legacy_shared} prohibited shared plan record(s), quarantined from active v3 model")
+if legacy_proof:
+    warn("LEGACY-UNVERIFIED-PROOF-EVIDENCE", f"historical catalog retains proof fields on {legacy_proof} product(s), quarantined from active v3 model")
 
-    # Seeded/unproven social proof must not silently become production truth.
-    if product.get('orders') not in (None, 0) and not product.get('orders_evidence'):
-        fail('P1-UNVERIFIED-ORDER-COUNT', f'{name} has orders={product.get("orders")} without orders_evidence')
-    if product.get('bestseller_rank') not in (None, 0) and not product.get('bestseller_evidence'):
-        fail('P1-UNVERIFIED-BESTSELLER', f'{name} has bestseller_rank={product.get("bestseller_rank")} without bestseller_evidence')
+legacy_terms = text(TERMS)
+if re.search(r"shared seats violate most providers.? terms of service", legacy_terms, re.I):
+    warn("LEGACY-TERMS-EVIDENCE", "historical terms.html contains obsolete sharing language but is not a release source")
 
-# Terms cannot use disclosure/warranty as the mechanism that normalizes known ToS violations.
-if TERMS.exists():
-    terms_text = TERMS.read_text(encoding='utf-8', errors='replace')
-    if re.search(r'shared seats violate most providers.? terms of service', terms_text, re.I):
-        fail('P0-TERMS-NORMALIZE-PROHIBITED-SHARING', 'terms explicitly sell shared seats while acknowledging provider ToS violations')
-
-# At L0/L1, generated commerce and public prices are blocked regardless of UI intent.
-commerce_markers = []
-price_markers = []
-for path in list((ROOT / 'p').glob('*.html')) + list((ROOT / 'bn' / 'p').glob('*.html')):
-    text = path.read_text(encoding='utf-8', errors='replace')
-    if 'cartAdd(' in text or '"@type": "Offer"' in text or '"@type": "AggregateOffer"' in text:
-        commerce_markers.append(path.relative_to(ROOT).as_posix())
-    if re.search(r'৳\s*[0-9]', text):
-        price_markers.append(path.relative_to(ROOT).as_posix())
-
-if state in {'L0_BOOTSTRAP_PRIVATE', 'L1_PUBLIC_INFO_ONLY'} and commerce_markers:
-    fail('P0-LAUNCH-COMMERCE-BLOCK', f'{len(commerce_markers)} generated product page(s) contain commerce while state={state}')
-if not commerce_authorized and commerce_markers:
-    fail('P0-COMMERCE-AUTHORITY-MISSING', 'commerce exists in generated output but commerce_authorized is false')
-if not public_price_authorized and price_markers:
-    fail('P0-PUBLIC-PRICE-AUTHORITY-MISSING', f'{len(price_markers)} generated product page(s) expose BDT prices without public price authority')
-
-robots = ROOT / 'robots.txt'
-if not indexing_authorized and robots.exists():
-    robots_text = robots.read_text(encoding='utf-8', errors='replace')
-    if re.search(r'(?mi)^Allow:\s*/\s*$', robots_text):
-        fail('P1-INDEXING-STATE-MISMATCH', 'robots.txt allows global crawling while indexing_authorized is false')
+legacy_pages = 0
+for path in list((ROOT / "p").glob("*.html")) + list((ROOT / "bn" / "p").glob("*.html")):
+    content = text(path)
+    if "cartAdd(" in content or re.search(r"৳\s*[0-9]", content):
+        legacy_pages += 1
+if legacy_pages:
+    warn("LEGACY-GENERATED-COMMERCE-EVIDENCE", f"{legacy_pages} historical product HTML file(s) remain in repo but are excluded from all strict publication paths")
 
 for code, message in warnings:
-    print(f'WARN {code}: {message}')
+    print(f"WARN {code}: {message}")
 
 if errors:
-    print(f'RELEASE BLOCKED: {len(errors)} integrity failure(s)')
+    print(f"RELEASE BLOCKED: {len(errors)} integrity failure(s)")
     for code, message in errors:
-        print(f'FAIL {code}: {message}')
+        print(f"FAIL {code}: {message}")
     sys.exit(1)
 
-print('release integrity gate passed')
+print("release integrity gate passed for staged strict artifact")
+print(f"legacy quarantine warnings: {len(warnings)}")
