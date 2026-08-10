@@ -76,26 +76,26 @@ def render(language: str) -> str:
         title = "বাংলাদেশে অফিসিয়াল AI টুল অ্যাক্সেস | SAVEONSUB"
         desc = "বাংলাদেশ থেকে ChatGPT, Gemini ও Claude-এর অফিসিয়াল availability যাচাই করুন এবং provider-এর নিজস্ব সাইটে যাওয়ার নিরাপদ পথ দেখুন।"
         heading = "বাংলাদেশে AI টুলের অফিসিয়াল অ্যাক্সেস কীভাবে যাচাই করবেন"
-        summary = "কোনো reseller claim, shared account বা অযাচাইকৃত payment route-এর উপর নির্ভর না করে প্রথমে provider-এর বর্তমান availability এবং official sign-in/upgrade path যাচাই করুন।"
+        summary = "তৃতীয় পক্ষের access claim বা অযাচাইকৃত payment route-এর উপর নির্ভর না করে প্রথমে provider-এর বর্তমান availability এবং official sign-in/upgrade path যাচাই করুন।"
         checklist = [
             "Provider-এর official availability page-এ Bangladesh আছে কি না দেখুন।",
             "নিজের account-এ sign in করে provider-এর দেখানো upgrade option দেখুন।",
             "Checkout-এ যে currency, tax ও payment method দেখায় সেটিকেই current truth ধরুন; SAVEONSUB এখানে কোনো price বা payment destination প্রকাশ করে না।",
-            "Shared login, unknown workspace invite বা credential-sharing offer গ্রহণের আগে provider terms পড়ুন।",
+            "অন্যের login credential, unknown workspace invite বা credential-sharing offer গ্রহণের আগে provider terms পড়ুন।",
             "Provider page ও third-party claim-এর মধ্যে conflict হলে provider source-কে অগ্রাধিকার দিন।",
         ]
         caveat = "Availability মানেই প্রতিটি paid plan, feature বা payment method সব account-এ একই হবে—এমন নয়। Provider eligibility, app-store rules, account type এবং rollout বদলাতে পারে।"
         source_heading = "যাচাইকৃত provider source"
     else:
         title = "Official AI Access in Bangladesh | SAVEONSUB"
-        desc = "Verify official Bangladesh availability for ChatGPT, Gemini and Claude, then follow the provider's own access path without relying on shared-account or reseller claims."
+        desc = "Verify official Bangladesh availability for ChatGPT, Gemini and Claude, then follow the provider's own access path instead of relying on third-party access claims."
         heading = "How to verify official AI-tool access in Bangladesh"
-        summary = "Start with the provider's current availability page and official sign-in or upgrade path instead of relying on reseller claims, shared accounts or an unverified payment route."
+        summary = "Start with the provider's current availability page and official sign-in or upgrade path instead of relying on third-party access claims or an unverified payment route."
         checklist = [
             "Confirm Bangladesh appears on the provider's current availability page.",
             "Sign in to your own account and inspect the upgrade options the provider presents to you.",
             "Treat the currency, tax and payment methods shown at provider checkout as current truth; SAVEONSUB does not publish a selling price or payment destination here.",
-            "Read provider terms before accepting a shared login, unknown workspace invite or credential-sharing offer.",
+            "Read provider terms before accepting another person's login credentials, an unknown workspace invite or credential-sharing offer.",
             "If a third-party claim conflicts with the provider page, prefer the provider source.",
         ]
         caveat = "Availability does not mean every paid plan, feature or payment method is identical for every account. Eligibility, app-store rules, account type and rollouts can change."
