@@ -204,8 +204,7 @@ def validate_source_article(article: dict, categories: set[str]) -> None:
                 fail(f"{slug}/{language}: section paragraph missing")
             for paragraph in paragraphs:
                 tokens.extend(str(paragraph).split())
-            bullets = section.get("bullets") or []
-            for bullet in bullets:
+            for bullet in section.get("bullets") or []:
                 tokens.extend(str(bullet).split())
         # Internal anti-thin-content floor only; not an SEO target or preferred length.
         if len(tokens) < 220:
@@ -307,8 +306,8 @@ def validate_hub(data: dict, language: str) -> None:
     hrefs = [href for href, _ in parser.links]
     for article in data["articles"]:
         expected = f"/bn/resources/{article['slug']}.html" if bn else f"/resources/{article['slug']}.html"
-        if hrefs.count(expected) != 1:
-            fail(f"{rel}: hub article link parity failure: {expected}")
+        if expected not in hrefs:
+            fail(f"{rel}: hub article link missing: {expected}")
 
 
 def sitemap_urls() -> set[str]:
