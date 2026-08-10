@@ -1,4 +1,21 @@
 #!/bin/bash
-set -e
-python3 build_catalog.py && python3 build_assets.py && python3 build_home.py && python3 build_pages.py && python3 build_trust.py && python3 build_seo.py && python3 build_category.py && python3 audit_all.py && python3 deploy_preflight.py
-echo 'DONE: full rebuild + audit + launch preflight'
+set -euo pipefail
+
+# SAVEONSUB default build is the strict L1 public-information release.
+# Historical commerce generators remain in the repository for migration/audit
+# evidence but are not part of the default build or any production path.
+python3 validate_authority_boundaries.py
+python3 validate_media_registry.py
+python3 validate_catalog_model.py
+python3 build_public_info_v3.py
+python3 harden_public_info_v3.py
+
+if [ -n "${GITHUB_SHA:-${SAVEONSUB_RELEASE_SHA:-${VERCEL_GIT_COMMIT_SHA:-}}}" ]; then
+  python3 stamp_release.py
+fi
+
+python3 validate_public_info_v3.py
+python3 validate_l1_release.py
+python3 stage_deploy.py --public-v3
+
+echo 'DONE: strict L1 public-information build + validation + staging'
