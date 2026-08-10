@@ -150,6 +150,24 @@ def inject_jsonld(text: str, payloads: list[dict]) -> tuple[str, int]:
     return text.replace("</head>", f"{block}</head>", 1), len(payloads)
 
 
+def add_visible_category_breadcrumb(text: str, rel: str) -> tuple[str, int]:
+    if not re.fullmatch(r"(?:bn/)?c/[^/]+\.html", rel):
+        return text, 0
+    if '<div class="crumbs">' in text:
+        return text, 0
+    match = re.search(r"<h1>(.*?)</h1>", text, re.S)
+    if not match:
+        return text, 0
+    bn = rel.startswith("bn/")
+    home_href = "/bn.html" if bn else "/"
+    home_label = "হোম" if bn else "Home"
+    crumb = f'<div class="crumbs"><a href="{home_href}">{home_label}</a> › {match.group(1)}</div>'
+    marker = '<span class="pill">'
+    if marker not in text:
+        return text, 0
+    return text.replace(marker, crumb + marker, 1), 1
+
+
 def schema_payloads(catalog: dict) -> dict[str, list[dict]]:
     payloads: dict[str, list[dict]] = {
         "index.html": [{
@@ -220,7 +238,6 @@ def schema_payloads(catalog: dict) -> dict[str, list[dict]]:
                         "isPartOf": {"@type": "WebSite", "name": "SAVEONSUB", "url": f"{DOMAIN}/"},
                     },
                     breadcrumb([
-                        ("হোম" if bn else "Home", home_url),
                         (name, product_url),
                         (label, plan_url),
                     ]),
@@ -265,10 +282,11 @@ def schema_payloads(catalog: dict) -> dict[str, list[dict]]:
     return payloads
 
 
-def harden_html() -> tuple[int, int, int]:
+def harden_html() -> tuple[int, int, int, int]:
     replacements = 0
     robots_hardened = 0
     schemas_added = 0
+    category_crumbs_added = 0
     payload_map = schema_payloads(load_catalog())
     for path in PUBLIC.rglob("*.html"):
         text = path.read_text(encoding="utf-8", errors="replace")
@@ -283,11 +301,13 @@ def harden_html() -> tuple[int, int, int]:
                 count=1,
             )
             robots_hardened += robots_count
+        new, crumb_count = add_visible_category_breadcrumb(new, rel)
+        category_crumbs_added += crumb_count
         new, schema_count = inject_jsonld(new, payload_map.get(rel, []))
         schemas_added += schema_count
         if new != text:
             path.write_text(new, encoding="utf-8")
-    return replacements, robots_hardened, schemas_added
+    return replacements, robots_hardened, schemas_added, category_crumbs_added
 
 
 def main() -> int:
@@ -297,11 +317,12 @@ def main() -> int:
     (ASSETS / "app.js").write_text(APP_JS, encoding="utf-8")
     (PUBLIC / "_redirects").write_text(REDIRECTS, encoding="utf-8")
     css_hardened = harden_stylesheet()
-    proof_redactions, robots_hardened, schemas_added = harden_html()
+    proof_redactions, robots_hardened, schemas_added, category_crumbs_added = harden_html()
     print(
         "hardened _public_v3: information-only app.js + non-commerce redirects + "
         f"css_hardened={css_hardened} unsupported_proof_redactions={proof_redactions} "
-        f"robots_hardened={robots_hardened} schemas_added={schemas_added}"
+        f"robots_hardened={robots_hardened} schemas_added={schemas_added} "
+        f"category_crumbs_added={category_crumbs_added}"
     )
     return 0
 
