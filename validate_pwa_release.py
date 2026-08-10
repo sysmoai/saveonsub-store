@@ -49,7 +49,7 @@ def main() -> int:
     else:
         sw = sw_path.read_text(encoding="utf-8", errors="replace")
 
-    match = re.search(r"const CACHE='([^']+)';", sw)
+    match = re.search(r"const\s+CACHE\s*=\s*'([^']+)';", sw)
     if not match:
         fail("sw.js CACHE declaration missing")
     elif match.group(1) != expected_cache:
@@ -72,17 +72,19 @@ def main() -> int:
         if token not in sw:
             fail(f"sw.js core cache missing {token}")
 
-    forbidden = ("checkout.html", "track.html", "catalog.json", "aips-live.json")
+    forbidden = ("checkout.html", "track.html", "catalog.json", "aips-live.json", "/assets/catalog.js")
     for token in forbidden:
         if token in sw:
             fail(f"sw.js must not cache forbidden legacy path {token}")
 
     if "k!==CACHE" not in sw or "caches.delete(k)" not in sw:
         fail("sw.js activation must delete prior cache namespaces")
-    if "r.mode==='navigate'" not in sw:
+    if not re.search(r"req\.mode\s*===\s*'navigate'|r\.mode\s*===\s*'navigate'", sw):
         fail("sw.js must treat navigation requests separately")
-    if "res&&res.ok" not in sw and "res && res.ok" not in sw:
-        fail("sw.js must avoid caching failed responses")
+    if not re.search(r"cacheable\s*=\s*r\s*=>\s*r\s*&&\s*r\.ok", sw):
+        fail("sw.js must gate persisted responses on successful HTTP status")
+    if "c.addAll(CORE)" not in sw:
+        fail("sw.js install must pre-cache the strict core")
 
     if errors:
         print(f"PWA RELEASE QUALITY BLOCKED: {len(errors)} failure(s)")
@@ -94,6 +96,7 @@ def main() -> int:
         "git_sha": sha,
         "cache_namespace": cache,
         "release_bound_cache": True,
+        "core_manifest": "/manifest.webmanifest",
         "legacy_cache_paths": 0,
         "failed_response_cache_risk": 0,
     }, indent=2))
