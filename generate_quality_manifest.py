@@ -26,6 +26,7 @@ SOURCE_FILES = (
     "media_registry.py",
     "build_public_info_v3.py",
     "extend_public_info_v3.py",
+    "enhance_discovery_v3.py",
     "enhance_social_metadata_v3.py",
     "harden_security_headers_v3.py",
     "harden_public_info_v3.py",
@@ -43,6 +44,7 @@ SOURCE_FILES = (
     "validate_social_metadata.py",
     "validate_pwa_release.py",
     "validate_security_policy.py",
+    "validate_discovery_quality.py",
     "verify_build_determinism.py",
     "assets/style.css",
     "assets/app.js",
@@ -60,6 +62,7 @@ SOURCE_DIRS = (
 GENERATOR_FILES = {
     "build_public_info_v3.py",
     "extend_public_info_v3.py",
+    "enhance_discovery_v3.py",
     "enhance_social_metadata_v3.py",
     "harden_security_headers_v3.py",
     "harden_public_info_v3.py",
