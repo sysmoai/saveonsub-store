@@ -13,10 +13,6 @@ SITE = ROOT / "_site"
 META = ROOT / "_release_meta"
 OUT = META / "quality-manifest.json"
 
-# Only files that can materially affect the strict L1 artifact or its release
-# validation belong here. Legacy root hosting files are intentionally excluded:
-# build_public_info_v3.py generates strict _headers, _redirects, sw.js and the
-# web manifest inside _public_v3, then post-build hardeners transform them.
 SOURCE_FILES = (
     "catalog.json",
     "site_config.py",
@@ -28,6 +24,7 @@ SOURCE_FILES = (
     "extend_public_info_v3.py",
     "enhance_discovery_v3.py",
     "enhance_compare_v3.py",
+    "enhance_related_v3.py",
     "enhance_social_metadata_v3.py",
     "harden_security_headers_v3.py",
     "harden_public_info_v3.py",
@@ -47,6 +44,7 @@ SOURCE_FILES = (
     "validate_security_policy.py",
     "validate_discovery_quality.py",
     "validate_compare_quality.py",
+    "validate_related_quality.py",
     "verify_build_determinism.py",
     "assets/style.css",
     "assets/app.js",
@@ -66,6 +64,7 @@ GENERATOR_FILES = {
     "extend_public_info_v3.py",
     "enhance_discovery_v3.py",
     "enhance_compare_v3.py",
+    "enhance_related_v3.py",
     "enhance_social_metadata_v3.py",
     "harden_security_headers_v3.py",
     "harden_public_info_v3.py",
