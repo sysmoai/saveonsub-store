@@ -1,34 +1,42 @@
 #!/usr/bin/env python3
-"""Validate the additive SAVEONSUB v3 catalog compatibility model.
-
-This validator is intentionally strict about identity, route uniqueness, media,
-authority-derived commerce state and legacy-field preservation. It does not
-change public output.
-"""
+"""Validate the SAVEONSUB v3 active catalog + legacy quarantine model."""
 from __future__ import annotations
 
 import json
 import pathlib
+import re
 from collections import Counter
 
 from catalog_model import iter_plans, load_raw_catalog, normalize_catalog, source_digest
 
 ROOT = pathlib.Path(__file__).resolve().parent
 errors: list[str] = []
+PROOF_KEYS = {"orders", "bestseller_rank", "market"}
+PRICE_KEYS = {"bdt", "price_bdt", "price", "usd"}
 
 
 def fail(message: str) -> None:
     errors.append(message)
 
 
-def compare_legacy_dict(raw: dict, normalized: dict, scope: str, added_keys: set[str]) -> None:
-    for key, value in raw.items():
-        if key in added_keys:
-            continue
-        if key not in normalized:
-            fail(f"{scope}: legacy key disappeared: {key}")
-        elif normalized[key] != value and key != "plans":
-            fail(f"{scope}: legacy value changed for key {key}")
+def looks_openai_shared(product: dict, plan: dict) -> bool:
+    identity = f"{product.get('id','')} {product.get('name','')}".lower()
+    openai = "chatgpt" in identity or "openai" in identity
+    shared = (
+        str(plan.get("type") or "").lower() == "shared"
+        or str(plan.get("tos") or "").lower().startswith("shared")
+        or "shared" in str(plan.get("label") or "").lower()
+    )
+    return openai and shared
+
+
+def plan_signature(plan: dict) -> tuple:
+    return (
+        str(plan.get("type") or ""),
+        str(plan.get("label") or ""),
+        str(plan.get("duration") or ""),
+        str(plan.get("tos") or ""),
+    )
 
 
 def main() -> int:
@@ -46,9 +54,16 @@ def main() -> int:
         fail(f"product count changed: {len(raw_products)} -> {len(products)}")
 
     raw_plan_count = sum(len(p.get("plans", [])) for p in raw_products)
-    plan_count = sum(len(p.get("plans", [])) for p in products)
-    if raw_plan_count != plan_count:
-        fail(f"plan count changed: {raw_plan_count} -> {plan_count}")
+    active_plan_count = sum(len(p.get("plans", [])) for p in products)
+    quarantined_count = sum(len(p.get("quarantined_plans_v3", [])) for p in products)
+    if raw_plan_count != active_plan_count + quarantined_count:
+        fail(
+            f"plan accounting mismatch: raw={raw_plan_count} active={active_plan_count} quarantined={quarantined_count}"
+        )
+
+    precedence = normalized.get("meta", {}).get("price_precedence", [])
+    if any(re.search(r"(^|[-_])aips($|[-_])", str(s), re.I) for s in precedence):
+        fail("active normalized price precedence still references AIPS")
 
     product_ids = [p.get("id") for p in products]
     if len(set(product_ids)) != len(product_ids):
@@ -70,12 +85,6 @@ def main() -> int:
     for product in products:
         pid = product["id"]
         raw_product = raw_by_id[pid]
-        compare_legacy_dict(
-            raw_product,
-            product,
-            f"product {pid}",
-            {"product_id", "routes_v3", "commercial_state_v3", "media_v3"},
-        )
 
         expected_en = f"p/{pid}.html"
         expected_bn = f"bn/p/{pid}.html"
@@ -86,27 +95,63 @@ def main() -> int:
         product_routes_en.append(product["routes_v3"]["en"])
         product_routes_bn.append(product["routes_v3"]["bn"])
 
+        archived_proof = product.get("legacy_proof_v1", {})
+        for key in PROOF_KEYS:
+            if key in raw_product:
+                if key in product:
+                    fail(f"{pid}: legacy proof key remained active: {key}")
+                if archived_proof.get(key) != raw_product.get(key):
+                    fail(f"{pid}: legacy proof key not preserved in quarantine: {key}")
+
+        raw_price_source = str(raw_product.get("price_source") or "")
+        if re.search(r"(^|[-_])aips($|[-_])", raw_price_source, re.I):
+            if "price_source" in product:
+                fail(f"{pid}: AIPS price source remained active")
+            if product.get("legacy_price_source_v1") != raw_product.get("price_source"):
+                fail(f"{pid}: AIPS price source not preserved in legacy quarantine")
+
         raw_plans = raw_product.get("plans", [])
-        normalized_plans = product.get("plans", [])
-        if len(raw_plans) != len(normalized_plans):
-            fail(f"{pid}: plan count changed")
-        for idx, plan in enumerate(normalized_plans):
-            raw_plan = raw_plans[idx]
-            compare_legacy_dict(
-                raw_plan,
-                plan,
-                f"{pid} plan {idx + 1}",
-                {
-                    "plan_id_v3", "plan_slug_v3", "product_id_v3",
-                    "commercial_state_v3", "price_v3", "sellable_v3", "routes_v3"
-                },
-            )
+        expected_active_raw = [p for p in raw_plans if not looks_openai_shared(raw_product, p)]
+        expected_quarantined_raw = [p for p in raw_plans if looks_openai_shared(raw_product, p)]
+        active_plans = product.get("plans", [])
+        quarantined_plans = product.get("quarantined_plans_v3", [])
+        if len(active_plans) != len(expected_active_raw):
+            fail(f"{pid}: active plan count mismatch")
+        if len(quarantined_plans) != len(expected_quarantined_raw):
+            fail(f"{pid}: quarantined plan count mismatch")
+
+        for archived, raw_plan in zip(quarantined_plans, expected_quarantined_raw):
+            if plan_signature(archived) != plan_signature(raw_plan):
+                fail(f"{pid}: quarantined plan identity changed")
+            if archived.get("quarantine_reason_v3") != "provider_policy_openai_shared_account":
+                fail(f"{pid}: quarantined OpenAI/shared plan missing reason")
+
+        for idx, (plan, raw_plan) in enumerate(zip(active_plans, expected_active_raw), 1):
+            if looks_openai_shared(raw_product, raw_plan):
+                fail(f"{pid}: prohibited OpenAI/shared plan remained active")
+
+            legacy_price = plan.get("legacy_price_v1", {})
+            for key in PRICE_KEYS:
+                if key in raw_plan:
+                    if key in plan:
+                        fail(f"{pid} plan {idx}: legacy price field remained active: {key}")
+                    if legacy_price.get(key) != raw_plan.get(key):
+                        fail(f"{pid} plan {idx}: legacy price field not preserved: {key}")
+
+            for key, value in raw_plan.items():
+                if key in PRICE_KEYS:
+                    continue
+                if key not in plan:
+                    fail(f"{pid} plan {idx}: non-price legacy key disappeared: {key}")
+                elif plan[key] != value:
+                    fail(f"{pid} plan {idx}: non-price legacy value changed: {key}")
+
             plan_id = str(plan.get("plan_id_v3") or "")
             if not plan_id:
-                fail(f"{pid} plan {idx + 1}: missing plan_id_v3")
+                fail(f"{pid} plan {idx}: missing plan_id_v3")
             plan_ids.append(plan_id)
             if plan.get("product_id_v3") != pid:
-                fail(f"{pid} plan {idx + 1}: wrong product_id_v3")
+                fail(f"{pid} plan {idx}: wrong product_id_v3")
             plan_routes_en.append(plan["routes_v3"]["en"])
             plan_routes_bn.append(plan["routes_v3"]["bn"])
 
@@ -121,17 +166,9 @@ def main() -> int:
                 if state != "allowed" or not plan.get("price_v3"):
                     fail(f"{pid} / {plan_id}: sellable without allowed state + approved price")
 
-            # Current OpenAI registry must never allow legacy shared plans.
-            if pid.startswith("chatgpt"):
-                looks_shared = (
-                    str(plan.get("type", "")).lower() == "shared"
-                    or str(plan.get("tos", "")).lower().startswith("shared")
-                    or "shared" in str(plan.get("label", "")).lower()
-                )
-                if looks_shared and state != "blocked":
-                    fail(f"{pid} / {plan_id}: OpenAI shared plan is not blocked")
-                if not looks_shared and state not in {"direct_provider_only", "blocked"}:
-                    fail(f"{pid} / {plan_id}: OpenAI plan is not direct-provider-only/blocked")
+            identity = f"{pid} {product.get('name','')}".lower()
+            if ("chatgpt" in identity or "openai" in identity) and state not in {"direct_provider_only", "blocked"}:
+                fail(f"{pid} / {plan_id}: retained OpenAI plan is not direct-provider-only/blocked")
 
         for media in product.get("media_v3", []):
             media_id = str(media.get("media_id") or "")
@@ -146,10 +183,8 @@ def main() -> int:
                 src = str(media.get("src") or "")
                 if not src.startswith("/"):
                     fail(f"{pid}: local media must use root-relative src: {src}")
-                else:
-                    local = ROOT / src.lstrip("/")
-                    if not local.is_file():
-                        fail(f"{pid}: local media does not exist: {src}")
+                elif not (ROOT / src.lstrip("/")).is_file():
+                    fail(f"{pid}: local media does not exist: {src}")
 
     for name, values in (
         ("plan IDs", plan_ids),
@@ -172,8 +207,6 @@ def main() -> int:
     if collisions:
         fail(f"new plan routes collide with existing HTML: {collisions[:10]}")
 
-    # With current authority registries public prices and launch commerce are not
-    # authorized, therefore no plan may normalize to sellable/priced yet.
     meta = normalized.get("meta", {}).get("v3_model", {})
     if meta.get("public_price_authorized") is not True and priced_count:
         fail(f"{priced_count} plan(s) have price_v3 while public pricing is unauthorized")
@@ -188,7 +221,9 @@ def main() -> int:
 
     summary = {
         "products": len(products),
-        "plans": plan_count,
+        "legacy_plans": raw_plan_count,
+        "active_plans": active_plan_count,
+        "quarantined_plans": quarantined_count,
         "unique_plan_ids_v3": len(set(plan_ids)),
         "unique_plan_routes_en": len(set(plan_routes_en)),
         "unique_plan_routes_bn": len(set(plan_routes_bn)),
@@ -200,8 +235,9 @@ def main() -> int:
         "legacy_source_sha256": before,
         "legacy_product_routes_preserved": True,
         "legacy_input_mutated": False,
+        "unsafe_legacy_fields_quarantined": True,
     }
-    print("V3 catalog compatibility model valid")
+    print("V3 active catalog + quarantine model valid")
     print(json.dumps(summary, indent=2))
     return 0
 
