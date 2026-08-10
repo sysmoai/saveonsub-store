@@ -11,6 +11,7 @@ on:
       - fix/sos-p0-truth-gates-20260810
       - feat/sos-quality-gates-20260810
       - feat/sos-discovery-20260810
+      - feat/sos-compare-20260810
   workflow_dispatch:
 
 permissions:
@@ -50,8 +51,10 @@ jobs:
           python -m py_compile validate_security_policy.py
           python -m py_compile validate_discovery_quality.py
           python -m py_compile validate_compare_quality.py
+          python -m py_compile validate_related_quality.py
           python -m py_compile enhance_discovery_v3.py
           python -m py_compile enhance_compare_v3.py
+          python -m py_compile enhance_related_v3.py
           python -m py_compile enhance_social_metadata_v3.py
           python -m py_compile harden_security_headers_v3.py
           python -m py_compile extend_public_info_v3.py
@@ -110,6 +113,9 @@ jobs:
 
       - name: Validate descriptive-only product comparison
         run: python validate_compare_quality.py
+
+      - name: Validate same-category product exploration
+        run: python validate_related_quality.py
 
       - name: Validate release-bound PWA caching
         run: python validate_pwa_release.py
