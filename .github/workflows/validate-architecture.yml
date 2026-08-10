@@ -69,6 +69,9 @@ jobs:
           python -m py_compile validate_public_info_v3.py
           python -m py_compile seed_plan_runtime.py
           python -m py_compile validate_commerce_worker.py
+          python -m py_compile stamp_release.py
+          python -m py_compile generate_release_manifest.py
+          python -m py_compile verify_live.py
 
       - name: Check browser JavaScript syntax
         run: node --check assets/app.js
@@ -103,6 +106,9 @@ jobs:
       - name: Harden strict L1 public-information artifact
         run: python harden_public_info_v3.py
 
+      - name: Stamp strict artifact with exact Git SHA
+        run: python stamp_release.py
+
       - name: Check strict L1 browser JavaScript syntax
         run: node --check _public_v3/assets/app.js
 
@@ -126,6 +132,9 @@ jobs:
 
       - name: Stage strict L1 release candidate
         run: python stage_deploy.py --public-v3
+
+      - name: Generate cryptographic release manifest
+        run: python generate_release_manifest.py
 
       - name: Verify strict release candidate boundaries
         run: |
@@ -151,13 +160,17 @@ jobs:
           test -f _site/sw.js
           test -f _site/assets/app.js
           test -f _site/assets/style.css
+          test -f _release_meta/release-manifest.json
           grep -q '^release_mode=L1_PUBLIC_INFO_ONLY$' _site/BUILD-MANIFEST.txt
+          grep -q "^git_sha=${GITHUB_SHA}$" _site/BUILD-MANIFEST.txt
 
       - name: Upload strict L1 release candidate
         uses: actions/upload-artifact@v4
         with:
           name: saveonsub-l1-public-info-${{ github.sha }}
-          path: _site
+          path: |
+            _site
+            _release_meta
           if-no-files-found: error
           retention-days: 14
 
@@ -176,13 +189,13 @@ jobs:
           node-version: '22'
 
       - name: Verify Cloudflare credential only
-        continue-on-error: true
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: npx --yes wrangler@latest whoami
 
       - name: Credential probe is read-only
+        if: always()
         run: echo 'No Cloudflare resource was created, changed, deployed, or deleted by this job.'
 
   release-integrity-report:
