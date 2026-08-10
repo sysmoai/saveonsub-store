@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout code
@@ -31,9 +31,6 @@ jobs:
         with:
           node-version: '22'
 
-      # The production path is now artifact-specific. Legacy committed storefront
-      # pages remain available for migration/audit evidence but are never staged by
-      # this workflow.
       - name: Validate protected authority boundaries
         run: python validate_authority_boundaries.py
 
@@ -45,6 +42,9 @@ jobs:
 
       - name: Harden strict L1 browser runtime
         run: python harden_public_info_v3.py
+
+      - name: Stamp strict artifact with exact Git SHA
+        run: python stamp_release.py
 
       - name: Check strict browser JavaScript syntax
         run: node --check _public_v3/assets/app.js
@@ -58,6 +58,9 @@ jobs:
       - name: Stage only strict L1 files
         run: python stage_deploy.py --public-v3
 
+      - name: Generate cryptographic release manifest
+        run: python generate_release_manifest.py
+
       - name: Verify production artifact boundaries
         run: |
           test -f _site/index.html
@@ -66,6 +69,7 @@ jobs:
           test -f _site/sw.js
           test -f _site/assets/app.js
           test -f _site/assets/style.css
+          test -f _release_meta/release-manifest.json
           test ! -e _site/catalog.json
           test ! -e _site/aips-live.json
           test ! -e _site/assets/catalog.js
@@ -77,14 +81,97 @@ jobs:
           grep -q '^commerce_controls=0$' _site/BUILD-MANIFEST.txt
           grep -q '^payment_destinations=0$' _site/BUILD-MANIFEST.txt
           grep -q '^whatsapp_destinations=0$' _site/BUILD-MANIFEST.txt
+          grep -q "^git_sha=${GITHUB_SHA}$" _site/BUILD-MANIFEST.txt
+
+      - name: Upload pre-deploy release evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: saveonsub-production-candidate-${{ github.sha }}
+          path: |
+            _site
+            _release_meta
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Install Wrangler
         run: npm install -g wrangler
 
-      # Deploy only the explicitly staged strict artifact. Never deploy the repo
-      # root, preview workspaces, source catalog, authority files or backend code.
+      - name: Capture verified rollback target
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p _release_meta
+          curl -fsS \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/saveonsub/deployments?env=production&per_page=1" \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            -H "Accept: application/json" \
+            > _release_meta/cloudflare-before.json
+          rollback_id=$(python - <<'PY'
+          import json
+          data=json.load(open('_release_meta/cloudflare-before.json', encoding='utf-8'))
+          rows=data.get('result') or []
+          print(rows[0].get('id','') if rows else '')
+          PY
+          )
+          if [ -z "$rollback_id" ]; then
+            echo 'No previous successful production deployment found; refusing production cutover without rollback target.'
+            exit 1
+          fi
+          echo "ROLLBACK_DEPLOYMENT_ID=${rollback_id}" >> "$GITHUB_ENV"
+          echo "rollback target captured: ${rollback_id}"
+
       - name: Deploy L1 artifact to Cloudflare Pages
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: wrangler pages deploy _site --project-name=saveonsub --branch=main
+
+      - name: Verify exact SHA live on saveonsub.com
+        id: live_verify
+        continue-on-error: true
+        run: python verify_live.py --base-url https://saveonsub.com --expected-sha "$GITHUB_SHA"
+
+      - name: Roll back automatically if live verification fails
+        if: steps.live_verify.outcome == 'failure'
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "${ROLLBACK_DEPLOYMENT_ID:-}"
+          curl -fsS -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/saveonsub/deployments/${ROLLBACK_DEPLOYMENT_ID}/rollback" \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            -H "Accept: application/json" \
+            > _release_meta/cloudflare-rollback.json
+          echo "rolled back to ${ROLLBACK_DEPLOYMENT_ID} after failed live verification"
+
+      - name: Fail release after automatic rollback
+        if: steps.live_verify.outcome == 'failure'
+        run: |
+          echo 'Post-deploy verification failed; previous Cloudflare Pages production deployment was restored.'
+          exit 1
+
+      - name: Capture verified production deployment
+        if: steps.live_verify.outcome == 'success'
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl -fsS \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/saveonsub/deployments?env=production&per_page=1" \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            -H "Accept: application/json" \
+            > _release_meta/cloudflare-after.json
+
+      - name: Upload deployment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: saveonsub-production-evidence-${{ github.sha }}
+          path: _release_meta
+          if-no-files-found: error
+          retention-days: 90
