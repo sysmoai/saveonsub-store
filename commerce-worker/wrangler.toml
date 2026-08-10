@@ -1,0 +1,13 @@
+name = "saveonsub-commerce-shadow"
+main = "src/index.js"
+compatibility_date = "2026-08-10"
+workers_dev = true
+preview_urls = false
+
+[vars]
+ENVIRONMENT = "shadow"
+COMMERCE_MODE = "shadow"
+
+# Intentionally no production route/custom domain.
+# Intentionally no D1 binding until the database is provisioned and its ID is
+# recorded through a reviewed infrastructure change.
