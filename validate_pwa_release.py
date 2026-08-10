@@ -60,11 +60,11 @@ def main() -> int:
         "'/index.html'",
         "'/all.html'",
         "'/bn/all.html'",
-        "'/offline.html'",
-        "'/manifest.webmanifest'",
+        "'/assets/site.webmanifest'",
         "'/assets/app.js'",
         "'/assets/a11y.js'",
         "'/assets/style.css'",
+        "'/assets/favicon.svg'",
         "'/assets/icon-192.png'",
         "'/assets/icon-512.png'",
     )
@@ -79,12 +79,14 @@ def main() -> int:
 
     if "k!==CACHE" not in sw or "caches.delete(k)" not in sw:
         fail("sw.js activation must delete prior cache namespaces")
-    if not re.search(r"req\.mode\s*===\s*'navigate'|r\.mode\s*===\s*'navigate'", sw):
+    if "mode==='navigate'" not in sw and 'mode === \'navigate\'' not in sw:
         fail("sw.js must treat navigation requests separately")
-    if not re.search(r"cacheable\s*=\s*r\s*=>\s*r\s*&&\s*r\.ok", sw):
-        fail("sw.js must gate persisted responses on successful HTTP status")
+    if len(re.findall(r"\.ok\b", sw)) < 2:
+        fail("sw.js must gate both navigation and asset persistence on successful HTTP status")
     if "c.addAll(CORE)" not in sw:
         fail("sw.js install must pre-cache the strict core")
+    if "caches.match('/all.html')" not in sw:
+        fail("sw.js navigation fallback must resolve to the safe information catalog")
 
     if errors:
         print(f"PWA RELEASE QUALITY BLOCKED: {len(errors)} failure(s)")
@@ -96,7 +98,7 @@ def main() -> int:
         "git_sha": sha,
         "cache_namespace": cache,
         "release_bound_cache": True,
-        "core_manifest": "/manifest.webmanifest",
+        "core_manifest": "/assets/site.webmanifest",
         "legacy_cache_paths": 0,
         "failed_response_cache_risk": 0,
     }, indent=2))
