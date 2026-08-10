@@ -1,0 +1,26 @@
+{
+  "record_type": "contact_authority",
+  "as_of": "2026-08-10",
+  "brand": "SAVEONSUB",
+  "support_email": {
+    "value": "support@saveonsub.com",
+    "status": "accepted_existing_canonical",
+    "source": "SAVEONSUB Safe Resume Harness 2026-07-14; not contradicted by 2026-07-26 Foundation Decisions"
+  },
+  "orders_email": {
+    "value": "orders@saveonsub.com",
+    "status": "accepted_existing_canonical",
+    "source": "SAVEONSUB Safe Resume Harness 2026-07-14; not contradicted by 2026-07-26 Foundation Decisions"
+  },
+  "whatsapp": {
+    "status": "PENDING_OWNER_INPUT",
+    "value": null,
+    "source": "SAVEONSUB Foundation Decisions — CEO Authorized 2026-07-26",
+    "rule": "Dedicated SAVEONSUB number pending; do not publish a CTA number."
+  },
+  "stale_values": [
+    "+880 1305-869242",
+    "8801305869242",
+    "01305869242"
+  ]
+}
