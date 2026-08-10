@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "python3 validate_authority_boundaries.py && python3 validate_media_registry.py && python3 validate_catalog_model.py && python3 build_public_info_v3.py && python3 harden_public_info_v3.py && python3 stamp_release.py && python3 validate_public_info_v3.py && python3 validate_l1_release.py && python3 stage_deploy.py --public-v3",
+  "buildCommand": "bash build_all.sh",
   "outputDirectory": "_site",
   "installCommand": "",
   "cleanUrls": true,
@@ -8,9 +8,7 @@
     { "source": "/subscriptions.html", "destination": "/all.html", "permanent": true },
     { "source": "/home", "destination": "/", "permanent": true },
     { "source": "/shop", "destination": "/all.html", "permanent": true },
-    { "source": "/products", "destination": "/all.html", "permanent": true },
-    { "source": "/checkout.html", "destination": "/all.html", "permanent": false },
-    { "source": "/track.html", "destination": "/contact.html", "permanent": false }
+    { "source": "/products", "destination": "/all.html", "permanent": true }
   ],
   "headers": [
     {
