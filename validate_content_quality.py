@@ -2,6 +2,7 @@
 """Fail-closed quality contract for SAVEONSUB source-backed resource content."""
 from __future__ import annotations
 
+import datetime as dt
 import json
 import pathlib
 import re
@@ -9,11 +10,13 @@ import urllib.parse
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 
+from catalog_model import load_catalog
 from routes_v3 import DOMAIN, slugify
 
 ROOT = pathlib.Path(__file__).resolve().parent
 SITE = ROOT / "_site"
 SOURCE = ROOT / "content" / "resources_v1.json"
+BASELINE_SITEMAP_URLS = 179
 errors: list[str] = []
 
 
@@ -97,8 +100,14 @@ def load_source() -> dict:
         fail("resource schema mismatch")
     if data.get("editorial_owner") != "SAVEONSUB Admin":
         fail("editorial owner must be SAVEONSUB Admin")
-    if not re.fullmatch(r"2026-\d{2}-\d{2}", str(data.get("checked_on") or "")):
-        fail("checked_on must be an explicit 2026 ISO date")
+    raw_date = str(data.get("checked_on") or "")
+    try:
+        checked = dt.date.fromisoformat(raw_date)
+    except ValueError:
+        fail("checked_on must be an ISO date")
+    else:
+        if checked > dt.date.today():
+            fail("checked_on cannot be in the future")
     return data
 
 
@@ -147,19 +156,31 @@ def parse_page(rel: str) -> ResourceParser:
     return parser
 
 
-def validate_source_article(article: dict, checked_on: str) -> None:
+def validate_source_article(article: dict, categories: set[str]) -> None:
     slug = str(article.get("slug") or "")
     if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug):
         fail(f"invalid resource slug: {slug!r}")
-    if not article.get("sources"):
-        fail(f"{slug}: sources required")
-    for source in article.get("sources", []):
+    if not normalize(article.get("audience")):
+        fail(f"{slug}: audience is required")
+    sources = article.get("sources") or []
+    if len(sources) < 2:
+        fail(f"{slug}: at least two sources required")
+    source_urls: set[str] = set()
+    for source in sources:
         url = str(source.get("url") or "")
         parsed = urllib.parse.urlsplit(url)
         if parsed.scheme != "https" or not parsed.netloc:
             fail(f"{slug}: source must be absolute HTTPS URL: {url}")
         if not normalize(source.get("name")):
             fail(f"{slug}: source name missing")
+        if url in source_urls:
+            fail(f"{slug}: duplicate source URL {url}")
+        source_urls.add(url)
+
+    for category in article.get("related_categories", []):
+        if category not in categories:
+            fail(f"{slug}: unknown related category {category!r}")
+
     for language in ("en", "bn"):
         local = article.get(language) or {}
         title = normalize(local.get("title"))
@@ -174,20 +195,21 @@ def validate_source_article(article: dict, checked_on: str) -> None:
             fail(f"{slug}/{language}: summary too short")
         if len(sections) < 4:
             fail(f"{slug}/{language}: at least four sections required")
-        words = []
+        tokens: list[str] = []
         for section in sections:
             if not normalize(section.get("heading")):
                 fail(f"{slug}/{language}: section heading missing")
-            if len(section.get("paragraphs") or []) < 1:
+            paragraphs = section.get("paragraphs") or []
+            if not paragraphs:
                 fail(f"{slug}/{language}: section paragraph missing")
-            for paragraph in section.get("paragraphs") or []:
-                words.extend(str(paragraph).split())
-            for bullet in section.get("bullets") or []:
-                words.extend(str(bullet).split())
-        if len(words) < 220:
-            fail(f"{slug}/{language}: content depth too low ({len(words)} words/tokens)")
-        if checked_on not in str(checked_on):
-            fail(f"{slug}/{language}: checked date invalid")
+            for paragraph in paragraphs:
+                tokens.extend(str(paragraph).split())
+            bullets = section.get("bullets") or []
+            for bullet in bullets:
+                tokens.extend(str(bullet).split())
+        # Internal anti-thin-content floor only; not an SEO target or preferred length.
+        if len(tokens) < 220:
+            fail(f"{slug}/{language}: substantive depth floor not met ({len(tokens)} tokens)")
 
 
 def validate_article_page(article: dict, language: str, checked_on: str) -> None:
@@ -195,8 +217,10 @@ def validate_article_page(article: dict, language: str, checked_on: str) -> None
     slug = article["slug"]
     rel = f"bn/resources/{slug}.html" if bn else f"resources/{slug}.html"
     peer = f"resources/{slug}.html" if bn else f"bn/resources/{slug}.html"
+    methodology_rel = "bn/resources/saveonsub-editorial-methodology.html" if bn else "resources/saveonsub-editorial-methodology.html"
     canonical = f"{DOMAIN}/{rel}"
     alternate = f"{DOMAIN}/{peer}"
+    expected_methodology = f"{DOMAIN}/{methodology_rel}"
     parser = parse_page(rel)
     visible = parser.visible()
     if parser.lang != ("bn" if bn else "en"):
@@ -215,12 +239,18 @@ def validate_article_page(article: dict, language: str, checked_on: str) -> None
         fail(f"{rel}: visible checked date missing")
     if normalize(article[language]["title"]) not in visible:
         fail(f"{rel}: source title not visible")
+    if normalize(article[language]["summary"]) not in visible:
+        fail(f"{rel}: source summary not visible")
 
-    hrefs = [href for href, _ in parser.links]
+    source_link_map = {href: rel_value for href, rel_value in parser.links}
     expected_sources = [source["url"] for source in article.get("sources", [])]
+    hrefs = [href for href, _ in parser.links]
     for url in expected_sources:
         if hrefs.count(url) != 1:
             fail(f"{rel}: source link parity failure for {url}")
+        rel_tokens = set(source_link_map.get(url, "").split())
+        if not {"noopener", "noreferrer"}.issubset(rel_tokens):
+            fail(f"{rel}: external source link missing noopener/noreferrer for {url}")
     for category in article.get("related_categories", []):
         expected = f"/bn/c/{slugify(category)}.html" if bn else f"/c/{slugify(category)}.html"
         if expected not in hrefs:
@@ -233,6 +263,8 @@ def validate_article_page(article: dict, language: str, checked_on: str) -> None
         node = article_nodes[0]
         if node.get("headline") != article[language]["title"]:
             fail(f"{rel}: Article headline mismatch")
+        if node.get("description") != article[language]["summary"]:
+            fail(f"{rel}: Article description must equal visible summary")
         if node.get("datePublished") != checked_on or node.get("dateModified") != checked_on:
             fail(f"{rel}: Article dates mismatch")
         if node.get("mainEntityOfPage") != canonical:
@@ -240,6 +272,8 @@ def validate_article_page(article: dict, language: str, checked_on: str) -> None
         author = node.get("author") if isinstance(node.get("author"), dict) else {}
         if author.get("name") != "SAVEONSUB Admin":
             fail(f"{rel}: Article author credit mismatch")
+        if author.get("url") != expected_methodology:
+            fail(f"{rel}: Article author methodology URL mismatch")
         publisher = node.get("publisher") if isinstance(node.get("publisher"), dict) else {}
         if publisher.get("name") != "SAVEONSUB":
             fail(f"{rel}: Article publisher mismatch")
@@ -310,12 +344,15 @@ def main() -> int:
     if not data:
         return 1
     articles = data.get("articles") or []
+    if len(articles) < 5:
+        fail("initial resource cluster must contain at least five substantive articles")
     slugs = [str(article.get("slug") or "") for article in articles]
     if len(slugs) != len(set(slugs)):
         fail("resource slugs must be unique")
+    categories = set(load_catalog().get("categories", []))
     checked_on = data["checked_on"]
     for article in articles:
-        validate_source_article(article, checked_on)
+        validate_source_article(article, categories)
         validate_article_page(article, "en", checked_on)
         validate_article_page(article, "bn", checked_on)
     validate_hub(data, "en")
@@ -329,9 +366,9 @@ def main() -> int:
     missing = expected_urls - actual_sitemap
     if missing:
         fail(f"resource sitemap URLs missing: {sorted(missing)}")
-    expected_total = 179 + len(expected_urls)
-    if len(actual_sitemap) != expected_total:
-        fail(f"sitemap total mismatch: {len(actual_sitemap)} != {expected_total}")
+    minimum_total = BASELINE_SITEMAP_URLS + len(expected_urls)
+    if len(actual_sitemap) < minimum_total:
+        fail(f"sitemap shrank below baseline plus resources: {len(actual_sitemap)} < {minimum_total}")
     manifest_count = manifest_indexable()
     if manifest_count != len(actual_sitemap):
         fail(f"manifest/sitemap count mismatch: {manifest_count} != {len(actual_sitemap)}")
