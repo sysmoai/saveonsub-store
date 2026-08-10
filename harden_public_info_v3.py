@@ -106,15 +106,24 @@ def harden_stylesheet() -> int:
     return int(new != text)
 
 
-def harden_html() -> int:
+def harden_html() -> tuple[int, int]:
     replacements = 0
+    robots_hardened = 0
     for path in PUBLIC.rglob("*.html"):
         text = path.read_text(encoding="utf-8", errors="replace")
         new, count = redact_unsupported_proof(text)
-        if count:
+        replacements += count
+        if path.relative_to(PUBLIC).as_posix() == "404.html":
+            new, robots_count = re.subn(
+                r'<meta name="robots" content="index,follow">',
+                '<meta name="robots" content="noindex,follow">',
+                new,
+                count=1,
+            )
+            robots_hardened += robots_count
+        if new != text:
             path.write_text(new, encoding="utf-8")
-            replacements += count
-    return replacements
+    return replacements, robots_hardened
 
 
 def main() -> int:
@@ -124,10 +133,11 @@ def main() -> int:
     (ASSETS / "app.js").write_text(APP_JS, encoding="utf-8")
     (PUBLIC / "_redirects").write_text(REDIRECTS, encoding="utf-8")
     css_hardened = harden_stylesheet()
-    proof_redactions = harden_html()
+    proof_redactions, robots_hardened = harden_html()
     print(
         "hardened _public_v3: information-only app.js + non-commerce redirects + "
-        f"css_hardened={css_hardened} unsupported_proof_redactions={proof_redactions}"
+        f"css_hardened={css_hardened} unsupported_proof_redactions={proof_redactions} "
+        f"robots_hardened={robots_hardened}"
     )
     return 0
 
