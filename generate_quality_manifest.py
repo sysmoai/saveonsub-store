@@ -15,6 +15,10 @@ OUT = META / "quality-manifest.json"
 
 SOURCE_FILES = (
     "catalog.json",
+    "_headers",
+    "_redirects",
+    "sw.js",
+    "manifest.webmanifest",
     "site_config.py",
     "authority_model.py",
     "catalog_model.py",
@@ -36,6 +40,8 @@ SOURCE_FILES = (
     "validate_localization_quality.py",
     "validate_navigation_accessibility.py",
     "validate_social_metadata.py",
+    "validate_pwa_release.py",
+    "validate_security_policy.py",
     "verify_build_determinism.py",
     "assets/style.css",
     "assets/favicon.svg",
@@ -50,6 +56,10 @@ SOURCE_DIRS = (
     "assets/social",
 )
 GENERATOR_FILES = {
+    "_headers",
+    "_redirects",
+    "sw.js",
+    "manifest.webmanifest",
     "build_public_info_v3.py",
     "extend_public_info_v3.py",
     "enhance_social_metadata_v3.py",
