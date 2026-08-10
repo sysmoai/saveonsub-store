@@ -34,6 +34,9 @@ jobs:
       - name: Validate protected authority boundaries
         run: python validate_authority_boundaries.py
 
+      - name: Validate reviewed media registry
+        run: python validate_media_registry.py
+
       - name: Validate normalized product and plan model
         run: python validate_catalog_model.py
 
@@ -70,6 +73,7 @@ jobs:
           test -f _site/assets/app.js
           test -f _site/assets/style.css
           test -f _release_meta/release-manifest.json
+          test ! -e _site/data
           test ! -e _site/catalog.json
           test ! -e _site/aips-live.json
           test ! -e _site/assets/catalog.js
