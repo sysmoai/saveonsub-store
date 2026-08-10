@@ -7,6 +7,7 @@ import pathlib
 import re
 
 from catalog_model import load_catalog
+from extend_public_info_v3 import extend_public_info
 from routes_v3 import DOMAIN, slugify, strip_price_tokens
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -188,6 +189,7 @@ def schema_payloads(catalog: dict) -> dict[str, list[dict]]:
     }
     products = catalog.get("products", [])
     all_items = []
+    all_items_bn = []
     for pos, product in enumerate(products, start=1):
         pid = product["id"]
         name = str(product.get("name") or pid).replace("🎁 ", "")
@@ -197,6 +199,12 @@ def schema_payloads(catalog: dict) -> dict[str, list[dict]]:
             "@type": "ListItem",
             "position": pos,
             "url": f"{DOMAIN}/p/{pid}.html",
+            "name": name,
+        })
+        all_items_bn.append({
+            "@type": "ListItem",
+            "position": pos,
+            "url": f"{DOMAIN}/bn/p/{pid}.html",
             "name": name,
         })
         for language in ("en", "bn"):
@@ -248,6 +256,13 @@ def schema_payloads(catalog: dict) -> dict[str, list[dict]]:
         "name": "SAVEONSUB subscription catalog",
         "numberOfItems": len(all_items),
         "itemListElement": all_items,
+    }]
+    payloads["bn/all.html"] = [{
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "SAVEONSUB সম্পূর্ণ সাবস্ক্রিপশন ক্যাটালগ",
+        "numberOfItems": len(all_items_bn),
+        "itemListElement": all_items_bn,
     }]
     for category in catalog.get("categories", []):
         category_slug = slugify(category)
@@ -313,6 +328,7 @@ def harden_html() -> tuple[int, int, int, int]:
 def main() -> int:
     if not PUBLIC.is_dir():
         raise SystemExit("_public_v3 missing; run build_public_info_v3.py first")
+    extension = extend_public_info()
     ASSETS.mkdir(parents=True, exist_ok=True)
     (ASSETS / "app.js").write_text(APP_JS, encoding="utf-8")
     (PUBLIC / "_redirects").write_text(REDIRECTS, encoding="utf-8")
@@ -322,7 +338,7 @@ def main() -> int:
         "hardened _public_v3: information-only app.js + non-commerce redirects + "
         f"css_hardened={css_hardened} unsupported_proof_redactions={proof_redactions} "
         f"robots_hardened={robots_hardened} schemas_added={schemas_added} "
-        f"category_crumbs_added={category_crumbs_added}"
+        f"category_crumbs_added={category_crumbs_added} i18n_extension={extension}"
     )
     return 0
 
