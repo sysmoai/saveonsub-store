@@ -10,7 +10,7 @@ Important migration rules:
 - mutable prices never become part of identity or routes;
 - raw legacy price/status/risk/proof fields never authorize commerce;
 - provider, pricing, payment and launch authority come from protected registries;
-- OpenAI/shared-account offerings are removed from the active v3 plan model;
+- shared-account/shared-seat plans require explicit provider permission evidence;
 - AIPS never supplies active SAVEONSUB price authority;
 - unknown is never sellable.
 """
@@ -28,9 +28,11 @@ from authority_model import (
     approved_price,
     commerce_launch_ready,
     load_authority,
+    plan_looks_shared,
     product_bundle_state,
     provider_plan_state,
     provider_product_state,
+    shared_plan_explicitly_allowed,
 )
 from media_registry import normalize_media
 from routes_v3 import plan_label_slug, plan_path, product_path, slugify
@@ -126,18 +128,14 @@ def _openai_surface(product: dict[str, Any]) -> bool:
     return "chatgpt" in identity or "openai" in identity
 
 
-def _looks_shared(plan: dict[str, Any]) -> bool:
-    return (
-        str(plan.get("type") or "").strip().lower() == "shared"
-        or str(plan.get("tos") or "").strip().lower().startswith("shared")
-        or "shared" in str(plan.get("label") or "").lower()
-    )
-
-
-def _quarantine_plan_reason(product: dict[str, Any], plan: dict[str, Any]) -> str | None:
-    if _openai_surface(product) and _looks_shared(plan):
+def _quarantine_plan_reason(product: dict[str, Any], plan: dict[str, Any], authority: dict[str, Any]) -> str | None:
+    if not plan_looks_shared(plan):
+        return None
+    if shared_plan_explicitly_allowed(product, authority):
+        return None
+    if _openai_surface(product):
         return "provider_policy_openai_shared_account"
-    return None
+    return "shared_fulfillment_not_provider_verified"
 
 
 def _quarantine_product_fields(product: dict[str, Any]) -> None:
@@ -196,6 +194,7 @@ def normalize_catalog(raw: dict[str, Any]) -> dict[str, Any]:
         "public_price_authorized": authority["pricing"].get("public_price_authorized") is True,
         "payment_destinations_verified": authority["payment"].get("destinations_status") == "VERIFIED",
         "unsafe_legacy_fields_quarantined": True,
+        "shared_fulfillment_requires_explicit_provider_evidence": True,
     }
 
     products = normalized.get("products", [])
@@ -211,7 +210,7 @@ def normalize_catalog(raw: dict[str, Any]) -> dict[str, Any]:
         active_plans = []
         quarantined_plans = []
         for original_index, plan in enumerate(product.get("plans") or [], 1):
-            reason = _quarantine_plan_reason(product, plan)
+            reason = _quarantine_plan_reason(product, plan, authority)
             if reason:
                 archived = copy.deepcopy(plan)
                 archived["quarantine_reason_v3"] = reason
@@ -219,6 +218,7 @@ def normalize_catalog(raw: dict[str, Any]) -> dict[str, Any]:
                 quarantined_plans.append(archived)
                 continue
             active = plan
+            active["legacy_index_v1"] = original_index
             _quarantine_plan_prices(active)
             active_plans.append(active)
         product["plans"] = active_plans
