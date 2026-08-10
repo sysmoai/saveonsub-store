@@ -33,11 +33,18 @@ jobs:
       - name: Validate catalog JSON
         run: python -m json.tool catalog.json > /dev/null
 
-      - name: Compile control scripts
+      - name: Compile architecture and control scripts
         run: |
           python -m py_compile inventory_site.py
           python -m py_compile stage_deploy.py
           python -m py_compile validate_release.py
+          python -m py_compile routes_v3.py
+          python -m py_compile media_registry.py
+          python -m py_compile catalog_model.py
+          python -m py_compile validate_catalog_model.py
+
+      - name: Validate v3 catalog compatibility model
+        run: python validate_catalog_model.py
 
       - name: Inventory and route parity
         run: python inventory_site.py
