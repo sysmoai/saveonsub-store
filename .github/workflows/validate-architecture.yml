@@ -53,6 +53,7 @@ jobs:
           python -m py_compile inventory_site.py
           python -m py_compile stage_deploy.py
           python -m py_compile validate_release.py
+          python -m py_compile validate_l1_release.py
           python -m py_compile routes_v3.py
           python -m py_compile media_registry.py
           python -m py_compile catalog_model.py
@@ -64,6 +65,7 @@ jobs:
           python -m py_compile build_product_pages_v3.py
           python -m py_compile validate_v3_product_preview.py
           python -m py_compile build_public_info_v3.py
+          python -m py_compile harden_public_info_v3.py
           python -m py_compile validate_public_info_v3.py
           python -m py_compile seed_plan_runtime.py
           python -m py_compile validate_commerce_worker.py
@@ -98,8 +100,17 @@ jobs:
       - name: Generate strict L1 public-information artifact
         run: python build_public_info_v3.py
 
+      - name: Harden strict L1 public-information artifact
+        run: python harden_public_info_v3.py
+
+      - name: Check strict L1 browser JavaScript syntax
+        run: node --check _public_v3/assets/app.js
+
       - name: Validate strict L1 public-information artifact
         run: python validate_public_info_v3.py
+
+      - name: Gate strict L1 release authority
+        run: python validate_l1_release.py
 
       - name: Generate fail-closed D1 plan seed
         run: python seed_plan_runtime.py
