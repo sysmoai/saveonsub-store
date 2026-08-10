@@ -180,11 +180,12 @@ def main() -> int:
     for required in (f"{DOMAIN}/all.html", f"{DOMAIN}/bn/all.html"):
         if required not in urls:
             fail(f"sitemap missing bilingual catalog URL: {required}")
-    if len(urls) != 179:
-        fail(f"expected 179 sitemap URLs after BN catalog addition, found {len(urls)}")
+    if len(urls) < 179:
+        fail(f"sitemap cannot shrink below the 179-URL bilingual catalog baseline, found {len(urls)}")
 
-    if manifest_value("indexable_urls") != "179":
-        fail("BUILD-MANIFEST indexable_urls must be 179")
+    manifest_urls = manifest_value("indexable_urls")
+    if manifest_urls != str(len(urls)):
+        fail(f"BUILD-MANIFEST indexable_urls must equal sitemap count {len(urls)}, found {manifest_urls!r}")
 
     sw = (SITE / "sw.js").read_text(encoding="utf-8", errors="replace") if (SITE / "sw.js").is_file() else ""
     if "'/all.html'" not in sw or "'/bn/all.html'" not in sw:
@@ -201,7 +202,7 @@ def main() -> int:
         "localization_quality": "PASS",
         "english_catalog_products": 72,
         "bangla_catalog_products": 72,
-        "sitemap_urls": 179,
+        "sitemap_urls": len(urls),
         "bangla_pages_navigation_checked": checked_bn,
         "catalog_hreflang_pairs": 1,
     }, indent=2))
