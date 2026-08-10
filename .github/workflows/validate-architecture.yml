@@ -30,6 +30,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
       - name: Validate catalog JSON
         run: python -m json.tool catalog.json > /dev/null
 
@@ -46,6 +51,8 @@ jobs:
           python -m py_compile validate_v3_preview.py
           python -m py_compile build_product_pages_v3.py
           python -m py_compile validate_v3_product_preview.py
+          python -m py_compile seed_plan_runtime.py
+          python -m py_compile validate_commerce_worker.py
 
       - name: Validate v3 catalog compatibility model
         run: python validate_catalog_model.py
@@ -65,12 +72,22 @@ jobs:
       - name: Validate preview-only v3 product pages
         run: python validate_v3_product_preview.py
 
+      - name: Generate fail-closed D1 plan seed
+        run: python seed_plan_runtime.py
+
+      - name: Validate shadow commerce posture
+        run: python validate_commerce_worker.py
+
+      - name: Test shadow Worker quote authority
+        run: node commerce-worker/test.mjs
+
       - name: Stage public artifact safely
         run: python stage_deploy.py
 
-      - name: Verify preview workspace is not deployable
+      - name: Verify preview and backend workspaces are not deployable
         run: |
           test ! -e _site/_preview_v3
+          test ! -e _site/commerce-worker
           test ! -e _site/p/chatgpt-plus/starter-shared-6-8-users.html
           test ! -e _site/bn/p/chatgpt-plus/starter-shared-6-8-users.html
 
@@ -90,6 +107,44 @@ jobs:
           test -f _site/sw.js
           test -f _site/assets/app.js
           test -f _site/assets/style.css
+
+  cloudflare-readiness:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Verify Cloudflare identity
+        continue-on-error: true
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx --yes wrangler@latest whoami
+
+      - name: Inventory Cloudflare Pages projects
+        continue-on-error: true
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx --yes wrangler@latest pages project list
+
+      - name: Inventory D1 databases
+        continue-on-error: true
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx --yes wrangler@latest d1 list
+
+      - name: Cloudflare readiness is inventory-only
+        run: echo 'No Cloudflare resource was created or modified by this job.'
 
   release-integrity-report:
     runs-on: ubuntu-latest
