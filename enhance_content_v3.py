@@ -33,7 +33,7 @@ def inject_jsonld(page: str, payload: dict) -> str:
     return page.replace("</head>", f"{tag}</head>", 1)
 
 
-def render_sources(article: dict, language: str) -> str:
+def render_sources(article: dict, language: str, checked_on: str) -> str:
     bn = language == "bn"
     items = "".join(
         f'<li><a href="{esc(source["url"])}" target="_blank" rel="noopener noreferrer">{esc(source["name"])}</a></li>'
@@ -44,7 +44,9 @@ def render_sources(article: dict, language: str) -> str:
     return (
         f'<section class="mt3"><h2>{"সোর্স ও আরও পড়ুন" if bn else "Sources and further reading"}</h2>'
         f'<ul>{items}</ul><p class="fine">'
-        f'{"লিংকগুলো ২০২৬-০৮-১০ তারিখে SAVEONSUB Admin যাচাই করেছে। কোনো সোর্স পরিবর্তিত হলে পেজের updated date-ও পরিবর্তন করা হবে।" if bn else "Links were checked by SAVEONSUB Admin on 2026-08-10. If a source materially changes, the page updated date should change with it."}'
+        f'{"লিংকগুলো SAVEONSUB Admin যাচাই করেছে" if bn else "Links were checked by SAVEONSUB Admin on"} '
+        f'<time datetime="{esc(checked_on)}">{esc(checked_on)}</time>. '
+        f'{"কোনো সোর্স গুরুত্বপূর্ণভাবে পরিবর্তিত হলে পেজের updated date-ও পরিবর্তন করা হবে।" if bn else "If a source materially changes, the page updated date should change with it."}'
         f'</p></section>'
     )
 
@@ -84,10 +86,12 @@ def render_article(article: dict, language: str, checked_on: str, owner: str) ->
 
     hub = "/bn/resources/index.html" if bn else "/resources/index.html"
     home = "/bn.html" if bn else "/"
+    methodology = "/bn/resources/saveonsub-editorial-methodology.html" if bn else "/resources/saveonsub-editorial-methodology.html"
     byline = (
         f'<div class="notice mt2"><b>{"সম্পাদনা" if bn else "Editorial"}: {esc(owner)}</b>'
         f'<p>{"প্রকাশ/যাচাই" if bn else "Published / checked"}: <time datetime="{esc(checked_on)}">{esc(checked_on)}</time>. '
-        f'{"এই রিসোর্স তথ্য ও decision support-এর জন্য; এটি কোনো paid ranking নয়।" if bn else "This resource is for information and decision support; it is not a paid ranking."}</p></div>'
+        f'{"এই রিসোর্স তথ্য ও decision support-এর জন্য; এটি কোনো paid ranking নয়।" if bn else "This resource is for information and decision support; it is not a paid ranking."} '
+        f'<a href="{methodology}">{"Editorial method" if bn else "Editorial method"}</a>.</p></div>'
     )
     correction = (
         f'<section class="mt3"><div class="notice"><b>{"কোনো ভুল দেখেছেন?" if bn else "Found something outdated?"}</b>'
@@ -99,7 +103,7 @@ def render_article(article: dict, language: str, checked_on: str, owner: str) ->
         f'<div class="crumbs"><a href="{home}">{"হোম" if bn else "Home"}</a> › <a href="{hub}">{"রিসোর্স" if bn else "Resources"}</a> › {esc(localized["title"])}</div>'
         f'<span class="pill">{"BANGLADESH AI RESOURCE" if not bn else "বাংলাদেশ AI রিসোর্স"}</span>'
         f'<h1>{esc(localized["title"])}</h1><p class="sub">{esc(localized["summary"])}</p>{byline}'
-        f'{"".join(sections)}{render_categories(article, language)}{render_sources(article, language)}{correction}'
+        f'{"".join(sections)}{render_categories(article, language)}{render_sources(article, language, checked_on)}{correction}'
         f'</article>'
     )
     page = shell(
@@ -115,12 +119,12 @@ def render_article(article: dict, language: str, checked_on: str, owner: str) ->
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": localized["title"],
-        "description": localized["description"],
+        "description": localized["summary"],
         "datePublished": checked_on,
         "dateModified": checked_on,
         "inLanguage": "bn-BD" if bn else "en-BD",
         "mainEntityOfPage": canonical,
-        "author": {"@type": "Organization", "name": owner, "url": f"{DOMAIN}/resources/saveonsub-editorial-methodology.html"},
+        "author": {"@type": "Organization", "name": owner, "url": f"{DOMAIN}{methodology}"},
         "publisher": {"@type": "Organization", "name": "SAVEONSUB", "url": f"{DOMAIN}/"},
     }
     return inject_jsonld(page, schema)
@@ -143,7 +147,7 @@ def render_hub(data: dict, language: str) -> str:
         f'<div class="wrap" style="padding-top:30px;padding-bottom:50px"><span class="pill">{"রিসোর্স লাইব্রেরি" if bn else "RESOURCE LIBRARY"}</span>'
         f'<h1>{"বাংলাদেশ AI রিসোর্স লাইব্রেরি" if bn else "Bangladesh AI Resource Library"}</h1>'
         f'<p class="sub">{"শিক্ষার্থী, ফ্রিল্যান্সার, টিম ও AI ব্যবহারকারীদের জন্য source-backed practical guide। প্রতিটি পেজ SAVEONSUB Admin-এর editorial method ও release gate অনুসরণ করে।" if bn else "Source-backed practical guides for students, freelancers, teams and AI users in Bangladesh. Every page follows SAVEONSUB Admin editorial methodology and the same release gates as the catalog."}</p>'
-        f'<div class="notice mt2"><b>{"Editorial owner" if not bn else "Editorial owner"}: SAVEONSUB Admin</b><p>{"শেষ source check" if bn else "Latest source check"}: {esc(data["checked_on"])}. '
+        f'<div class="notice mt2"><b>Editorial owner: SAVEONSUB Admin</b><p>{"শেষ source check" if bn else "Latest source check"}: <time datetime="{esc(data["checked_on"])}">{esc(data["checked_on"])}</time>. '
         f'<a href="{"/bn/resources/saveonsub-editorial-methodology.html" if bn else "/resources/saveonsub-editorial-methodology.html"}">{"Methodology দেখুন" if bn else "Read the methodology"}</a>.</p></div>'
         f'<div class="grid g2 mt3">{"".join(cards)}</div></div>'
     )
@@ -190,18 +194,21 @@ def add_sitemap_urls(urls: list[str]) -> int:
 
 def inject_resource_navigation() -> int:
     changed = 0
+    en_nav_old = '<div class="navlinks"><a href="/all.html">Subscriptions</a><a href="/#categories">Categories</a><a href="/faq.html">FAQ</a>'
+    en_nav_new = '<div class="navlinks"><a href="/all.html">Subscriptions</a><a href="/#categories">Categories</a><a href="/resources/index.html">Resources</a><a href="/faq.html">FAQ</a>'
+    en_footer_old = '<div><b>Browse</b><a href="/all.html">All subscriptions</a><a href="/#categories">Categories</a></div>'
+    en_footer_new = '<div><b>Browse</b><a href="/all.html">All subscriptions</a><a href="/#categories">Categories</a><a href="/resources/index.html">Resources</a></div>'
+    bn_nav_old = '<div class="navlinks"><a href="/all.html">সব সাবস্ক্রিপশন</a><a href="/bn.html#categories">ক্যাটাগরি</a><a href="/faq.html">প্রশ্নোত্তর</a>'
+    bn_nav_new = '<div class="navlinks"><a href="/all.html">সব সাবস্ক্রিপশন</a><a href="/bn.html#categories">ক্যাটাগরি</a><a href="/bn/resources/index.html">রিসোর্স</a><a href="/faq.html">প্রশ্নোত্তর</a>'
+    bn_footer_old = '<div><b>ব্রাউজ</b><a href="/all.html">সব সাবস্ক্রিপশন</a><a href="/bn.html#categories">ক্যাটাগরি</a></div>'
+    bn_footer_new = '<div><b>ব্রাউজ</b><a href="/all.html">সব সাবস্ক্রিপশন</a><a href="/bn.html#categories">ক্যাটাগরি</a><a href="/bn/resources/index.html">রিসোর্স</a></div>'
+
     for path in sorted(DEST.rglob("*.html")):
         text = path.read_text(encoding="utf-8", errors="replace")
-        bn = '<html lang="bn">' in text
-        new = text
-        if bn:
-            if 'href="/bn/resources/index.html">রিসোর্স</a>' not in new:
-                new = new.replace('<a href="/faq.html">প্রশ্নোত্তর</a>', '<a href="/bn/resources/index.html">রিসোর্স</a><a href="/faq.html">প্রশ্নোত্তর</a>', 1)
-                new = new.replace('<a href="/bn.html#categories">ক্যাটাগরি</a>', '<a href="/bn.html#categories">ক্যাটাগরি</a><a href="/bn/resources/index.html">রিসোর্স</a>', 1)
+        if '<html lang="bn">' in text:
+            new = text.replace(bn_nav_old, bn_nav_new, 1).replace(bn_footer_old, bn_footer_new, 1)
         else:
-            if 'href="/resources/index.html">Resources</a>' not in new:
-                new = new.replace('<a href="/faq.html">FAQ</a>', '<a href="/resources/index.html">Resources</a><a href="/faq.html">FAQ</a>', 1)
-                new = new.replace('<a href="/#categories">Categories</a>', '<a href="/#categories">Categories</a><a href="/resources/index.html">Resources</a>', 1)
+            new = text.replace(en_nav_old, en_nav_new, 1).replace(en_footer_old, en_footer_new, 1)
         if new != text:
             path.write_text(new, encoding="utf-8")
             changed += 1
@@ -214,7 +221,7 @@ def enhance_content() -> dict[str, int]:
     data = load_resources()
     checked_on = data["checked_on"]
     owner = data["editorial_owner"]
-    urls = []
+    urls: list[str] = []
 
     write("resources/index.html", render_hub(data, "en"))
     write("bn/resources/index.html", render_hub(data, "bn"))
