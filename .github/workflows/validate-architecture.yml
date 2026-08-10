@@ -44,6 +44,8 @@ jobs:
           python -m py_compile validate_catalog_model.py
           python -m py_compile build_plan_pages_v3.py
           python -m py_compile validate_v3_preview.py
+          python -m py_compile build_product_pages_v3.py
+          python -m py_compile validate_v3_product_preview.py
 
       - name: Validate v3 catalog compatibility model
         run: python validate_catalog_model.py
@@ -54,8 +56,14 @@ jobs:
       - name: Generate preview-only v3 plan pages
         run: python build_plan_pages_v3.py
 
+      - name: Generate preview-only v3 product pages
+        run: python build_product_pages_v3.py
+
       - name: Validate preview-only v3 plan pages
         run: python validate_v3_preview.py
+
+      - name: Validate preview-only v3 product pages
+        run: python validate_v3_product_preview.py
 
       - name: Stage public artifact safely
         run: python stage_deploy.py
