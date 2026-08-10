@@ -7,7 +7,7 @@ import pathlib
 import re
 
 from catalog_model import load_catalog
-from routes_v3 import DOMAIN, slugify
+from routes_v3 import DOMAIN, slugify, strip_price_tokens
 
 ROOT = pathlib.Path(__file__).resolve().parent
 PUBLIC = ROOT / "_public_v3"
@@ -210,7 +210,7 @@ def schema_payloads(catalog: dict) -> dict[str, list[dict]]:
             for plan in product.get("plans", []):
                 route = plan["routes_v3"][language]
                 plan_url = f"{DOMAIN}/{route}"
-                label = str(plan.get("label") or "Plan")
+                label = strip_price_tokens(plan.get("label") or "Plan") or ("প্ল্যান" if bn else "Plan")
                 payloads[route] = [
                     {
                         "@context": "https://schema.org",
