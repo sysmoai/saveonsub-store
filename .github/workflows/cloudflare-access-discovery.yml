@@ -1,0 +1,93 @@
+name: Cloudflare Access Discovery
+
+on:
+  push:
+    branches:
+      - fix/sos-p0-truth-gates-20260810
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover-existing-access:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    env:
+      TOKEN_PRIMARY: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      TOKEN_CF_API: ${{ secrets.CF_API_TOKEN }}
+      TOKEN_CF: ${{ secrets.CF_TOKEN }}
+      TOKEN_ALT: ${{ secrets.CLOUDFLARE_TOKEN }}
+      TOKEN_PAGES: ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}
+      TOKEN_WORKERS: ${{ secrets.CLOUDFLARE_WORKERS_TOKEN }}
+    steps:
+      - name: Search existing token aliases read-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/cf-discovery
+
+          try_token() {
+            local source="$1"
+            local token="$2"
+            if [ -z "$token" ]; then
+              return 1
+            fi
+            echo "::add-mask::$token"
+            curl -sS "https://api.cloudflare.com/client/v4/accounts" \
+              -H "Authorization: Bearer ${token}" \
+              -H "Accept: application/json" \
+              > /tmp/cf-discovery/accounts.json || return 1
+
+            python - <<'PY' || return 1
+          import json
+          data=json.load(open('/tmp/cf-discovery/accounts.json', encoding='utf-8'))
+          if data.get('success') is not True or not (data.get('result') or []):
+              raise SystemExit(1)
+          PY
+
+            python - <<'PY' > /tmp/cf-discovery/account_ids.txt
+          import json
+          data=json.load(open('/tmp/cf-discovery/accounts.json', encoding='utf-8'))
+          for account in data.get('result') or []:
+              aid=account.get('id')
+              if aid:
+                  print(aid)
+          PY
+
+            while IFS= read -r account_id; do
+              [ -n "$account_id" ] || continue
+              curl -sS \
+                "https://api.cloudflare.com/client/v4/accounts/${account_id}/pages/projects/saveonsub" \
+                -H "Authorization: Bearer ${token}" \
+                -H "Accept: application/json" \
+                > /tmp/cf-discovery/project.json || continue
+              if python - <<'PY'
+          import json
+          data=json.load(open('/tmp/cf-discovery/project.json', encoding='utf-8'))
+          ok=data.get('success') is True and (data.get('result') or {}).get('name') == 'saveonsub'
+          raise SystemExit(0 if ok else 1)
+          PY
+              then
+                echo "FOUND_CLOUDFLARE_SECRET_ALIAS=${source}"
+                echo "FOUND_CLOUDFLARE_ACCOUNT_ID=${account_id}"
+                return 0
+              fi
+            done < /tmp/cf-discovery/account_ids.txt
+            return 1
+          }
+
+          try_token CLOUDFLARE_API_TOKEN "${TOKEN_PRIMARY}" && exit 0
+          try_token CF_API_TOKEN "${TOKEN_CF_API}" && exit 0
+          try_token CF_TOKEN "${TOKEN_CF}" && exit 0
+          try_token CLOUDFLARE_TOKEN "${TOKEN_ALT}" && exit 0
+          try_token CLOUDFLARE_PAGES_TOKEN "${TOKEN_PAGES}" && exit 0
+          try_token CLOUDFLARE_WORKERS_TOKEN "${TOKEN_WORKERS}" && exit 0
+
+          echo 'No existing tested repository secret alias authenticated to the saveonsub Cloudflare Pages project.'
+          exit 1
+
+      - name: Confirm discovery is read-only
+        if: always()
+        run: echo 'Discovery used only Cloudflare GET endpoints; no resource was created, modified, deployed, or deleted.'
