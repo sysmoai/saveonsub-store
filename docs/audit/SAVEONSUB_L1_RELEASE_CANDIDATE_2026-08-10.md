@@ -4,7 +4,7 @@
 
 `dcebe69163b72933aca45cb7e8dd91f0c84a6b8e`
 
-The current PR head adds only this audit record after that runtime code head. Exact-head CI independently rebuilds and revalidates the artifact, so release authority is tied to the current PR head rather than this historical code-head label.
+Subsequent commits on the PR update release-evidence documentation only. Exact-head CI independently rebuilds and revalidates the artifact, so release authority is always tied to the current PR head.
 
 ## Release posture
 
