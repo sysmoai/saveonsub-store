@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 """Validate the additive SAVEONSUB v3 catalog compatibility model.
 
-This validator is intentionally strict about identity, route uniqueness, media
-references and legacy-field preservation. It does not change public output.
+This validator is intentionally strict about identity, route uniqueness, media,
+authority-derived commerce state and legacy-field preservation. It does not
+change public output.
 """
 from __future__ import annotations
 
 import json
 import pathlib
-import sys
 from collections import Counter
 
 from catalog_model import iter_plans, load_raw_catalog, normalize_catalog, source_digest
 
 ROOT = pathlib.Path(__file__).resolve().parent
-
 errors: list[str] = []
 
 
@@ -62,8 +61,10 @@ def main() -> int:
     media_ids: list[str] = []
     product_routes_en: list[str] = []
     product_routes_bn: list[str] = []
-    unknown_commercial = 0
     fallback_media = 0
+    state_counts: Counter[str] = Counter()
+    sellable_count = 0
+    priced_count = 0
 
     raw_by_id = {p["id"]: p for p in raw_products}
     for product in products:
@@ -95,7 +96,10 @@ def main() -> int:
                 raw_plan,
                 plan,
                 f"{pid} plan {idx + 1}",
-                {"plan_id_v3", "plan_slug_v3", "product_id_v3", "commercial_state_v3", "routes_v3"},
+                {
+                    "plan_id_v3", "plan_slug_v3", "product_id_v3",
+                    "commercial_state_v3", "price_v3", "sellable_v3", "routes_v3"
+                },
             )
             plan_id = str(plan.get("plan_id_v3") or "")
             if not plan_id:
@@ -105,8 +109,29 @@ def main() -> int:
                 fail(f"{pid} plan {idx + 1}: wrong product_id_v3")
             plan_routes_en.append(plan["routes_v3"]["en"])
             plan_routes_bn.append(plan["routes_v3"]["bn"])
-            if plan.get("commercial_state_v3") == "unknown":
-                unknown_commercial += 1
+
+            state = plan.get("commercial_state_v3")
+            if state not in {"allowed", "direct_provider_only", "blocked", "unknown"}:
+                fail(f"{pid} / {plan_id}: invalid commercial state {state!r}")
+            state_counts[str(state)] += 1
+            if plan.get("price_v3") is not None:
+                priced_count += 1
+            if plan.get("sellable_v3") is True:
+                sellable_count += 1
+                if state != "allowed" or not plan.get("price_v3"):
+                    fail(f"{pid} / {plan_id}: sellable without allowed state + approved price")
+
+            # Current OpenAI registry must never allow legacy shared plans.
+            if pid.startswith("chatgpt"):
+                looks_shared = (
+                    str(plan.get("type", "")).lower() == "shared"
+                    or str(plan.get("tos", "")).lower().startswith("shared")
+                    or "shared" in str(plan.get("label", "")).lower()
+                )
+                if looks_shared and state != "blocked":
+                    fail(f"{pid} / {plan_id}: OpenAI shared plan is not blocked")
+                if not looks_shared and state not in {"direct_provider_only", "blocked"}:
+                    fail(f"{pid} / {plan_id}: OpenAI plan is not direct-provider-only/blocked")
 
         for media in product.get("media_v3", []):
             media_id = str(media.get("media_id") or "")
@@ -138,20 +163,22 @@ def main() -> int:
         if duplicates:
             fail(f"duplicate {name}: {duplicates[:10]}")
 
-    # New plan routes may not collide with any existing HTML path.
     existing_html = {
         p.relative_to(ROOT).as_posix()
         for p in ROOT.glob("**/*.html")
-        if "_site" not in p.parts and ".git" not in p.parts
+        if "_site" not in p.parts and "_preview_v3" not in p.parts and ".git" not in p.parts
     }
     collisions = sorted((set(plan_routes_en) | set(plan_routes_bn)) & existing_html)
     if collisions:
         fail(f"new plan routes collide with existing HTML: {collisions[:10]}")
 
-    # Fail closed: legacy status labels are never enough to authorize commerce.
-    for _, plan in iter_plans(normalized):
-        if plan.get("commercial_state_v3") not in {"allowed", "direct_provider_only", "blocked", "unknown"}:
-            fail(f"invalid commercial_state_v3: {plan.get('commercial_state_v3')}")
+    # With current authority registries public prices and launch commerce are not
+    # authorized, therefore no plan may normalize to sellable/priced yet.
+    meta = normalized.get("meta", {}).get("v3_model", {})
+    if meta.get("public_price_authorized") is not True and priced_count:
+        fail(f"{priced_count} plan(s) have price_v3 while public pricing is unauthorized")
+    if meta.get("commerce_launch_ready") is not True and sellable_count:
+        fail(f"{sellable_count} plan(s) are sellable while commerce launch is not ready")
 
     if errors:
         print(f"V3 CATALOG MODEL INVALID: {len(errors)} failure(s)")
@@ -167,7 +194,9 @@ def main() -> int:
         "unique_plan_routes_bn": len(set(plan_routes_bn)),
         "normalized_media_items": len(media_ids),
         "fallback_media_items": fallback_media,
-        "plans_defaulting_commercial_unknown": unknown_commercial,
+        "commercial_state_counts": dict(sorted(state_counts.items())),
+        "approved_price_records_in_effect": priced_count,
+        "sellable_plans": sellable_count,
         "legacy_source_sha256": before,
         "legacy_product_routes_preserved": True,
         "legacy_input_mutated": False,
