@@ -2,9 +2,9 @@
 """Authority-aware public configuration for SAVEONSUB.
 
 This file deliberately distinguishes known public contact channels from pending
-or protected values. It is safe for generators to import. Payment destinations
-and legal-entity claims must never be added here without a dated authority
-record.
+or protected values. It is safe for generators to import. Payment destinations,
+legal-entity claims and commerce UI must never be enabled here without dated
+authority evidence and passing release gates.
 """
 from __future__ import annotations
 
@@ -30,6 +30,12 @@ PAYMENT_DESTINATIONS = {}
 # Exact legal operator wording is not established by current primary evidence.
 LEGAL_OPERATOR_STATUS = "unverified"
 LEGAL_OPERATOR_PUBLIC = None
+
+# Until provider eligibility, SAVEONSUB prices, payment destinations and launch
+# state all pass release validation, generated public navigation must not expose
+# checkout/order controls. This is a UI consequence of authority, not the source
+# of authority; validate_release.py remains the hard release gate.
+COMMERCE_UI_ENABLED = False
 
 
 def support_mailto(subject: str = "SAVEONSUB support") -> str:
