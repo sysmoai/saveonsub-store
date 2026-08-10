@@ -22,6 +22,7 @@ SOURCE_FILES = (
     "media_registry.py",
     "build_public_info_v3.py",
     "extend_public_info_v3.py",
+    "enhance_content_v3.py",
     "enhance_discovery_v3.py",
     "enhance_compare_v3.py",
     "enhance_related_v3.py",
@@ -45,6 +46,7 @@ SOURCE_FILES = (
     "validate_discovery_quality.py",
     "validate_compare_quality.py",
     "validate_related_quality.py",
+    "validate_content_quality.py",
     "verify_build_determinism.py",
     "assets/style.css",
     "assets/app.js",
@@ -58,10 +60,12 @@ SOURCE_DIRS = (
     "docs/control",
     "data/media",
     "assets/social",
+    "content",
 )
 GENERATOR_FILES = {
     "build_public_info_v3.py",
     "extend_public_info_v3.py",
+    "enhance_content_v3.py",
     "enhance_discovery_v3.py",
     "enhance_compare_v3.py",
     "enhance_related_v3.py",
@@ -166,6 +170,8 @@ def main() -> int:
     missing_source_contract = [rel for rel in SOURCE_FILES if not (ROOT / rel).is_file()]
     if missing_source_contract:
         raise SystemExit(f"quality manifest source contract missing files: {missing_source_contract}")
+    if not (ROOT / "content" / "resources_v1.json").is_file():
+        raise SystemExit("quality manifest editorial source contract missing content/resources_v1.json")
 
     manifest = {
         "manifest_version": 1,
@@ -202,6 +208,7 @@ def main() -> int:
         "git_sha": manifest["git_sha"],
         "source_files": len(source_entries),
         "generator_files": len(generator_entries),
+        "editorial_files": sum(1 for e in source_entries if str(e["path"]).startswith("content/")),
         "output_files": len(output_entries),
         "html_routes": len(html_routes),
         "sitemap_urls": len(urls),
