@@ -13,6 +13,9 @@ on:
       - feat/sos-discovery-20260810
       - feat/sos-compare-20260810
       - feat/sos-related-20260810
+      - feat/sos-content-engine-20260810
+  schedule:
+    - cron: '15 2 * * *'
   workflow_dispatch:
 
 permissions:
@@ -54,6 +57,7 @@ jobs:
           python -m py_compile validate_compare_quality.py
           python -m py_compile validate_related_quality.py
           python -m py_compile validate_content_quality.py
+          python -m py_compile validate_editorial_freshness.py
           python -m py_compile enhance_content_v3.py
           python -m py_compile enhance_discovery_v3.py
           python -m py_compile enhance_compare_v3.py
@@ -66,12 +70,16 @@ jobs:
       - name: Validate editorial source records
         run: |
           python -m json.tool content/resources_v1.json > /dev/null
+          python -m json.tool content/editorial_policy_v1.json > /dev/null
           test "$(python - <<'PY'
           import json
           data=json.load(open('content/resources_v1.json', encoding='utf-8'))
           print(data.get('editorial_owner',''))
           PY
           )" = "SAVEONSUB Admin"
+
+      - name: Enforce editorial freshness SLA
+        run: python validate_editorial_freshness.py
 
       - name: Reconfirm protected model before quality build
         run: |
