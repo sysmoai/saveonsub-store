@@ -38,26 +38,53 @@ def load_authority() -> dict[str, Any]:
     }
 
 
+def provider_record(product: dict[str, Any], authority: dict[str, Any] | None = None) -> dict[str, Any]:
+    authority = authority or load_authority()
+    return authority["provider"].get("records", {}).get(str(product.get("id", "")), {})
+
+
 def provider_product_state(product: dict[str, Any], authority: dict[str, Any] | None = None) -> str:
     authority = authority or load_authority()
     registry = authority["provider"]
-    record = registry.get("records", {}).get(str(product.get("id", "")), {})
+    record = provider_record(product, authority)
     state = str(record.get("state") or registry.get("default_state") or "unknown").lower()
     return state if state in VALID_COMMERCIAL_STATES else "unknown"
 
 
-def provider_plan_state(product: dict[str, Any], plan: dict[str, Any], authority: dict[str, Any] | None = None) -> str:
-    authority = authority or load_authority()
-    registry = authority["provider"]
-    record = registry.get("records", {}).get(str(product.get("id", "")), {})
-    product_state = provider_product_state(product, authority)
+def plan_looks_shared(plan: dict[str, Any]) -> bool:
     plan_type = str(plan.get("type") or "").lower()
     tos = str(plan.get("tos") or "").lower()
-    looks_shared = plan_type == "shared" or tos.startswith("shared") or "shared" in str(plan.get("label") or "").lower()
+    return plan_type == "shared" or tos.startswith("shared") or "shared" in str(plan.get("label") or "").lower()
 
-    if looks_shared and record.get("shared_plan_state"):
-        state = str(record["shared_plan_state"]).lower()
-        return state if state in VALID_COMMERCIAL_STATES else "blocked"
+
+def shared_plan_explicitly_allowed(product: dict[str, Any], authority: dict[str, Any] | None = None) -> bool:
+    """Return True only for provider-evidenced shared fulfillment permission.
+
+    Absence of a provider record, an unknown record, or a generic product-level
+    `allowed` state is never sufficient. Shared fulfillment must have its own
+    explicit `shared_plan_state=allowed` plus evidence/authority reference.
+    """
+    authority = authority or load_authority()
+    record = provider_record(product, authority)
+    if str(record.get("shared_plan_state") or "").lower() != "allowed":
+        return False
+    evidence = record.get("shared_plan_evidence") or record.get("evidence") or record.get("authority_ref")
+    return bool(str(evidence or "").strip())
+
+
+def provider_plan_state(product: dict[str, Any], plan: dict[str, Any], authority: dict[str, Any] | None = None) -> str:
+    authority = authority or load_authority()
+    record = provider_record(product, authority)
+    product_state = provider_product_state(product, authority)
+
+    if plan_looks_shared(plan):
+        if shared_plan_explicitly_allowed(product, authority):
+            return "allowed"
+        explicit = str(record.get("shared_plan_state") or "").lower()
+        if explicit in {"direct_provider_only", "blocked"}:
+            return explicit
+        # Unknown/no record is not permission for account/seat sharing.
+        return "blocked"
     return product_state
 
 
