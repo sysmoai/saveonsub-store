@@ -1,0 +1,27 @@
+{
+  "schema": "saveonsub-editorial-policy-v1",
+  "editorial_owner": "SAVEONSUB Admin",
+  "timezone": "Asia/Dhaka",
+  "daily_quality_cron_utc": "15 2 * * *",
+  "freshness": {
+    "review_due_days": 21,
+    "hard_fail_days": 45,
+    "source_check_date_required": true,
+    "future_dates_forbidden": true
+  },
+  "publishing": {
+    "people_first": true,
+    "bangladesh_relevance_required": true,
+    "bilingual_for_resource_cluster": true,
+    "primary_or_authoritative_sources_required": true,
+    "minimum_sources_per_article": 2,
+    "paid_ranking_without_disclosure_forbidden": true,
+    "unverified_commercial_claims_forbidden": true,
+    "automated_mass_publishing_for_search_rankings_forbidden": true
+  },
+  "release": {
+    "production_requires_authenticated_canonical_path": true,
+    "production_requires_green_release_gates": true,
+    "production_gate_bypass_forbidden": true
+  }
+}
