@@ -1,19 +1,23 @@
-/* SAVEONSUB Store — shared app.js (Step 3) */
-const WA = "8801305869242";
-const BKASH = "+8801305869242";
+/* SAVEONSUB shared app.js — authority-aware compatibility runtime */
+const SUPPORT_EMAIL = "support@saveonsub.com";
+const COMMERCE_ENABLED = false;
 
-/* ---------- Cart (localStorage) ---------- */
+/* ---------- Cart (localStorage compatibility) ---------- */
 function cartGet(){ try{return JSON.parse(localStorage.getItem('sos_cart')||'[]')}catch(e){return []} }
 function cartSet(c){ localStorage.setItem('sos_cart', JSON.stringify(c)); cartBadge(); }
 function cartAdd(id, planLabel, bdt, name){
+  if(!COMMERCE_ENABLED){
+    toast('Ordering is not enabled while plan and payment verification is pending.');
+    return;
+  }
   const c = cartGet();
   const ex = c.find(i=>i.id===id && i.plan===planLabel);
   if(ex){ ex.qty++; } else { c.push({id, plan:planLabel, bdt:Number(bdt), name, qty:1}); }
-  cartSet(c); toast(`✅ ${name} added — ৳${bdt}`);
+  cartSet(c); toast(`✅ ${name} added to cart`);
 }
 function cartRemove(idx){ const c=cartGet(); c.splice(idx,1); cartSet(c); if(window.renderCart)renderCart(); }
-function cartTotal(){ return cartGet().reduce((s,i)=>s+i.bdt*i.qty,0); }
-function cartCount(){ return cartGet().reduce((s,i)=>s+i.qty,0); }
+function cartTotal(){ return cartGet().reduce((s,i)=>s+Number(i.bdt||0)*i.qty,0); }
+function cartCount(){ return COMMERCE_ENABLED ? cartGet().reduce((s,i)=>s+i.qty,0) : 0; }
 function cartBadge(){ document.querySelectorAll('.cartn').forEach(el=>{ el.textContent=cartCount(); el.style.display=cartCount()?'block':'none'; }); }
 
 /* ---------- Toast ---------- */
@@ -24,14 +28,13 @@ function toast(msg){
   clearTimeout(t._h); t._h=setTimeout(()=>t.style.display='none', 2400);
 }
 
-/* ---------- Order ID ---------- */
+/* ---------- Legacy order-ID compatibility ---------- */
 function orderId(){
   const d=new Date(), p=n=>String(n).padStart(2,'0');
   return `SOS-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${Math.floor(1000+Math.random()*9000)}`;
 }
-
-/* ---------- Order record (localStorage) — on-site receipt + fallback ---------- */
 function saveOrder(o){
+  if(!COMMERCE_ENABLED) return;
   try{
     localStorage.setItem('sos_last_order', JSON.stringify(o));
     const hist=JSON.parse(localStorage.getItem('sos_orders')||'[]');
@@ -40,25 +43,28 @@ function saveOrder(o){
 }
 function lastOrder(){ try{return JSON.parse(localStorage.getItem('sos_last_order')||'null')}catch(e){return null} }
 
-/* ---------- WhatsApp helpers ---------- */
-function waLink(text){ return `https://wa.me/${WA}?text=${encodeURIComponent(text)}`; }
+/* ---------- Contact compatibility ---------- */
+function supportMailto(subject, body){
+  return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject||'SAVEONSUB support')}&body=${encodeURIComponent(body||'')}`;
+}
+// Historical templates may still call waLink/waOrder until every generated page
+// is rebuilt. Keep the function names as compatibility aliases, but never route
+// them to an unapproved WhatsApp number or expose a client-authoritative order.
+function waLink(text){ return supportMailto('SAVEONSUB support', text||''); }
 function waOrder(extra){
-  const c=cartGet();
-  const lines=c.map(i=>`• ${i.name} — ${i.plan} ×${i.qty} = ৳${i.bdt*i.qty}`).join('\n');
-  return waLink(`🛒 NEW ORDER ${extra&&extra.oid?extra.oid:orderId()}\n${lines}\nTOTAL: ৳${cartTotal()}\nPayment: ${extra&&extra.method?extra.method:'(choosing)'} ${extra&&extra.txn?('TxnID: '+extra.txn):''}\n— sent from saveonsub store`);
+  return supportMailto(
+    'SAVEONSUB order enquiry',
+    `Ordering is currently verification-gated.${extra&&extra.oid?` Reference: ${extra.oid}`:''}`
+  );
 }
 
-/* ---------- Real-facts ticker (honest — lifetime records, no fake timestamps) ---------- */
+/* ---------- Truth-safe ticker ---------- */
 const TICKS=[
-  "211+ lifetime orders — Google AI Pro ৳500 (our #1)",
-  "201+ lifetime orders — Grammarly Premium ৳470",
-  "178+ lifetime orders — Leonardo AI ৳599",
-  "156+ lifetime orders — Midjourney from ৳1,199",
-  "145+ lifetime orders — ChatGPT Plus from ৳499",
-  "1,600+ total orders delivered since 2024",
-  "Warranty promise: replacement within 1 hour",
-  "Pay-after-testing available on first orders",
-  "Delivery SLA: 5–15 min on instant products"
+  "Compare plans before choosing a subscription",
+  "English + Bangla product guidance",
+  "Official-provider links are available on product pages",
+  "Plan eligibility is verified separately from product information",
+  "No automatic renewal or payment is enabled while commerce verification is pending"
 ];
 function startTicker(){
   const el=document.getElementById('tick'); if(!el) return;
@@ -73,11 +79,10 @@ function copyText(txt,label){ navigator.clipboard&&navigator.clipboard.writeText
 /* ---------- Mobile nav ---------- */
 function navToggle(){ const l=document.querySelector('.navlinks'); if(l) l.classList.toggle('open'); }
 
-/* ---------- PWA: register service worker (offline resilience) ---------- */
+/* ---------- PWA ---------- */
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{ navigator.serviceWorker.register('/sw.js').catch(()=>{}); });
 }
-/* Custom install prompt (Android/desktop): capture event, show a subtle button if present */
 let sosDeferredPrompt=null;
 window.addEventListener('beforeinstallprompt', (e)=>{
   e.preventDefault(); sosDeferredPrompt=e;
@@ -85,15 +90,15 @@ window.addEventListener('beforeinstallprompt', (e)=>{
     b.onclick=async()=>{ b.style.display='none'; sosDeferredPrompt.prompt(); await sosDeferredPrompt.userChoice; sosDeferredPrompt=null; }; }
 });
 
-/* ---------- Bangla language auto-suggest (honest, dismissible, once) ---------- */
+/* ---------- Bangla language auto-suggest ---------- */
 function suggestBangla(){
   try{
-    if((document.documentElement.lang||'').startsWith('bn')) return;      // already Bangla
-    if(localStorage.getItem('sos_lang_dismissed')) return;                 // user said no
+    if((document.documentElement.lang||'').startsWith('bn')) return;
+    if(localStorage.getItem('sos_lang_dismissed')) return;
     const langs = navigator.languages || [navigator.language || ''];
-    if(!langs.some(l => (l||'').toLowerCase().startsWith('bn'))) return;    // not a Bangla browser
+    if(!langs.some(l => (l||'').toLowerCase().startsWith('bn'))) return;
     const alt = document.querySelector('link[hreflang="bn-bd"]');
-    if(!alt || !alt.href || alt.href === location.href) return;             // no distinct Bangla page
+    if(!alt || !alt.href || alt.href === location.href) return;
     const bar = document.createElement('div');
     bar.setAttribute('role','region'); bar.setAttribute('aria-label','ভাষা');
     bar.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;max-width:520px;margin:0 auto;'
@@ -108,46 +113,19 @@ function suggestBangla(){
   }catch(e){}
 }
 
-/* ---------- Email Newsletter ---------- */
+/* ---------- Deal-alert interest form ---------- */
 function setupNewsletterForm(){
   const form = document.getElementById('newsletter-form');
   if(!form) return;
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const email = form.querySelector('input[type="email"]').value;
+    const email = form.querySelector('input[type="email"]')?.value?.trim();
     if(!email) return;
-
-    try {
-      // Local copy only — the merchant cannot read this. It exists so a repeat
-      // visitor is not prompted twice on the same device.
-      const subscribers = JSON.parse(localStorage.getItem('sos_subscribers') || '[]');
-      if(!subscribers.includes(email)) {
-        subscribers.push(email);
-        localStorage.setItem('sos_subscribers', JSON.stringify(subscribers));
-      }
-
-      // This was previously fetch('https://wa.me/...'), which delivered nothing
-      // and told the visitor otherwise. It failed twice over: CSP connect-src
-      // 'self' blocked the request outright, and wa.me is a click-to-chat
-      // REDIRECTOR, not an ingest endpoint — it would not have recorded the
-      // address even if allowed. The .catch(()=>{}) swallowed the violation, so
-      // every signup was silently discarded under a success message.
-      // window.open is a navigation, not a fetch, so connect-src does not apply
-      // and the lead actually reaches the merchant.
-      const waMsg = `Newsletter signup: ${email}`;
-      const win = window.open(`https://wa.me/${WA}?text=${encodeURIComponent(waMsg)}`, '_blank');
-
-      if (win) {
-        toast('Opening WhatsApp — send the message to confirm your signup.');
-        form.reset();
-      } else {
-        // Popup blocked: say so rather than claim success.
-        toast('Please allow popups, or message us on WhatsApp to subscribe.');
-      }
-    } catch(e) {
-      toast('Could not subscribe — please message us on WhatsApp.');
-      console.error('Newsletter error:', e);
-    }
+    // No newsletter backend is connected. Never claim the address was stored or
+    // subscribed. Open a normal email draft so the user intentionally contacts
+    // the known support mailbox instead of silently sending PII somewhere.
+    location.href = supportMailto('SAVEONSUB deal alerts', `Please add this address to future SAVEONSUB deal alerts: ${email}`);
+    toast('Opening your email app so you can confirm the request.');
   });
 }
 
