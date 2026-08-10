@@ -2,9 +2,9 @@
 """Stage an explicit public copy of SAVEONSUB into ./_site.
 
 The repository root is never publishable. Internal strategy, source data, scripts,
-pricing provenance, control records and preview workspaces must not enter
-Cloudflare Pages output. Runtime JSON is fail-closed: browser code may fetch only
-files listed in PUBLIC_JSON_ALLOWLIST.
+pricing provenance, control records, backend source and preview workspaces must
+not enter Cloudflare Pages output. Runtime JSON is fail-closed: browser code may
+fetch only files listed in PUBLIC_JSON_ALLOWLIST.
 """
 import glob
 import os
@@ -19,7 +19,7 @@ DEST = ROOT / '_site'
 EXCLUDE_DIRS = {
     '.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
     '__pycache__', 'node_modules', 'marketing', 'reports', 'docs', '_site',
-    '_preview_v3'
+    '_preview_v3', 'commerce-worker'
 }
 EXCLUDE_EXT = {
     '.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml', '.json'
