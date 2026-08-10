@@ -42,6 +42,7 @@ jobs:
           python -m py_compile validate_pwa_release.py
           python -m py_compile validate_security_policy.py
           python -m py_compile enhance_social_metadata_v3.py
+          python -m py_compile harden_security_headers_v3.py
           python -m py_compile extend_public_info_v3.py
           python -m py_compile verify_build_determinism.py
 
