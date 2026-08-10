@@ -9,6 +9,7 @@ on:
     branches:
       - main
       - fix/sos-p0-truth-gates-20260810
+      - feat/sos-quality-gates-20260810
   workflow_dispatch:
 
 permissions:
@@ -31,6 +32,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
       - name: Compile quality controls
         run: |
           python -m py_compile generate_quality_manifest.py
@@ -41,6 +47,8 @@ jobs:
           python -m py_compile validate_social_metadata.py
           python -m py_compile validate_pwa_release.py
           python -m py_compile validate_security_policy.py
+          python -m py_compile validate_discovery_quality.py
+          python -m py_compile enhance_discovery_v3.py
           python -m py_compile enhance_social_metadata_v3.py
           python -m py_compile harden_security_headers_v3.py
           python -m py_compile extend_public_info_v3.py
@@ -60,6 +68,12 @@ jobs:
           python validate_public_info_v3.py
           python validate_l1_release.py
           python stage_deploy.py --public-v3
+
+      - name: Check strict browser JavaScript syntax
+        run: |
+          node --check _site/assets/app.js
+          node --check _site/assets/a11y.js
+          node --check _site/assets/discovery.js
 
       - name: Prove strict build determinism
         run: python verify_build_determinism.py
@@ -86,6 +100,9 @@ jobs:
 
       - name: Validate neutral social preview metadata
         run: python validate_social_metadata.py
+
+      - name: Validate payload-free catalog discovery
+        run: python validate_discovery_quality.py
 
       - name: Validate release-bound PWA caching
         run: python validate_pwa_release.py
