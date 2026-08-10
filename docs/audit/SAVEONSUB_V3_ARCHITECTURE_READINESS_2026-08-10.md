@@ -2,63 +2,48 @@
 
 **Measured:** 2026-08-10 · Asia/Dhaka  
 **Branch:** `fix/sos-p0-truth-gates-20260810`  
-**Current branch head:** `aa6c11deb49e14c10267a96d86ddae87ade192b2`  
-**Exact-head push validation run:** `Validate Architecture` run `31345862122`
+**Validated branch head before this audit-only freeze:** `9f346af06b05cb8ba45f3b25f0a14632f5742884`  
+**Exact-head push validation run:** `Validate Architecture` run `31345900869`
 
-## 1. Architecture baseline
+## Readiness conclusion
 
-SAVEONSUB remains a compatibility-first evolution of the existing Python-generated static storefront. Existing product IDs and canonical product URLs are preserved; new commerce/media systems are additive and remain fail-closed until separately authorized.
+SAVEONSUB Evolution Architecture v3 has a green strict L1 public-information release candidate and a separate intentionally red legacy storefront audit.
 
-Machine-measured legacy baseline:
+The architecture remains an additive evolution of the existing Python/static/Cloudflare stack. Existing canonical product URLs remain invariant. New plan/media/backend capabilities are introduced behind compatibility and fail-closed authority layers rather than by rewriting the storefront.
 
-- HTML files: **234**
-- sitemap URLs: **200**
-- products: **72**
-- plans: **138**
-- categories: **13**
-- EN product pages: **72**
-- BN product pages: **72**
-- product social PNGs: **72**
+## Measured baseline
 
-## 2. Normalized v3 model
+- 72 products
+- 138 plans
+- 13 categories
+- 234 legacy repository HTML files
+- 200 legacy sitemap URLs
+- 72 EN + 72 BN legacy product pages
+- 72 product social images
 
-The compatibility layer now provides:
+## V3 model state
 
-- deterministic normalized identity for all **138 / 138** plans;
-- unique future EN plan routes: **138 / 138**;
-- unique future BN plan routes: **138 / 138**;
-- immutable existing EN/BN product routes;
-- first-class media normalization with current social-image fallback;
-- provider eligibility derived from protected authority records;
-- approved price lookup derived only from the SAVEONSUB pricing authority registry;
-- `unknown` provider state treated as non-sellable;
-- OpenAI shared plans blocked and OpenAI products routed to official-provider/information-only behavior under current provider evidence.
+- all 138 legacy plans normalize to deterministic unique v3 identities;
+- all 138 have unique future EN routes and 138 unique BN routes;
+- existing product routes remain unchanged;
+- first-class media normalization exists with local social-image fallback;
+- provider/commercial state is derived from protected authority registries;
+- pricing is derived only from the SAVEONSUB pricing registry;
+- `unknown` is not sellable;
+- OpenAI shared commerce is blocked; OpenAI product paths are direct-provider/information-only under current provider evidence.
 
-Legacy `catalog.json` remains migration input, not commercial authority.
+## Current authority state
 
-## 3. Protected authority state
+Launch state: `L1_PUBLIC_INFO_ONLY`.
 
-Current authority registries are separated by concern:
-
-- contact authority;
-- payment authority;
-- pricing authority;
-- provider eligibility;
-- legal authority;
-- launch state.
-
-Current release state is **L1_PUBLIC_INFO_ONLY**.
-
-Authorized now:
-
-- informational EN/BN product pages;
-- informational EN/BN category pages;
+Authorized:
+- public informational product/category pages;
+- English/Bangla discovery;
 - provider-status disclosures;
 - official-provider links;
-- indexing of non-commerce informational routes.
+- indexing of non-commerce information pages.
 
-Not authorized now:
-
+Not authorized:
 - SAVEONSUB selling prices;
 - cart/checkout;
 - payment destinations/instructions;
@@ -67,128 +52,86 @@ Not authorized now:
 - unverified legal-operator claims;
 - provider-prohibited fulfillment.
 
-The dedicated SAVEONSUB WhatsApp value remains pending owner input. Payment destinations remain pending owner input. The SAVEONSUB active-price registry remains empty and public-price authorization remains false.
+Protected registries remain fail-closed:
+- WhatsApp value: pending owner input / null;
+- payment destinations: pending owner input / empty;
+- active SAVEONSUB price registry: empty;
+- public price authorization: false;
+- exact legal operator: pending primary evidence.
 
-## 4. Internal ecommerce previews
+## Internal v3 preview tree
 
-Preview-only generators now produce and validate:
-
-- **72 EN + 72 BN** upgraded product-page previews;
-- **138 EN + 138 BN** dedicated plan-page previews;
-- product-to-plan route parity;
+Validated preview-only output:
+- 72 EN + 72 BN upgraded product-page previews;
+- 138 EN + 138 BN dedicated plan-page previews;
+- product/plan route parity;
 - normalized media association;
-- price-free, cart-free, Offer-schema-free plan previews;
-- `noindex,follow` on dedicated plan previews.
+- price-free/cart-free/Offer-schema-free plan pages;
+- `noindex,follow` on plan pages.
 
-The preview workspace is explicitly excluded from `_site`.
+Preview files are explicitly excluded from deployment.
 
-## 5. Strict L1 public-information release artifact
+## Strict L1 public-information artifact
 
-A separate strict builder now produces `_public_v3` rather than sanitizing legacy generated pages at deploy time.
+The strict release builder produces `_public_v3`; it does not deploy/sanitize the legacy commerce tree.
 
-The strict artifact preserves current product URLs and generates:
+Validated strict properties:
+- 0 SAVEONSUB selling prices;
+- 0 cart/checkout controls;
+- 0 payment destinations;
+- 0 WhatsApp destinations;
+- 0 Offer/AggregateOffer schema;
+- 0 raw `catalog.json` / `assets/catalog.js` publication;
+- 0 unsupported numeric order/customer/user proof;
+- 0 unverified legal-operator wording;
+- canonical current product URLs preserved;
+- plan detail pages excluded from sitemap and `noindex,follow`;
+- internal JSON absent.
 
-- 72 EN product pages;
-- 72 BN product pages;
-- 138 EN dedicated plan pages;
-- 138 BN dedicated plan pages;
-- 13 EN category pages;
-- 13 BN category pages;
-- EN/BN home/discovery surfaces and minimal neutral trust/contact pages.
+`stage_deploy.py --public-v3` stages only this strict artifact and refuses protected/legacy commerce paths.
 
-Strict L1 properties validated in CI:
+## Exact validation evidence
 
-- **0 public SAVEONSUB selling prices**;
-- **0 cart/checkout controls**;
-- **0 payment destinations**;
-- **0 WhatsApp destinations**;
-- **0 Offer/AggregateOffer schema**;
-- **0 raw `catalog.json` / `assets/catalog.js` publication**;
-- **0 unsupported numeric orders/customers/users proof**;
-- **0 unverified legal-operator wording**;
-- current product canonical URLs preserved;
-- detail plan pages excluded from sitemap and marked `noindex,follow`;
-- internal JSON absent from the release artifact.
+At branch head `9f346af06b05cb8ba45f3b25f0a14632f5742884`, push run `31345900869` completed the full `structural-audit` successfully.
 
-`stage_deploy.py --public-v3` stages only this strict artifact and refuses protected paths.
-
-## 6. Exact-head validation result
-
-`Validate Architecture` push run `31345862122` at exact head `aa6c11deb49e14c10267a96d86ddae87ade192b2` completed with the structural/release-candidate job **SUCCESS**.
-
-Successful steps include:
-
-- control JSON validation;
-- Python/JavaScript compile/syntax checks;
-- protected authority boundary validation;
-- v3 normalized catalog validation;
-- current inventory/parity validation;
-- EN/BN product/plan preview generation and validation;
-- strict L1 build;
-- strict L1 hardening;
+Green steps included:
+- authority/control JSON validation;
+- Python and JavaScript syntax checks;
+- protected authority boundaries;
+- normalized catalog model;
+- inventory/parity;
+- internal product/plan previews;
+- strict L1 build/hardening;
 - strict public-artifact validation;
 - strict L1 release-authority gate;
-- fail-closed D1 plan seed generation;
-- shadow Worker validation and tests;
+- fail-closed D1 plan seed;
+- shadow Worker validation and quote tests;
 - bounded legacy staging;
-- strict L1 `_site` staging;
-- strict release-candidate boundary verification;
+- strict `_site` staging and boundary verification;
 - release-candidate artifact upload.
 
-The immediately preceding green release candidate from head `52788f35f2cc9b8d372e800f7bc0a544520ac809` was uploaded as GitHub Actions artifact:
+The separate legacy/current-source release report remains intentionally red because the old price-bearing commerce tree is unsafe and must not become the deployment source.
 
-- artifact ID: `9047271757`
-- artifact digest: `sha256:57cc9c0844724d3fe2f210d0ebcfd61bc62d2ffb75369690f800e7231efc8bf7`
+## Cloudflare blocker
 
-The current exact-head run also uploaded its strict release candidate after the same gate sequence; retrieve its run artifact when selecting the merge/deployment SHA.
+The same exact-head push run performed a read-only Wrangler credential probe. `wrangler whoami` failed against Cloudflare `/accounts` with `Invalid access token [code: 9109]`.
 
-## 7. Legacy release report
+No Cloudflare resource was created, changed, deployed, or deleted by the credential probe.
 
-The separate legacy/current-source `validate_release.py` report remains intentionally red.
+Therefore:
 
-This is not a contradiction with the green strict L1 candidate. It proves that the old committed price-bearing commerce tree still contains historical commercial/provider/authority issues and therefore must **not** be the production deployment input.
+- **L1 code/release-candidate readiness: PASS**
+- **Cloudflare production deployment: BLOCKED_ACCESS**
+- **commerce activation: NOT READY / NOT AUTHORIZED**
 
-The production workflow on this branch has been changed so it can deploy only the generated strict L1 artifact, never the repository root or legacy commerce tree.
+## Next execution sequence
 
-## 8. Shadow commerce backend
-
-A non-routed `saveonsub-commerce-shadow` Worker foundation now exists with:
-
-- health/capability endpoints;
-- server-authoritative quote logic;
-- D1 runtime schema;
-- all 138 seed plans defaulting to `unknown` + `NULL` price;
-- client price ignored by quote calculation;
-- blocked/unknown plans unable to quote;
-- order creation hard-disabled;
-- no customer/payment PII schema in the shadow phase.
-
-It is not deployed because Cloudflare authentication is invalid and because commerce authority is not yet established.
-
-## 9. Cloudflare infrastructure blocker
-
-The exact-head push run performed a read-only Wrangler credential probe using the existing GitHub Actions secrets. `wrangler whoami` failed against Cloudflare `/accounts` with `Invalid access token [code: 9109]`.
-
-No Cloudflare resource was created, modified, deployed, or deleted by this probe.
-
-The GitHub workflow job is marked successful overall only because the credential probe is deliberately `continue-on-error`; the Wrangler command itself failed and is the current infrastructure blocker.
-
-## 10. Current readiness decision
-
-**Code / release-candidate readiness for L1 public information: PASS at exact branch head.**
-
-**Production deployment: BLOCKED_ACCESS** until the Cloudflare credential in GitHub Actions is replaced with a valid token for the correct account.
-
-**Commerce activation: NOT READY / NOT AUTHORIZED.** It remains blocked by protected provider/pricing/payment/legal/contact reconciliation even after the informational site is live.
-
-Next execution sequence:
-
-1. repair Cloudflare Pages deployment credential in GitHub Actions;
-2. run a read-only credential validation on the branch;
-3. reconfirm strict CI green at the exact head;
+1. replace the invalid Cloudflare Pages deployment token in GitHub Actions;
+2. re-run read-only credential verification;
+3. reconfirm strict exact-head validation;
 4. merge the reviewed branch;
-5. allow `main` to deploy only the strict L1 artifact;
-6. verify the live custom domain and deployment SHA;
+5. let `main` deploy only the strict L1 artifact;
+6. verify `saveonsub.com` live behavior and deployment SHA;
 7. record rollback point;
-8. continue non-production Worker/D1 and media/admin phases;
-9. enable commerce only after the protected authority registries are populated and all corresponding gates pass.
+8. continue shadow Worker/D1 and media/admin phases;
+9. enable commerce only after protected price/payment/contact/legal/provider registries are fully populated and all corresponding gates pass.
