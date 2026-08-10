@@ -1,9 +1,8 @@
 {
-  "name": "saveonsub",
-  "version": 2,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "python3 validate_authority_boundaries.py && python3 validate_media_registry.py && python3 validate_catalog_model.py && python3 build_public_info_v3.py && python3 harden_public_info_v3.py && python3 stamp_release.py && python3 validate_public_info_v3.py && python3 validate_l1_release.py && python3 stage_deploy.py --public-v3",
   "outputDirectory": "_site",
-  "installCommand": "echo 'No dependency install required for strict L1 static build'",
+  "installCommand": "",
   "cleanUrls": true,
   "redirects": [
     { "source": "/subscriptions.html", "destination": "/all.html", "permanent": true },
