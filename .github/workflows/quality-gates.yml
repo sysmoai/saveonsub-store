@@ -10,6 +10,7 @@ on:
       - main
       - fix/sos-p0-truth-gates-20260810
       - feat/sos-quality-gates-20260810
+      - feat/sos-discovery-20260810
   workflow_dispatch:
 
 permissions:
@@ -48,7 +49,9 @@ jobs:
           python -m py_compile validate_pwa_release.py
           python -m py_compile validate_security_policy.py
           python -m py_compile validate_discovery_quality.py
+          python -m py_compile validate_compare_quality.py
           python -m py_compile enhance_discovery_v3.py
+          python -m py_compile enhance_compare_v3.py
           python -m py_compile enhance_social_metadata_v3.py
           python -m py_compile harden_security_headers_v3.py
           python -m py_compile extend_public_info_v3.py
@@ -74,6 +77,7 @@ jobs:
           node --check _site/assets/app.js
           node --check _site/assets/a11y.js
           node --check _site/assets/discovery.js
+          node --check _site/assets/compare.js
 
       - name: Prove strict build determinism
         run: python verify_build_determinism.py
@@ -103,6 +107,9 @@ jobs:
 
       - name: Validate payload-free catalog discovery
         run: python validate_discovery_quality.py
+
+      - name: Validate descriptive-only product comparison
+        run: python validate_compare_quality.py
 
       - name: Validate release-bound PWA caching
         run: python validate_pwa_release.py
