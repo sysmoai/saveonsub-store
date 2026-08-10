@@ -1,8 +1,31 @@
-"""SAVEONSUB unified templates — ONE nav, ONE footer per language. Every build script imports this.
-Edit here, rebuild all, and every single page gets the update. Zero drift."""
+"""SAVEONSUB unified templates — ONE nav, ONE footer per language.
+
+Every build script imports this module. Contact and commerce controls derive from
+site_config so stale/protected values cannot be reintroduced by individual page
+generators.
+"""
 import html
 
-def esc(s): return html.escape(str(s), quote=True)
+from site_config import COMMERCE_UI_ENABLED, SUPPORT_EMAIL, support_mailto
+
+
+def esc(s):
+    return html.escape(str(s), quote=True)
+
+
+def _nav_actions_en(rel=""):
+    if COMMERCE_UI_ENABLED:
+        return f'''<a href="{rel}track.html" class="navtrack">📦 Track</a>
+    <button class="cartbtn" onclick="location.href='{rel}checkout.html'" aria-label="Cart">🛒<span class="cartn" style="display:none">0</span></button>'''
+    return f'<a href="{esc(support_mailto())}" class="navtrack">✉ Support</a>'
+
+
+def _nav_actions_bn(rel=""):
+    if COMMERCE_UI_ENABLED:
+        return f'''<a href="{rel}track.html" class="navtrack">📦 ট্র্যাক</a>
+    <button class="cartbtn" onclick="location.href='{rel}checkout.html'" aria-label="কার্ট">🛒<span class="cartn" style="display:none">0</span></button>'''
+    return f'<a href="{esc(support_mailto("SAVEONSUB সহায়তা"))}" class="navtrack">✉ সহায়তা</a>'
+
 
 # ===== ENGLISH NAV =====
 def nav_en(rel=""):
@@ -34,19 +57,19 @@ def nav_en(rel=""):
     <a href="{rel}faq.html">FAQ</a>
   </div>
   <div class="navright">
-    <a href="{rel}track.html" class="navtrack">📦 Track</a>
-    <button class="cartbtn" onclick="location.href='{rel}checkout.html'" aria-label="Cart">🛒<span class="cartn" style="display:none">0</span></button>
+    {_nav_actions_en(rel)}
     <button class="hamb" onclick="navToggle()" aria-label="Menu">☰</button>
   </div>
 </div></nav>'''
 
-# ===== ENGLISH FOOTER (5-column) =====
+
+# ===== ENGLISH FOOTER =====
 def footer_en(rel=""):
     return f'''<footer><div class="wrap">
   <div class="fcols">
     <div>
       <span class="logo">SAVE<em>ON</em>SUB</span>
-      <p style="margin-top:10px;max-width:280px">Bangladesh's Subscription Operating System — official, customer-owned subscriptions paid in BDT — Dhaka, Bangladesh.</p>
+      <p style="margin-top:10px;max-width:280px">Bangladesh-first subscription discovery, comparison and activation support. Provider and commercial eligibility are verified per plan.</p>
     </div>
     <div>
       <b>Store</b>
@@ -58,8 +81,7 @@ def footer_en(rel=""):
     </div>
     <div>
       <b>Help</b>
-      <a href="{rel}how-to-order.html">How to order</a>
-      <a href="{rel}track.html">Track order</a>
+      <a href="{rel}how-to-order.html">How it works</a>
       <a href="{rel}contact.html">Contact</a>
       <a href="{rel}students.html">Student Zone</a>
     </div>
@@ -75,14 +97,14 @@ def footer_en(rel=""):
     <div>
       <b>Company</b>
       <a href="{rel}about.html">About us</a>
-      <a href="https://wa.me/8801305869242">WhatsApp</a>
-      <a href="mailto:support@saveonsub.com">Email</a>
+      <a href="{esc(support_mailto())}">Email support</a>
     </div>
   </div>
-  <p class="fine">&copy; 2026 SAVEONSUB &middot; . All product names and trademarks belong to their owners. Official prices shown for comparison — verify using official links on product pages.</p>
+  <p class="fine">&copy; 2026 SAVEONSUB. Product names and trademarks belong to their respective owners. SAVEONSUB does not imply provider partnership or authorization unless explicitly stated and verified.</p>
 </div></footer>'''
 
-# ===== BANGLA NAV (with dropdown categories) =====
+
+# ===== BANGLA NAV =====
 def nav_bn(rel=""):
     return f'''<nav><div class="wrap navin">
   <a class="logo" href="{rel}bn.html">SAVE<em>ON</em>SUB</a>
@@ -110,11 +132,11 @@ def nav_bn(rel=""):
     <a href="{rel}faq.html">প্রশ্নোত্তর</a>
   </div>
   <div class="navright">
-    <a href="{rel}track.html" class="navtrack">📦 ট্র্যাক</a>
-    <button class="cartbtn" onclick="location.href='{rel}checkout.html'" aria-label="কার্ট">🛒<span class="cartn" style="display:none">0</span></button>
+    {_nav_actions_bn(rel)}
     <button class="hamb" onclick="navToggle()" aria-label="মেনু">☰</button>
   </div>
 </div></nav>'''
+
 
 # ===== BANGLA FOOTER =====
 def footer_bn(rel=""):
@@ -122,7 +144,7 @@ def footer_bn(rel=""):
   <div class="fcols">
     <div>
       <span class="logo">SAVE<em>ON</em>SUB</span>
-      <p style="margin-top:10px;max-width:280px">বাংলাদেশের সাবস্ক্রিপশন অপারেটিং সিস্টেম — অফিসিয়াল, গ্রাহক-নিয়ন্ত্রিত সাবস্ক্রিপশন — ঢাকা, বাংলাদেশ।</p>
+      <p style="margin-top:10px;max-width:280px">বাংলাদেশ-কেন্দ্রিক সাবস্ক্রিপশন তথ্য, তুলনা ও অ্যাক্টিভেশন সহায়তা। প্রতিটি প্ল্যানের প্রোভাইডার ও বাণিজ্যিক যোগ্যতা আলাদাভাবে যাচাই করা হয়।</p>
     </div>
     <div>
       <b>স্টোর</b>
@@ -134,8 +156,7 @@ def footer_bn(rel=""):
     </div>
     <div>
       <b>সাহায্য</b>
-      <a href="{rel}how-to-order.html">কীভাবে অর্ডার</a>
-      <a href="{rel}track.html">অর্ডার ট্র্যাক</a>
+      <a href="{rel}how-to-order.html">কীভাবে কাজ করে</a>
       <a href="{rel}contact.html">যোগাযোগ</a>
       <a href="{rel}students.html">স্টুডেন্ট</a>
     </div>
@@ -149,11 +170,12 @@ def footer_bn(rel=""):
     <div>
       <b>কোম্পানি</b>
       <a href="{rel}about.html">আমাদের সম্পর্কে</a>
-      <a href="https://wa.me/8801305869242">হোয়াটসঅ্যাপ</a>
+      <a href="{esc(support_mailto('SAVEONSUB সহায়তা'))}">ইমেইল সহায়তা</a>
     </div>
   </div>
-  <p class="fine">&copy; 2026 SAVEONSUB &middot; । সব প্রোডাক্টের নাম ও ট্রেডমার্ক তাদের মালিকদের।</p>
+  <p class="fine">&copy; 2026 SAVEONSUB। সব প্রোডাক্টের নাম ও ট্রেডমার্ক তাদের নিজ নিজ মালিকের। যাচাই ছাড়া কোনো প্রোভাইডার পার্টনারশিপ বা অনুমোদন দাবি করা হয় না।</p>
 </div></footer>'''
+
 
 # ===== COMMON HEAD ELEMENTS =====
 def head_common(rel=""):
@@ -163,14 +185,17 @@ def head_common(rel=""):
 <meta property="og:image" content="https://saveonsub.com/assets/og-image.png">
 <link rel="stylesheet" href="{rel}assets/style.css">'''
 
-# ===== FLOATING BUTTONS =====
+
+# ===== FLOATING SUPPORT BUTTONS =====
 def fabs_en(rel=""):
-    return f'''<button class="fab fab-wa" onclick="location.href='https://wa.me/8801305869242?text=Hi!'" aria-label="WhatsApp">💬 WhatsApp</button>
+    return f'''<a class="fab fab-wa" href="{esc(support_mailto())}" aria-label="Email SAVEONSUB support">✉ Support</a>
 <a class="fab fab-quiz" href="{rel}quiz.html" aria-label="Find my AI quiz">🧭 Find My AI</a>'''
 
+
 def fabs_bn(rel=""):
-    return f'''<button class="fab fab-wa" onclick="location.href='https://wa.me/8801305869242?text=Hi!'" aria-label="হোয়াটসঅ্যাপ">💬 হোয়াটসঅ্যাপ</button>
+    return f'''<a class="fab fab-wa" href="{esc(support_mailto('SAVEONSUB সহায়তা'))}" aria-label="SAVEONSUB ইমেইল সহায়তা">✉ সহায়তা</a>
 <a class="fab fab-quiz" href="{rel}quiz.html" aria-label="কুইজ">🧭 কুইজ</a>'''
+
 
 # ===== PAGE SHELL (for trust pages) =====
 PAGE_SHELL_EN = '''<!DOCTYPE html>
