@@ -7,7 +7,8 @@ import pathlib
 import re
 from collections import Counter
 
-from catalog_model import iter_plans, load_raw_catalog, normalize_catalog, source_digest
+from authority_model import load_authority, plan_looks_shared, shared_plan_explicitly_allowed
+from catalog_model import load_raw_catalog, normalize_catalog, source_digest
 
 ROOT = pathlib.Path(__file__).resolve().parent
 errors: list[str] = []
@@ -17,17 +18,6 @@ PRICE_KEYS = {"bdt", "price_bdt", "price", "usd"}
 
 def fail(message: str) -> None:
     errors.append(message)
-
-
-def looks_openai_shared(product: dict, plan: dict) -> bool:
-    identity = f"{product.get('id','')} {product.get('name','')}".lower()
-    openai = "chatgpt" in identity or "openai" in identity
-    shared = (
-        str(plan.get("type") or "").lower() == "shared"
-        or str(plan.get("tos") or "").lower().startswith("shared")
-        or "shared" in str(plan.get("label") or "").lower()
-    )
-    return openai and shared
 
 
 def plan_signature(plan: dict) -> tuple:
@@ -44,6 +34,7 @@ def main() -> int:
     before = source_digest(raw)
     normalized = normalize_catalog(raw)
     after = source_digest(raw)
+    authority = load_authority()
 
     if before != after:
         fail("normalize_catalog mutated the raw input")
@@ -57,18 +48,16 @@ def main() -> int:
     active_plan_count = sum(len(p.get("plans", [])) for p in products)
     quarantined_count = sum(len(p.get("quarantined_plans_v3", [])) for p in products)
     if raw_plan_count != active_plan_count + quarantined_count:
-        fail(
-            f"plan accounting mismatch: raw={raw_plan_count} active={active_plan_count} quarantined={quarantined_count}"
-        )
+        fail(f"plan accounting mismatch: raw={raw_plan_count} active={active_plan_count} quarantined={quarantined_count}")
 
     precedence = normalized.get("meta", {}).get("price_precedence", [])
     if any(re.search(r"(^|[-_])aips($|[-_])", str(s), re.I) for s in precedence):
         fail("active normalized price precedence still references AIPS")
 
     product_ids = [p.get("id") for p in products]
-    if len(set(product_ids)) != len(product_ids):
-        dupes = sorted(k for k, v in Counter(product_ids).items() if v > 1)
-        fail(f"duplicate product IDs: {dupes}")
+    duplicates = sorted(k for k, v in Counter(product_ids).items() if v > 1)
+    if duplicates:
+        fail(f"duplicate product IDs: {duplicates}")
 
     plan_ids: list[str] = []
     plan_routes_en: list[str] = []
@@ -78,6 +67,7 @@ def main() -> int:
     product_routes_bn: list[str] = []
     fallback_media = 0
     state_counts: Counter[str] = Counter()
+    quarantine_reasons: Counter[str] = Counter()
     sellable_count = 0
     priced_count = 0
 
@@ -85,12 +75,11 @@ def main() -> int:
     for product in products:
         pid = product["id"]
         raw_product = raw_by_id[pid]
+        raw_plans = raw_product.get("plans", [])
 
-        expected_en = f"p/{pid}.html"
-        expected_bn = f"bn/p/{pid}.html"
-        if product["routes_v3"]["en"] != expected_en:
+        if product["routes_v3"]["en"] != f"p/{pid}.html":
             fail(f"{pid}: existing EN product route changed")
-        if product["routes_v3"]["bn"] != expected_bn:
+        if product["routes_v3"]["bn"] != f"bn/p/{pid}.html":
             fail(f"{pid}: existing BN product route changed")
         product_routes_en.append(product["routes_v3"]["en"])
         product_routes_bn.append(product["routes_v3"]["bn"])
@@ -110,25 +99,38 @@ def main() -> int:
             if product.get("legacy_price_source_v1") != raw_product.get("price_source"):
                 fail(f"{pid}: AIPS price source not preserved in legacy quarantine")
 
-        raw_plans = raw_product.get("plans", [])
-        expected_active_raw = [p for p in raw_plans if not looks_openai_shared(raw_product, p)]
-        expected_quarantined_raw = [p for p in raw_plans if looks_openai_shared(raw_product, p)]
-        active_plans = product.get("plans", [])
-        quarantined_plans = product.get("quarantined_plans_v3", [])
-        if len(active_plans) != len(expected_active_raw):
-            fail(f"{pid}: active plan count mismatch")
-        if len(quarantined_plans) != len(expected_quarantined_raw):
-            fail(f"{pid}: quarantined plan count mismatch")
-
-        for archived, raw_plan in zip(quarantined_plans, expected_quarantined_raw):
+        accounted_indices: list[int] = []
+        for archived in product.get("quarantined_plans_v3", []):
+            idx = archived.get("legacy_index_v1")
+            if not isinstance(idx, int) or idx < 1 or idx > len(raw_plans):
+                fail(f"{pid}: quarantined plan has invalid legacy index {idx!r}")
+                continue
+            accounted_indices.append(idx)
+            raw_plan = raw_plans[idx - 1]
             if plan_signature(archived) != plan_signature(raw_plan):
-                fail(f"{pid}: quarantined plan identity changed")
-            if archived.get("quarantine_reason_v3") != "provider_policy_openai_shared_account":
-                fail(f"{pid}: quarantined OpenAI/shared plan missing reason")
+                fail(f"{pid}: quarantined plan identity changed at legacy index {idx}")
+            if not plan_looks_shared(raw_plan):
+                fail(f"{pid}: non-shared plan was quarantined without a supported reason")
+            if shared_plan_explicitly_allowed(raw_product, authority):
+                fail(f"{pid}: explicitly provider-allowed shared plan was quarantined")
+            reason = str(archived.get("quarantine_reason_v3") or "")
+            quarantine_reasons[reason] += 1
+            identity = f"{pid} {raw_product.get('name','')}".lower()
+            expected = "provider_policy_openai_shared_account" if ("chatgpt" in identity or "openai" in identity) else "shared_fulfillment_not_provider_verified"
+            if reason != expected:
+                fail(f"{pid}: unexpected quarantine reason {reason!r}, expected {expected!r}")
 
-        for idx, (plan, raw_plan) in enumerate(zip(active_plans, expected_active_raw), 1):
-            if looks_openai_shared(raw_product, raw_plan):
-                fail(f"{pid}: prohibited OpenAI/shared plan remained active")
+        for plan in product.get("plans", []):
+            idx = plan.get("legacy_index_v1")
+            if not isinstance(idx, int) or idx < 1 or idx > len(raw_plans):
+                fail(f"{pid}: active plan has invalid legacy index {idx!r}")
+                continue
+            accounted_indices.append(idx)
+            raw_plan = raw_plans[idx - 1]
+            if plan_signature(plan) != plan_signature(raw_plan):
+                fail(f"{pid}: active plan identity changed at legacy index {idx}")
+            if plan_looks_shared(raw_plan) and not shared_plan_explicitly_allowed(raw_product, authority):
+                fail(f"{pid}: shared plan remained active without explicit provider permission")
 
             legacy_price = plan.get("legacy_price_v1", {})
             for key in PRICE_KEYS:
@@ -170,6 +172,9 @@ def main() -> int:
             if ("chatgpt" in identity or "openai" in identity) and state not in {"direct_provider_only", "blocked"}:
                 fail(f"{pid} / {plan_id}: retained OpenAI plan is not direct-provider-only/blocked")
 
+        if sorted(accounted_indices) != list(range(1, len(raw_plans) + 1)):
+            fail(f"{pid}: raw plan accounting has gaps or duplicates: {accounted_indices}")
+
         for media in product.get("media_v3", []):
             media_id = str(media.get("media_id") or "")
             if not media_id:
@@ -194,9 +199,9 @@ def main() -> int:
         ("EN product routes", product_routes_en),
         ("BN product routes", product_routes_bn),
     ):
-        duplicates = sorted(k for k, v in Counter(values).items() if v > 1)
-        if duplicates:
-            fail(f"duplicate {name}: {duplicates[:10]}")
+        dups = sorted(k for k, v in Counter(values).items() if v > 1)
+        if dups:
+            fail(f"duplicate {name}: {dups[:10]}")
 
     existing_html = {
         p.relative_to(ROOT).as_posix()
@@ -224,6 +229,7 @@ def main() -> int:
         "legacy_plans": raw_plan_count,
         "active_plans": active_plan_count,
         "quarantined_plans": quarantined_count,
+        "quarantine_reasons": dict(sorted(quarantine_reasons.items())),
         "unique_plan_ids_v3": len(set(plan_ids)),
         "unique_plan_routes_en": len(set(plan_routes_en)),
         "unique_plan_routes_bn": len(set(plan_routes_bn)),
