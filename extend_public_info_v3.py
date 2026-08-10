@@ -10,6 +10,7 @@ from catalog_model import load_catalog
 from enhance_compare_v3 import enhance_compare
 from enhance_content_v3 import enhance_content
 from enhance_discovery_v3 import enhance_discovery
+from enhance_official_access_v3 import enhance_official_access
 from enhance_related_v3 import enhance_related
 from enhance_social_metadata_v3 import enhance_social_metadata
 from harden_security_headers_v3 import harden_security_headers
@@ -220,9 +221,11 @@ def extend_public_info() -> dict[str, int]:
     catalog = load_catalog()
     write_bn_catalog(catalog)
     content_result = enhance_content()
+    official_access_result = enhance_official_access()
     result = {
         "bn_catalog_written": 1,
         **content_result,
+        **official_access_result,
         "bangla_pages_rewired": rewire_bangla_catalog_links(),
         "english_hreflang_fixed": fix_english_catalog_hreflang(),
         "sitemap_urls_added": add_sitemap_url(),
@@ -241,7 +244,7 @@ def extend_public_info() -> dict[str, int]:
 
 def main() -> int:
     result = extend_public_info()
-    print("extended strict L1 bilingual resource library + discovery + comparison + same-category exploration + accessibility + social metadata + headers:", result)
+    print("extended strict L1 bilingual resource library + official access + discovery + comparison + same-category exploration + accessibility + social metadata + headers:", result)
     return 0
 
 
