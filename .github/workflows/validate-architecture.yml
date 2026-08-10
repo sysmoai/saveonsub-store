@@ -35,11 +35,21 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Validate catalog JSON
-        run: python -m json.tool catalog.json > /dev/null
+      - name: Validate control JSON
+        run: |
+          python -m json.tool catalog.json > /dev/null
+          python -m json.tool docs/control/launch_state.json > /dev/null
+          python -m json.tool docs/control/contact_authority.json > /dev/null
+          python -m json.tool docs/control/payment_authority.json > /dev/null
+          python -m json.tool docs/control/pricing_authority.json > /dev/null
+          python -m json.tool docs/control/provider_eligibility.json > /dev/null
+          python -m json.tool docs/control/legal_authority.json > /dev/null
 
       - name: Compile architecture and control scripts
         run: |
+          python -m py_compile site_config.py
+          python -m py_compile templates.py
+          python -m py_compile authority_model.py
           python -m py_compile inventory_site.py
           python -m py_compile stage_deploy.py
           python -m py_compile validate_release.py
@@ -47,6 +57,8 @@ jobs:
           python -m py_compile media_registry.py
           python -m py_compile catalog_model.py
           python -m py_compile validate_catalog_model.py
+          python -m py_compile validate_authority_boundaries.py
+          python -m py_compile audit_authority_surface.py
           python -m py_compile build_plan_pages_v3.py
           python -m py_compile validate_v3_preview.py
           python -m py_compile build_product_pages_v3.py
@@ -54,8 +66,17 @@ jobs:
           python -m py_compile seed_plan_runtime.py
           python -m py_compile validate_commerce_worker.py
 
+      - name: Check browser JavaScript syntax
+        run: node --check assets/app.js
+
+      - name: Validate protected authority boundaries
+        run: python validate_authority_boundaries.py
+
       - name: Validate v3 catalog compatibility model
         run: python validate_catalog_model.py
+
+      - name: Inventory authority-sensitive surfaces
+        run: python audit_authority_surface.py
 
       - name: Inventory and route parity
         run: python inventory_site.py
@@ -108,7 +129,7 @@ jobs:
           test -f _site/assets/app.js
           test -f _site/assets/style.css
 
-  cloudflare-readiness:
+  cloudflare-credential-check:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -122,29 +143,15 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Verify Cloudflare identity
+      - name: Verify Cloudflare credential only
         continue-on-error: true
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: npx --yes wrangler@latest whoami
 
-      - name: Inventory Cloudflare Pages projects
-        continue-on-error: true
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: npx --yes wrangler@latest pages project list
-
-      - name: Inventory D1 databases
-        continue-on-error: true
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: npx --yes wrangler@latest d1 list
-
-      - name: Cloudflare readiness is inventory-only
-        run: echo 'No Cloudflare resource was created or modified by this job.'
+      - name: Credential probe is read-only
+        run: echo 'No Cloudflare resource was created, changed, deployed, or deleted by this job.'
 
   release-integrity-report:
     runs-on: ubuntu-latest
