@@ -1,0 +1,87 @@
+name: Quality Gates
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - gh-pages
+  pull_request:
+    branches:
+      - main
+      - fix/sos-p0-truth-gates-20260810
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-gates-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  strict-web-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile quality controls
+        run: |
+          python -m py_compile generate_quality_manifest.py
+          python -m py_compile validate_quality_gates.py
+          python -m py_compile verify_build_determinism.py
+
+      - name: Reconfirm protected model before quality build
+        run: |
+          python validate_authority_boundaries.py
+          python validate_media_registry.py
+          python validate_catalog_model.py
+
+      - name: Build strict L1 artifact
+        run: |
+          python build_public_info_v3.py
+          python harden_public_info_v3.py
+          python stamp_release.py
+          python validate_public_info_v3.py
+          python validate_l1_release.py
+          python stage_deploy.py --public-v3
+
+      - name: Prove strict build determinism
+        run: python verify_build_determinism.py
+
+      - name: Generate release evidence
+        run: |
+          python generate_release_manifest.py
+          python generate_quality_manifest.py
+
+      - name: Reconfirm release integrity
+        run: python validate_release.py
+
+      - name: Validate links, SEO, accessibility and budgets
+        run: python validate_quality_gates.py
+
+      - name: Verify private evidence remains private
+        run: |
+          test -f _release_meta/release-manifest.json
+          test -f _release_meta/quality-manifest.json
+          test ! -e _site/quality-manifest.json
+          test ! -e _site/release-manifest.json
+          if find _site -type f -name '*.json' -print -quit | grep -q .; then
+            echo 'Unexpected JSON found in staged public artifact:'
+            find _site -type f -name '*.json' -print
+            exit 1
+          fi
+
+      - name: Upload quality evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: saveonsub-quality-evidence-${{ github.sha }}
+          path: _release_meta
+          if-no-files-found: error
+          retention-days: 14
