@@ -2,156 +2,190 @@
 
 **Measured:** 2026-08-10 · Asia/Dhaka  
 **Branch:** `fix/sos-p0-truth-gates-20260810`  
-**Structural CI head:** `d1ff38815754e66aa733662dba43fc1304de61e6`  
-**Workflow run:** `Validate Architecture` #1
+**Current strict release-candidate head:** `52788f35f2cc9b8d372e800f7bc0a544520ac809`  
+**Green validation run:** `Validate Architecture` run `31345771459`
 
-## 1. Structural audit result
+## 1. Architecture baseline
 
-**PASS**
+SAVEONSUB remains a compatibility-first evolution of the existing Python-generated static storefront. Existing product IDs and canonical product URLs are preserved; new commerce/media systems are additive and remain fail-closed until separately authorized.
 
-The non-deploy structural job successfully:
-
-- parsed `catalog.json` as valid JSON;
-- compiled `inventory_site.py`, `stage_deploy.py`, and `validate_release.py` under Python 3.12;
-- ran product/route inventory parity successfully;
-- staged the explicit public artifact through `stage_deploy.py`;
-- verified no `.json` file entered `_site`;
-- verified required public files exist in `_site`.
-
-Staging result:
-
-- public staged files: **322**
-- staged size: **5.19 MB**
-- internal JSON leak check: **PASS**
-
-## 2. Exact current product/plan baseline
-
-Machine-measured from the current catalog:
+Machine-measured legacy baseline:
 
 - HTML files: **234**
 - sitemap URLs: **200**
 - products: **72**
 - plans: **138**
 - categories: **13**
-- root Python scripts: **16**
-- JavaScript files: **3**
-- CSS files: **1**
-- product social PNGs: **72**
-
-Product page parity:
-
-- catalog product IDs: in parity with EN product pages;
-- catalog product IDs: in parity with BN product pages;
-- catalog product IDs: in parity with social PNG files;
-- duplicate product IDs: **0**.
-
-## 3. Current route baseline
-
-- root HTML: **23**
 - EN product pages: **72**
 - BN product pages: **72**
-- EN dedicated plan pages: **0**
-- BN dedicated plan pages: **0**
-- EN category pages: **13**
-- BN category pages: **13**
-- blog pages: **13**
-- mode detail pages: **10**
-- BN general pages: **18**
+- product social PNGs: **72**
 
-## 4. Current plan model baseline
+## 2. Normalized v3 model
 
-138 catalog plans currently break down as:
+The compatibility layer now provides:
 
-### Plan `type`
+- deterministic normalized identity for all **138 / 138** plans;
+- unique future EN plan routes: **138 / 138**;
+- unique future BN plan routes: **138 / 138**;
+- immutable existing EN/BN product routes;
+- first-class media normalization with current social-image fallback;
+- provider eligibility derived from protected authority records;
+- approved price lookup derived only from the SAVEONSUB pricing authority registry;
+- `unknown` provider state treated as non-sellable;
+- OpenAI shared plans blocked and OpenAI products routed to official-provider/information-only behavior under current provider evidence.
 
-- `personal`: **55**
-- `shared`: **54**
-- `bundle`: **10**
-- `official`: **3**
-- `unknown`: **16**
+Legacy `catalog.json` remains migration input, not commercial authority.
 
-### Plan `tos`
+## 3. Protected authority state
 
-- `personal`: **67**
-- `shared-med`: **38**
-- `shared-low`: **26**
-- `official`: **7**
+Current authority registries are separated by concern:
 
-### v3 plan readiness
+- contact authority;
+- payment authority;
+- pricing authority;
+- provider eligibility;
+- legal authority;
+- launch state.
 
-- plans with stable IDs: **0**
-- plans missing stable IDs: **138**
-- duplicate stable plan IDs: **0** (none exist yet)
-- products without plans: **0**
+Current release state is **L1_PUBLIC_INFO_ONLY**.
 
-This is the primary reason v3 introduces stable plan identity before creating dedicated plan pages or server-authoritative commerce records.
+Authorized now:
 
-## 5. Current media readiness baseline
+- informational EN/BN product pages;
+- informational EN/BN category pages;
+- provider-status disclosures;
+- official-provider links;
+- indexing of non-commerce informational routes.
 
-Catalog-first media modeling does not exist yet:
+Not authorized now:
 
-- products with first-class `media` field: **0**
-- products with first-class `gallery` field: **0**
-- products with first-class `video`/`videos` field: **0**
-- dedicated EN plan pages: **0**
-- dedicated BN plan pages: **0**
+- SAVEONSUB selling prices;
+- cart/checkout;
+- payment destinations/instructions;
+- server order creation;
+- unverified WhatsApp CTA;
+- unverified legal-operator claims;
+- provider-prohibited fulfillment.
 
-The existing site does have one generated social PNG per product, but that is an Open Graph/social-card pipeline rather than an ecommerce product-gallery model.
+The dedicated SAVEONSUB WhatsApp value remains pending owner input. Payment destinations remain pending owner input. The SAVEONSUB active-price registry remains empty and public-price authorization remains false.
 
-## 6. Current product status baseline
+## 4. Internal ecommerce previews
 
-- `live`: **51**
-- `new`: **12**
-- `gap-fill`: **9**
+Preview-only generators now produce and validate:
 
-v3 must not interpret these labels as sufficient commercial eligibility. A separate provider/commercial eligibility state is required.
+- **72 EN + 72 BN** upgraded product-page previews;
+- **138 EN + 138 BN** dedicated plan-page previews;
+- product-to-plan route parity;
+- normalized media association;
+- price-free, cart-free, Offer-schema-free plan previews;
+- `noindex,follow` on dedicated plan previews.
 
-## 7. Release-integrity result
+The preview workspace is explicitly excluded from `_site`.
 
-**INTENTIONALLY BLOCKED**
+## 5. Strict L1 public-information release artifact
 
-`validate_release.py` reported **32 integrity failures**. This is expected while the existing P0/P1 commercial and authority gaps remain.
+A separate strict builder now produces `_public_v3` rather than sanitizing legacy generated pages at deploy time.
 
-Failure classes observed include:
+The strict artifact preserves current product URLs and generates:
 
-- active price precedence referencing AIPS;
-- OpenAI/ChatGPT shared-commerce plans;
-- unsupported order-count claims;
-- unsupported bestseller claims;
-- Terms normalizing provider-prohibited shared fulfillment;
-- generated commerce below the provisional L0 state;
-- commerce authorization missing;
-- public-price authorization missing;
-- robots/indexing state inconsistent with L0 control.
+- 72 EN product pages;
+- 72 BN product pages;
+- 138 EN dedicated plan pages;
+- 138 BN dedicated plan pages;
+- 13 EN category pages;
+- 13 BN category pages;
+- EN/BN home/discovery surfaces and minimal neutral trust/contact pages.
 
-The architecture work must not disable or weaken these checks simply to produce a green release.
+Strict L1 properties validated in CI:
 
-## 8. Additional metadata drift observed
+- **0 public SAVEONSUB selling prices**;
+- **0 cart/checkout controls**;
+- **0 payment destinations**;
+- **0 WhatsApp destinations**;
+- **0 Offer/AggregateOffer schema**;
+- **0 raw `catalog.json` / `assets/catalog.js` publication**;
+- **0 unsupported numeric orders/customers/users proof**;
+- **0 unverified legal-operator wording**;
+- current product canonical URLs preserved;
+- detail plan pages excluded from sitemap and marked `noindex,follow`;
+- internal JSON absent from the release artifact.
 
-GitHub repository description still advertises **64 products / 214 pages**, while the machine inventory is **72 products / 234 HTML files**.
+`stage_deploy.py --public-v3` stages only this strict artifact and refuses protected paths.
 
-This is public metadata drift, not architecture truth. Update only through a separate reviewed metadata change.
+## 6. Strict release-candidate CI result
 
-## 9. Readiness decision
+`Validate Architecture` run `31345771459` completed with the structural/release-candidate job **SUCCESS**.
 
-SAVEONSUB is ready to begin **Phase 1 of Evolution Architecture v3** on a non-production branch:
+Successful steps include:
 
-1. stable plan IDs;
-2. catalog normalization adapter;
-3. media registry abstraction;
-4. route helper abstraction;
-5. schema validation;
-6. deterministic parity tests.
+- control JSON validation;
+- Python/JavaScript compile/syntax checks;
+- protected authority boundary validation;
+- v3 normalized catalog validation;
+- current inventory/parity validation;
+- EN/BN product/plan preview generation and validation;
+- strict L1 build;
+- strict L1 hardening;
+- strict public-artifact validation;
+- strict L1 release-authority gate;
+- fail-closed D1 plan seed generation;
+- shadow Worker validation and tests;
+- bounded legacy staging;
+- strict L1 `_site` staging;
+- strict release-candidate boundary verification;
+- release-candidate artifact upload.
 
-It is **not** ready to switch production checkout/order/payment behavior to a new backend because release/commercial authority blockers remain open.
+The strict release candidate was uploaded as GitHub Actions artifact:
 
-## 10. Safety conclusion
+- artifact ID: `9047271757`
+- artifact digest: `sha256:57cc9c0844724d3fe2f210d0ebcfd61bc62d2ffb75369690f800e7231efc8bf7`
+- artifact source head: `52788f35f2cc9b8d372e800f7bc0a544520ac809`
 
-The architecture upgrade can proceed safely as additive source/model/preview work because:
+## 7. Legacy release report
 
-- the existing public route structure is measured;
-- current product parity is machine-verified;
-- plan/media migration gaps are now quantified;
-- public staging boundary is machine-verified;
-- release blockers remain fail-closed;
-- no production deployment is part of the v3 architecture commits.
+The separate legacy/current-source `validate_release.py` report remains intentionally red.
+
+This is not a contradiction with the green strict L1 candidate. It proves that the old committed price-bearing commerce tree still contains historical commercial/provider/authority issues and therefore must **not** be the production deployment input.
+
+The production workflow on this branch has been changed so it can deploy only the generated strict L1 artifact, never the repository root or legacy commerce tree.
+
+## 8. Shadow commerce backend
+
+A non-routed `saveonsub-commerce-shadow` Worker foundation now exists with:
+
+- health/capability endpoints;
+- server-authoritative quote logic;
+- D1 runtime schema;
+- all 138 seed plans defaulting to `unknown` + `NULL` price;
+- client price ignored by quote calculation;
+- blocked/unknown plans unable to quote;
+- order creation hard-disabled;
+- no customer/payment PII schema in the shadow phase.
+
+It is not deployed because Cloudflare access is currently invalid and because commerce authority is not yet established.
+
+## 9. Cloudflare infrastructure blocker
+
+The existing GitHub Actions `CLOUDFLARE_API_TOKEN` currently fails Cloudflare authentication (`Invalid access token` / authentication error). Read-only Cloudflare identity/Pages/D1 inventory therefore cannot be trusted until the repository secret is replaced with a valid token for the correct account.
+
+No Cloudflare resource has been created, modified, deployed, or deleted during these failed credential probes.
+
+## 10. Current readiness decision
+
+**Code / release-candidate readiness for L1 public information: PASS.**
+
+**Production deployment: BLOCKED_ACCESS** until the Cloudflare credential in GitHub Actions is repaired.
+
+**Commerce activation: NOT READY / NOT AUTHORIZED.** It remains blocked by protected provider/pricing/payment/legal/contact reconciliation even after the informational site is live.
+
+Next execution sequence:
+
+1. repair Cloudflare Pages deployment credential in GitHub Actions;
+2. run a read-only credential validation on the branch;
+3. reconfirm strict CI green at the exact head;
+4. merge the reviewed branch;
+5. allow `main` to deploy only the strict L1 artifact;
+6. verify the live custom domain and deployment SHA;
+7. record rollback point;
+8. continue non-production Worker/D1 and media/admin phases;
+9. enable commerce only after the protected authority registries are populated and all corresponding gates pass.
