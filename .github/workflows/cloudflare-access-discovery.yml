@@ -1,9 +1,6 @@
 name: Cloudflare Access Discovery
 
 on:
-  push:
-    branches:
-      - fix/sos-p0-truth-gates-20260810
   workflow_dispatch:
 
 permissions:
