@@ -42,6 +42,8 @@ jobs:
           python -m py_compile media_registry.py
           python -m py_compile catalog_model.py
           python -m py_compile validate_catalog_model.py
+          python -m py_compile build_plan_pages_v3.py
+          python -m py_compile validate_v3_preview.py
 
       - name: Validate v3 catalog compatibility model
         run: python validate_catalog_model.py
@@ -49,8 +51,20 @@ jobs:
       - name: Inventory and route parity
         run: python inventory_site.py
 
+      - name: Generate preview-only v3 plan pages
+        run: python build_plan_pages_v3.py
+
+      - name: Validate preview-only v3 plan pages
+        run: python validate_v3_preview.py
+
       - name: Stage public artifact safely
         run: python stage_deploy.py
+
+      - name: Verify preview workspace is not deployable
+        run: |
+          test ! -e _site/_preview_v3
+          test ! -e _site/p/chatgpt-plus/starter-shared-6-8-users.html
+          test ! -e _site/bn/p/chatgpt-plus/starter-shared-6-8-users.html
 
       - name: Verify no internal JSON entered public artifact
         run: |
