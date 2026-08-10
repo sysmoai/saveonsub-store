@@ -63,6 +63,8 @@ def main() -> int:
         "'/assets/site.webmanifest'",
         "'/assets/app.js'",
         "'/assets/a11y.js'",
+        "'/assets/discovery.js'",
+        "'/assets/discovery.css'",
         "'/assets/style.css'",
         "'/assets/favicon.svg'",
         "'/assets/icon-192.png'",
@@ -99,6 +101,7 @@ def main() -> int:
         "cache_namespace": cache,
         "release_bound_cache": True,
         "core_manifest": "/assets/site.webmanifest",
+        "core_discovery_assets": 2,
         "legacy_cache_paths": 0,
         "failed_response_cache_risk": 0,
     }, indent=2))
