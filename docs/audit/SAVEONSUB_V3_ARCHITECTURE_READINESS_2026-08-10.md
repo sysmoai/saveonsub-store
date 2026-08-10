@@ -2,8 +2,8 @@
 
 **Measured:** 2026-08-10 · Asia/Dhaka  
 **Branch:** `fix/sos-p0-truth-gates-20260810`  
-**Current strict release-candidate head:** `52788f35f2cc9b8d372e800f7bc0a544520ac809`  
-**Green validation run:** `Validate Architecture` run `31345771459`
+**Current branch head:** `aa6c11deb49e14c10267a96d86ddae87ade192b2`  
+**Exact-head push validation run:** `Validate Architecture` run `31345862122`
 
 ## 1. Architecture baseline
 
@@ -112,9 +112,9 @@ Strict L1 properties validated in CI:
 
 `stage_deploy.py --public-v3` stages only this strict artifact and refuses protected paths.
 
-## 6. Strict release-candidate CI result
+## 6. Exact-head validation result
 
-`Validate Architecture` run `31345771459` completed with the structural/release-candidate job **SUCCESS**.
+`Validate Architecture` push run `31345862122` at exact head `aa6c11deb49e14c10267a96d86ddae87ade192b2` completed with the structural/release-candidate job **SUCCESS**.
 
 Successful steps include:
 
@@ -135,11 +135,12 @@ Successful steps include:
 - strict release-candidate boundary verification;
 - release-candidate artifact upload.
 
-The strict release candidate was uploaded as GitHub Actions artifact:
+The immediately preceding green release candidate from head `52788f35f2cc9b8d372e800f7bc0a544520ac809` was uploaded as GitHub Actions artifact:
 
 - artifact ID: `9047271757`
 - artifact digest: `sha256:57cc9c0844724d3fe2f210d0ebcfd61bc62d2ffb75369690f800e7231efc8bf7`
-- artifact source head: `52788f35f2cc9b8d372e800f7bc0a544520ac809`
+
+The current exact-head run also uploaded its strict release candidate after the same gate sequence; retrieve its run artifact when selecting the merge/deployment SHA.
 
 ## 7. Legacy release report
 
@@ -162,19 +163,21 @@ A non-routed `saveonsub-commerce-shadow` Worker foundation now exists with:
 - order creation hard-disabled;
 - no customer/payment PII schema in the shadow phase.
 
-It is not deployed because Cloudflare access is currently invalid and because commerce authority is not yet established.
+It is not deployed because Cloudflare authentication is invalid and because commerce authority is not yet established.
 
 ## 9. Cloudflare infrastructure blocker
 
-The existing GitHub Actions `CLOUDFLARE_API_TOKEN` currently fails Cloudflare authentication (`Invalid access token` / authentication error). Read-only Cloudflare identity/Pages/D1 inventory therefore cannot be trusted until the repository secret is replaced with a valid token for the correct account.
+The exact-head push run performed a read-only Wrangler credential probe using the existing GitHub Actions secrets. `wrangler whoami` failed against Cloudflare `/accounts` with `Invalid access token [code: 9109]`.
 
-No Cloudflare resource has been created, modified, deployed, or deleted during these failed credential probes.
+No Cloudflare resource was created, modified, deployed, or deleted by this probe.
+
+The GitHub workflow job is marked successful overall only because the credential probe is deliberately `continue-on-error`; the Wrangler command itself failed and is the current infrastructure blocker.
 
 ## 10. Current readiness decision
 
-**Code / release-candidate readiness for L1 public information: PASS.**
+**Code / release-candidate readiness for L1 public information: PASS at exact branch head.**
 
-**Production deployment: BLOCKED_ACCESS** until the Cloudflare credential in GitHub Actions is repaired.
+**Production deployment: BLOCKED_ACCESS** until the Cloudflare credential in GitHub Actions is replaced with a valid token for the correct account.
 
 **Commerce activation: NOT READY / NOT AUTHORIZED.** It remains blocked by protected provider/pricing/payment/legal/contact reconciliation even after the informational site is live.
 
