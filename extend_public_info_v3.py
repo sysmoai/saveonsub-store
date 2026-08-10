@@ -16,15 +16,23 @@ A11Y_JS = r'''/* SAVEONSUB progressive accessibility helpers */
     if(!links || !links.id) return null;
     return document.querySelector('.hamb[aria-controls="'+links.id+'"]');
   }
+  function linksFor(button){
+    if(!button) return null;
+    const id=button.getAttribute('aria-controls');
+    return id?document.getElementById(id):null;
+  }
   function sync(button){
     if(!button) return;
-    const id=button.getAttribute('aria-controls');
-    const links=id?document.getElementById(id):null;
+    const links=linksFor(button);
     button.setAttribute('aria-expanded', links&&links.classList.contains('open')?'true':'false');
   }
   document.addEventListener('click',function(event){
     const button=event.target.closest&&event.target.closest('.hamb');
-    if(button) sync(button);
+    if(!button) return;
+    const links=linksFor(button);
+    if(!links) return;
+    links.classList.toggle('open');
+    sync(button);
   });
   document.addEventListener('keydown',function(event){
     if(event.key!=='Escape') return;
@@ -162,8 +170,10 @@ def enhance_mobile_navigation() -> int:
     for path in sorted(DEST.rglob("*.html")):
         text = path.read_text(encoding="utf-8", errors="replace")
         new = text.replace('<div class="navlinks">', '<div class="navlinks" id="primary-nav">', 1)
-        new = new.replace('onclick="navToggle()" aria-label="Menu"', 'onclick="navToggle(this)" aria-label="Menu" aria-controls="primary-nav" aria-expanded="false"', 1)
-        new = new.replace('onclick="navToggle()" aria-label="মেনু"', 'onclick="navToggle(this)" aria-label="মেনু" aria-controls="primary-nav" aria-expanded="false"', 1)
+        new = new.replace('onclick="navToggle()" aria-label="Menu"', 'aria-label="Menu" aria-controls="primary-nav" aria-expanded="false"', 1)
+        new = new.replace('onclick="navToggle()" aria-label="মেনু"', 'aria-label="মেনু" aria-controls="primary-nav" aria-expanded="false"', 1)
+        new = new.replace('onclick="navToggle(this)" aria-label="Menu"', 'aria-label="Menu" aria-controls="primary-nav" aria-expanded="false"', 1)
+        new = new.replace('onclick="navToggle(this)" aria-label="মেনু"', 'aria-label="মেনু" aria-controls="primary-nav" aria-expanded="false"', 1)
         if '/assets/a11y.js' not in new and '</body>' in new:
             new = new.replace('</body>', '<script src="/assets/a11y.js"></script></body>', 1)
         if new != text:
