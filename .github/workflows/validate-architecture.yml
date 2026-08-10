@@ -63,6 +63,8 @@ jobs:
           python -m py_compile validate_v3_preview.py
           python -m py_compile build_product_pages_v3.py
           python -m py_compile validate_v3_product_preview.py
+          python -m py_compile build_public_info_v3.py
+          python -m py_compile validate_public_info_v3.py
           python -m py_compile seed_plan_runtime.py
           python -m py_compile validate_commerce_worker.py
 
@@ -75,23 +77,29 @@ jobs:
       - name: Validate v3 catalog compatibility model
         run: python validate_catalog_model.py
 
-      - name: Inventory authority-sensitive surfaces
+      - name: Inventory authority-sensitive legacy surfaces
         run: python audit_authority_surface.py
 
       - name: Inventory and route parity
         run: python inventory_site.py
 
-      - name: Generate preview-only v3 plan pages
+      - name: Generate internal v3 plan previews
         run: python build_plan_pages_v3.py
 
-      - name: Generate preview-only v3 product pages
+      - name: Generate internal v3 product previews
         run: python build_product_pages_v3.py
 
-      - name: Validate preview-only v3 plan pages
+      - name: Validate internal v3 plan previews
         run: python validate_v3_preview.py
 
-      - name: Validate preview-only v3 product pages
+      - name: Validate internal v3 product previews
         run: python validate_v3_product_preview.py
+
+      - name: Generate strict L1 public-information artifact
+        run: python build_public_info_v3.py
+
+      - name: Validate strict L1 public-information artifact
+        run: python validate_public_info_v3.py
 
       - name: Generate fail-closed D1 plan seed
         run: python seed_plan_runtime.py
@@ -102,25 +110,29 @@ jobs:
       - name: Test shadow Worker quote authority
         run: node commerce-worker/test.mjs
 
-      - name: Stage public artifact safely
+      - name: Verify legacy staging remains bounded
         run: python stage_deploy.py
 
-      - name: Verify preview and backend workspaces are not deployable
+      - name: Stage strict L1 release candidate
+        run: python stage_deploy.py --public-v3
+
+      - name: Verify strict release candidate boundaries
         run: |
           test ! -e _site/_preview_v3
+          test ! -e _site/_public_v3
           test ! -e _site/commerce-worker
-          test ! -e _site/p/chatgpt-plus/starter-shared-6-8-users.html
-          test ! -e _site/bn/p/chatgpt-plus/starter-shared-6-8-users.html
-
-      - name: Verify no internal JSON entered public artifact
-        run: |
+          test ! -e _site/catalog.json
+          test ! -e _site/aips-live.json
+          test ! -e _site/assets/catalog.js
+          test ! -e _site/checkout.html
+          test ! -e _site/track.html
           if find _site -type f -name '*.json' -print -quit | grep -q .; then
-            echo 'Unexpected JSON found in _site:'
+            echo 'Unexpected JSON found in strict release candidate:'
             find _site -type f -name '*.json' -print
             exit 1
           fi
 
-      - name: Verify required public files
+      - name: Verify strict candidate required files
         run: |
           test -f _site/index.html
           test -f _site/sitemap.xml
@@ -128,6 +140,15 @@ jobs:
           test -f _site/sw.js
           test -f _site/assets/app.js
           test -f _site/assets/style.css
+          grep -q '^release_mode=L1_PUBLIC_INFO_ONLY$' _site/BUILD-MANIFEST.txt
+
+      - name: Upload strict L1 release candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: saveonsub-l1-public-info-${{ github.sha }}
+          path: _site
+          if-no-files-found: error
+          retention-days: 14
 
   cloudflare-credential-check:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -166,5 +187,5 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Report fail-closed production blockers
+      - name: Report legacy/current-source blockers separately
         run: python validate_release.py
