@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
-"""Harden generated _public_v3 for a strict L1 information-only release.
-
-The repository compatibility runtime and stylesheet deliberately retain legacy
-selectors/function names so old committed pages do not break during migration.
-The strict public L1 artifact does not need that vocabulary. This post-build
-step replaces its browser runtime with an information-only implementation,
-removes legacy commerce redirects, neutralizes unused shared-plan CSS selectors,
-and redacts unsupported numeric social-proof phrases inherited from legacy copy.
-"""
+"""Harden generated _public_v3 for a strict L1 information-only release."""
 from __future__ import annotations
 
+import json
 import pathlib
 import re
+
+from catalog_model import load_catalog
+from routes_v3 import DOMAIN, slugify
 
 ROOT = pathlib.Path(__file__).resolve().parent
 PUBLIC = ROOT / "_public_v3"
@@ -80,13 +76,41 @@ REDIRECTS = '''/home / 301
 /products /all.html 301
 '''
 
-# The strict artifact may inherit factual-looking numeric claims from old FAQ or
-# descriptive copy (for example "100+ users"). Without evidence binding those
-# counts are not publishable. Preserve the noun/context, remove only the number.
 UNSUPPORTED_PROOF_RE = re.compile(
     r"\b[0-9]{2,}\+?\s*(orders|customers|users)\b",
     re.IGNORECASE,
 )
+
+FAQ_SCHEMA = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Can I buy directly from this version of SAVEONSUB?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Product and plan information is public, but order and payment controls remain disabled until eligibility, pricing and payment destinations are verified.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "Why are prices not shown?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A public selling price is treated as an authority-controlled fact. SAVEONSUB will publish it only when the current approved price registry is populated.",
+            },
+        },
+        {
+            "@type": "Question",
+            "name": "What if a plan is marked Official provider path?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Use the official provider link on that product or plan page. SAVEONSUB is not offering that plan as reseller commerce in the current state.",
+            },
+        },
+    ],
+}
 
 
 def redact_unsupported_proof(text: str) -> tuple[str, int]:
@@ -98,22 +122,160 @@ def harden_stylesheet() -> int:
     if not path.is_file():
         return 0
     text = path.read_text(encoding="utf-8", errors="replace")
-    # These classes are unused by the strict L1 pages. Rename them instead of
-    # deleting arbitrary CSS blocks, which keeps the inherited stylesheet valid
-    # while removing shared-commerce vocabulary from the release artifact.
     new = text.replace("shared-low", "legacy-risk-low").replace("shared-med", "legacy-risk-med")
     path.write_text(new, encoding="utf-8")
     return int(new != text)
 
 
-def harden_html() -> tuple[int, int]:
+def schema_tag(payload: dict) -> str:
+    data = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    return f'<script type="application/ld+json">{data}</script>'
+
+
+def breadcrumb(items: list[tuple[str, str]]) -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": i, "name": name, "item": url}
+            for i, (name, url) in enumerate(items, start=1)
+        ],
+    }
+
+
+def inject_jsonld(text: str, payloads: list[dict]) -> tuple[str, int]:
+    if not payloads or "</head>" not in text:
+        return text, 0
+    block = "".join(schema_tag(payload) for payload in payloads)
+    return text.replace("</head>", f"{block}</head>", 1), len(payloads)
+
+
+def schema_payloads(catalog: dict) -> dict[str, list[dict]]:
+    payloads: dict[str, list[dict]] = {
+        "index.html": [{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "SAVEONSUB",
+            "url": f"{DOMAIN}/",
+            "inLanguage": ["en-BD", "bn-BD"],
+        }],
+        "bn.html": [{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "SAVEONSUB",
+            "url": f"{DOMAIN}/bn.html",
+            "inLanguage": "bn-BD",
+        }],
+        "faq.html": [FAQ_SCHEMA],
+    }
+    products = catalog.get("products", [])
+    all_items = []
+    for pos, product in enumerate(products, start=1):
+        pid = product["id"]
+        name = str(product.get("name") or pid).replace("🎁 ", "")
+        category = str(product.get("category") or "")
+        category_slug = slugify(category)
+        all_items.append({
+            "@type": "ListItem",
+            "position": pos,
+            "url": f"{DOMAIN}/p/{pid}.html",
+            "name": name,
+        })
+        for language in ("en", "bn"):
+            bn = language == "bn"
+            rel = f"bn/p/{pid}.html" if bn else f"p/{pid}.html"
+            product_url = f"{DOMAIN}/{rel}"
+            category_url = f"{DOMAIN}/bn/c/{category_slug}.html" if bn else f"{DOMAIN}/c/{category_slug}.html"
+            home_url = f"{DOMAIN}/bn.html" if bn else f"{DOMAIN}/"
+            product_schema = {
+                "@context": "https://schema.org",
+                "@type": "Product",
+                "name": name,
+                "category": category,
+                "url": product_url,
+                "description": (
+                    f"{name} plan and provider-status information for Bangladesh."
+                    if not bn else
+                    f"বাংলাদেশের জন্য {name} প্ল্যান ও প্রোভাইডার-স্ট্যাটাস তথ্য।"
+                ),
+            }
+            payloads[rel] = [
+                product_schema,
+                breadcrumb([
+                    ("হোম" if bn else "Home", home_url),
+                    (category, category_url),
+                    (name, product_url),
+                ]),
+            ]
+            for plan in product.get("plans", []):
+                route = plan["routes_v3"][language]
+                plan_url = f"{DOMAIN}/{route}"
+                label = str(plan.get("label") or "Plan")
+                payloads[route] = [
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "WebPage",
+                        "name": f"{name} — {label}",
+                        "url": plan_url,
+                        "isPartOf": {"@type": "WebSite", "name": "SAVEONSUB", "url": f"{DOMAIN}/"},
+                    },
+                    breadcrumb([
+                        ("হোম" if bn else "Home", home_url),
+                        (name, product_url),
+                        (label, plan_url),
+                    ]),
+                ]
+    payloads["all.html"] = [{
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "SAVEONSUB subscription catalog",
+        "numberOfItems": len(all_items),
+        "itemListElement": all_items,
+    }]
+    for category in catalog.get("categories", []):
+        category_slug = slugify(category)
+        items = [p for p in products if p.get("category") == category]
+        for language in ("en", "bn"):
+            bn = language == "bn"
+            rel = f"bn/c/{category_slug}.html" if bn else f"c/{category_slug}.html"
+            category_url = f"{DOMAIN}/{rel}"
+            home_url = f"{DOMAIN}/bn.html" if bn else f"{DOMAIN}/"
+            item_list = {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": f"{category} — SAVEONSUB",
+                "numberOfItems": len(items),
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": i,
+                        "url": f"{DOMAIN}/{'bn/' if bn else ''}p/{p['id']}.html",
+                        "name": str(p.get("name") or p["id"]).replace("🎁 ", ""),
+                    }
+                    for i, p in enumerate(items, start=1)
+                ],
+            }
+            payloads[rel] = [
+                item_list,
+                breadcrumb([
+                    ("হোম" if bn else "Home", home_url),
+                    (category, category_url),
+                ]),
+            ]
+    return payloads
+
+
+def harden_html() -> tuple[int, int, int]:
     replacements = 0
     robots_hardened = 0
+    schemas_added = 0
+    payload_map = schema_payloads(load_catalog())
     for path in PUBLIC.rglob("*.html"):
         text = path.read_text(encoding="utf-8", errors="replace")
         new, count = redact_unsupported_proof(text)
         replacements += count
-        if path.relative_to(PUBLIC).as_posix() == "404.html":
+        rel = path.relative_to(PUBLIC).as_posix()
+        if rel == "404.html":
             new, robots_count = re.subn(
                 r'<meta name="robots" content="index,follow">',
                 '<meta name="robots" content="noindex,follow">',
@@ -121,9 +283,11 @@ def harden_html() -> tuple[int, int]:
                 count=1,
             )
             robots_hardened += robots_count
+        new, schema_count = inject_jsonld(new, payload_map.get(rel, []))
+        schemas_added += schema_count
         if new != text:
             path.write_text(new, encoding="utf-8")
-    return replacements, robots_hardened
+    return replacements, robots_hardened, schemas_added
 
 
 def main() -> int:
@@ -133,11 +297,11 @@ def main() -> int:
     (ASSETS / "app.js").write_text(APP_JS, encoding="utf-8")
     (PUBLIC / "_redirects").write_text(REDIRECTS, encoding="utf-8")
     css_hardened = harden_stylesheet()
-    proof_redactions, robots_hardened = harden_html()
+    proof_redactions, robots_hardened, schemas_added = harden_html()
     print(
         "hardened _public_v3: information-only app.js + non-commerce redirects + "
         f"css_hardened={css_hardened} unsupported_proof_redactions={proof_redactions} "
-        f"robots_hardened={robots_hardened}"
+        f"robots_hardened={robots_hardened} schemas_added={schemas_added}"
     )
     return 0
 
