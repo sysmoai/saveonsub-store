@@ -5,9 +5,17 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: saveonsub-production
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
@@ -18,31 +26,65 @@ jobs:
         with:
           python-version: '3.12'
 
-      # Fail closed on launch/commercial truth before any publishable output is staged.
-      # Pull requests deliberately do not deploy; previews must use a separate, explicit workflow.
-      - name: Release integrity gate
-        run: python validate_release.py
-
-      - name: Price consistency check
-        run: python check_prices.py
-
-      # Generated pages are committed. CI verifies/stages the reviewed output rather than
-      # silently regenerating assets with a different local toolchain.
-      - name: Stage publishable files
-        run: python stage_deploy.py
-
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
           node-version: '22'
 
+      # The production path is now artifact-specific. Legacy committed storefront
+      # pages remain available for migration/audit evidence but are never staged by
+      # this workflow.
+      - name: Validate protected authority boundaries
+        run: python validate_authority_boundaries.py
+
+      - name: Validate normalized product and plan model
+        run: python validate_catalog_model.py
+
+      - name: Build strict L1 public-information artifact
+        run: python build_public_info_v3.py
+
+      - name: Harden strict L1 browser runtime
+        run: python harden_public_info_v3.py
+
+      - name: Check strict browser JavaScript syntax
+        run: node --check _public_v3/assets/app.js
+
+      - name: Validate strict L1 public artifact
+        run: python validate_public_info_v3.py
+
+      - name: L1 release authority gate
+        run: python validate_l1_release.py
+
+      - name: Stage only strict L1 files
+        run: python stage_deploy.py --public-v3
+
+      - name: Verify production artifact boundaries
+        run: |
+          test -f _site/index.html
+          test -f _site/sitemap.xml
+          test -f _site/robots.txt
+          test -f _site/sw.js
+          test -f _site/assets/app.js
+          test -f _site/assets/style.css
+          test ! -e _site/catalog.json
+          test ! -e _site/aips-live.json
+          test ! -e _site/assets/catalog.js
+          test ! -e _site/checkout.html
+          test ! -e _site/track.html
+          test ! -e _site/commerce-worker
+          grep -q '^release_mode=L1_PUBLIC_INFO_ONLY$' _site/BUILD-MANIFEST.txt
+          grep -q '^public_prices=0$' _site/BUILD-MANIFEST.txt
+          grep -q '^commerce_controls=0$' _site/BUILD-MANIFEST.txt
+          grep -q '^payment_destinations=0$' _site/BUILD-MANIFEST.txt
+          grep -q '^whatsapp_destinations=0$' _site/BUILD-MANIFEST.txt
+
       - name: Install Wrangler
         run: npm install -g wrangler
 
-      # Deploy only the explicit staged public tree. Never deploy the repository root.
-      - name: Deploy to Cloudflare Pages
+      # Deploy only the explicitly staged strict artifact. Never deploy the repo
+      # root, preview workspaces, source catalog, authority files or backend code.
+      - name: Deploy L1 artifact to Cloudflare Pages
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: wrangler pages deploy _site --project-name=saveonsub --branch=main
-        continue-on-error: false
