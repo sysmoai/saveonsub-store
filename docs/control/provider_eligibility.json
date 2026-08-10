@@ -1,0 +1,39 @@
+{
+  "record_type": "provider_eligibility",
+  "as_of": "2026-08-10",
+  "brand": "SAVEONSUB",
+  "default_state": "unknown",
+  "states": ["allowed", "direct_provider_only", "blocked", "unknown"],
+  "records": {
+    "chatgpt-plus": {
+      "provider": "OpenAI",
+      "state": "direct_provider_only",
+      "shared_plan_state": "blocked",
+      "evidence": "Current OpenAI account-sharing policy and Services Agreement prohibit credential/login sharing between users.",
+      "public_rule": "Information/official-provider path only until a separately provider-supported SAVEONSUB fulfillment model is documented."
+    },
+    "chatgpt-pro": {
+      "provider": "OpenAI",
+      "state": "direct_provider_only",
+      "shared_plan_state": "blocked",
+      "evidence": "Current OpenAI account-sharing policy and Services Agreement prohibit credential/login sharing between users.",
+      "public_rule": "Information/official-provider path only until a separately provider-supported SAVEONSUB fulfillment model is documented."
+    },
+    "chatgpt-go": {
+      "provider": "OpenAI",
+      "state": "direct_provider_only",
+      "shared_plan_state": "blocked",
+      "evidence": "Current OpenAI account-sharing policy and Services Agreement prohibit credential/login sharing between users.",
+      "public_rule": "Information/official-provider path only until a separately provider-supported SAVEONSUB fulfillment model is documented."
+    },
+    "chatgpt-business": {
+      "provider": "OpenAI",
+      "state": "direct_provider_only",
+      "shared_plan_state": "blocked",
+      "evidence": "Current OpenAI Services Agreement prohibits sharing account access credentials or individual login credentials between multiple users.",
+      "public_rule": "Information/official-provider path only unless a provider-supported seat/customer model is documented."
+    }
+  },
+  "bundle_rule": "Any bundle containing a blocked or direct-provider-only component cannot become SAVEONSUB commerce until every included plan has its own allowed provider record.",
+  "unknown_rule": "Unknown is not sellable."
+}
