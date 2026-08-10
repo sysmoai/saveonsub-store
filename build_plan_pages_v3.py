@@ -3,7 +3,7 @@
 
 Output lives under _preview_v3/, which stage_deploy.py explicitly excludes.
 These pages are intentionally fail-closed:
-- no prices;
+- no prices, including price tokens embedded in legacy plan labels;
 - no Offer/AggregateOffer schema;
 - no cart/order buttons;
 - noindex,follow;
@@ -20,7 +20,7 @@ import pathlib
 import shutil
 
 from catalog_model import load_catalog
-from routes_v3 import DOMAIN, product_url
+from routes_v3 import DOMAIN, product_url, strip_price_tokens
 
 ROOT = pathlib.Path(__file__).resolve().parent
 DEST = ROOT / "_preview_v3"
@@ -28,6 +28,11 @@ DEST = ROOT / "_preview_v3"
 
 def esc(value: object) -> str:
     return html.escape(str(value or ""), quote=True)
+
+
+def display_plan_label(value: object, language: str) -> str:
+    clean = strip_price_tokens(value)
+    return clean or ("প্ল্যান" if language == "bn" else "Plan")
 
 
 def commercial_copy(state: str, language: str) -> tuple[str, str]:
@@ -52,7 +57,7 @@ def commercial_copy(state: str, language: str) -> tuple[str, str]:
 def page(product: dict, plan: dict, language: str) -> str:
     bn = language == "bn"
     name = product.get("name", product["id"])
-    label = plan.get("label", "Plan")
+    label = display_plan_label(plan.get("label", "Plan"), language)
     duration = plan.get("duration", "")
     category = product.get("category", "")
     plan_id = plan["plan_id_v3"]
@@ -62,6 +67,7 @@ def page(product: dict, plan: dict, language: str) -> str:
     parent_url = product_url(product["id"], language)
     alternate_language = "en" if bn else "bn"
     alternate_url = f"{DOMAIN}/{plan['routes_v3'][alternate_language]}"
+    x_default_url = f"{DOMAIN}/{plan['routes_v3']['en']}"
     status_title, status_text = commercial_copy(plan.get("commercial_state_v3"), language)
     media = product.get("media_v3", [])[0] if product.get("media_v3") else None
     media_html = ""
@@ -125,7 +131,7 @@ def page(product: dict, plan: dict, language: str) -> str:
 <link rel="canonical" href="{esc(self_url)}">
 <link rel="alternate" hreflang="{'bn-bd' if bn else 'en-bd'}" href="{esc(self_url)}">
 <link rel="alternate" hreflang="{'en-bd' if bn else 'bn-bd'}" href="{esc(alternate_url)}">
-<link rel="alternate" hreflang="x-default" href="{esc(plan['routes_v3']['en'] if plan['routes_v3']['en'].startswith('http') else DOMAIN + '/' + plan['routes_v3']['en'])}">
+<link rel="alternate" hreflang="x-default" href="{esc(x_default_url)}">
 <link rel="stylesheet" href="/assets/style.css">
 <meta name="theme-color" content="#06181a">
 </head>
