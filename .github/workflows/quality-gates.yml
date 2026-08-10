@@ -36,6 +36,8 @@ jobs:
           python -m py_compile generate_quality_manifest.py
           python -m py_compile validate_quality_gates.py
           python -m py_compile validate_schema_quality.py
+          python -m py_compile validate_localization_quality.py
+          python -m py_compile extend_public_info_v3.py
           python -m py_compile verify_build_determinism.py
 
       - name: Reconfirm protected model before quality build
@@ -69,6 +71,9 @@ jobs:
 
       - name: Validate visible non-commercial structured data
         run: python validate_schema_quality.py
+
+      - name: Validate EN-BN discovery parity
+        run: python validate_localization_quality.py
 
       - name: Verify private evidence remains private
         run: |
