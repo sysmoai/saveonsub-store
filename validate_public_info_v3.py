@@ -14,8 +14,13 @@ PUBLIC = ROOT / "_public_v3"
 errors: list[str] = []
 
 
+def _workflow_escape(message: str) -> str:
+    return str(message).replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+
+
 def fail(message: str) -> None:
     errors.append(message)
+    print(f"::error title=Strict L1 artifact::{_workflow_escape(message)}")
 
 
 def text_files():
