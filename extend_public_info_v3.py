@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 
 from build_public_info_v3 import DEST, product_card, shell
 from catalog_model import load_catalog
+from enhance_social_metadata_v3 import enhance_social_metadata
 from routes_v3 import DOMAIN
 
 A11Y_JS = r'''/* SAVEONSUB progressive accessibility helpers */
@@ -202,12 +203,13 @@ def extend_public_info() -> dict[str, int]:
         "accessible_nav_pages": enhance_mobile_navigation(),
         "service_worker_updated": update_service_worker(),
     }
+    result.update(enhance_social_metadata())
     return result
 
 
 def main() -> int:
     result = extend_public_info()
-    print("extended strict L1 bilingual discovery + accessibility:", result)
+    print("extended strict L1 bilingual discovery + accessibility + social metadata:", result)
     return 0
 
 
