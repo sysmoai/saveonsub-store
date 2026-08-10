@@ -85,7 +85,7 @@ jobs:
       - name: Validate reviewed media registry
         run: python validate_media_registry.py
 
-      - name: Validate v3 catalog compatibility model
+      - name: Validate v3 active catalog and quarantine model
         run: python validate_catalog_model.py
 
       - name: Inventory authority-sensitive legacy surfaces
@@ -141,6 +141,9 @@ jobs:
 
       - name: Generate cryptographic release manifest
         run: python generate_release_manifest.py
+
+      - name: Validate staged release integrity
+        run: python validate_release.py
 
       - name: Verify strict release candidate boundaries
         run: |
@@ -208,7 +211,6 @@ jobs:
   release-integrity-report:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -218,5 +220,20 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Report legacy/current-source blockers separately
+      - name: Validate active model and authority
+        run: |
+          python validate_authority_boundaries.py
+          python validate_media_registry.py
+          python validate_catalog_model.py
+
+      - name: Build strict artifact for independent release gate
+        run: |
+          python build_public_info_v3.py
+          python harden_public_info_v3.py
+          python stamp_release.py
+          python validate_public_info_v3.py
+          python validate_l1_release.py
+          python stage_deploy.py --public-v3
+
+      - name: Validate deployable release integrity
         run: python validate_release.py
