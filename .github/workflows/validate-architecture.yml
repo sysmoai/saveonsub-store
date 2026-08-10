@@ -1,0 +1,79 @@
+name: Validate Architecture
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - gh-pages
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-architecture-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  structural-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate catalog JSON
+        run: python -m json.tool catalog.json > /dev/null
+
+      - name: Compile control scripts
+        run: |
+          python -m py_compile inventory_site.py
+          python -m py_compile stage_deploy.py
+          python -m py_compile validate_release.py
+
+      - name: Inventory and route parity
+        run: python inventory_site.py
+
+      - name: Stage public artifact safely
+        run: python stage_deploy.py
+
+      - name: Verify no internal JSON entered public artifact
+        run: |
+          if find _site -type f -name '*.json' -print -quit | grep -q .; then
+            echo 'Unexpected JSON found in _site:'
+            find _site -type f -name '*.json' -print
+            exit 1
+          fi
+
+      - name: Verify required public files
+        run: |
+          test -f _site/index.html
+          test -f _site/sitemap.xml
+          test -f _site/robots.txt
+          test -f _site/sw.js
+          test -f _site/assets/app.js
+          test -f _site/assets/style.css
+
+  release-integrity-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Report fail-closed production blockers
+        run: python validate_release.py
