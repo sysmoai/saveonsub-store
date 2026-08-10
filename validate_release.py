@@ -51,8 +51,9 @@ if state not in {"L0_BOOTSTRAP_PRIVATE", "L1_PUBLIC_INFO_ONLY", "L2_LIMITED_COMM
 deploy_text = text(DEPLOY)
 vercel_text = text(VERCEL)
 build_text = text(BUILD_ALL)
-required_deploy = ("build_public_info_v3.py", "harden_public_info_v3.py", "stage_deploy.py --public-v3", "output")
-for token in required_deploy[:3]:
+strict_build_tokens = ("build_public_info_v3.py", "harden_public_info_v3.py", "stage_deploy.py --public-v3")
+
+for token in strict_build_tokens:
     if token not in deploy_text:
         fail("P0-DEPLOY-PATH-UNSAFE", f"Cloudflare deploy workflow missing strict token: {token}")
 if "wrangler pages deploy _site" not in deploy_text:
@@ -60,13 +61,19 @@ if "wrangler pages deploy _site" not in deploy_text:
 if re.search(r"wrangler\s+pages\s+deploy\s+\.\s", deploy_text):
     fail("P0-DEPLOY-PATH-UNSAFE", "Cloudflare deploy workflow can deploy repository root")
 
-for token in ("build_public_info_v3.py", "harden_public_info_v3.py", "stage_deploy.py --public-v3", '"outputDirectory": "_site"'):
-    if token not in vercel_text:
-        fail("P0-VERCEL-PREVIEW-UNSAFE", f"Vercel configuration missing strict token: {token}")
+# Vercel may call the shared strict build script or inline the strict commands.
+# Validate the transitive build graph rather than requiring implementation details
+# to be duplicated in vercel.json.
+vercel_calls_strict_default = bool(re.search(r'"buildCommand"\s*:\s*"bash\s+build_all\.sh"', vercel_text))
+vercel_inlines_strict = all(token in vercel_text for token in strict_build_tokens)
+if not (vercel_calls_strict_default or vercel_inlines_strict):
+    fail("P0-VERCEL-PREVIEW-UNSAFE", "Vercel does not invoke the strict default build or inline the strict L1 build chain")
+if '"outputDirectory": "_site"' not in vercel_text:
+    fail("P0-VERCEL-PREVIEW-UNSAFE", "Vercel outputDirectory is not the staged _site artifact")
 if '"outputDirectory": "."' in vercel_text:
     fail("P0-VERCEL-PREVIEW-UNSAFE", "Vercel can publish repository root")
 
-for token in ("build_public_info_v3.py", "harden_public_info_v3.py", "stage_deploy.py --public-v3"):
+for token in strict_build_tokens:
     if token not in build_text:
         fail("P0-DEFAULT-BUILD-UNSAFE", f"default build missing strict token: {token}")
 if any(token in build_text for token in ("build_pages.py", "build_trust.py", "build_catalog.py")):
