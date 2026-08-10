@@ -1,13 +1,46 @@
 #!/usr/bin/env python3
-"""Add safe bilingual discovery extensions to the strict SAVEONSUB L1 artifact."""
+"""Add safe bilingual discovery and accessibility extensions to strict SAVEONSUB L1."""
 from __future__ import annotations
 
 import pathlib
 import xml.etree.ElementTree as ET
 
-from build_public_info_v3 import DEST, esc, product_card, shell
+from build_public_info_v3 import DEST, product_card, shell
 from catalog_model import load_catalog
 from routes_v3 import DOMAIN
+
+A11Y_JS = r'''/* SAVEONSUB progressive accessibility helpers */
+(function(){
+  function buttonFor(links){
+    if(!links || !links.id) return null;
+    return document.querySelector('.hamb[aria-controls="'+links.id+'"]');
+  }
+  function sync(button){
+    if(!button) return;
+    const id=button.getAttribute('aria-controls');
+    const links=id?document.getElementById(id):null;
+    button.setAttribute('aria-expanded', links&&links.classList.contains('open')?'true':'false');
+  }
+  document.addEventListener('click',function(event){
+    const button=event.target.closest&&event.target.closest('.hamb');
+    if(button) sync(button);
+  });
+  document.addEventListener('keydown',function(event){
+    if(event.key!=='Escape') return;
+    const links=document.querySelector('.navlinks.open');
+    if(!links) return;
+    links.classList.remove('open');
+    const button=buttonFor(links);
+    if(button){
+      button.setAttribute('aria-expanded','false');
+      button.focus();
+    }
+  });
+  document.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('.hamb[aria-controls]').forEach(sync);
+  });
+})();
+'''
 
 
 def bn_all_page(catalog: dict) -> str:
@@ -114,19 +147,44 @@ def update_build_manifest() -> int:
     return changed
 
 
+def write_accessibility_runtime() -> int:
+    assets = DEST / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    path = assets / "a11y.js"
+    prior = path.read_text(encoding="utf-8", errors="replace") if path.is_file() else ""
+    path.write_text(A11Y_JS, encoding="utf-8")
+    return int(prior != A11Y_JS)
+
+
+def enhance_mobile_navigation() -> int:
+    changed = 0
+    for path in sorted(DEST.rglob("*.html")):
+        text = path.read_text(encoding="utf-8", errors="replace")
+        new = text.replace('<div class="navlinks">', '<div class="navlinks" id="primary-nav">', 1)
+        new = new.replace('onclick="navToggle()" aria-label="Menu"', 'onclick="navToggle(this)" aria-label="Menu" aria-controls="primary-nav" aria-expanded="false"', 1)
+        new = new.replace('onclick="navToggle()" aria-label="মেনু"', 'onclick="navToggle(this)" aria-label="মেনু" aria-controls="primary-nav" aria-expanded="false"', 1)
+        if '/assets/a11y.js' not in new and '</body>' in new:
+            new = new.replace('</body>', '<script src="/assets/a11y.js"></script></body>', 1)
+        if new != text:
+            path.write_text(new, encoding="utf-8")
+            changed += 1
+    return changed
+
+
 def update_service_worker() -> int:
     path = DEST / "sw.js"
     if not path.is_file():
         return 0
     text = path.read_text(encoding="utf-8", errors="replace")
-    if "'/bn/all.html'" in text:
-        return 0
-    marker = "'/all.html'"
-    if marker not in text:
-        return 0
-    new = text.replace(marker, "'/all.html','/bn/all.html'", 1)
-    path.write_text(new, encoding="utf-8")
-    return 1
+    new = text
+    if "'/bn/all.html'" not in new and "'/all.html'" in new:
+        new = new.replace("'/all.html'", "'/all.html','/bn/all.html'", 1)
+    if "'/assets/a11y.js'" not in new and "'/assets/app.js'" in new:
+        new = new.replace("'/assets/app.js'", "'/assets/app.js','/assets/a11y.js'", 1)
+    if new != text:
+        path.write_text(new, encoding="utf-8")
+        return 1
+    return 0
 
 
 def extend_public_info() -> dict[str, int]:
@@ -140,6 +198,8 @@ def extend_public_info() -> dict[str, int]:
         "english_hreflang_fixed": fix_english_catalog_hreflang(),
         "sitemap_urls_added": add_sitemap_url(),
         "manifest_updated": update_build_manifest(),
+        "a11y_runtime_written": write_accessibility_runtime(),
+        "accessible_nav_pages": enhance_mobile_navigation(),
         "service_worker_updated": update_service_worker(),
     }
     return result
@@ -147,7 +207,7 @@ def extend_public_info() -> dict[str, int]:
 
 def main() -> int:
     result = extend_public_info()
-    print("extended strict L1 bilingual discovery:", result)
+    print("extended strict L1 bilingual discovery + accessibility:", result)
     return 0
 
 
