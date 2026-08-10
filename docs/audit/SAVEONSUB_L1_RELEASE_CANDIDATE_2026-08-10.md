@@ -1,8 +1,10 @@
 # SAVEONSUB L1 Release Candidate — 2026-08-10
 
-## Final code head
+## Runtime code head
 
 `dcebe69163b72933aca45cb7e8dd91f0c84a6b8e`
+
+The current PR head adds only this audit record after that runtime code head. Exact-head CI independently rebuilds and revalidates the artifact, so release authority is tied to the current PR head rather than this historical code-head label.
 
 ## Release posture
 
@@ -36,9 +38,9 @@
 - Unsupported proof findings: 0
 - Unverified legal-operator findings: 0
 
-## Exact-head CI evidence
+## Runtime-code CI evidence
 
-GitHub Actions run `31347226633`:
+GitHub Actions run `31347226633` at runtime code head `dcebe69163b72933aca45cb7e8dd91f0c84a6b8e`:
 
 - `structural-audit`: SUCCESS
 - `release-integrity-report`: SUCCESS
@@ -50,7 +52,7 @@ GitHub Actions run `31347226633`:
 - cryptographic release manifest generation: SUCCESS
 - release candidate artifact upload: SUCCESS
 
-Artifact:
+Runtime-code artifact:
 
 - `saveonsub-l1-public-info-dcebe69163b72933aca45cb7e8dd91f0c84a6b8e`
 - SHA-256: `7512d5e07330379eaabbe9fe92d2cbe21a92fb274f2f511510c42905ffca60d7`
@@ -69,7 +71,7 @@ Production workflow now:
 8. automatically rolls back to the captured production deployment if live verification fails;
 9. stores deployment evidence.
 
-Vercel Git previews are also configured to run `bash build_all.sh` and publish only `_site`; the current Vercel account is build-rate-limited, so no exact-head preview deployment was created after this hardening.
+Vercel Git previews are configured to run `bash build_all.sh` and publish only `_site`. The configuration is accepted by Vercel; the current Vercel account is build-rate-limited, so no exact-head preview deployment was created after this hardening.
 
 ## External infrastructure blocker
 
@@ -83,4 +85,4 @@ Evidence already exhausted autonomously:
 - no Cloudflare connector/plugin is installed in the current environment;
 - connected Vercel project does not have `saveonsub.com` attached and connector controls do not expose canonical-domain reassignment.
 
-No production merge/cutover is authorized from machine state until an authenticated Cloudflare control channel exists. This is an authentication dependency, not an unresolved code/release-integrity defect.
+No production merge/cutover should occur from machine state until an authenticated Cloudflare control channel exists. This is an authentication dependency, not an unresolved code/release-integrity defect.
