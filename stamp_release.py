@@ -42,17 +42,30 @@ def stamp_manifest(sha: str, cache_name: str) -> None:
     MANIFEST.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def ensure_core_path(text: str, path: str) -> str:
+    quoted = f"'{path}'"
+    if quoted in text:
+        return text
+    anchor = "'/assets/favicon.svg'"
+    if anchor not in text:
+        raise SystemExit(f"strict service worker core anchor missing while adding {path}")
+    return text.replace(anchor, f"{anchor},{quoted}", 1)
+
+
 def stamp_service_worker(cache_name: str) -> None:
     if not SERVICE_WORKER.is_file():
         raise SystemExit("_public_v3/sw.js missing; strict PWA release cannot be stamped")
     text = SERVICE_WORKER.read_text(encoding="utf-8", errors="replace")
 
-    # Remove legacy commerce data from the install list. Strict L1 does not
-    # publish assets/catalog.js, and leaving it in cache.addAll() would reject
-    # the whole pre-cache transaction and silently defeat offline resilience.
+    # Defensive cleanup if a legacy commerce path ever leaks into the generated
+    # worker. The strict builder currently emits no catalog.js, but the release
+    # boundary must keep that invariant explicit.
     text = re.sub(r",?\s*['\"]/assets/catalog\.js['\"]", "", text)
-    text = text.replace("'/assets/site.webmanifest'", "'/manifest.webmanifest'")
-    text = text.replace('"/assets/site.webmanifest"', '"/manifest.webmanifest"')
+
+    # The strict builder generates site.webmanifest in /assets. Cache the actual
+    # generated PWA identity and icons so addAll(CORE) contains only real files.
+    for required in ("/assets/site.webmanifest", "/assets/icon-192.png", "/assets/icon-512.png"):
+        text = ensure_core_path(text, required)
 
     new, count = re.subn(
         r"const\s+CACHE\s*=\s*'[^']+';",
@@ -64,8 +77,9 @@ def stamp_service_worker(cache_name: str) -> None:
         raise SystemExit("service-worker CACHE declaration missing or ambiguous")
     if "/assets/catalog.js" in new:
         raise SystemExit("strict service worker still references forbidden legacy catalog.js")
-    if "/manifest.webmanifest" not in new:
-        raise SystemExit("strict service worker does not cache the public web manifest")
+    for required in ("/assets/site.webmanifest", "/assets/icon-192.png", "/assets/icon-512.png"):
+        if required not in new:
+            raise SystemExit(f"strict service worker core missing generated asset: {required}")
     SERVICE_WORKER.write_text(new, encoding="utf-8")
 
 
