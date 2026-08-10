@@ -3,7 +3,8 @@
 
 Read-only. No network calls and no writes outside docs/architecture when
 --write is explicitly supplied. Intended to make every future development
-change measurable before merge/deploy.
+change measurable before merge/deploy. Preview workspaces are excluded from the
+public-site census.
 """
 from __future__ import annotations
 
@@ -14,13 +15,15 @@ import pathlib
 import sys
 import xml.etree.ElementTree as ET
 
+from catalog_model import load_catalog as load_v3_catalog
+
 ROOT = pathlib.Path(__file__).resolve().parent
 CATALOG = ROOT / "catalog.json"
 SITEMAP = ROOT / "sitemap.xml"
 OUT_JSON = ROOT / "docs" / "architecture" / "site_inventory.json"
 OUT_MD = ROOT / "docs" / "architecture" / "SAVEONSUB_SITE_INVENTORY.md"
 
-EXCLUDED_DIRS = {".git", "_site", "node_modules", "__pycache__"}
+EXCLUDED_DIRS = {".git", "_site", "_preview_v3", "node_modules", "__pycache__"}
 
 
 def visible_files(pattern: str):
@@ -60,6 +63,7 @@ def route_group(url: str):
 
 def collect():
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
+    v3_catalog = load_v3_catalog()
     products = catalog.get("products", [])
     categories = catalog.get("categories", [])
     category_counts = collections.Counter(p.get("category") for p in products)
@@ -79,28 +83,29 @@ def collect():
     product_bn = stems("bn/p/*.html")
     product_social = stems("assets/social/*.png")
 
-    # Plan census. Current v1 catalog plans generally do not yet carry stable
-    # plan IDs; these readiness metrics quantify the migration gap without
-    # failing the existing site merely because v2 has not been introduced yet.
-    plans = []
-    for product in products:
-        for plan in product.get("plans", []):
-            plans.append((product, plan))
-
-    plan_ids = [str(plan.get("id")) for _, plan in plans if plan.get("id")]
-    plan_id_counts = collections.Counter(plan_ids)
-    duplicate_plan_ids = sorted(k for k, v in plan_id_counts.items() if v > 1)
+    plans = [(product, plan) for product in products for plan in product.get("plans", [])]
+    source_plan_ids = [str(plan.get("plan_id") or plan.get("id")) for _, plan in plans if plan.get("plan_id") or plan.get("id")]
+    source_plan_id_counts = collections.Counter(source_plan_ids)
+    duplicate_source_plan_ids = sorted(k for k, v in source_plan_id_counts.items() if v > 1)
     plan_type_counts = collections.Counter(str(plan.get("type", "unknown")) for _, plan in plans)
     plan_tos_counts = collections.Counter(str(plan.get("tos", "unknown")) for _, plan in plans)
     product_status_counts = collections.Counter(str(p.get("status", "unknown")) for p in products)
+
+    v3_plans = [(product, plan) for product in v3_catalog.get("products", []) for plan in product.get("plans", [])]
+    v3_plan_ids = [plan.get("plan_id_v3") for _, plan in v3_plans]
+    v3_plan_id_counts = collections.Counter(v3_plan_ids)
+    duplicate_v3_plan_ids = sorted(k for k, v in v3_plan_id_counts.items() if v > 1)
+    v3_routes_en = [plan.get("routes_v3", {}).get("en") for _, plan in v3_plans]
+    v3_routes_bn = [plan.get("routes_v3", {}).get("bn") for _, plan in v3_plans]
+    v3_media = [media for p in v3_catalog.get("products", []) for media in p.get("media_v3", [])]
+    v3_fallback_media = [media for media in v3_media if media.get("fallback")]
+    v3_unknown_commercial = [plan for _, plan in v3_plans if plan.get("commercial_state_v3") == "unknown"]
 
     products_without_plans = sorted(p.get("id") for p in products if not p.get("plans"))
     products_with_media_field = sorted(p.get("id") for p in products if p.get("media"))
     products_with_gallery_field = sorted(p.get("id") for p in products if p.get("gallery"))
     products_with_video_field = sorted(p.get("id") for p in products if p.get("video") or p.get("videos"))
 
-    # Target dedicated plan routes are nested below the existing product slug.
-    # These should remain zero until the v3 plan-page generator is introduced.
     plan_pages_en = visible_files("p/*/*.html")
     plan_pages_bn = visible_files("bn/p/*/*.html")
 
@@ -125,18 +130,26 @@ def collect():
         "bn_page_missing_catalog": sorted(product_bn - catalog_ids),
         "catalog_missing_social_png": sorted(catalog_ids - product_social),
         "social_png_missing_catalog": sorted(product_social - catalog_ids),
+        "duplicate_v3_plan_ids": duplicate_v3_plan_ids,
     }
 
     readiness = {
         "products_without_plans": products_without_plans,
-        "plans_with_stable_id": len(plan_ids),
-        "plans_missing_stable_id": len(plans) - len(plan_ids),
-        "duplicate_plan_ids": duplicate_plan_ids,
+        "source_plans_with_persisted_id": len(source_plan_ids),
+        "source_plans_missing_persisted_id": len(plans) - len(source_plan_ids),
+        "duplicate_source_plan_ids": duplicate_source_plan_ids,
+        "v3_normalized_plan_ids": len(v3_plan_ids),
+        "v3_unique_plan_ids": len(set(v3_plan_ids)),
+        "v3_unique_plan_routes_en": len(set(v3_routes_en)),
+        "v3_unique_plan_routes_bn": len(set(v3_routes_bn)),
+        "v3_normalized_media_items": len(v3_media),
+        "v3_fallback_media_items": len(v3_fallback_media),
+        "v3_plans_commercial_unknown": len(v3_unknown_commercial),
         "products_with_media_field": len(products_with_media_field),
         "products_with_gallery_field": len(products_with_gallery_field),
         "products_with_video_field": len(products_with_video_field),
-        "dedicated_plan_pages_en": len(plan_pages_en),
-        "dedicated_plan_pages_bn": len(plan_pages_bn),
+        "dedicated_public_plan_pages_en": len(plan_pages_en),
+        "dedicated_public_plan_pages_bn": len(plan_pages_bn),
     }
 
     data = {
@@ -207,20 +220,20 @@ def markdown(data):
             lines.append(f"- `{key}`: {', '.join(value) if value else 'none'}")
         else:
             lines.append(f"- `{key}`: **{value}**")
-    lines += ["", "## Product parity", ""]
+    lines += ["", "## Product / normalized-plan parity", ""]
     bad = False
     for key, values in data["parity"].items():
         if values:
             bad = True
             lines.append(f"- `{key}`: {', '.join(values)}")
     if not bad:
-        lines.append("- Catalog IDs, EN product pages, BN product pages, and product social PNGs are in parity.")
+        lines.append("- Catalog IDs, EN product pages, BN product pages, product social PNGs and normalized v3 plan IDs are in parity.")
     lines += [
         "",
         "## Safety rule",
         "",
         "Any future product addition/removal must keep catalog, EN/BN product routes, sitemap, category counts and social assets in parity before merge.",
-        "Plan IDs/media fields are readiness metrics until the v3 normalized model is introduced; they become hard gates only after migration activation.",
+        "Normalized v3 plan IDs/routes/media are compatibility-layer readiness. Persisted source IDs and public plan routes remain separate activation steps.",
         "",
     ]
     return "\n".join(lines)
