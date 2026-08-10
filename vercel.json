@@ -1,29 +1,28 @@
 {
   "name": "saveonsub",
   "version": 2,
-  "buildCommand": "bash build_all.sh",
-  "outputDirectory": ".",
-  "installCommand": "pip3 install Pillow --break-system-packages",
+  "buildCommand": "python3 validate_authority_boundaries.py && python3 validate_media_registry.py && python3 validate_catalog_model.py && python3 build_public_info_v3.py && python3 harden_public_info_v3.py && python3 stamp_release.py && python3 validate_public_info_v3.py && python3 validate_l1_release.py && python3 stage_deploy.py --public-v3",
+  "outputDirectory": "_site",
+  "installCommand": "echo 'No dependency install required for strict L1 static build'",
   "cleanUrls": true,
   "redirects": [
     { "source": "/subscriptions.html", "destination": "/all.html", "permanent": true },
     { "source": "/home", "destination": "/", "permanent": true },
     { "source": "/shop", "destination": "/all.html", "permanent": true },
-    { "source": "/products", "destination": "/all.html", "permanent": true }
+    { "source": "/products", "destination": "/all.html", "permanent": true },
+    { "source": "/checkout.html", "destination": "/all.html", "permanent": false },
+    { "source": "/track.html", "destination": "/contact.html", "permanent": false }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://wa.me; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://wa.me" },
-        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" }
-      ]
-    },
-    {
-      "source": "/(.*).(html|css|js|svg|png|jpg|ico|webmanifest|json|xml|txt)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400" }
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" }
       ]
     }
   ]
