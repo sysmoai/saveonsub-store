@@ -25,6 +25,13 @@ def text_files():
             yield path
 
 
+def sample_context(text: str, match: re.Match[str], radius: int = 70) -> str:
+    start = max(0, match.start() - radius)
+    end = min(len(text), match.end() + radius)
+    sample = re.sub(r"\s+", " ", text[start:end]).strip()
+    return sample[:220]
+
+
 def main() -> int:
     if not PUBLIC.is_dir():
         fail("_public_v3 does not exist; run build_public_info_v3.py")
@@ -70,7 +77,9 @@ def main() -> int:
         "BDT selling price": re.compile(r"৳\s*[0-9]|\b(?:BDT|Tk\.?)\s*[0-9][0-9,]*", re.I),
         "stale WhatsApp number": re.compile(r"(?:\+?880[ -]?1305[ -]?869242|8801305869242|01305869242)"),
         "WhatsApp destination": re.compile(r"(?:wa\.me/|api\.whatsapp\.com)", re.I),
-        "cart control": re.compile(r"cartAdd\s*\(|checkout\.html|class=[\"'][^\"']*cartbtn", re.I),
+        "cartAdd function": re.compile(r"cartAdd\s*\(", re.I),
+        "checkout route": re.compile(r"checkout\.html", re.I),
+        "cart button class": re.compile(r"class=[\"'][^\"']*cartbtn", re.I),
         "Offer schema": re.compile(r"[\"']@type[\"']\s*:\s*[\"'](?:Offer|AggregateOffer)[\"']", re.I),
         "raw catalog": re.compile(r"catalog\.json|assets/catalog\.js", re.I),
         "payment destination": re.compile(r"(?:merchant number|send money to|payment number|bank account number|bKash\s*(?:number|to)|Nagad\s*(?:number|to))", re.I),
@@ -80,30 +89,39 @@ def main() -> int:
     }
 
     findings = {name: [] for name in forbidden_patterns}
+    examples = {name: [] for name in forbidden_patterns}
     for path in text_files():
         rel = path.relative_to(PUBLIC).as_posix()
         text = path.read_text(encoding="utf-8", errors="replace")
         for name, pattern in forbidden_patterns.items():
-            if pattern.search(text):
+            match = pattern.search(text)
+            if match:
                 findings[name].append(rel)
+                if len(examples[name]) < 5:
+                    examples[name].append({
+                        "path": rel,
+                        "matched": match.group(0),
+                        "context": sample_context(text, match),
+                    })
 
     for name, paths in findings.items():
         if paths:
             fail(f"forbidden {name} in {len(paths)} file(s): {', '.join(paths[:8])}")
+            for example in examples[name]:
+                print(
+                    f"DIAG {name}: path={example['path']} matched={example['matched']!r} "
+                    f"context={example['context']!r}"
+                )
 
-    # The public artifact must not contain JSON files. The webmanifest is a
-    # manifest MIME type but is intentionally not named .json.
     json_files = [p.relative_to(PUBLIC).as_posix() for p in PUBLIC.rglob("*.json")]
     if json_files:
         fail(f"public JSON files present: {json_files[:10]}")
 
-    # Plan pages are real routes but intentionally excluded from indexing.
     for path in list(PUBLIC.glob("p/*/*.html")) + list(PUBLIC.glob("bn/p/*/*.html")):
         text = path.read_text(encoding="utf-8", errors="replace")
         if '<meta name="robots" content="noindex,follow">' not in text:
             fail(f"plan page missing noindex,follow: {path.relative_to(PUBLIC)}")
 
-    # Product pages stay on their historical canonical routes.
     for product in products:
         pid = product["id"]
         for language, rel in (("en", f"p/{pid}.html"), ("bn", f"bn/p/{pid}.html")):
@@ -115,8 +133,6 @@ def main() -> int:
             if f'<link rel="canonical" href="{expected_canonical}">' not in text:
                 fail(f"canonical drift: {rel}")
 
-    # Sitemap must contain only the deliberately indexable L1 set and no plan
-    # detail routes.
     sitemap = PUBLIC / "sitemap.xml"
     sitemap_urls: list[str] = []
     if sitemap.is_file():
@@ -143,6 +159,8 @@ def main() -> int:
                 fail(f"build manifest {key} is not zero")
 
     if errors:
+        print("DIAGNOSTIC SUMMARY")
+        print(json.dumps({name: {"files": len(paths), "examples": examples[name]} for name, paths in findings.items() if paths}, ensure_ascii=False, indent=2))
         print(f"L1 PUBLIC ARTIFACT INVALID: {len(errors)} failure(s)")
         for message in errors:
             print(f"FAIL {message}")
