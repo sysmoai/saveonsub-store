@@ -40,6 +40,7 @@ jobs:
           python -m py_compile validate_navigation_accessibility.py
           python -m py_compile validate_social_metadata.py
           python -m py_compile validate_pwa_release.py
+          python -m py_compile validate_security_policy.py
           python -m py_compile enhance_social_metadata_v3.py
           python -m py_compile extend_public_info_v3.py
           python -m py_compile verify_build_determinism.py
@@ -87,6 +88,9 @@ jobs:
 
       - name: Validate release-bound PWA caching
         run: python validate_pwa_release.py
+
+      - name: Validate strict CSP compatibility
+        run: python validate_security_policy.py
 
       - name: Verify private evidence remains private
         run: |
