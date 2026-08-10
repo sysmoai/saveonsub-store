@@ -13,12 +13,12 @@ SITE = ROOT / "_site"
 META = ROOT / "_release_meta"
 OUT = META / "quality-manifest.json"
 
+# Only files that can materially affect the strict L1 artifact or its release
+# validation belong here. Legacy root hosting files are intentionally excluded:
+# build_public_info_v3.py generates strict _headers, _redirects, sw.js and the
+# web manifest inside _public_v3, then post-build hardeners transform them.
 SOURCE_FILES = (
     "catalog.json",
-    "_headers",
-    "_redirects",
-    "sw.js",
-    "manifest.webmanifest",
     "site_config.py",
     "authority_model.py",
     "catalog_model.py",
@@ -27,6 +27,7 @@ SOURCE_FILES = (
     "build_public_info_v3.py",
     "extend_public_info_v3.py",
     "enhance_social_metadata_v3.py",
+    "harden_security_headers_v3.py",
     "harden_public_info_v3.py",
     "stamp_release.py",
     "stage_deploy.py",
@@ -44,6 +45,7 @@ SOURCE_FILES = (
     "validate_security_policy.py",
     "verify_build_determinism.py",
     "assets/style.css",
+    "assets/app.js",
     "assets/favicon.svg",
     "assets/logo.svg",
     "assets/icon-192.png",
@@ -56,13 +58,10 @@ SOURCE_DIRS = (
     "assets/social",
 )
 GENERATOR_FILES = {
-    "_headers",
-    "_redirects",
-    "sw.js",
-    "manifest.webmanifest",
     "build_public_info_v3.py",
     "extend_public_info_v3.py",
     "enhance_social_metadata_v3.py",
+    "harden_security_headers_v3.py",
     "harden_public_info_v3.py",
     "stamp_release.py",
     "stage_deploy.py",
@@ -158,6 +157,10 @@ def main() -> int:
     generator_entries = [e for e in source_entries if str(e["path"]) in GENERATOR_FILES]
     html_routes = sorted(p.relative_to(SITE).as_posix() for p in output_paths if p.suffix.lower() == ".html")
     urls = sitemap_urls()
+
+    missing_source_contract = [rel for rel in SOURCE_FILES if not (ROOT / rel).is_file()]
+    if missing_source_contract:
+        raise SystemExit(f"quality manifest source contract missing files: {missing_source_contract}")
 
     manifest = {
         "manifest_version": 1,
