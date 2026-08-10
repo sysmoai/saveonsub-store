@@ -37,6 +37,7 @@ jobs:
           python -m py_compile validate_quality_gates.py
           python -m py_compile validate_schema_quality.py
           python -m py_compile validate_localization_quality.py
+          python -m py_compile validate_navigation_accessibility.py
           python -m py_compile extend_public_info_v3.py
           python -m py_compile verify_build_determinism.py
 
@@ -74,6 +75,9 @@ jobs:
 
       - name: Validate EN-BN discovery parity
         run: python validate_localization_quality.py
+
+      - name: Validate mobile navigation accessibility
+        run: python validate_navigation_accessibility.py
 
       - name: Verify private evidence remains private
         run: |
