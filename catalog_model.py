@@ -9,6 +9,7 @@ Important migration rule:
 - existing product IDs and product URLs are permanent invariants;
 - derived plan IDs are provisional migration identities until persisted in the
   reviewed v3 plan registry/source;
+- mutable prices never become part of plan identity or route slugs;
 - a missing explicit commercial eligibility state normalizes to UNKNOWN, never
   to sellable.
 """
@@ -22,7 +23,7 @@ from collections import Counter, defaultdict
 from typing import Any
 
 from media_registry import normalize_media
-from routes_v3 import plan_path, product_path, slugify
+from routes_v3 import plan_label_slug, plan_path, product_path, slugify
 
 ROOT = pathlib.Path(__file__).resolve().parent
 DEFAULT_CATALOG = ROOT / "catalog.json"
@@ -57,7 +58,7 @@ def _duration_key(plan: dict[str, Any]) -> str:
 
 
 def _label_key(plan: dict[str, Any]) -> str:
-    return slugify(plan.get("label") or _plan_kind(plan), _plan_kind(plan))
+    return plan_label_slug(plan.get("label") or _plan_kind(plan), _plan_kind(plan))
 
 
 def _base_plan_id(product_id: str, plan: dict[str, Any]) -> str:
@@ -68,10 +69,10 @@ def _derived_plan_ids(product: dict[str, Any]) -> list[str]:
     """Derive deterministic migration IDs for the legacy plan array.
 
     Most plans resolve to <product>--<kind>--<duration>. If multiple legacy
-    plans share that semantic key, a stable label qualifier is added; only an
-    exact duplicate label requires a final ordinal. Once v3 IDs are persisted,
-    generators will prefer the persisted ID and this derivation becomes a
-    compatibility fallback only.
+    plans share that semantic key, a price-free label qualifier is added; only
+    an exact duplicate qualifier requires a final ordinal. Once v3 IDs are
+    persisted, generators will prefer the persisted ID and this derivation
+    becomes a compatibility fallback only.
     """
     plans = product.get("plans") or []
     base_counts = Counter(_base_plan_id(product["id"], p) for p in plans)
@@ -100,7 +101,7 @@ def _derived_plan_ids(product: dict[str, Any]) -> list[str]:
 
 def _plan_slugs(product: dict[str, Any]) -> list[str]:
     plans = product.get("plans") or []
-    candidates = [slugify(p.get("slug") or p.get("label") or _plan_kind(p), "plan") for p in plans]
+    candidates = [plan_label_slug(p.get("slug") or p.get("label") or _plan_kind(p), "plan") for p in plans]
     counts = Counter(candidates)
     used: defaultdict[str, int] = defaultdict(int)
     out: list[str] = []
