@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """Harden generated _public_v3 for a strict L1 information-only release.
 
-The repository compatibility runtime deliberately keeps legacy function names so
-old committed pages do not crash during migration. The strict public L1 artifact
-does not need those names at all. This post-build step replaces its browser
-runtime with an information-only implementation and removes legacy commerce
-redirect vocabulary before release validation/staging.
+The repository compatibility runtime and stylesheet deliberately retain legacy
+selectors/function names so old committed pages do not break during migration.
+The strict public L1 artifact does not need that vocabulary. This post-build
+step replaces its browser runtime with an information-only implementation,
+removes legacy commerce redirects, neutralizes unused shared-plan CSS selectors,
+and redacts unsupported numeric social-proof phrases inherited from legacy copy.
 """
 from __future__ import annotations
 
 import pathlib
+import re
 
 ROOT = pathlib.Path(__file__).resolve().parent
 PUBLIC = ROOT / "_public_v3"
@@ -78,6 +80,42 @@ REDIRECTS = '''/home / 301
 /products /all.html 301
 '''
 
+# The strict artifact may inherit factual-looking numeric claims from old FAQ or
+# descriptive copy (for example "100+ users"). Without evidence binding those
+# counts are not publishable. Preserve the noun/context, remove only the number.
+UNSUPPORTED_PROOF_RE = re.compile(
+    r"\b[0-9]{2,}\+?\s*(orders|customers|users)\b",
+    re.IGNORECASE,
+)
+
+
+def redact_unsupported_proof(text: str) -> tuple[str, int]:
+    return UNSUPPORTED_PROOF_RE.subn(lambda m: m.group(1), text)
+
+
+def harden_stylesheet() -> int:
+    path = ASSETS / "style.css"
+    if not path.is_file():
+        return 0
+    text = path.read_text(encoding="utf-8", errors="replace")
+    # These classes are unused by the strict L1 pages. Rename them instead of
+    # deleting arbitrary CSS blocks, which keeps the inherited stylesheet valid
+    # while removing shared-commerce vocabulary from the release artifact.
+    new = text.replace("shared-low", "legacy-risk-low").replace("shared-med", "legacy-risk-med")
+    path.write_text(new, encoding="utf-8")
+    return int(new != text)
+
+
+def harden_html() -> int:
+    replacements = 0
+    for path in PUBLIC.rglob("*.html"):
+        text = path.read_text(encoding="utf-8", errors="replace")
+        new, count = redact_unsupported_proof(text)
+        if count:
+            path.write_text(new, encoding="utf-8")
+            replacements += count
+    return replacements
+
 
 def main() -> int:
     if not PUBLIC.is_dir():
@@ -85,7 +123,12 @@ def main() -> int:
     ASSETS.mkdir(parents=True, exist_ok=True)
     (ASSETS / "app.js").write_text(APP_JS, encoding="utf-8")
     (PUBLIC / "_redirects").write_text(REDIRECTS, encoding="utf-8")
-    print("hardened _public_v3: information-only app.js + non-commerce redirects")
+    css_hardened = harden_stylesheet()
+    proof_redactions = harden_html()
+    print(
+        "hardened _public_v3: information-only app.js + non-commerce redirects + "
+        f"css_hardened={css_hardened} unsupported_proof_redactions={proof_redactions}"
+    )
     return 0
 
 
