@@ -1,20 +1,39 @@
 {
-  "record_type": "provisional_launch_control",
+  "record_type": "launch_control",
   "as_of": "2026-08-10",
   "timezone": "Asia/Dhaka",
-  "authority_basis": "SAVEONSUB Business Omni-Harness v2.0 uploaded 2026-08-10",
-  "state": "L0_BOOTSTRAP_PRIVATE",
+  "authority_basis": "Current owner instruction on 2026-08-10 explicitly directs SAVEONSUB development and deployment to live, reconciled with SAVEONSUB Business Omni-Harness v2.0.",
+  "state": "L1_PUBLIC_INFO_ONLY",
   "production_classification": "UNKNOWN",
-  "launch_authorization": "UNPROVEN",
+  "launch_authorization": "PROVEN_FOR_L1_PUBLIC_INFORMATION",
   "commerce_authorized": false,
   "public_price_authorized": false,
-  "indexing_authorized": false,
+  "indexing_authorized": true,
   "payment_instructions_authorized": false,
   "owner_transition_required": true,
+  "scope": {
+    "authorized": [
+      "public informational product pages",
+      "public informational category pages",
+      "English and Bangla discovery pages",
+      "provider-status disclosures",
+      "official-provider outbound links",
+      "indexing of non-commerce informational pages"
+    ],
+    "not_authorized": [
+      "SAVEONSUB selling prices",
+      "cart or checkout",
+      "payment destinations or payment instructions",
+      "server order creation",
+      "unverified WhatsApp CTA",
+      "unverified legal-operator claims",
+      "provider-prohibited fulfillment"
+    ]
+  },
   "notes": [
-    "Bootstrap authority does not establish public launch authority.",
-    "The latest Cloudflare workflow runs observed for main failed.",
-    "GitHub Pages is enabled but the gh-pages branch currently contains only .nojekyll.",
-    "Custom-domain DNS/live behavior was not independently verified from the execution environment."
+    "Current user instruction establishes public release intent, so the previous L0 launch-authorization gap is resolved for L1 information only.",
+    "Commerce remains fail-closed until provider eligibility, independent SAVEONSUB pricing, payment destinations, and legal/contact authority are reconciled.",
+    "Cloudflare deployment credentials are currently invalid in GitHub Actions, so production deployment remains technically blocked until access is repaired.",
+    "Exact current custom-domain deployment SHA remains unverified."
   ]
 }
