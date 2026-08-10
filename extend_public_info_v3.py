@@ -9,6 +9,7 @@ from build_public_info_v3 import DEST, product_card, shell
 from catalog_model import load_catalog
 from enhance_compare_v3 import enhance_compare
 from enhance_discovery_v3 import enhance_discovery
+from enhance_related_v3 import enhance_related
 from enhance_social_metadata_v3 import enhance_social_metadata
 from harden_security_headers_v3 import harden_security_headers
 from routes_v3 import DOMAIN
@@ -218,6 +219,7 @@ def extend_public_info() -> dict[str, int]:
     }
     result.update(enhance_discovery())
     result.update(enhance_compare())
+    result.update(enhance_related())
     result.update(enhance_social_metadata())
     result.update(harden_security_headers())
     return result
@@ -225,7 +227,7 @@ def extend_public_info() -> dict[str, int]:
 
 def main() -> int:
     result = extend_public_info()
-    print("extended strict L1 bilingual discovery + comparison + accessibility + social metadata + headers:", result)
+    print("extended strict L1 bilingual discovery + comparison + same-category exploration + accessibility + social metadata + headers:", result)
     return 0
 
 
