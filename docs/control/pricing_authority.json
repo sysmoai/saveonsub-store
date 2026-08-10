@@ -1,0 +1,17 @@
+{
+  "record_type": "pricing_authority",
+  "as_of": "2026-08-10",
+  "brand": "SAVEONSUB",
+  "currency": "BDT",
+  "state": "UNVERIFIED",
+  "public_price_authorized": false,
+  "active_prices": {},
+  "source_rules": [
+    "SAVEONSUB pricing must be independently approved for SAVEONSUB.",
+    "AIPS prices, analyses, floor calculations, or price precedence are research inputs only and cannot authorize a SAVEONSUB selling price.",
+    "A formula or competitor survey is not equivalent to an approved public price.",
+    "Every future active price must reference a stable plan ID, amount, effective date, and dated authority reference."
+  ],
+  "legacy_catalog_prices_operational": false,
+  "commerce_effect": "public prices and server quotes remain disabled until active_prices is populated from current SAVEONSUB authority"
+}
