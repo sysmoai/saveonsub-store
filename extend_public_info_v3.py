@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Add safe bilingual discovery and accessibility extensions to strict SAVEONSUB L1."""
+"""Add safe bilingual discovery, content and accessibility extensions to strict SAVEONSUB L1."""
 from __future__ import annotations
 
 import pathlib
@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 from build_public_info_v3 import DEST, product_card, shell
 from catalog_model import load_catalog
 from enhance_compare_v3 import enhance_compare
+from enhance_content_v3 import enhance_content
 from enhance_discovery_v3 import enhance_discovery
 from enhance_related_v3 import enhance_related
 from enhance_social_metadata_v3 import enhance_social_metadata
@@ -137,25 +138,36 @@ def add_sitemap_url() -> int:
     return 1
 
 
+def sitemap_count() -> int:
+    path = DEST / "sitemap.xml"
+    if not path.is_file():
+        return 0
+    root = ET.parse(path).getroot()
+    return sum(1 for node in root.iter() if node.tag.rsplit("}", 1)[-1] == "loc" and node.text)
+
+
 def update_build_manifest() -> int:
     path = DEST / "BUILD-MANIFEST.txt"
     if not path.is_file():
         return 0
+    desired = sitemap_count()
+    if desired <= 0:
+        raise RuntimeError("cannot update manifest before sitemap is populated")
     lines = path.read_text(encoding="utf-8").splitlines()
     out: list[str] = []
     changed = 0
+    found = False
     for line in lines:
         if line.startswith("indexable_urls="):
-            try:
-                current = int(line.split("=", 1)[1])
-            except ValueError:
-                current = 0
-            desired = max(current, 179)
+            found = True
             new_line = f"indexable_urls={desired}"
             changed += int(new_line != line)
             out.append(new_line)
         else:
             out.append(line)
+    if not found:
+        out.append(f"indexable_urls={desired}")
+        changed += 1
     path.write_text("\n".join(out) + "\n", encoding="utf-8")
     return changed
 
@@ -207,8 +219,10 @@ def extend_public_info() -> dict[str, int]:
         raise RuntimeError("_public_v3 missing; run build_public_info_v3.py first")
     catalog = load_catalog()
     write_bn_catalog(catalog)
+    content_result = enhance_content()
     result = {
         "bn_catalog_written": 1,
+        **content_result,
         "bangla_pages_rewired": rewire_bangla_catalog_links(),
         "english_hreflang_fixed": fix_english_catalog_hreflang(),
         "sitemap_urls_added": add_sitemap_url(),
@@ -227,7 +241,7 @@ def extend_public_info() -> dict[str, int]:
 
 def main() -> int:
     result = extend_public_info()
-    print("extended strict L1 bilingual discovery + comparison + same-category exploration + accessibility + social metadata + headers:", result)
+    print("extended strict L1 bilingual resource library + discovery + comparison + same-category exploration + accessibility + social metadata + headers:", result)
     return 0
 
 
