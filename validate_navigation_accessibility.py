@@ -54,8 +54,8 @@ def validate_page(path: pathlib.Path) -> None:
             fail(f"{rel}: hamburger initial aria-expanded must be false")
         if not button.get("aria-label", "").strip():
             fail(f"{rel}: hamburger needs localized aria-label")
-        if button.get("onclick") != "navToggle(this)":
-            fail(f"{rel}: hamburger must call navToggle(this)")
+        if any(key.startswith("on") for key in button):
+            fail(f"{rel}: hamburger must not depend on CSP-blocked inline event handlers")
 
     if parser.scripts.count("/assets/a11y.js") != 1:
         fail(f"{rel}: expected exactly one /assets/a11y.js script")
@@ -70,6 +70,7 @@ def validate_runtime() -> None:
     required = (
         "aria-controls",
         "aria-expanded",
+        "classList.toggle('open')",
         "event.key!=='Escape'",
         "classList.remove('open')",
         "button.focus()",
@@ -102,6 +103,7 @@ def main() -> int:
         "pages_checked": len(pages),
         "nav_id_errors": 0,
         "aria_state_errors": 0,
+        "inline_event_handlers": 0,
         "escape_behavior_errors": 0,
         "runtime_load_errors": 0,
     }, indent=2))
