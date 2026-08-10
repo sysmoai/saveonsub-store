@@ -2,8 +2,6 @@
 """Add progressive, information-only catalog discovery to strict SAVEONSUB L1."""
 from __future__ import annotations
 
-import pathlib
-
 from build_public_info_v3 import DEST
 
 DISCOVERY_JS = r'''/* SAVEONSUB rendered-card discovery: no catalog payload, no commerce data */
@@ -134,6 +132,25 @@ def enhance_catalog_page(rel: str, language: str) -> int:
     return 1
 
 
+def update_service_worker() -> int:
+    path = DEST / "sw.js"
+    if not path.is_file():
+        return 0
+    text = path.read_text(encoding="utf-8", errors="replace")
+    new = text
+    anchor = "'/assets/a11y.js'"
+    for asset in ("/assets/discovery.js", "/assets/discovery.css"):
+        quoted = f"'{asset}'"
+        if quoted not in new:
+            if anchor not in new:
+                raise RuntimeError(f"service worker core anchor missing while adding {asset}")
+            new = new.replace(anchor, f"{anchor},{quoted}", 1)
+    if new != text:
+        path.write_text(new, encoding="utf-8")
+        return 1
+    return 0
+
+
 def enhance_discovery() -> dict[str, int]:
     if not DEST.is_dir():
         raise RuntimeError("_public_v3 missing; run build_public_info_v3.py first")
@@ -145,6 +162,7 @@ def enhance_discovery() -> dict[str, int]:
         "discovery_assets_written": 2,
         "english_catalog_enhanced": enhance_catalog_page("all.html", "en"),
         "bangla_catalog_enhanced": enhance_catalog_page("bn/all.html", "bn"),
+        "service_worker_updated": update_service_worker(),
     }
     return result
 
