@@ -44,6 +44,7 @@ jobs:
           python -m json.tool docs/control/pricing_authority.json > /dev/null
           python -m json.tool docs/control/provider_eligibility.json > /dev/null
           python -m json.tool docs/control/legal_authority.json > /dev/null
+          python -m json.tool data/media/media_registry.json > /dev/null
 
       - name: Compile architecture and control scripts
         run: |
@@ -56,6 +57,8 @@ jobs:
           python -m py_compile validate_l1_release.py
           python -m py_compile routes_v3.py
           python -m py_compile media_registry.py
+          python -m py_compile media_authoring.py
+          python -m py_compile validate_media_registry.py
           python -m py_compile catalog_model.py
           python -m py_compile validate_catalog_model.py
           python -m py_compile validate_authority_boundaries.py
@@ -78,6 +81,9 @@ jobs:
 
       - name: Validate protected authority boundaries
         run: python validate_authority_boundaries.py
+
+      - name: Validate reviewed media registry
+        run: python validate_media_registry.py
 
       - name: Validate v3 catalog compatibility model
         run: python validate_catalog_model.py
@@ -141,6 +147,7 @@ jobs:
           test ! -e _site/_preview_v3
           test ! -e _site/_public_v3
           test ! -e _site/commerce-worker
+          test ! -e _site/data
           test ! -e _site/catalog.json
           test ! -e _site/aips-live.json
           test ! -e _site/assets/catalog.js
