@@ -2,16 +2,19 @@
 """Compatibility-first normalized catalog model for SAVEONSUB v3.
 
 This module reads the existing catalog.json and enriches a deep copy with
-stable-enough v3 identifiers, routes, media and fail-closed commerce metadata.
-It deliberately does not rewrite catalog.json and is safe to run in CI.
+stable-enough v3 identifiers, routes, media and authority-derived commerce
+metadata. It deliberately does not rewrite catalog.json and is safe to run in
+CI.
 
-Important migration rule:
+Important migration rules:
 - existing product IDs and product URLs are permanent invariants;
 - derived plan IDs are provisional migration identities until persisted in the
   reviewed v3 plan registry/source;
 - mutable prices never become part of plan identity or route slugs;
-- a missing explicit commercial eligibility state normalizes to UNKNOWN, never
-  to sellable.
+- legacy catalog price/status/risk fields never authorize commerce;
+- provider, pricing, payment and launch authority come from protected control
+  registries;
+- unknown is never sellable.
 """
 from __future__ import annotations
 
@@ -22,6 +25,14 @@ import pathlib
 from collections import Counter, defaultdict
 from typing import Any
 
+from authority_model import (
+    approved_price,
+    commerce_launch_ready,
+    load_authority,
+    product_bundle_state,
+    provider_plan_state,
+    provider_product_state,
+)
 from media_registry import normalize_media
 from routes_v3 import plan_label_slug, plan_path, product_path, slugify
 
@@ -29,7 +40,6 @@ ROOT = pathlib.Path(__file__).resolve().parent
 DEFAULT_CATALOG = ROOT / "catalog.json"
 
 KNOWN_PLAN_TYPES = {"personal", "shared", "official", "bundle"}
-COMMERCIAL_STATES = {"allowed", "direct_provider_only", "blocked", "unknown"}
 
 
 def source_digest(raw: dict[str, Any]) -> str:
@@ -66,14 +76,7 @@ def _base_plan_id(product_id: str, plan: dict[str, Any]) -> str:
 
 
 def _derived_plan_ids(product: dict[str, Any]) -> list[str]:
-    """Derive deterministic migration IDs for the legacy plan array.
-
-    Most plans resolve to <product>--<kind>--<duration>. If multiple legacy
-    plans share that semantic key, a price-free label qualifier is added; only
-    an exact duplicate qualifier requires a final ordinal. Once v3 IDs are
-    persisted, generators will prefer the persisted ID and this derivation
-    becomes a compatibility fallback only.
-    """
+    """Derive deterministic migration IDs for the legacy plan array."""
     plans = product.get("plans") or []
     base_counts = Counter(_base_plan_id(product["id"], p) for p in plans)
     label_group_counts: Counter[str] = Counter()
@@ -114,30 +117,26 @@ def _plan_slugs(product: dict[str, Any]) -> list[str]:
     return out
 
 
-def _commercial_state(product: dict[str, Any], plan: dict[str, Any] | None = None) -> str:
-    values = []
-    if plan:
-        values += [plan.get("commercial_state"), plan.get("eligibility")]
-    values += [product.get("commercial_state"), product.get("eligibility")]
-    for value in values:
-        normalized = str(value or "").strip().lower()
-        if normalized in COMMERCIAL_STATES:
-            return normalized
-    return "unknown"
-
-
 def normalize_catalog(raw: dict[str, Any]) -> dict[str, Any]:
     """Return a deep-copy normalized model while preserving all legacy fields."""
     normalized = copy.deepcopy(raw)
+    authority = load_authority()
+    commerce_ready = commerce_launch_ready(authority)
     normalized.setdefault("meta", {})
     normalized["meta"]["v3_model"] = {
-        "version": 1,
+        "version": 2,
         "source_sha256": source_digest(raw),
         "compatibility_mode": True,
         "commercial_default": "unknown",
+        "commerce_launch_ready": commerce_ready,
+        "public_price_authorized": authority["pricing"].get("public_price_authorized") is True,
+        "payment_destinations_verified": authority["payment"].get("destinations_status") == "VERIFIED",
     }
 
-    for product in normalized.get("products", []):
+    products = normalized.get("products", [])
+    products_by_id = {str(p.get("id")): p for p in products if p.get("id")}
+
+    for product in products:
         pid = str(product.get("id") or "").strip()
         if not pid:
             raise ValueError("product missing id")
@@ -146,7 +145,11 @@ def normalize_catalog(raw: dict[str, Any]) -> dict[str, Any]:
             "en": product_path(pid, "en"),
             "bn": product_path(pid, "bn"),
         }
-        product["commercial_state_v3"] = _commercial_state(product)
+        if isinstance(product.get("contains"), list) and product.get("contains"):
+            product_state = product_bundle_state(product, products_by_id, authority)
+        else:
+            product_state = provider_product_state(product, authority)
+        product["commercial_state_v3"] = product_state
         product["media_v3"] = normalize_media(product)
 
         plan_ids = _derived_plan_ids(product)
@@ -154,10 +157,18 @@ def normalize_catalog(raw: dict[str, Any]) -> dict[str, Any]:
         for index, plan in enumerate(product.get("plans") or []):
             plan_id = plan_ids[index]
             plan_slug = plan_slugs[index]
+            if isinstance(product.get("contains"), list) and product.get("contains"):
+                plan_state = product_state
+            else:
+                plan_state = provider_plan_state(product, plan, authority)
+            price_record = approved_price(plan_id, authority)
+
             plan["plan_id_v3"] = plan_id
             plan["plan_slug_v3"] = plan_slug
             plan["product_id_v3"] = pid
-            plan["commercial_state_v3"] = _commercial_state(product, plan)
+            plan["commercial_state_v3"] = plan_state
+            plan["price_v3"] = copy.deepcopy(price_record)
+            plan["sellable_v3"] = bool(commerce_ready and plan_state == "allowed" and price_record)
             plan["routes_v3"] = {
                 "en": plan_path(pid, plan_slug, "en"),
                 "bn": plan_path(pid, plan_slug, "bn"),
