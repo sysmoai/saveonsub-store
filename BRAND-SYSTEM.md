@@ -1,150 +1,325 @@
 ---
-date: 2026-07-13
+date: 2026-08-19
 type: brand-system
-version: 1.0
-status: canonical
+version: 2.0
+status: current-canonical
 owner: EMON HOSSAIN
-tags: [saveonsub, brand, guidelines, canonical]
+supersedes: BRAND-SYSTEM v1.0 (2026-07-13)
+tags: [saveonsub, brand, canonical, whatsapp-first, ai-first, savings]
 ---
 
-# SAVEONSUB — Brand System v1.0 (Canonical)
+# SAVEONSUB — Brand System v2.0 (CURRENT CANONICAL)
 
-> The single source of truth for how SAVEONSUB looks, sounds, and behaves — everywhere: website, WhatsApp, social, invoices, packaging of credentials, even refusals. Every future page, post, and reply is measured against this document.
+> This document is the current source of truth for how SAVEONSUB looks, sounds, sells, supports, and earns trust across website, Facebook, WhatsApp, social media, content, invoices, and customer communication.
+
+## 0. CURRENT CEO LOCKS — 2026-08-19
+
+- **Founder & CEO:** Emon Hossain.
+- **Website:** `saveonsub.com`.
+- **Primary customer channel:** **WhatsApp Human Support +880 1305 869242**.
+- **WhatsApp deep link:** `https://wa.me/8801305869242`.
+- WhatsApp is the primary sales + support destination across the website, Facebook Page, and all social channels. Customers should be able to message or call the human team.
+- **Final logo and icon are APPROVED and LOCKED.** Preserve the exact approved icon geometry, proportions, percentage symbol, price-tag/arrow S construction, wordmark concept, and teal/green + dark navy/charcoal color system. Do not redraw, regenerate, restyle, distort, recolor, or replace the mark unless the CEO explicitly changes this decision.
+- The former July 2026 tilted `৳` price-tag logo concept is **deprecated**. It is not the current brand mark.
+- Older AIPS-MRR freeze language, “dedicated WhatsApp pending,” and older brand-positioning language are superseded for current SAVEONSUB work.
 
 ---
 
 ## 1. BRAND CORE
 
-**Mission** — Give every Bangladeshi access to the world's premium digital tools at prices that make sense for Bangladesh, with honesty no competitor can copy.
+### Category
+**Bangladesh-focused, AI-first subscription savings and support platform.**
 
-**Vision** — The name people say when anyone in BD asks "ভাই, ChatGPT কীভাবে কিনবো?" — and the answer AI assistants give when asked the same.
+SAVEONSUB is not merely a “cheap subscription shop.” The brand should own a repeatable customer habit:
 
-**The One-Line Brand** — *"Premium subscriptions at honest BD prices."*
+> **Before You Subscribe, Check SaveOnSub.**
 
-**Brand promise (the contract):** honest labels on every plan · official price shown for verification · warranty in writing · a human answers · we'll talk you out of buying when the free tier fits.
+The name itself communicates the category promise: customers should think of SAVEONSUB before paying for a premium subscription because there may be a smarter-value option, clearer access method, better local payment path, and real human support available.
 
-**Positioning statement** — For Bangladeshi students, freelancers and small businesses locked out by international cards, SAVEONSUB is the subscription store that sells premium tools at local prices **with radical honesty** — unlike Facebook/Telegram sellers (no brand, no recourse) and unlike official channels (card-only, ৳2,200+/mo).
+### Mission
+Help people in Bangladesh get more value from premium digital subscriptions through smarter savings, clear access terms, local-friendly payment and activation support, and dependable human help before and after purchase.
 
-**Brand personality (5 traits, in priority order):**
-1. **Honest to a fault** — discloses what competitors hide; loses sales on purpose sometimes.
-2. **Deshi-smart** — speaks bKash, understands ৳500 is real money, never talks down.
-3. **Fast** — 5–15 min delivery is a personality trait, not just an SLA.
-4. **Protective** — warranty language everywhere; the customer is never left alone with a dead seat.
-5. **Quietly confident** — no ALL-CAPS hype, no fake urgency, no "99% OFF!!!". The numbers do the talking.
+### Vision
+Become the first brand people in Bangladesh think of when they need to buy, compare, save on, activate, renew, troubleshoot, or understand a premium subscription — especially premium AI tools.
 
-**Brand archetype:** The Honest Broker (Sage × Everyman). Not the Magician (overpromise), not the Outlaw (scammy discount culture).
+### 3S Brand Promise
 
----
+1. **SAVINGS** — strong, clearly explained savings and value versus a verified reference price or alternative where evidence exists.
+2. **SECURITY** — transparent access type, clear conditions, customer-owned or provider-permitted options prioritized where genuinely supported, and no hidden access model.
+3. **SUPPORT** — a real human team available on WhatsApp before purchase, during activation, and after purchase.
 
-## 2. BRAND ARCHITECTURE (family rules)
+### Primary brand lines
 
-| Brand | Role | Relationship rule |
-|---|---|---|
-| **SYSmoAI** | Parent (B2B AI consulting) | "A SYSmoAI venture" appears in SAVEONSUB footer/about; SYSmoAI never sells subscriptions |
-| **SAVEONSUB** | Flagship consumer storefront | The growth brand; all new marketing points here |
-| **AI Premium Shop (AIPS)** | Origin story + WhatsApp legacy channel | Honored in About ("where it started, 3,000+ customers"); existing customers migrate naturally; no new AIPS marketing |
-| **AI Premium Tools (AIPT)** | Sister store (Esteak) | "Sister store" link only; positioning overlap must be resolved (flagged to CEO) |
-| **Brand firewall** | — | SAVEONSUB never claims SYSmoAI's B2B clients; never mixes KEF/NEXTHOME content |
+- **Master:** `Save More. Subscribe Smarter.`
+- **Trust:** `Verified Savings. Real Human Support.`
+- **Campaign:** `Before You Subscribe, Check SaveOnSub.`
+- **3S:** `Savings. Security. Support.`
+- **AI:** `Premium AI. Smarter Prices. Human Support.`
 
----
-
-## 3. VERBAL IDENTITY
-
-**Name usage:** SAVEONSUB (all caps, one word) in logos/headers; "SaveOnSub" acceptable in prose; never "Save On Sub" or "SOS" publicly (SOS is internal only).
-
-**Tagline system:**
-- Primary: **"Premium subscriptions at honest BD prices."**
-- Action: "Stop overpaying. Start today."
-- Trust: "Honest labels. Real warranty. Human support."
-- Bangla: **"সাবস্ক্রিপশনের সৎ দোকান।"** (the honest subscription shop)
-
-**Voice principles with DO/DON'T:**
-
-| Principle | ✅ DO | ❌ DON'T |
-|---|---|---|
-| Lead with the number | "ChatGPT ৳350 — official is ৳2,200" | "MASSIVE discount on ChatGPT!!!" |
-| Disclose the catch yourself | "Cheap because it's shared — here's the risk + warranty" | Hide the word "shared" until after payment |
-| Talk like a smart friend | "Honestly? The free tier covers you." | Corporate-speak, begging, or hype |
-| Respect the wallet | "৳500/month is real money — here's exactly what it buys" | "Only ৳500!" |
-| Bangla-friendly, not Bangla-broken | Natural code-switching: "Warranty আছে, ১ ঘণ্টায় replacement" | Machine-translated full-Bangla paragraphs |
-| Never fake anything | Real order counts (211+), "reviews: earning them" | Invented testimonials, fake timers, fake stock counts |
-
-**Vocabulary (always / never):**
-- Always: honest label, warranty, replacement, official price, personal plan, shared seat, pay-after-testing, verify.
-- Never: "100% legit bro", "lifetime deal" (doesn't exist), "unlimited" (unless provider says so), "hack/crack/mod", "guaranteed forever", fake scarcity ("2 left!!" — only use real seat counts if we ever track them).
-
-**Bangla style guide:** numerals in ৳ always (৳৩৫০ or ৳350 — pick ৳350 with Latin digits for consistency); tech nouns stay English (subscription, seat, warranty); tone = respectful তুমি-অঞ্চলহীন "আপনি" for support; emojis sparing (✅ 💬 🛡️ only).
-
-**WhatsApp support voice templates:**
-- Greeting: "আসসালামু আলাইকুম! SAVEONSUB থেকে [name] বলছি। কীভাবে সাহায্য করতে পারি?"
-- Delivery: "✅ Order [ID] delivered! Login: [details]. নিয়ম: password change করবেন না (shared)। কোনো সমস্যা হলে এই নাম্বারে ১ মেসেজ — ১ ঘণ্টায় replacement। Warranty: 7 দিন।"
-- Honest refusal: "ভাই honestly, আপনার use-এ free tier-ই যথেষ্ট। টাকা রাখেন — দরকার হলে পরে নিয়েন। 🙂"
-- Renewal (T-3): "আপনার [product] শেষ হচ্ছে [date]-এ। Renew করতে reply করুন '1' — auto-charge নেই, আপনি না চাইলে এমনিই বন্ধ হয়ে যাবে।"
+These lines are complementary, not competing taglines. Use the one appropriate to the touchpoint.
 
 ---
 
-## 4. VISUAL IDENTITY
+## 2. POSITIONING
 
-**Logo system:** Wordmark SAVE**ON**SUB — "ON" carries the gradient (`assets/logo.svg`); mark = "S" tile (`assets/favicon.svg`). Clear space = height of the "S" on all sides. Never: stretch, recolor outside tokens, place on busy imagery, add drop shadows.
+### Customer mental association
 
-**Color tokens v2 — "HAOR TEAL" (2026-07-13, unique to SAVEONSUB by design):**
+**SAVEONSUB = the place I check before paying for any subscription.**
 
-> Uniqueness audit: distinct from bKash magenta `#e2136e`, Nagad orange `#f6921e`, Rocket purple `#8c3494`, GP blue, Daraz orange, Robi red, AIPS navy/green `#0a0e27/#22c55e`, Spotify green, Netflix red. **Teal-on-deep-teal is unowned in BD commerce** — it is now ours. All pairs WCAG-AA verified by computed math.
+The brand must connect three ideas in the customer’s mind:
 
-| Token | Hex | Role | Rule |
-|---|---|---|---|
-| Haor Deep | `#06181a` | Primary background (near-black teal) | Dominant surface, always |
-| Ink | `#f2fbfa` | Primary text | AA-locked |
-| **Taka Teal** | `#14d4b8` → bright `#2ef0d2` | THE brand color — CTAs, savings, official labels | The honesty color; nobody else's |
-| Meghna Sky | `#7cc7ff` | Personal plans, links | Secondary accent only |
-| Shondha Amber | `#ffb648` | Deals, shared-low labels, real numbers | Never fake urgency (distinct from Nagad orange) |
-| Warning Coral | `#ff7a8f` | Shared-med risk labels ONLY | Semantic law: coral = disclosure |
-| Muted | `#a3c9c4` | Secondary text | AA-verified |
+**Save money → understand exactly what I am getting → know a real person will help if something goes wrong.**
 
-**The gradient** (`#14d4b8→#7cc7ff`, 135°) is the signature — logo "ON", primary CTAs, headline highlights, savings chips only.
+### Market position
 
-**The mark v2:** the **Honest Price Tag** — a tilted price tag holding the ৳ symbol with an amber eyelet (`assets/favicon.svg`, `logo.svg` with Bangla tagline "সাবস্ক্রিপশনের সৎ দোকান"). No other BD brand uses a ৳-tag mark.
+Most Bangladesh subscription sellers compete with generic language such as cheap, authentic, instant, trusted, 24/7, or best price. SAVEONSUB must not rely on those words alone.
 
-**Semantic color law (non-negotiable):** label colors ARE the honesty system — green=official, cyan=personal, gold=shared-low, coral=shared-med. No exceptions, no "coral looks nice here".
+The durable differentiation is the combined system:
 
-**Typography:** System stack + Noto Sans Bengali (zero-download performance is a brand feature). Weights: 900 headlines / 700-800 UI / 400 body. Numbers always tabular-feeling, big and bold — prices are heroes.
+**Savings intelligence + transparent access + human-backed support + content authority + WhatsApp-first commerce.**
 
-**Iconography:** Emoji-first (💎🎨🎬🧠) — deliberate: instant recognition, zero bytes, mobile-native. Never mix in stock icons. Product icons come from `catalog.json` only.
+### AI-first wedge
 
-**Imagery rules:** No stock photos of fake smiling customers. Allowed: real product-card compositions, real screenshots (consented),数字-led graphics (the og-image style), founder-real photos.
+SAVEONSUB covers broad digital subscription categories, but premium AI tools receive strategic priority because AI subscriptions are a high-growth, high-confusion, high-comparison category where customers need pricing clarity, access clarity, use-case guidance, and support.
 
-**Layout DNA:** dark canvas · card-based · 16px radius · generous whitespace · one gradient CTA per viewport · trust bar always visible near top · WhatsApp FAB always bottom-right.
+Content, SEO, comparison pages, social posts, and campaigns should make SAVEONSUB especially authoritative around AI subscriptions without turning the brand into an AI-only store.
 
 ---
 
-## 5. MESSAGING HOUSE
+## 3. PUBLIC CLAIM & TRUST RULES
 
-**Roof (brand idea):** *Radical honesty is the discount that never expires.*
+Trust is an operating system, not a slogan.
 
-**Pillars → proof points:**
-1. **Honest** → risk labels on 77 plans · official-price links · "reviews: earning them" · free-tier referrals
-2. **Local** → bKash/Nagad/Rocket · ৳ pricing · Bangla support · 5–15 min WhatsApp delivery
-3. **Protected** → 1-hour replacement · 7/30-day guarantees · same-day refunds · pay-after-testing
+### Evidence-gated claims
 
-**Objection→message map** (from sales playbook): scam-fear→pay-after-testing; price-doubt→official anchor; privacy→"chats stay private, cost is shared"; ban-fear→warranty terms; indecision→quiz.
+The following claims must not be published as facts unless current SAVEONSUB-specific evidence exists and can be traced:
 
-**Elevator pitches:** 5s: "ChatGPT ৳350-এ, bKash দিয়ে, warranty সহ।" · 30s: add honesty system + 3,000 customers · 2min: add the card-gap story (239M MFS vs 3M cards).
+- “Bangladesh #1” / “#1 subscription provider” / “#1 AI subscription provider”
+- “most trusted” / “best” / “cheapest”
+- customer counts, order counts, review counts, traffic counts, response-time statistics
+- savings percentages and compare-at prices
+- delivery SLAs
+- warranty/replacement guarantees
+- “official,” “authentic,” “personal,” “shared,” “customer-owned,” or provider-permitted access labels
+- partnership, reseller, distributor, or authorization claims
+
+**Internal objective:** become Bangladesh’s #1 subscription and AI-subscription provider.
+
+**External rule:** earn it, measure it, then prove it.
+
+### Access-label rule
+
+Every product must state the actual access method before payment. Recommended customer-facing classes:
+
+- **Official Personal** — legitimate subscription on the customer’s own account where verified.
+- **Official Invite / License** — provider-permitted team/family/license/invite method where verified.
+- **Value Access** — another disclosed access model; must state limitations and must never be presented as Official Personal.
+
+Never hide a shared or managed access model behind a generic “official” claim.
+
+### Brand firewall
+
+SAVEONSUB is a separate business unit. Do not borrow AIPS, AITP, AIPT, SYSmoAI, or other portfolio brands’ customers, order counts, reviews, credentials, financial data, WhatsApp numbers, or proof as if they belong to SAVEONSUB.
+
+A portfolio relationship may be mentioned only when it is true, useful, and clearly attributed.
 
 ---
 
-## 6. CHANNEL GUIDELINES
+## 4. VERBAL IDENTITY
 
-| Channel | Role | Cadence | Rules |
-|---|---|---|---|
-| Website | Conversion + AIO citation source | Catalog truth always current | This brand system governs every page |
-| WhatsApp | Sales + support + renewals | Reply < 15 min in support hours | Templates §3; never spam; T-3 renewal only |
-| Facebook page/groups | Discovery + social proof | 3-4 posts/week | Number-led posts; never argue publicly; move to DM |
-| LinkedIn (founder) | B2B halo + hiring | Weekly | Founder voice, links SYSmoAI |
-| Blog/guides | SEO/AIO traffic | 2/month + price re-verification monthly | Every guide must say one honest thing that costs us |
+### Name usage
 
-**Brand laws (violations = fix immediately, the audit script enforces #1-3):**
-1. No fake reviews/ratings/testimonials — ever.
-2. No fake urgency, timers, or invented stock counts.
-3. No unverifiable statistics.
-4. Coral/gold/cyan/green semantic system never repurposed.
-5. Every public claim traces to a verified source (locked claims: founded 2024, 3,000+ customers, 1,600+ orders, order counts per product).
+- Public prose: **SaveOnSub** is preferred when natural sentence case reads better.
+- Logo/wordmark: use the **exact approved wordmark artwork**.
+- Domain: **saveonsub.com**.
+- Internal code `SOS` is not a customer-facing brand name.
+
+### Voice
+
+Clear, confident, helpful, human, commercially sharp, and easy to understand.
+
+The brand should feel like an expert person who wants the customer to make a good purchase, not a coupon page shouting for attention.
+
+### DO
+
+- Lead with customer value and real savings when verified.
+- Explain the access method before payment.
+- State warranty/support terms clearly and in writing.
+- Use simple English/Bangla and direct answers.
+- Encourage customers to WhatsApp the human team when they need help.
+- Tell customers when a free or cheaper option is genuinely better for their use case.
+- Use comparisons, guides, renewal information, and savings intelligence to build long-term trust.
+
+### DO NOT
+
+- invent reviews, ratings, order counts, customer counts, stock, scarcity, countdowns, or “sold out soon” pressure.
+- use “hack,” “crack,” “mod,” or misleading “lifetime” language.
+- call a plan official/authentic/customer-owned unless the actual fulfillment method supports that claim.
+- promise instant delivery, replacement, refunds, or warranty beyond the operational SLA that can actually be met.
+- sound like a low-trust Facebook reseller using excessive emojis, all-caps hype, or unbelievable discounts without proof.
+
+---
+
+## 5. WHATSAPP-FIRST CUSTOMER EXPERIENCE
+
+### Canonical contact
+
+**WhatsApp Human Support: +880 1305 869242**
+
+Use the number consistently across website, Facebook, Instagram, TikTok, YouTube, receipts, order confirmations, support pages, and campaigns.
+
+### Channel hierarchy
+
+1. **Website** — discovery, SEO, comparisons, product research, savings intelligence, trust, order intent.
+2. **WhatsApp** — primary human sales/support conversation, calls, activation coordination, order exceptions, warranty/support, renewals.
+3. **Facebook and social media** — discovery, education, proof, community, offers; route high-intent users to WhatsApp.
+4. **Email** — formal/secondary support, receipts, long-form notices, and recovery where needed.
+
+### Default CTA language
+
+- `Chat on WhatsApp`
+- `Get Human Support`
+- `Check Availability on WhatsApp`
+- `Ask SaveOnSub`
+- `Need help choosing? Message us on WhatsApp.`
+
+Do not make Messenger the primary customer-support promise if WhatsApp is available.
+
+### Support promise
+
+Human support means a real person can communicate with the customer, including WhatsApp message and call support when operationally available. Do not claim an exact “instant,” “under X minutes,” or 24/7 SLA until measured and operationally guaranteed.
+
+---
+
+## 6. VISUAL IDENTITY — FINAL LOGO LOCK
+
+### Master logo
+
+The approved logo is the `S`-based savings/subscription mark formed from:
+
+- upper price-tag form,
+- percentage symbol inside the upper curve,
+- lower circular arrow form,
+- matching horizontal/stacked SaveOnSub.com wordmark variants.
+
+### Non-negotiable preservation
+
+- Exact icon geometry and proportions.
+- Exact relative scale of icon, `%`, wordmark, and `.com` in the approved variants.
+- Teal/green icon and `On` treatment.
+- Dark navy/charcoal treatment for `Save` and `Sub` in the approved wordmark.
+- Do not replace the icon with a generic price tag, `৳` symbol, shield, lock, or letter-S approximation.
+- Do not re-typeset the wordmark to “match closely.” Use the approved artwork.
+- Do not add new outlines, shadows, 3D effects, mascots, gradients, badges, frames, or decorative marks to the master logo.
+
+### Color rule
+
+The final approved master artwork is the color authority. Exact production hex/RGB/CMYK values should be sampled and documented from the approved master assets rather than inherited from deprecated July palettes or invented by a designer/AI.
+
+### Current repository warning
+
+Any older repository logo that uses a tilted price tag with a `৳` symbol is **deprecated and must not be used for new customer-facing assets**. Replace only with an approved master-derived asset; do not approximate the locked logo.
+
+---
+
+## 7. FACEBOOK & SOCIAL POSITIONING
+
+### Facebook Page role
+
+Facebook is a trust + discovery + demand-generation channel. It should make people remember the savings category and then move qualified conversations to WhatsApp.
+
+### Recommended page message hierarchy
+
+1. **Save on premium subscriptions.**
+2. **AI-first expertise and broad subscription coverage.**
+3. **Clear access + security.**
+4. **Real human WhatsApp support.**
+5. **Guides, comparisons, savings intelligence, and community — not just sales posts.**
+
+### Core social hook
+
+> **Before You Subscribe, Check SaveOnSub.**
+
+### Content pillars
+
+- Savings / price intelligence
+- AI subscription comparisons and buying guides
+- Product/use-case education
+- Security and access transparency
+- Human support and customer-care proof
+- Renewal/price-change alerts
+- Free-vs-paid recommendations
+- Real customer proof when consented and verifiable
+- Community questions and practical subscription tips
+
+### CTA
+
+Primary: **WhatsApp Human Support +880 1305 869242**.
+
+Where Meta permits it, connect the Facebook Page directly to the WhatsApp Business account and use a WhatsApp-oriented action button.
+
+---
+
+## 8. CONTENT & ORGANIC GROWTH MOAT
+
+The website should become more than a catalog. The long-term moat is:
+
+**Content + comparisons + current pricing + verified savings + AI expertise + human concierge + support history + community + commerce.**
+
+### Organic growth objective
+
+**50,000+ qualified monthly organic visitors is a growth target, not a current achievement.**
+
+Content should help users answer:
+
+- Which AI/tool should I buy?
+- What does the official plan cost?
+- Is there a smarter-value option?
+- Which plan is right for my use case?
+- Can I pay from Bangladesh?
+- What access method am I getting?
+- What happens if there is a problem?
+- Should I buy at all, or is the free tier enough?
+
+The natural conclusion should frequently be: **Before You Subscribe, Check SaveOnSub.**
+
+---
+
+## 9. CUSTOMER RELATIONSHIP MODEL
+
+The business should optimize for long-term profitable relationships, not one-time transactions.
+
+Lifecycle:
+
+**Discover → Compare → WhatsApp → Buy/Activate → Verify → Support → Renew → Save/Optimize → Refer → Community**
+
+Important metrics:
+
+- qualified WhatsApp conversations
+- WhatsApp-to-order conversion
+- average human first-response time
+- activation success rate
+- support resolution time
+- warranty/replacement rate
+- repeat purchase rate
+- renewal rate
+- verified savings delivered
+- review rate and verified review quality
+- organic traffic and content-assisted revenue
+
+---
+
+## 10. CURRENT BRAND LAWS
+
+1. The final approved logo/icon is locked. No AI regeneration or visual reinterpretation.
+2. WhatsApp **+880 1305 869242** is the canonical primary SAVEONSUB human-support number.
+3. Website is **saveonsub.com**.
+4. Brand mental association: **Before You Subscribe, Check SaveOnSub.**
+5. Core promise: **Savings · Security · Support.**
+6. Primary positioning: **AI-first subscription savings + support platform for Bangladesh.**
+7. Broad subscription coverage remains part of the business; AI is the strategic authority wedge.
+8. Public proof claims are evidence-gated.
+9. Never conceal access type or call something “official” if the fulfillment method does not support that claim.
+10. No cross-brand proof/contact leakage.
+11. Social and website should route high-intent customers to WhatsApp human support.
+12. Build trust through useful content and real service proof, not slogans alone.
