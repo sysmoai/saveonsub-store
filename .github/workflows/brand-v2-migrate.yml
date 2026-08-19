@@ -1,18 +1,20 @@
 name: SaveOnSub Brand V2 Migration
 
 on:
-  push:
-    branches: [brand-v2-2026-08-19]
+  pull_request:
+    branches: [main]
     paths:
       - 'migrate_brand_v2.py'
       - '.github/workflows/brand-v2-migrate.yml'
+      - '.github/workflows/deploy.yml'
+      - 'assets/logo.svg'
 
 permissions:
   contents: write
 
 jobs:
   migrate:
-    if: github.actor != 'github-actions[bot]'
+    if: github.head_ref == 'brand-v2-2026-08-19' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout brand branch
