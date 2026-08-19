@@ -1,0 +1,50 @@
+name: SaveOnSub Brand V2 Migration
+
+on:
+  push:
+    branches: [brand-v2-2026-08-19]
+    paths:
+      - 'migrate_brand_v2.py'
+      - '.github/workflows/brand-v2-migrate.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout brand branch
+        uses: actions/checkout@v4
+        with:
+          ref: brand-v2-2026-08-19
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Apply deterministic brand migration
+        run: python migrate_brand_v2.py
+
+      - name: Sanity checks
+        run: |
+          python -m py_compile migrate_brand_v2.py templates.py build_assets.py
+          grep -q 'Before You Subscribe, Check SaveOnSub.' index.html
+          grep -q 'brand-logo' templates.py
+          grep -q '8801305869242' templates.py
+          ! grep -q 'BANGLADESH.S HONEST SUBSCRIPTION STORE' index.html
+
+      - name: Commit staged brand output
+        run: |
+          if git diff --quiet; then
+            echo 'No changes to commit'
+            exit 0
+          fi
+          git config user.name 'saveonsub-brand-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'brand: apply v2 website migration'
+          git push origin HEAD:brand-v2-2026-08-19
