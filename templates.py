@@ -7,7 +7,7 @@ def esc(s): return html.escape(str(s), quote=True)
 # ===== ENGLISH NAV =====
 def nav_en(rel=""):
     return f'''<nav><div class="wrap navin">
-  <a class="logo" href="{rel}index.html">SAVE<em>ON</em>SUB</a>
+  <a class="logo brand-lockup" href="{rel}index.html"><img src="{rel}assets/logo.svg" alt="SaveOnSub" class="brand-logo"></a>
   <div class="navlinks">
     <a href="{rel}all.html">Subscriptions</a>
     <div class="navdrop">
@@ -45,8 +45,8 @@ def footer_en(rel=""):
     return f'''<footer><div class="wrap">
   <div class="fcols">
     <div>
-      <span class="logo">SAVE<em>ON</em>SUB</span>
-      <p style="margin-top:10px;max-width:280px">Bangladesh's Subscription Operating System — official, customer-owned subscriptions paid in BDT — Dhaka, Bangladesh.</p>
+      <a class="logo brand-lockup footer-brand" href="{rel}index.html"><img src="{rel}assets/logo.svg" alt="SaveOnSub" class="brand-logo"></a>
+      <p style="margin-top:10px;max-width:280px">Save more on premium AI and digital subscriptions with clear access options and real human WhatsApp support in Bangladesh.</p>
     </div>
     <div>
       <b>Store</b>
@@ -85,7 +85,7 @@ def footer_en(rel=""):
 # ===== BANGLA NAV (with dropdown categories) =====
 def nav_bn(rel=""):
     return f'''<nav><div class="wrap navin">
-  <a class="logo" href="{rel}bn.html">SAVE<em>ON</em>SUB</a>
+  <a class="logo brand-lockup" href="{rel}bn.html"><img src="{rel}assets/logo.svg" alt="SaveOnSub" class="brand-logo"></a>
   <div class="navlinks">
     <a href="{rel}all.html">সাবস্ক্রিপশন</a>
     <div class="navdrop">
@@ -121,8 +121,8 @@ def footer_bn(rel=""):
     return f'''<footer><div class="wrap">
   <div class="fcols">
     <div>
-      <span class="logo">SAVE<em>ON</em>SUB</span>
-      <p style="margin-top:10px;max-width:280px">বাংলাদেশের সাবস্ক্রিপশন অপারেটিং সিস্টেম — অফিসিয়াল, গ্রাহক-নিয়ন্ত্রিত সাবস্ক্রিপশন — ঢাকা, বাংলাদেশ।</p>
+      <a class="logo brand-lockup footer-brand" href="{rel}index.html"><img src="{rel}assets/logo.svg" alt="SaveOnSub" class="brand-logo"></a>
+      <p style="margin-top:10px;max-width:280px">প্রিমিয়াম AI ও ডিজিটাল সাবস্ক্রিপশনে স্মার্ট সেভিংস, পরিষ্কার অ্যাক্সেস তথ্য এবং বাংলাদেশে সরাসরি হিউম্যান WhatsApp সাপোর্ট।</p>
     </div>
     <div>
       <b>স্টোর</b>

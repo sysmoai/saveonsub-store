@@ -26,33 +26,10 @@ def font(size):
             except Exception: pass
     return ImageFont.load_default()
 
-# ---------- favicon.svg — the Honest Price Tag mark ----------
-open('assets/favicon.svg', 'w').write(
-"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0" stop-color="#14d4b8"/><stop offset="1" stop-color="#7cc7ff"/></linearGradient></defs>
-<rect width="64" height="64" rx="14" fill="#06181a"/>
-<g transform="rotate(-12 32 32)">
-<path d="M18 14 h20 a6 6 0 0 1 6 6 v24 a6 6 0 0 1 -6 6 h-20 a6 6 0 0 1 -6 -6 v-24 a6 6 0 0 1 6 -6 z" fill="none" stroke="url(#g)" stroke-width="4"/>
-<circle cx="24" cy="22" r="3" fill="#ffb648"/>
-<text x="30" y="44" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="900" text-anchor="middle" fill="url(#g)">৳</text>
-</g>
-</svg>""")
-
-# ---------- logo.svg — wordmark v2 ----------
-open('assets/logo.svg', 'w').write(
-"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 80">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0" stop-color="#14d4b8"/><stop offset="1" stop-color="#7cc7ff"/></linearGradient></defs>
-<rect width="460" height="80" rx="16" fill="#06181a"/>
-<g transform="translate(14,14) rotate(-12 26 26)">
-<path d="M12 6 h24 a5 5 0 0 1 5 5 v30 a5 5 0 0 1 -5 5 h-24 a5 5 0 0 1 -5 -5 v-30 a5 5 0 0 1 5 -5 z" fill="none" stroke="url(#g)" stroke-width="3.5"/>
-<circle cx="17" cy="13" r="2.4" fill="#ffb648"/>
-<text x="24" y="36" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="900" text-anchor="middle" fill="url(#g)">৳</text>
-</g>
-<text x="78" y="52" font-family="Arial,Helvetica,sans-serif" font-size="33" font-weight="900" fill="#f2fbfa">SAVE<tspan fill="url(#g)">ON</tspan>SUB</text>
-<text x="80" y="69" font-family="Arial,Helvetica,sans-serif" font-size="12.5" fill="#a3c9c4">সাবস্ক্রিপশনের সৎ দোকান</text>
-</svg>""")
+# ---------- LOCKED BRAND ASSETS ----------
+# assets/logo.svg and assets/favicon.svg are CEO-approved master-derived assets.
+# DO NOT generate, redraw, recolor or overwrite them in this build script.
+# The deprecated tilted-Taka price-tag generator was removed on 2026-08-19.
 
 # ---------- apple-touch-icon.png ----------
 img = Image.new('RGB', (180, 180), BG)
