@@ -19,15 +19,14 @@ jobs:
         with:
           python-version: '3.12'
 
-      # Fails the build if a retired price (e.g. ChatGPT ৳350 after the move to
-      # ৳499) still appears next to its product name in any shipped page.
+      # Fails the build if a retired price still appears next to its product
+      # name in any shipped page.
       - name: Price consistency check
         run: python check_prices.py
 
-      # Builds are NOT re-run here on purpose: build_assets.py needs Pillow and
-      # system fonts, and re-generating in CI would deploy something nobody
-      # reviewed. Generated pages are committed, so CI ships exactly what was
-      # reviewed locally. Run the build_*.py scripts before committing.
+      # Builds are NOT re-run here on purpose: generated pages are committed and
+      # CI ships exactly what was reviewed. stage_deploy.py also enforces the
+      # locked SaveOnSub brand assets on every staged HTML page.
       - name: Stage publishable files
         run: python stage_deploy.py
 
@@ -39,16 +38,29 @@ jobs:
       - name: Install Wrangler
         run: npm install -g wrangler
 
-      # Deploys ./_site, never the repo root. `wrangler pages deploy .` would
-      # publish every build script, catalog.json and internal strategy doc —
-      # _redirects cannot stop it, because Pages serves an existing static file
-      # before redirect rules are evaluated.
-      # Project name is pinned: the Pages project is "saveonsub" while the repo
-      # is "saveonsub-store", so github.event.repository.name resolved to a
-      # project that does not exist and every CI deploy failed.
+      # Deploys ./_site, never the repo root. Cloudflare occasionally returns
+      # API code 10429 (rate limited), especially after several rapid commits.
+      # Retry with bounded exponential backoff instead of turning a transient
+      # provider throttle into a false production failure.
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: wrangler pages deploy _site --project-name=saveonsub --branch=main
+        run: |
+          set -e
+          waits=(20 40 80 120)
+          for attempt in 1 2 3 4 5; do
+            echo "Cloudflare deploy attempt ${attempt}/5"
+            if wrangler pages deploy _site --project-name=saveonsub --branch=main; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 5 ]; then
+              echo "Cloudflare deployment failed after 5 attempts."
+              exit 1
+            fi
+            wait_index=$((attempt - 1))
+            wait_seconds=${waits[$wait_index]}
+            echo "Transient deploy failure; waiting ${wait_seconds}s before retry."
+            sleep "$wait_seconds"
+          done
         continue-on-error: false
