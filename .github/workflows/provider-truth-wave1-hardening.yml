@@ -1,0 +1,109 @@
+name: Provider Truth Wave 1 Hardening
+
+on:
+  push:
+    branches: [ops/catalog-truth-wave1-20260903]
+    paths:
+      - '.github/workflows/provider-truth-wave1-hardening.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  harden-rebuild-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ops/catalog-truth-wave1-20260903
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
+
+      - name: Remove residual stale and absolute claims at source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          cpath=Path('catalog.json')
+          data=json.loads(cpath.read_text(encoding='utf-8'))
+          before={p['id']:[pl.get('bdt') for pl in p.get('plans',[])] for p in data['products']}
+          byid={p['id']:p for p in data['products']}
+          g=byid['google-ai-pro']
+          for plan in g.get('plans',[]):
+              if plan.get('label') == 'Personal (your Gmail) — 83% off special':
+                  plan['label'] = 'Personal (your Gmail)'
+          market=g.get('market',{})
+          if market.get('who') == 'AISubscriptionBD ৳1,500 · TechHaat ৳899 · our ৳500 is market leader':
+              market['who'] = 'AISubscriptionBD ৳1,500 · TechHaat ৳899 · SaveOnSub ৳500 at survey date'
+          after={p['id']:[pl.get('bdt') for pl in p.get('plans',[])] for p in data['products']}
+          assert before == after, 'SaveOnSub BDT selling price changed unexpectedly'
+          cpath.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          bp=Path('build_pages.py')
+          text=bp.read_text(encoding='utf-8')
+          old='''  <div class="notice mt2">🧭 <b>Price-match guarantee:</b> Find a lower official price? We match it + 5% off. Every subscription is official, activated on YOUR own account, and 100% customer-owned.</div>\n  <div class="notice mt2" style="font-size:12.5px;color:var(--muted);line-height:1.6"><b>Important Notice:</b> SAVEONSUB is not an official distributor, reseller, or partner of any subscription platform. We provide setup and activation support to help Bangladesh-based users access plans using local payment methods (bKash, Nagad, bank transfer). Your account is 100% customer-owned; we do not retain access to your credentials. If we cannot complete activation within the agreed window, you receive a full refund per our refund policy.</div>'''
+          new='''  <div class="notice mt2">🧭 <b>Compare before buying:</b> Provider pricing, regional availability and plan features can change. Verify the linked official provider page, then compare the SaveOnSub access method, current BDT price and written warranty before ordering.</div>\n  <div class="notice mt2" style="font-size:12.5px;color:var(--muted);line-height:1.6"><b>Independent service notice:</b> SAVEONSUB is an independent subscription access/setup service and does not claim official distributor or partner status unless a product page explicitly documents it. Access may be personal/customer-specific or shared depending on the selected plan; the access method and applicable warranty/refund terms are disclosed before payment. Do not use shared-access products for sensitive information.</div>'''
+          if old not in text:
+              raise SystemExit('expected legacy product notice block not found')
+          bp.write_text(text.replace(old,new),encoding='utf-8')
+
+          tg=Path('truth_guard.py')
+          t=tg.read_text(encoding='utf-8')
+          marker="    'thousands of times daily': 'unsupported scam-frequency claim',\n}"
+          replacement="""    'thousands of times daily': 'unsupported scam-frequency claim',
+    'Price-match guarantee:': 'price-match promise is not an evidenced global policy',
+    'Every subscription is official': 'blanket official claim conflicts with shared/access-method disclosures',
+    '100% customer-owned': 'blanket ownership claim conflicts with shared/access-method disclosures',
+    'our ৳500 is market leader': 'unsupported competitor leadership claim',
+    '83% off special': 'hard-coded discount percentage can become stale when reference pricing changes',
+}"""
+          if marker not in t:
+              raise SystemExit('truth guard insertion marker not found')
+          tg.write_text(t.replace(marker,replacement),encoding='utf-8')
+          print('residual claim hardening applied; BDT prices preserved')
+          PY
+
+      - name: Full rebuild and audits
+        run: |
+          bash build_all.sh
+          python cache_safe_brand.py
+
+      - name: Verify hardened public artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          python truth_guard.py
+          ! grep -R -Fq 'Price-match guarantee:' _site --include='*.html'
+          ! grep -R -Fq 'Every subscription is official' _site --include='*.html'
+          ! grep -R -Fq '100% customer-owned' _site --include='*.html'
+          ! grep -R -Fq 'our ৳500 is market leader' _site --include='*.html'
+          ! grep -R -Fq '83% off special' _site --include='*.html'
+          grep -Fq 'Personal (your Gmail)' _site/p/google-ai-pro.html
+          grep -Fq '5 TB' _site/p/google-ai-pro.html
+          grep -Fq 'Official: ~৳2,455/mo ($19.99)' _site/p/google-ai-pro.html
+          grep -Fq 'Independent service notice:' _site/p/google-ai-pro.html
+          grep -Fq '/assets/logo-' _site/index.html
+          echo 'hardening checks passed'
+
+      - name: Commit hardening and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/provider-truth-wave1-hardening.yml
+          git config user.name 'saveonsub-truth-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'truth: remove residual absolute and stale product claims'
+          git push origin HEAD:ops/catalog-truth-wave1-20260903
