@@ -41,3 +41,29 @@ jobs:
                       occurrences += n; hits.append(path)
               print(repr(needle), 'occurrences=',occurrences,'files=',len(hits),','.join(hits[:30]))
           PY
+
+      - name: Summarize catalog service-policy fields
+        run: |
+          python3 - <<'PY'
+          import json
+          from collections import Counter, defaultdict
+          data=json.load(open('catalog.json',encoding='utf-8'))
+          products=data.get('products',[])
+          print('products=',len(products))
+          print('product_keys=',sorted({k for p in products for k in p.keys()}))
+          print('plan_keys=',sorted({k for p in products for plan in p.get('plans',[]) for k in plan.keys()}))
+          counters=defaultdict(Counter)
+          keywords=('sla','warranty','delivery','guarantee','refund','access','tos','risk')
+          for p in products:
+              for k,v in p.items():
+                  if any(x in k.lower() for x in keywords) and isinstance(v,(str,int,float,bool)):
+                      counters['product.'+k][str(v)] += 1
+              for plan in p.get('plans',[]):
+                  for k,v in plan.items():
+                      if any(x in k.lower() for x in keywords) and isinstance(v,(str,int,float,bool)):
+                          counters['plan.'+k][str(v)] += 1
+          for field,c in sorted(counters.items()):
+              print('FIELD',field,'UNIQUE',len(c))
+              for value,n in c.most_common(20):
+                  print(' ',n,repr(value[:180]))
+          PY
