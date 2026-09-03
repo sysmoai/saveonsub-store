@@ -1,0 +1,109 @@
+name: Final Evidence-Safe Brand and Copy Cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-final-factual-brand-drift.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply targeted evidence-safe corrections
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          roots=[]
+          for p in Path('.').rglob('*'):
+              if not p.is_file() or any(x in p.parts for x in ('.git','.github','_site','node_modules')):
+                  continue
+              if p.suffix.lower() not in {'.py','.html','.htm'}:
+                  continue
+              roots.append(p)
+
+          replacements = {
+              '<meta name="theme-color" content="#06181a">': '<meta name="theme-color" content="#102634">',
+              'We WhatsApp you 3 days before expiry with one-tap renewal — no auto-charges, ever.': 'Renewal is never automatic. If you want to renew, contact SaveOnSub on WhatsApp before expiry; no automatic charge is made.',
+              "Providers' terms prohibit seat-sharing, so a shared seat can occasionally get reset — that's why they're much cheaper AND why our warranty replaces any dead seat within 1 hour. We label the risk honestly on every product; personal plans have no such risk.": 'Shared-access plans can carry higher privacy and continuity risk, and provider rules can differ by product. We label the access method and applicable warranty before payment; choose a personal/customer-owned plan when privacy or continuity is critical.',
+              'Replacement within 1 hour. 7-day guarantee on shared, 30-day on personal. In writing, on every product.': 'Warranty scope and replacement timing vary by plan. The applicable terms are shown on each product before payment.',
+              'Replacement within 1 hour during support hours. Shared seats carry a 7-day guarantee; personal plans 30 days.': 'Warranty scope and replacement timing vary by plan. The applicable terms are shown before payment and on the relevant product page.',
+              'Pay-after-testing available.': 'Payment terms are shown before you order.',
+              'Official subscriptions trusted in Bangladesh': 'Plan type and access method shown before payment',
+              'pay-after-testing — we send access before you pay.': 'pay-after-testing only where it is explicitly offered for that product.',
+              "You don't know us yet — so don't pay first. Use <b style=\"color:var(--green2)\">Pay After Testing</b>: we send access, you verify it works, then you pay. Availability varies by product; the exact access and payment terms are shown before you order.": 'If <b style="color:var(--green2)">Pay After Testing</b> is explicitly offered for the selected product, the exact process will be confirmed before payment. Availability varies by product; otherwise follow the standard checkout instructions.',
+              '✅ Replacement within <b>1 hour</b> (support hours)<br>\n          ✅ <b>7-day</b> guarantee on shared · <b>30-day</b> on personal<br>': '✅ Warranty and replacement terms are shown per plan before payment<br>\n',
+          }
+
+          changed=[]
+          counts={k:0 for k in replacements}
+          for p in roots:
+              s=p.read_text(encoding='utf-8',errors='ignore')
+              old=s
+              for a,b in replacements.items():
+                  n=s.count(a)
+                  if n:
+                      counts[a]+=n
+                      s=s.replace(a,b)
+              if s != old:
+                  p.write_text(s,encoding='utf-8')
+                  changed.append(p.as_posix())
+
+          app=Path('assets/app.js')
+          s=app.read_text(encoding='utf-8')
+          safe_ticks='''const TICKS=[\n  "Plans are labeled by access type before payment",\n  "Prices are shown in BDT",\n  "Warranty terms are shown by plan",\n  "Support is available through the SaveOnSub WhatsApp channel",\n  "Shared-access products can carry additional privacy and continuity risk"\n];'''
+          s2,n=re.subn(r'const TICKS=\[.*?\];',safe_ticks,s,count=1,flags=re.S)
+          if n != 1:
+              raise SystemExit(f'Expected one TICKS block, found {n}')
+          if s2 != s:
+              app.write_text(s2,encoding='utf-8')
+              changed.append(app.as_posix())
+
+          guard=Path('truth_guard.py')
+          g=guard.read_text(encoding='utf-8')
+          if "'app.js'," not in g:
+              g=g.replace("'build_home.py', 'build_trust.py', 'build_pages.py', 'templates.py',\n", "'build_home.py', 'build_trust.py', 'build_pages.py', 'templates.py', 'app.js',\n")
+          anchor="    \"Bangladesh's trusted subscription OS\": 'unsupported trust-superlative claim; use verifiable facts instead',\n"
+          additions="""    'We WhatsApp you 3 days before expiry': 'renewal reminder automation is not implemented; do not promise proactive reminders',\n    \"Providers' terms prohibit seat-sharing\": 'blanket provider-policy claim requires product-specific evidence',\n    '1,600+ total orders delivered since 2024': 'unsupported aggregate order-count claim',\n    'lifetime orders —': 'unsupported product-level lifetime-order claim',\n    'Pay-after-testing available on first orders': 'availability varies by product and must not be promised globally',\n    'Warranty promise: replacement within 1 hour': 'blanket replacement SLA must not be promised globally',\n    'Delivery SLA: 5–15 min on instant products': 'blanket delivery SLA must not be emitted by runtime ticker',\n    '7-day guarantee on shared, 30-day on personal': 'blanket warranty durations require plan-specific evidence',\n    'Official subscriptions trusted in Bangladesh': 'unsupported trust/official blanket claim',\n"""
+          if 'renewal reminder automation is not implemented' not in g:
+              if anchor not in g: raise SystemExit('truth_guard anchor not found')
+              g=g.replace(anchor,anchor+additions,1)
+          guard.write_text(g,encoding='utf-8')
+          if guard.as_posix() not in changed: changed.append(guard.as_posix())
+
+          print('changed_files=',len(set(changed)))
+          for key,n in counts.items():
+              if n: print('replacement_count',n,repr(key[:70]))
+          PY
+
+      - name: Validate clean build and public surface
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements.txt
+          python check_prices.py
+          python stage_deploy.py
+          grep -q 'data-brand-lock="2026-08-19-approved"' _site/index.html
+          ! grep -R -F '<meta name="theme-color" content="#06181a">' _site --include='*.html'
+          ! grep -R -E '1,600\+ total orders|lifetime orders —|We WhatsApp you 3 days before expiry|Providers. terms prohibit seat-sharing|Pay-after-testing available on first orders|Warranty promise: replacement within 1 hour|Official subscriptions trusted in Bangladesh' _site --include='*.html' --include='*.js'
+          grep -F '<meta name="theme-color" content="#102634">' _site/index.html
+          echo 'Evidence-safe brand/copy validation passed.'
+
+      - name: Commit corrections
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          git config user.name 'sysmoai'
+          git config user.email 'sysmoai.com@gmail.com'
+          git add -A
+          git reset .github/workflows/fix-final-factual-brand-drift.yml
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'fix: remove unsupported runtime claims and align theme metadata'
+          git push origin HEAD:main
