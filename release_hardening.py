@@ -15,8 +15,6 @@ if not SITE.is_dir():
     print('ERROR: _site/ missing; run stage_deploy.py first.', file=sys.stderr)
     raise SystemExit(1)
 
-# Unsafe blanket claims that conflict with product-specific access labels or
-# require evidence that is not currently represented per plan.
 REPLACEMENTS = {
     '🧭 <b>Price-match guarantee:</b> Find a lower official price? We match it + 5% off. Every subscription is official, activated on YOUR own account, and 100% customer-owned.':
         '🧭 <b>Access disclosure:</b> Access method varies by plan. Check the visible plan label and confirm the exact credential/invite method before payment.',
@@ -32,7 +30,12 @@ REPLACEMENTS = {
         'Privacy and continuity depend on the exact access method. Shared access can carry additional privacy, continuity and provider-policy risk; check the current plan disclosure before ordering.',
 }
 
-# Additional known high-risk phrases that must never survive the public release.
+GENERIC_REPLACEMENTS = {
+    '100% customer-owned': 'customer-specific where the selected plan explicitly says so',
+    'we do not retain access to your credentials': 'credential handling depends on the selected access method and is disclosed before payment',
+    'Every subscription is official': 'Every plan is labeled by access type',
+}
+
 FORBIDDEN_PUBLIC = {
     'Every subscription is official': 'blanket official claim',
     '100% customer-owned': 'blanket ownership claim',
@@ -48,12 +51,8 @@ for path in SITE.rglob('*.html'):
     text = path.read_text(encoding='utf-8', errors='replace')
     original = text
 
-    # Google does not use the keywords meta tag for ranking. Remove it from the
-    # production artifact instead of shipping a machine-generated keyword list.
     text = re.sub(r'\n?<meta name="keywords" content="[^"]*">', '', text)
 
-    # Remove visible keyword-dump blocks. Search intent should be answered by
-    # useful copy/FAQ/comparisons rather than a list of query variants.
     text = re.sub(
         r'\n\s*<h2 class="mt3" style="font-size:20px">Commonly searched as</h2>\s*'
         r'<p[^>]*>.*?</p>\s*(?:<p[^>]*>.*?</p>\s*)?'
@@ -63,14 +62,13 @@ for path in SITE.rglob('*.html'):
 
     for old, new in REPLACEMENTS.items():
         text = text.replace(old, new)
+    for old, new in GENERIC_REPLACEMENTS.items():
+        text = text.replace(old, new)
 
     if text != original:
         path.write_text(text, encoding='utf-8')
         changed += 1
 
-# robots.txt: explicitly separate OpenAI search crawling from training-control
-# crawling. Wildcard access already allows these, but explicit entries make
-# policy intent auditable and less ambiguous.
 robots = SITE / 'robots.txt'
 if robots.exists():
     r = robots.read_text(encoding='utf-8', errors='replace')
@@ -80,18 +78,17 @@ if robots.exists():
         r = r.replace(marker, marker + addition) if marker in r else r + '\n' + addition
         robots.write_text(r, encoding='utf-8')
 
-# llms.txt is supplementary. Keep it factual and avoid keyword-list duplication.
 llms = SITE / 'llms.txt'
 if llms.exists():
     text = llms.read_text(encoding='utf-8', errors='replace')
     text = re.sub(r'^\s*searched:.*$', '', text, flags=re.M)
     for old, new in REPLACEMENTS.items():
         text = text.replace(old, new)
-    # compact duplicate blank lines created by removed search aliases
+    for old, new in GENERIC_REPLACEMENTS.items():
+        text = text.replace(old, new)
     text = re.sub(r'\n{3,}', '\n\n', text)
     llms.write_text(text, encoding='utf-8')
 
-# Fail closed if any unsafe phrase remains in staged public text.
 hits = []
 for path in list(SITE.rglob('*.html')) + [p for p in (SITE / 'llms.txt',) if p.exists()]:
     text = path.read_text(encoding='utf-8', errors='replace')
