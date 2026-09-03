@@ -93,7 +93,7 @@ for c in cat['categories']:
 <meta name="geo.region" content="BD"><meta name="geo.placename" content="Dhaka">
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/c/{s}.html">
-<meta property="og:locale" content="en_BD"><meta name="theme-color" content="#06181a">
+<meta property="og:locale" content="en_BD"><meta name="theme-color" content="#102634">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="manifest" href="../assets/site.webmanifest">
@@ -184,7 +184,7 @@ for c in cat['categories']:
 <meta name="geo.region" content="BD"><meta name="geo.placename" content="Dhaka">
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/bn/c/{s}.html">
-<meta property="og:locale" content="bn_BD"><meta name="theme-color" content="#06181a">
+<meta property="og:locale" content="bn_BD"><meta name="theme-color" content="#102634">
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../assets/site.webmanifest">

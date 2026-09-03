@@ -50,15 +50,11 @@ function waOrder(extra){
 
 /* ---------- Real-facts ticker (honest — lifetime records, no fake timestamps) ---------- */
 const TICKS=[
-  "211+ lifetime orders — Google AI Pro ৳500 (our #1)",
-  "201+ lifetime orders — Grammarly Premium ৳470",
-  "178+ lifetime orders — Leonardo AI ৳599",
-  "156+ lifetime orders — Midjourney from ৳1,199",
-  "145+ lifetime orders — ChatGPT Plus from ৳499",
-  "1,600+ total orders delivered since 2024",
-  "Warranty promise: replacement within 1 hour",
-  "Pay-after-testing available on first orders",
-  "Delivery SLA: 5–15 min on instant products"
+  "Plans are labeled by access type before payment",
+  "Prices are shown in BDT",
+  "Warranty terms are shown by plan",
+  "Support is available through the SaveOnSub WhatsApp channel",
+  "Shared-access products can carry additional privacy and continuity risk"
 ];
 function startTicker(){
   const el=document.getElementById('tick'); if(!el) return;

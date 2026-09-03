@@ -188,7 +188,7 @@ PAGE_SHELL_EN = '''<!DOCTYPE html>
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
 <meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/{slug}.html">
 <meta property="og:locale" content="en_BD">
-<meta name="theme-color" content="#06181a">{robots}
+<meta name="theme-color" content="#102634">{robots}
 ''' + head_common('') + '''
 {schema}
 </head>
@@ -219,7 +219,7 @@ PAGE_SHELL_BN = '''<!DOCTYPE html>
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
 <meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/{slug}">
 <meta property="og:locale" content="bn_BD">
-<meta name="theme-color" content="#06181a">{robots}
+<meta name="theme-color" content="#102634">{robots}
 ''' + head_common('../') + '''
 {schema}
 </head>

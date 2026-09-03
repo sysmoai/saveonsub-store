@@ -63,7 +63,7 @@ page=f'''<!DOCTYPE html>
 <meta property="og:url" content="https://saveonsub.com/">
 <meta property="og:locale" content="en_BD">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#06181a">
+<meta name="theme-color" content="#102634">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="manifest" href="assets/site.webmanifest">
@@ -81,7 +81,7 @@ page=f'''<!DOCTYPE html>
  {{"@type":"Question","name":"How fast is delivery?","acceptedAnswer":{{"@type":"Answer","text":"5–15 minutes on WhatsApp for instant products, up to 1–2 days for managed personal accounts. The SLA is shown on every product."}}}},
  {{"@type":"Question","name":"Will others see my chats on a shared ChatGPT plan?","acceptedAnswer":{{"@type":"Answer","text":"Privacy depends on the exact access method. Before payment, we disclose whether you receive your own account/workspace seat or shared credentials. Do not put sensitive information into any shared-access product. If privacy is critical, choose a personal/customer-owned plan."}}}},
  {{"@type":"Question","name":"How do I pay?","acceptedAnswer":{{"@type":"Answer","text":"bKash, Nagad or Rocket send-money — no card or bank account needed. Full instructions appear at checkout with a copy button."}}}},
- {{"@type":"Question","name":"What if my subscription stops working?","acceptedAnswer":{{"@type":"Answer","text":"Replacement within 1 hour during support hours. Shared seats carry a 7-day guarantee; personal plans 30 days."}}}}
+ {{"@type":"Question","name":"What if my subscription stops working?","acceptedAnswer":{{"@type":"Answer","text":"Warranty scope and replacement timing vary by plan. The applicable terms are shown before payment and on the relevant product page."}}}}
 ]}}
 </script>
 </head>
@@ -152,7 +152,7 @@ page=f'''<!DOCTYPE html>
   <h2>A BD store built around <span class="grad-text">honest labels</span>.</h2>
   <div class="grid g3 mt3">
     <div class="tcard"><b style="color:var(--green2)">🏷️ Every plan risk-labeled</b><p class="sub" style="font-size:14px;margin-top:8px">Shared, personal or official — we tell you exactly what you're buying and what the risks are. The access method and known risks are shown before payment.</p></div>
-    <div class="tcard"><b style="color:var(--green2)">🛡️ Warranty that means it</b><p class="sub" style="font-size:14px;margin-top:8px">Replacement within 1 hour. 7-day guarantee on shared, 30-day on personal. In writing, on every product.</p></div>
+    <div class="tcard"><b style="color:var(--green2)">🛡️ Warranty that means it</b><p class="sub" style="font-size:14px;margin-top:8px">Warranty scope and replacement timing vary by plan. The applicable terms are shown on each product before payment.</p></div>
     <div class="tcard"><b style="color:var(--green2)">🤝 We'll talk you OUT of buying</b><p class="sub" style="font-size:14px;margin-top:8px">Student? Copilot is free for you — we'll show you how instead of selling it. That's why customers come back.</p></div>
   </div>
   <div class="grid g3 mt3">
@@ -168,9 +168,9 @@ page=f'''<!DOCTYPE html>
   <div class="mt3">
     <details open><summary>Is this safe? How do I know you're not a scam?</summary><p>SaveOnSub publishes a public WhatsApp support channel, clearly labeled access types and written warranty terms. For a first order, check whether <b>pay-after-testing</b> is available for that product before paying. Availability varies by product; the exact access and payment terms are shown before you order.</p></details>
     <details><summary>Shared plan — will others see my ChatGPT chats?</summary><p>Privacy depends on the exact access method. We disclose whether you receive your own account/workspace seat or shared credentials before payment. Do not put sensitive information into shared-access products; choose a personal/customer-owned plan when privacy is critical.</p></details>
-    <details><summary>What's the catch with shared plans?</summary><p>Providers' terms prohibit seat-sharing, so a shared seat can occasionally get reset — that's why they're much cheaper AND why our warranty replaces any dead seat within 1 hour. We label the risk honestly on every product; personal plans have no such risk.</p></details>
+    <details><summary>What's the catch with shared plans?</summary><p>Shared-access plans can carry higher privacy and continuity risk, and provider rules can differ by product. We label the access method and applicable warranty before payment; choose a personal/customer-owned plan when privacy or continuity is critical.</p></details>
     <details><summary>How do I pay without a card?</summary><p>bKash, Nagad or Rocket send-money. At checkout you get the current payment number with a copy button and your order ID as reference. Done in 60 seconds.</p></details>
-    <details><summary>Do prices include renewal?</summary><p>Prices are per duration shown (mostly monthly). We WhatsApp you 3 days before expiry with one-tap renewal — no auto-charges, ever.</p></details>
+    <details><summary>Do prices include renewal?</summary><p>Prices are per duration shown (mostly monthly). Renewal is never automatic. If you want to renew, contact SaveOnSub on WhatsApp before expiry; no automatic charge is made.</p></details>
   </div>
   <p class="mt2 center"><a href="faq.html" class="btn btn-ghost">All 22 questions answered →</a></p>
 </div></section>
@@ -262,7 +262,7 @@ bn = f'''<!DOCTYPE html>
 <meta name="geo.region" content="BD"><meta name="geo.placename" content="Dhaka">
 <meta property="og:title" content="SAVEONSUB — বাংলাদেশি দামে প্রিমিয়াম সাবস্ক্রিপশন"><meta property="og:description" content="সৎ দামে ৫০+ সাবস্ক্রিপশন, বিকাশে। ৫-১৫ মিনিটে ডেলিভারি, ওয়ারেন্টি সহ।">
 <meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/bn.html"><meta property="og:locale" content="bn_BD">
-<meta name="theme-color" content="#06181a">
+<meta name="theme-color" content="#102634">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png"><link rel="manifest" href="assets/site.webmanifest">
 <meta property="og:image" content="https://saveonsub.com/assets/og-image.png">
 <link rel="stylesheet" href="assets/style.css">

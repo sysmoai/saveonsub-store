@@ -19,7 +19,7 @@ SHELL = """<!DOCTYPE html>
 <meta name="geo.region" content="BD"><meta name="geo.placename" content="Dhaka">
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
 <meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/{slug}.html">
-<meta name="theme-color" content="#06181a">{robots}
+<meta name="theme-color" content="#102634">{robots}
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="manifest" href="assets/site.webmanifest">
@@ -411,7 +411,7 @@ bn_faq = f"""<!DOCTYPE html>
 <meta name="geo.region" content="BD"><meta name="geo.placename" content="Dhaka">
 <meta property="og:title" content="প্রশ্নোত্তর — সৎ উত্তর | SAVEONSUB"><meta property="og:description" content="বাংলাদেশে সাবস্ক্রিপশন কেনার সব প্রশ্নের সৎ উত্তর।">
 <meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/bn/faq.html">
-<meta property="og:locale" content="bn_BD"><meta name="theme-color" content="#06181a">
+<meta property="og:locale" content="bn_BD"><meta name="theme-color" content="#102634">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="manifest" href="../assets/site.webmanifest">
@@ -464,7 +464,7 @@ bn_howto = f"""<!DOCTYPE html>
 <meta name="geo.region" content="BD"><meta name="geo.placename" content="Dhaka">
 <meta property="og:title" content="বিকাশে কীভাবে অর্ডার করবেন | SAVEONSUB"><meta property="og:description" content="৩ মিনিটে অর্ডার — বিকাশ/নগদে, কার্ড ছাড়া।">
 <meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/bn/how-to-order.html">
-<meta property="og:locale" content="bn_BD"><meta name="theme-color" content="#06181a">
+<meta property="og:locale" content="bn_BD"><meta name="theme-color" content="#102634">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="manifest" href="../assets/site.webmanifest">

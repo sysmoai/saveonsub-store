@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent
 EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
                 '__pycache__', 'node_modules', '_site', 'ops', 'reports'}
 SOURCE_ALLOW = {
-    'build_home.py', 'build_trust.py', 'build_pages.py', 'templates.py',
+    'build_home.py', 'build_trust.py', 'build_pages.py', 'templates.py', 'app.js',
 }
 
 FORBIDDEN = {
@@ -40,6 +40,15 @@ FORBIDDEN = {
     'merchant number': 'account type is not independently verified; use neutral checkout payment wording',
     'মার্চেন্ট নম্বর': 'account type is not independently verified; use neutral checkout payment wording',
     "Bangladesh's trusted subscription OS": 'unsupported trust-superlative claim; use verifiable facts instead',
+    'We WhatsApp you 3 days before expiry': 'renewal reminder automation is not implemented; do not promise proactive reminders',
+    "Providers' terms prohibit seat-sharing": 'blanket provider-policy claim requires product-specific evidence',
+    '1,600+ total orders delivered since 2024': 'unsupported aggregate order-count claim',
+    'lifetime orders —': 'unsupported product-level lifetime-order claim',
+    'Pay-after-testing available on first orders': 'availability varies by product and must not be promised globally',
+    'Warranty promise: replacement within 1 hour': 'blanket replacement SLA must not be promised globally',
+    'Delivery SLA: 5–15 min on instant products': 'blanket delivery SLA must not be emitted by runtime ticker',
+    '7-day guarantee on shared, 30-day on personal': 'blanket warranty durations require plan-specific evidence',
+    'Official subscriptions trusted in Bangladesh': 'unsupported trust/official blanket claim',
 }
 
 WA_RE = re.compile(r'https://wa\.me/(\d+)')
