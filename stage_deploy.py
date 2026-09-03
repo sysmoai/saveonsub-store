@@ -14,6 +14,15 @@ BEFORE redirect rules are evaluated, so `/*.py /404.html 404` never fires for a
 
 So we build an allowlisted copy and deploy that instead. Local runs and CI both
 call this script, so the two can never drift apart.
+
+Brand lock
+----------
+The CEO-approved SaveOnSub mark dated 2026-08-19 is canonical. Generated HTML in
+this static repository historically contains a typeset SAVE<em>ON</em>SUB fallback.
+During staging we replace that fallback with the approved master-derived lockup
+from /assets/logo.svg on every deployed page. This makes the live site consistent
+without redrawing or re-typesetting the locked mark and prevents old generated
+pages from reintroducing the deprecated identity.
 """
 import os, shutil, pathlib, sys, re, glob
 
@@ -42,6 +51,27 @@ def runtime_fetched_json():
     return keep
 
 
+def apply_brand_lock():
+    """Enforce the approved logo/icon on every staged HTML document."""
+    replacement = ('<img src="/assets/logo.svg" alt="SaveOnSub.com" '
+                   'data-brand-lock="2026-08-19-approved" '
+                   'style="display:block;width:155px;max-width:42vw;height:auto">')
+    changed = 0
+    for page in DEST.rglob('*.html'):
+        try:
+            old = page.read_text(encoding='utf-8')
+        except OSError:
+            continue
+        new = old.replace('SAVE<em>ON</em>SUB', replacement)
+        # A few legacy/generated pages may use sentence-case text inside the same
+        # logo container. Only replace the known branded HTML token above; never
+        # rewrite ordinary prose mentioning SaveOnSub.
+        if new != old:
+            page.write_text(new, encoding='utf-8')
+            changed += 1
+    print(f"brand lock applied to {changed} HTML file(s)")
+
+
 def main():
     os.chdir(ROOT)
     keep = runtime_fetched_json()
@@ -66,6 +96,8 @@ def main():
             out.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(pathlib.Path(base) / fn, out)
             copied += 1
+
+    apply_brand_lock()
 
     # Fail loudly rather than publish something internal.
     leaks = []
@@ -93,6 +125,22 @@ def main():
     if not index.exists():
         print("REFUSING TO DEPLOY — no index.html in staged output")
         return 1
+
+    # Brand regression checks: production must never ship the retired tilted
+    # price-tag + ৳ artwork again. The current approved SVG wrappers carry this
+    # explicit lock marker and embed master-derived raster artwork.
+    for rel in ('assets/logo.svg', 'assets/favicon.svg'):
+        f = DEST / rel
+        if not f.exists():
+            print(f"REFUSING TO DEPLOY — missing locked brand asset: {rel}")
+            return 1
+        s = f.read_text(encoding='utf-8', errors='replace')
+        if 'data-brand-lock="2026-08-19-approved"' not in s:
+            print(f"REFUSING TO DEPLOY — unapproved brand asset: {rel}")
+            return 1
+        if '>৳<' in s or 'rotate(-12' in s:
+            print(f"REFUSING TO DEPLOY — deprecated logo artwork detected: {rel}")
+            return 1
 
     print("staging clean")
     return 0
