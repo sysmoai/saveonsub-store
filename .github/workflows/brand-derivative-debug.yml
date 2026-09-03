@@ -1,0 +1,36 @@
+name: Debug Locked Brand Derivatives
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/brand-derivative-debug.yml'
+permissions:
+  contents: read
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --disable-pip-version-check -r requirements.txt
+      - name: Inspect approved embedded raster payloads
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, io, re
+          from pathlib import Path
+          from PIL import Image, ImageFile
+          ImageFile.LOAD_TRUNCATED_IMAGES = True
+          for rel in ('assets/favicon.svg','assets/logo.svg'):
+              text=Path(rel).read_text(encoding='utf-8')
+              m=re.search(r'href="data:image/png;base64,([A-Za-z0-9+/=]+)"', text)
+              if not m:
+                  print(rel, 'NO_MATCH')
+                  continue
+              raw=base64.b64decode(m.group(1), validate=True)
+              print(rel, 'bytes=',len(raw),'signature=',raw[:16].hex(),'pngsig=',raw[:8]==b'\x89PNG\r\n\x1a\n')
+              try:
+                  im=Image.open(io.BytesIO(raw)); im.load()
+                  print(rel, 'PIL_OK', im.format, im.size, im.mode)
+              except Exception as e:
+                  print(rel, 'PIL_ERROR', type(e).__name__, str(e))
+          PY
