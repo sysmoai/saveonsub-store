@@ -1,9 +1,8 @@
 {
   "name": "saveonsub",
   "version": 2,
-  "buildCommand": "bash build_all.sh",
-  "outputDirectory": ".",
-  "installCommand": "pip3 install Pillow --break-system-packages",
+  "buildCommand": "python3 check_prices.py && python3 stage_deploy.py",
+  "outputDirectory": "_site",
   "cleanUrls": true,
   "redirects": [
     { "source": "/subscriptions.html", "destination": "/all.html", "permanent": true },
