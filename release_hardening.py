@@ -52,7 +52,6 @@ for path in SITE.rglob('*.html'):
     original = text
 
     text = re.sub(r'\n?<meta name="keywords" content="[^"]*">', '', text)
-
     text = re.sub(
         r'\n\s*<h2 class="mt3" style="font-size:20px">Commonly searched as</h2>\s*'
         r'<p[^>]*>.*?</p>\s*(?:<p[^>]*>.*?</p>\s*)?'
@@ -64,6 +63,11 @@ for path in SITE.rglob('*.html'):
         text = text.replace(old, new)
     for old, new in GENERIC_REPLACEMENTS.items():
         text = text.replace(old, new)
+
+    # First-party attribution only: no external network request is introduced.
+    # Absolute path works on every nested EN/BN/category/product page.
+    if '/assets/measurement.js' not in text and '</body>' in text:
+        text = text.replace('</body>', '<script src="/assets/measurement.js" defer></script>\n</body>')
 
     if text != original:
         path.write_text(text, encoding='utf-8')
@@ -89,8 +93,14 @@ if llms.exists():
     text = re.sub(r'\n{3,}', '\n\n', text)
     llms.write_text(text, encoding='utf-8')
 
+measurement = SITE / 'assets' / 'measurement.js'
+if not measurement.exists():
+    print('RELEASE HARDENING FAILED — staged measurement.js missing.', file=sys.stderr)
+    raise SystemExit(1)
+
 hits = []
-for path in list(SITE.rglob('*.html')) + [p for p in (SITE / 'llms.txt',) if p.exists()]:
+html_pages = list(SITE.rglob('*.html'))
+for path in html_pages + [p for p in (SITE / 'llms.txt',) if p.exists()]:
     text = path.read_text(encoding='utf-8', errors='replace')
     for phrase, reason in FORBIDDEN_PUBLIC.items():
         if phrase in text:
@@ -99,6 +109,8 @@ for path in list(SITE.rglob('*.html')) + [p for p in (SITE / 'llms.txt',) if p.e
         hits.append((path.as_posix(), 'Commonly searched as', 'visible keyword-dump block'))
     if '<meta name="keywords"' in text:
         hits.append((path.as_posix(), '<meta name="keywords"', 'obsolete generated keyword meta tag'))
+    if path.suffix == '.html' and '/assets/measurement.js' not in text:
+        hits.append((path.as_posix(), '/assets/measurement.js', 'first-party attribution script missing'))
 
 if hits:
     print(f'RELEASE HARDENING FAILED — {len(hits)} unsafe staged item(s):', file=sys.stderr)
@@ -106,4 +118,4 @@ if hits:
         print(f'  {path}: {reason}: {phrase!r}', file=sys.stderr)
     raise SystemExit(1)
 
-print(f'Release hardening OK — {changed} HTML files normalized; robots/llms policy checked.')
+print(f'Release hardening OK — {changed} HTML files normalized; robots/llms/measurement policy checked.')
