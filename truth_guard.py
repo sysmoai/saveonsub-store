@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+"""Fail builds when known P0 SaveOnSub truth/brand regressions return.
+
+This is intentionally narrow. It blocks claims/contact data that were verified as
+wrong, stale, unsafe or incompatible with the approved 2026-09-03 operating
+rules. It is not a substitute for human fact-checking of new claims.
+"""
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parent
+EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
+                '__pycache__', 'node_modules', '_site', 'ops', 'reports'}
+SCAN_EXT = {'.html', '.htm', '.py'}
+SOURCE_ALLOW = {
+    'build_home.py', 'build_trust.py', 'build_pages.py', 'templates.py',
+}
+
+FORBIDDEN = {
+    '1714-672094': 'retired/incorrect payment or support number',
+    '১৭১৪-৬৭২০৯৪': 'retired/incorrect Bangla payment or support number',
+    '8801714672094': 'retired/incorrect WhatsApp/payment number',
+    '100% official, customer-owned': 'blanket official/customer-owned claim conflicts with shared plans',
+    'No other BD store offers this': 'unsupported exclusivity claim',
+    'বাংলাদেশে আর কেউ এটা দেয় না': 'unsupported Bangla exclusivity claim',
+    "It's not illegal for you": 'unsupported legal conclusion',
+    'Legally in Bangladesh: yes': 'unsupported legal conclusion',
+    'আপনার জন্য এটা অবৈধ নয়': 'unsupported Bangla legal conclusion',
+    'OpenAI only accepts international Visa/Mastercard': 'stale OpenAI Bangladesh payment claim',
+    'Resellers are the only path': 'unsupported exclusivity/payment claim',
+    'other seat-holders cannot see your chats': 'overbroad shared-access privacy guarantee',
+    'শুধু খরচটা শেয়ার হয়, ডেটা কখনো নয়': 'overbroad Bangla shared-access privacy guarantee',
+    'shared at ৳350': 'retired ChatGPT shared price wording',
+    'shared from ৳350': 'retired ChatGPT shared price wording',
+    'we sell at ৳350': 'retired ChatGPT shared price wording',
+    'No shortcuts.': 'blanket official-only positioning conflicts with disclosed shared plans',
+}
+
+
+def should_scan(p: Path) -> bool:
+    rel = p.relative_to(ROOT)
+    if any(part in EXCLUDE_DIRS for part in rel.parts):
+        return False
+    if p.suffix.lower() in {'.html', '.htm'}:
+        return True
+    return p.name in SOURCE_ALLOW
+
+
+def main() -> int:
+    hits = []
+    for p in ROOT.rglob('*'):
+        if not p.is_file() or not should_scan(p):
+            continue
+        try:
+            text = p.read_text(encoding='utf-8', errors='replace')
+        except OSError:
+            continue
+        for pattern, reason in FORBIDDEN.items():
+            if pattern in text:
+                hits.append((p.relative_to(ROOT).as_posix(), pattern, reason))
+
+    # Approved identity must remain the build source of truth.
+    for rel in ('assets/logo.svg', 'assets/favicon.svg'):
+        p = ROOT / rel
+        if not p.exists():
+            hits.append((rel, '<missing>', 'approved locked brand asset missing'))
+            continue
+        text = p.read_text(encoding='utf-8', errors='replace')
+        if 'data-brand-lock="2026-08-19-approved"' not in text:
+            hits.append((rel, '<brand-lock>', 'approved brand-lock marker missing'))
+        if '>৳<' in text or 'rotate(-12' in text:
+            hits.append((rel, '<deprecated-art>', 'deprecated tilted ৳ logo artwork detected'))
+
+    if hits:
+        print(f'TRUTH GUARD FAILED — {len(hits)} regression(s) found:')
+        for path, pattern, reason in hits:
+            print(f'  {path}: {reason} :: {pattern!r}')
+        return 1
+
+    print('Truth guard OK — no known P0 claim/contact/brand regressions found.')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
