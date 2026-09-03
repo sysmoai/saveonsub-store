@@ -14,5 +14,7 @@ python3 audit_all.py
 python3 deploy_preflight.py
 python3 check_prices.py
 python3 stage_deploy.py
+python3 release_hardening.py
+python3 cache_safe_brand.py
 
-echo 'DONE: full rebuild + audit + safe staged deployment output (_site)'
+echo 'DONE: full rebuild + audit + hardened staged deployment output (_site)'
