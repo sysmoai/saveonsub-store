@@ -43,15 +43,26 @@ jobs:
       - name: Stage exact public artifact
         run: python stage_deploy.py
 
+      - name: Make approved logo cache-safe
+        run: python cache_safe_brand.py
+
       - name: Verify public release boundary
         run: |
           set -euo pipefail
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/logo.svg
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/favicon.svg
+          versioned_logo=$(grep -o '/assets/logo-[0-9a-f]\{16\}\.svg' _site/index.html | head -1)
+          test -n "$versioned_logo"
+          test -f "_site${versioned_logo}"
+          grep -q 'data-brand-lock="2026-08-19-approved"' "_site${versioned_logo}"
+          if grep -R -q 'assets/logo\.svg' _site --include='*.html'; then
+            echo "::error::Mutable logo URL remains in staged HTML."
+            exit 1
+          fi
           test ! -e _site/catalog.json
           test ! -e _site/build_assets.py
           test ! -e _site/.env
           test -f _site/index.html
           test -f _site/sitemap.xml
           test -f _site/robots.txt
-          echo "Quality gates passed; staged public release boundary is clean."
+          echo "Quality gates passed; staged public release boundary and cache-safe brand references are clean."
