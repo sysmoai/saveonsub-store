@@ -1,7 +1,7 @@
 {
   "name": "saveonsub",
   "version": 2,
-  "buildCommand": "python3 check_prices.py && python3 stage_deploy.py",
+  "buildCommand": "python3 check_prices.py && python3 stage_deploy.py && python3 release_hardening.py && python3 cache_safe_brand.py",
   "outputDirectory": "_site",
   "cleanUrls": true,
   "redirects": [
