@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Price-consistency guard. Run before every deploy:  python check_prices.py
+"""Deployment preflight: truth/brand guard + price-consistency guard.
+
+Run before every deploy:  python check_prices.py
 
 Why this exists
 ---------------
@@ -9,14 +11,16 @@ literals were not updated, so the organic-traffic surface advertised a price the
 store no longer honoured — a 43% gap at the last step of the funnel, on a store
 whose entire pitch is honest labelling.
 
-This script fails the build if a price that a product NO LONGER charges appears
-next to that product's name in shipped HTML.
+The permanent truth_guard is also executed here so every current deployment
+path (Cloudflare and Vercel) blocks known P0 contact, claim, privacy, legal and
+brand regressions without each host needing a separate configuration change.
 
-Deliberately narrow: it only flags a stale number when it sits next to the
-product name, because several products legitimately share prices (Perplexity Pro
-and Truecaller Premium really are 350).
+The price portion deliberately flags a retired number only when it sits next to
+the relevant product name, because several products may legitimately share the
+same price.
 """
 import json, re, sys, glob, os
+from truth_guard import main as truth_guard_main
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 cat = json.load(open('catalog.json', encoding='utf-8'))
@@ -30,9 +34,8 @@ RETIRED = {
 SKIP_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
              '__pycache__', 'node_modules', 'marketing'}
 
-# Intentional exceptions: text that cites a price COMPETITORS charge, not ours.
-# Kept deliberately — the sentence exists to contrast our offer against the
-# market's ৳350 anchor. Matched as a substring of the surrounding line.
+# Intentional exceptions: text that cites a competitor/market price rather than
+# a current SaveOnSub selling price. Keep this list small and evidence-backed.
 ALLOWED_CONTEXT = [
     "Every BD seller offers 'ChatGPT ৳350'",
 ]
@@ -46,6 +49,10 @@ def current_prices(name_fragment):
 
 
 def main():
+    truth_rc = truth_guard_main()
+    if truth_rc:
+        return truth_rc
+
     problems = []
     files = [f for f in glob.glob('**/*.html', recursive=True)
              if not any(part in SKIP_DIRS for part in f.replace('\\', '/').split('/'))]
