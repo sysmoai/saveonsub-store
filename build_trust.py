@@ -56,34 +56,34 @@ pages = {}
 
 # ---------- FAQ (22 questions — every playbook objection) ----------
 FAQS = [
- ("Is SAVEONSUB legit? How do I know you're not a scam?", "Fair question — BD is full of subscription scams. Proof: Bangladesh's Subscription OS trusted in Bangladesh, part of the verifiable SYSmoAI family (sysmoai.com, aipremiumshop.com), public WhatsApp with a human reply, and a <b>pay-after-testing</b> option where we send access BEFORE you pay. On eligible orders, you can verify that access works before completing payment."),
- ("Why is it so cheap? What's the catch?", "Two honest reasons: (1) shared plans split one subscription's cost across several users — that's the discount, and it's also why providers' terms don't allow it (the 'catch', which we label on every product and cover with warranty); (2) personal plans use regional pricing and bulk activation. We show the official price next to ours so you always see what you're saving and why."),
+ ("Is SAVEONSUB legit? How do I know you're not a scam?", "Check what can be verified before paying: the public support number, access label, current price, official-provider link where available, warranty/refund terms and whether pay-after-testing is explicitly offered for that product. SaveOnSub is an independent subscription seller/service; product trademarks belong to their owners."),
+ ("Why is it so cheap? What's the catch?", "Lower prices can come from shared/multi-user access, regional pricing, bundles or seller sourcing. The trade-offs vary by provider. We show the access method and a comparison reference so you can judge risk and value before payment."),
  ("Will other people see my ChatGPT chats on a shared plan?", "Privacy depends on the exact access method. Before payment, we disclose whether you receive your own account/workspace seat or shared credentials. Do not put sensitive information into any shared-access product. If privacy is critical, choose a personal/customer-owned plan."),
- ("What's the difference between Shared, Personal and Official?", "<b>Official</b> = you pay the provider directly, we just guide/activate (e.g. Spotify BD ৳219). <b>Personal</b> = a subscription on YOUR OWN email — full control, lowest risk. <b>Shared</b> = a seat on a multi-user plan — 70-85% cheaper, provider terms prohibit it, so seats occasionally reset; our warranty replaces them within 1 hour."),
- ("Can a shared account get banned? What happens then?", "Yes, it happens — that's the honest trade-off for the price. When it does: message us, replacement within 1 hour during support hours, 7-day guarantee on every shared seat. If we can't replace, you get a refund for unused days."),
+ ("What's the difference between Shared, Personal and Official?", "<b>Official</b> = provider-billed/official path where available. <b>Personal</b> = customer-specific access with lower sharing risk. <b>Shared</b> = multi-user/shared access with higher privacy/continuity risk. Exact provider rules, delivery SLA and SaveOnSub warranty are shown for the selected plan."),
+ ("Can a shared account get banned? What happens then?", "Shared access can stop working because of provider, account or seat changes. Under the current SaveOnSub policy, applicable shared-plan warranty coverage is 7 days with a replacement target within 1 hour during support hours unless the product states otherwise; see the written warranty/refund pages for scope and exclusions."),
  ("How fast is delivery?", "Instant products: 5–15 minutes on WhatsApp. Fast products: 1–2 hours. Managed personal accounts: 1–2 days. The SLA is printed on every product page — if we miss it badly, ask for a free extension."),
  ("How do I pay? I don't have a card.", "bKash, Nagad or Rocket send-money — that's the point. No card, no bank account, no international payment. At checkout you get our payment number shown at checkout (+880 1305-869242) with a copy button and your order ID as reference."),
- ("What is pay-after-testing?", "For nervous first-timers: we send the access first, you verify it works, then you pay within an hour. Available on most instant products for first orders. Availability depends on the product and first-order eligibility; ask before ordering."),
- ("Do you auto-charge renewals?", "Never. There is no auto-charge — you pay manually each time. We send a WhatsApp reminder 3 days before expiry with a one-tap renewal link. Ignore it and the subscription simply lapses. Your money stays yours."),
+ ("What is pay-after-testing?", "Pay-after-testing is not universal. If explicitly offered for the selected product/order, support confirms the exact sequence before payment. Otherwise use the standard checkout process."),
+ ("Do you auto-charge renewals?", "The storefront does not automatically charge renewals. Renewal is manual: contact support before expiry if you want to continue. Do not rely on an automatic reminder unless one is explicitly confirmed for your order."),
  ("Can I get a refund?", "Yes — see the <a href='refund.html' style='color:var(--green2)'>refund policy</a>. Short version: not delivered in 24h → full refund; dead seat we can't replace → refund for unused days; you changed your mind before delivery → full refund; after successful delivery → replacement-first, refund if we fail."),
- ("Can I get a discount?", "Three honest ways: pay 3 months upfront (10% off), refer a friend (you both get ৳100 off), or students get ৳100 off ChatGPT personal plans with a student ID. Ask on WhatsApp."),
+ ("Can I get a discount?", "Discounts and promotional eligibility change. Check the current Offers page or ask support for the exact product and duration; do not assume a past student/referral/multi-month discount still applies."),
  ("Is my payment information safe?", "We never see your bKash PIN or account — you send money from YOUR app to our payment number shown at checkout. We only receive the payment notification. We don't store card numbers because we never touch cards."),
  ("Which AI should I buy? I'm confused.", "Take the 60-second <a href='quiz.html' style='color:var(--green2)'>Find My AI quiz</a> — 4 questions, one honest recommendation. Or ask a human on WhatsApp. If a free tier fits your usage, we'll tell you to use that instead. Seriously."),
  ("I'm a student — what's the cheapest way to get AI tools?", "Real talk: GitHub Copilot is FREE with the Student Pack, Spotify BD student is ৳109 official, Canva Education is free for eligible institutions. For the rest: ChatGPT shared ৳499 or the Research Bundle ৳600 are the best student deals. We'll always point out the free path first."),
  ("Do you sell accounts with MY name on certificates (Coursera etc.)?", "Shared Coursera prints the account-holder's name on certificates — useless for your CV. If you need YOUR name, take the Personal plan. We say this on the product page before you pay, not after."),
- ("What devices/apps do these work on?", "Same as official — you're using the real service. Shared seats sometimes limit simultaneous devices (shown on the product). Personal plans have no restrictions."),
- ("Can I upgrade from shared to personal later?", "Yes — pay the difference any time and we migrate you. Many customers start shared at ৳499, then upgrade to personal once the tool starts earning them money."),
- ("Do you offer team/business plans?", "Yes — ChatGPT Business seats, bulk Canva, and custom team setups. Message WhatsApp with your team size; bulk pricing starts at 3+ seats (10-15% off)."),
- ("What happens when my subscription expires?", "It just stops — no auto-charge, no debt. You'll have gotten a WhatsApp reminder 3 days before. Renew with one tap or walk away; your choice, no pressure."),
+ ("What devices/apps do these work on?", "Device/app support depends on the provider and exact access method. Check provider requirements and the selected product page; shared access may have additional device/session restrictions."),
+ ("Can I upgrade from shared to personal later?", "An upgrade may be possible when a compatible personal option is available, but it is not automatic. Ask support for the current migration/price difference before paying."),
+ ("Do you offer team/business plans?", "Business/team options vary by provider and current inventory. Message WhatsApp with provider and team size for a current quote; no blanket bulk-discount percentage is promised."),
+ ("What happens when my subscription expires?", "The storefront does not auto-charge renewals. When the purchased duration ends, continued access depends on provider/access method. Contact support before expiry if you want to renew; do not rely on an automatic reminder."),
  ("Why should I trust you over Facebook/Telegram sellers?", "FB/Telegram sellers vanish when a seat dies — no brand, no website, no recourse. We have a public brand (SYSmoAI family), a written warranty, a refund policy, this store, and published policies and a persistent public support channel. When something breaks, we're still here at the same number."),
  ("Is buying shared subscriptions legal in Bangladesh?", "We do not give legal advice. Provider terms and applicable law can differ by service and access method. Shared credentials may violate a provider's terms. We disclose the access method and known provider-policy restrictions before payment so you can decide whether the plan fits your risk tolerance."),
- ("Do you have a physical office?", "We operate online-first from Dhaka with registered company paperwork in progress (SYSmoAI). All support runs through WhatsApp with real humans — usually the founder's team directly."),
+ ("Do you have a physical office?", "SaveOnSub operates online-first from Dhaka. Current support routes through the public WhatsApp/contact channels shown on this site; use those channels for order, warranty and refund requests."),
  ("What is the official ChatGPT price in Bangladesh and why can't I pay with bKash?",
   "ChatGPT Plus is $20/month on the web. OpenAI currently supports BDT-denominated web billing in Bangladesh; standard web payment methods include credit/debit cards, and available methods can vary by platform or checkout. SAVEONSUB offers local-payment purchase paths on eligible plans. Before payment, check the product page for the exact access method and current SAVEONSUB price."),
  ("Is Spotify available officially in Bangladesh?",
   "Yes — Spotify launched BD pricing in 2024: Individual ৳219/mo, Student ৳109, Duo ৳299, Family ৳379. Pay with local methods including bKash. We recommend official for zero risk. We also offer family slots at ৳129 — but official is the right answer for most people, and we say that."),
  ("What happens if I get scammed by a Facebook seller?",
-  "The seller blocks you and disappears. No brand, no website, no recourse. This happens thousands of times daily across BD subscription groups. Buy only from sellers with a real website, a written warranty, a refund policy, and a public WhatsApp number active for over a year. Those checks make a seller easier to verify and contact if something goes wrong."),
+  "If a seller disappears or access fails, recovery is difficult when there is no documented business identity, support channel, order record or written policy. Before paying any seller, verify contact details, access method, refund/warranty terms and keep payment/order evidence."),
  ("Which AI tools are actually worth it for Bangladeshi freelancers?",
   "Fiverr thumbnails → Midjourney ৳1,199 or Leonardo ৳599. Copywriting → ChatGPT Plus ৳499 or Jasper ৳1,520. Video editing → CapCut Pro ৳399. Web dev → GitHub Copilot FREE for students, Cursor ৳590. The Research Bundle (ChatGPT+Perplexity ৳600) covers 80% of use. Start free, buy one tool when free stops you, stack slowly."),
  ("How big is the Bangladesh subscription market?",
@@ -91,7 +91,7 @@ FAQS = [
  ("Can I resell subscriptions to others?",
   "We do not provide legal advice on reselling. Provider terms and applicable law vary by service and business model. If you resell any digital access, verify the provider's rules, disclose the access method truthfully, protect customer data, and get qualified legal advice when needed."),
  ("Why publish competitor prices?",
-  "Because hiding them is how dishonest sellers win. FanFlix sells ChatGPT at ৳500, we sell at ৳499 with warranty. BD Subscription lists 250+ products. We publish the full picture because trust earns repeat customers, and repeat customers are the only business model that survives in BD."),
+  "Comparison ranges help buyers judge value, but they age quickly. We publish a cited historical market snapshot only where one exists, label it as a snapshot, and tell buyers to verify current competitor pricing before purchase."),
 ]
 body = f"""<span class="pill">FAQ</span>
 <h1 style="font-size:clamp(26px,4vw,38px)">Every question. <span class="grad-text">Straight answers.</span></h1>
@@ -103,7 +103,7 @@ pages['faq'] = dict(title="FAQ — 30 Straight Answers | SAVEONSUB", desc="Is it
 # ---------- Warranty ----------
 body = """<span class="pill">🛡️ WARRANTY</span>
 <h1 style="font-size:clamp(26px,4vw,38px)">A warranty that <span class="grad-text">actually means something</span>.</h1>
-<p class="sub">In writing, on every product, trusted in Bangladesh.</p>
+<p class="sub">SaveOnSub policy. Check the selected product and written terms before payment.</p>
 <div class="tbl mt3"><table>
 <tr><th>Plan type</th><th>Coverage</th><th>Replacement time</th><th>If we can't fix it</th></tr>
 <tr><td><span class="tos shared-med">Shared</span></td><td>7 days from delivery</td><td>Within 1 hour (support hours 9am–12am)</td><td>Refund for unused days</td></tr>
@@ -134,7 +134,7 @@ body = """<span class="pill">↩️ REFUND POLICY</span>
 <p class="sub" style="font-size:15px">Back to the same bKash/Nagad/Rocket number you paid from — send-money, no fees deducted. We don't do store-credit-only games.</p>
 <h2 class="mt3" style="font-size:21px">How to request</h2>
 <p class="sub" style="font-size:15px">WhatsApp your order ID + reason. Refunds are approved by a human (usually within the hour), not a bot maze.</p>
-<div class="notice green mt3">🤝 Still deciding? Use <b>pay-after-testing</b> on your first order and you'll never need this page.</div>"""
+<div class="notice green mt3">🤝 Still deciding? Ask whether <b>pay-after-testing</b> is explicitly available for your selected product/order; otherwise use the standard checkout and written refund terms.</div>"""
 pages['refund'] = dict(title="Refund Policy — Same-Day, No Games | SAVEONSUB", desc="Full refund if not delivered in 24h. Unused-days refund on warranty failures. Paid back to your bKash same day. The whole policy in one table.", crumb="Refund Policy", body=body, schema="", robots="")
 
 # ---------- Privacy ----------
@@ -201,11 +201,11 @@ body = """<span class="pill">📖 HOW TO ORDER</span>
   <div class="step"><h3>Get delivered</h3><p>Instant products arrive in <b>5–15 minutes</b> with setup instructions. Read the seat rules (shared plans), enjoy, and save our number — warranty claims are one message away.</p></div>
 </div>
 <h2 class="mt3" style="font-size:21px">Nervous about paying first?</h2>
-<p class="sub" style="font-size:15px">Use <b style="color:var(--green2)">Pay-After-Testing</b> at checkout — we send access before you pay on eligible first orders. You verify, then you pay. That's how confident we are.</p>
+<p class="sub" style="font-size:15px">If <b style="color:var(--green2)">Pay-After-Testing</b> is explicitly offered for the selected product/order, support will confirm the process before payment. Otherwise use the standard checkout flow.</p>
 <h2 class="mt3" style="font-size:21px">Common first-order mistakes (avoid these)</h2>
 <p class="sub" style="font-size:15px">Forgetting the order ID in the reference (we'll still find you, but slower) · sending to a number from ANY other website (only trust the number shown at OUR checkout) · changing the password on a shared seat (kills the seat for everyone — warranty won't cover it).</p>
 <div class="heroctas mt3"><a class="btn btn-primary" href="all.html">Start shopping →</a></div>"""
-pages['how-to-order'] = dict(title="How to Order with bKash — 3-Minute Guide | SAVEONSUB", desc="Pick product → send money via bKash/Nagad → confirm on WhatsApp → delivered in 5–15 min. Full first-timer guide including pay-after-testing.", crumb="How to Order", body=body, schema='<script type="application/ld+json">'+json.dumps(howto_ld,ensure_ascii=False)+'</script>', robots="")
+pages['how-to-order'] = dict(title="How to Order with bKash — 3-Minute Guide | SAVEONSUB", desc="Pick a product → follow the available local payment instructions → confirm on WhatsApp → delivery follows the SLA shown for the selected plan.", crumb="How to Order", body=body, schema='<script type="application/ld+json">'+json.dumps(howto_ld,ensure_ascii=False)+'</script>', robots="")
 
 # ---------- 404 (recovery-optimised: search + popular products + smart path) ----------
 _cat404 = json.load(open('catalog.json'))
@@ -248,20 +248,20 @@ body = """<span class="pill">📞 CONTACT & SUPPORT</span>
 <div class="grid g3 mt3">
   <div class="tcard"><b style="color:var(--green2)">💬 WhatsApp (fastest)</b><p class="sub" style="font-size:14px;margin-top:8px">Orders, support, warranty — everything runs here.</p><a class="btn btn-wa btn-sm mt2" href="https://wa.me/8801305869242">+880 1305-869242</a></div>
   <div class="tcard"><b style="color:var(--green2)">📧 Email</b><p class="sub" style="font-size:14px;margin-top:8px">For records, invoices, business enquiries.</p><a class="btn btn-ghost btn-sm mt2" href="mailto:support@saveonsub.com">support@saveonsub.com</a></div>
-  <div class="tcard"><b style="color:var(--green2)">💳 Payment number</b><p class="sub" style="font-size:14px;margin-top:8px">bKash/Nagad/Rocket merchant (send-money at checkout).</p><div style="font-weight:900;color:var(--gold);margin-top:8px">+880 1305-869242</div></div>
+  <div class="tcard"><b style="color:var(--green2)">💳 Payment number</b><p class="sub" style="font-size:14px;margin-top:8px">Use only the payment method and number displayed at checkout for your order.</p><div style="font-weight:900;color:var(--gold);margin-top:8px">+880 1305-869242</div></div>
 </div>
 <h2 class="mt3" style="font-size:21px">Support hours &amp; response</h2>
 <div class="tbl mt2"><table>
 <tr><th>Channel</th><th>Hours (BST)</th><th>Typical reply</th></tr>
-<tr><td>WhatsApp</td><td>9:00 AM – 12:00 AM daily</td><td>Within minutes</td></tr>
-<tr><td>Warranty claims</td><td>9:00 AM – 12:00 AM</td><td>Replacement within 1 hour</td></tr>
-<tr><td>Email</td><td>Checked daily</td><td>Within 24 hours</td></tr>
+<tr><td>WhatsApp</td><td>9:00 AM – 12:00 AM daily</td><td>Human support during listed hours</td></tr>
+<tr><td>Warranty claims</td><td>9:00 AM – 12:00 AM</td><td>Handled under the applicable written warranty policy</td></tr>
+<tr><td>Email</td><td>Checked daily</td><td>Response time varies with support load</td></tr>
 </table></div>
-<p class="sub mt2" style="font-size:14px">Outside hours (12 AM–9 AM)? Message anyway — we reply first thing, and your warranty clock pauses, so you lose nothing.</p>
+<p class="sub mt2" style="font-size:14px">Outside listed support hours? You can still send the message; the team will handle it when support resumes. Warranty handling follows the written policy for the selected plan.</p>
 <h2 class="mt3" style="font-size:21px">Where we serve</h2>
 <p class="sub" style="font-size:15px">🇧🇩 <b>All of Bangladesh.</b> Everything we sell is digital and delivered on WhatsApp — Dhaka, Chattogram, Sylhet, Khulna, Rajshahi, a village in Sirajganj, anywhere with internet. No courier, no address needed, no delivery charge.</p>
-<div class="notice green mt3">🤝 Nervous first order? Ask about <a href="how-to-order.html" style="color:var(--green2);font-weight:700">pay-after-testing</a> — we send access before you pay.</div>"""
-pages['contact'] = dict(title="Contact & Support — Real Human, Fast | SAVEONSUB", desc="WhatsApp +880 1305-869242, email, support hours, all-Bangladesh coverage. A real person replies in minutes, Bangla or English. Warranty in 1 hour.", crumb="Contact", body=body, schema='<script type="application/ld+json">'+json.dumps(contact_ld,ensure_ascii=False)+'</script>', robots="")
+<div class="notice green mt3">🤝 Nervous first order? Ask whether <a href="how-to-order.html" style="color:var(--green2);font-weight:700">pay-after-testing</a> is explicitly available for your selected product/order before payment.</div>"""
+pages['contact'] = dict(title="Contact & Support — Real Human, Fast | SAVEONSUB", desc="WhatsApp +880 1305-869242, email, listed support hours and all-Bangladesh digital coverage. Warranty requests follow the written SaveOnSub policy.", crumb="Contact", body=body, schema='<script type="application/ld+json">'+json.dumps(contact_ld,ensure_ascii=False)+'</script>', robots="")
 
 # ---------- Track Order (BD order-anxiety reducer) ----------
 body = """<span class="pill">📦 TRACK YOUR ORDER</span>
@@ -337,11 +337,11 @@ body = """<span class="pill">🎁 OFFERS</span>
   <div class="tcard"><b style="color:var(--green2)">👥 Refer a friend</b><p class="sub" style="font-size:14px;margin-top:8px">You both get <b>৳100 off</b> your next order. Just have them mention your number.</p></div>
   <div class="tcard"><b style="color:var(--green2)">🎓 Student</b><p class="sub" style="font-size:14px;margin-top:8px"><b>৳100 off</b> personal AI plans with a valid student ID. <a href="students.html" style="color:var(--green2)">Student Zone →</a></p></div>
   <div class="tcard"><b style="color:var(--green2)">🎁 Bundles</b><p class="sub" style="font-size:14px;margin-top:8px">Save up to ৳199 vs buying separately. <a href="all.html#bundles" style="color:var(--green2)">See bundles →</a></p></div>
-  <div class="tcard"><b style="color:var(--green2)">🤝 Pay-after-testing</b><p class="sub" style="font-size:14px;margin-top:8px">First order: access before payment. The best "offer" is trust.</p></div>
+  <div class="tcard"><b style="color:var(--green2)">🤝 Pay-after-testing</b><p class="sub" style="font-size:14px;margin-top:8px">Available only when explicitly confirmed for the selected product/order before payment.</p></div>
   <div class="tcard"><b style="color:var(--gold)">🌙 Festival offers</b><p class="sub" style="font-size:14px;margin-top:8px">Eid / Pohela Boishakh / back-to-school specials appear here when live — follow us on WhatsApp to hear first.</p></div>
 </div>
 <div class="notice green mt3">All offers stack sensibly — ask on <a href="https://wa.me/8801305869242" style="color:var(--green2);font-weight:700">WhatsApp</a> and we'll apply the best combination honestly.</div>"""
-pages['offers'] = dict(title="Offers — Bulk, Referral, Student Discounts | SAVEONSUB", desc="Real standing offers: 10-15% bulk discount, ৳100 refer-a-friend, ৳100 student discount, bundle savings, pay-after-testing. No fake countdowns.", crumb="Offers", body=body, schema="", robots="")
+pages['offers'] = dict(title="Offers — Bulk, Referral, Student Discounts | SAVEONSUB", desc="Current SaveOnSub offers, bundles and eligibility terms. Verify the exact product, duration and discount before payment; no fake countdowns.", crumb="Offers", body=body, schema="", robots="")
 
 # ---------- HTML sitemap (human + SEO internal linking) ----------
 prod_links = "".join(f'<a href="p/{p["id"]}.html" style="color:var(--green2);display:inline-block;margin:3px 10px 3px 0;font-size:13.5px">{esc(p["name"].replace("🎁 ",""))}</a>' for p in json.load(open('catalog.json'))['products'])
@@ -371,9 +371,9 @@ import os as _os
 _os.makedirs('bn', exist_ok=True)
 FAQS_BN = [
  ("SAVEONSUB কি আসল? স্ক্যাম না তো?",
-  "ন্যায্য প্রশ্ন — বাংলাদেশে সাবস্ক্রিপশন স্ক্যাম অনেক। প্রমাণ: ২০২৪ থেকে ৩,০০০+ কাস্টমার, যাচাইযোগ্য SYSmoAI পরিবার (sysmoai.com, aipremiumshop.com), পাবলিক হোয়াটসঅ্যাপে মানুষ উত্তর দেয়, আর <b>pay-after-testing</b> — আগে অ্যাক্সেস, যাচাই করে তারপর টাকা। যোগ্য অর্ডারে পেমেন্ট সম্পন্ন করার আগে অ্যাক্সেস কাজ করছে কি না যাচাই করা যায়।"),
+  "কেনার আগে যাচাই করুন: পাবলিক WhatsApp, current price, access label, official-provider link যেখানে আছে, এবং written warranty/refund terms। Pay-after-testing শুধু selected product/order-এ explicitly offered হলে প্রযোজ্য।"),
  ("এত সস্তা কেন? সমস্যা কোথায়?",
-  "দুটি সৎ কারণ: (১) শেয়ার্ড প্ল্যানে একটি সাবস্ক্রিপশনের খরচ কয়েকজন ভাগ করে নেয় — এটাই ডিসকাউন্ট, আর এ কারণেই প্রোভাইডারের শর্তে এটা অনুমোদিত নয় (এই 'সমস্যা'টা আমরা প্রতিটি প্রোডাক্টে লিখে দিই ও ওয়ারেন্টিতে কভার করি); (২) পার্সোনাল প্ল্যানে রিজিওনাল প্রাইসিং। অফিসিয়াল দামটাও পাশে দেখাই, যাতে কী বাঁচছে বোঝেন।"),
+  "কম দামের কারণ product অনুযায়ী shared/multi-user access, regional pricing, bundle বা seller sourcing হতে পারে। Provider rules এবং trade-off service অনুযায়ী ভিন্ন; তাই access method ও comparison reference অর্ডারের আগে দেখুন।"),
  ("শেয়ার্ড প্ল্যানে আমার ChatGPT চ্যাট কি অন্যরা দেখবে?",
   "প্রাইভেসি নির্ভর করে অ্যাক্সেস মেথডের ওপর। কেনার আগে আমরা জানাই আপনি নিজের অ্যাকাউন্ট/ওয়ার্কস্পেস সিট পাচ্ছেন নাকি শেয়ার্ড ক্রেডেনশিয়াল। কোনো শেয়ার্ড-অ্যাক্সেস প্রোডাক্টে সংবেদনশীল তথ্য না দেওয়াই নিরাপদ। সর্বোচ্চ প্রাইভেসি দরকার হলে পার্সোনাল/নিজস্ব অ্যাকাউন্ট নিন।"),
  ("শেয়ার্ড, পার্সোনাল আর অফিসিয়াল — পার্থক্য কী?",
@@ -450,13 +450,13 @@ _howto_ld_bn = {"@context":"https://schema.org","@type":"HowTo","name":"বি�
  "step":[{"@type":"HowToStep","position":1,"name":"প্রোডাক্ট বেছে নিন","text":"সব প্রোডাক্ট দেখুন বা Find My AI কুইজ দিন। কার্টে যোগ করুন — টাকায় দাম, প্রতিটি প্ল্যানে সৎ লেবেল।"},
  {"@type":"HowToStep","position":2,"name":"বিকাশ/নগদ/রকেটে টাকা পাঠান","text":"চেকআউটে চেকআউটে দেখানো পেমেন্ট নম্বর +৮৮০ ১৩০৫-৮৬৯২৪২ কপি করে অর্ডার আইডি রেফারেন্সে দিয়ে মোট টাকা সেন্ড মানি করুন।"},
  {"@type":"HowToStep","position":3,"name":"হোয়াটসঅ্যাপে কনফার্ম করুন","text":"কনফার্ম বাটনে চাপ দিন — অর্ডারসহ একটি রেডি মেসেজ খুলবে, পাঠিয়ে দিন।"},
- {"@type":"HowToStep","position":4,"name":"৫–১৫ মিনিটে পান","text":"অ্যাক্সেস বা ইনভাইট হোয়াটসঅ্যাপে আসবে। প্রথম মিনিট থেকেই ওয়ারেন্টি চালু।"}]}
+ {"@type":"HowToStep","position":4,"name":"প্ল্যানের SLA অনুযায়ী ডেলিভারি","text":"Selected plan-এর instant/fast/managed SLA অনুযায়ী access বা invite delivery হবে; applicable warranty terms product/order অনুযায়ী দেখুন।"}]}
 bn_howto = f"""<!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>বিকাশে কীভাবে অর্ডার করবেন — ৩ মিনিটের গাইড | SAVEONSUB</title>
-<meta name="description" content="প্রোডাক্ট বাছুন → বিকাশ/নগদে টাকা পাঠান → হোয়াটসঅ্যাপে কনফার্ম → ৫–১৫ মিনিটে ডেলিভারি। নতুনদের জন্য পূর্ণ গাইড, pay-after-testing সহ।">
+<meta name="description" content="প্রোডাক্ট বাছুন → available local payment instructions অনুসরণ করুন → WhatsApp-এ confirm করুন → selected plan-এর SLA অনুযায়ী delivery।">
 <link rel="canonical" href="https://saveonsub.com/bn/how-to-order.html">
 <link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn/how-to-order.html">
 <link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/how-to-order.html">
@@ -478,7 +478,7 @@ bn_howto = f"""<!DOCTYPE html>
 <main id="main"><div class="wrap" style="max-width:820px">
   <div class="crumbs"><a href="../bn.html">হোম</a> › কীভাবে অর্ডার</div>
   <span class="pill">📖 কীভাবে অর্ডার</span>
-  <h1 style="font-size:clamp(26px,4vw,38px)">প্রথমবার? <span class="grad-text">৩ মিনিটে ডেলিভারি পর্যন্ত।</span></h1>
+  <h1 style="font-size:clamp(26px,4vw,38px)">প্রথমবার? <span class="grad-text">৩ মিনিটে অর্ডার প্রক্রিয়া বুঝুন।</span></h1>
   <div class="steps mt3" style="grid-template-columns:repeat(2,1fr)">
     <div class="step"><h3>প্রোডাক্ট বেছে নিন</h3><p><a href="../all.html" style="color:var(--green2)">সব প্রোডাক্ট</a> দেখুন বা <a href="../quiz.html" style="color:var(--green2)">কুইজ</a> দিন। প্রতিটি প্ল্যানে দাম, সৎ ঝুঁকির লেবেল ও ডেলিভারির সময় লেখা। <b>কার্টে যোগ করুন</b>।</p></div>
     <div class="step"><h3>টাকা পাঠান</h3><p>বিকাশ/নগদ/রকেট খুলুন → <b>Send Money</b> → আমাদের নম্বর <b>+৮৮০ ১৩০৫-৮৬৯২৪২</b> (চেকআউটে কপি বাটন) → অ্যামাউন্ট = কার্টের মোট → রেফারেন্স = আপনার অর্ডার আইডি।</p></div>
@@ -486,7 +486,7 @@ bn_howto = f"""<!DOCTYPE html>
     <div class="step"><h3>ডেলিভারি নিন</h3><p>ইনস্ট্যান্ট প্রোডাক্ট <b>৫–১৫ মিনিটে</b> সেটআপ নির্দেশনাসহ আসে। শেয়ার্ড সিটের নিয়ম পড়ুন, উপভোগ করুন, আর নম্বরটা সেভ রাখুন — ওয়ারেন্টি একটা মেসেজ দূরে।</p></div>
   </div>
   <h2 class="mt3" style="font-size:21px">আগে টাকা দিতে ভয়?</h2>
-  <p class="sub" style="font-size:15px">চেকআউটে <b style="color:var(--green2)">Pay-After-Testing</b> ব্যবহার করুন — যোগ্য প্রথম অর্ডারে আগে অ্যাক্সেস পাঠাই, আপনি যাচাই করে তারপর টাকা দেন। এতটাই কনফিডেন্ট আমরা।</p>
+  <p class="sub" style="font-size:15px"><b style="color:var(--green2)">Pay-After-Testing</b> universal নয়। Selected product/order-এ explicitly offered হলে support payment-এর আগে exact process confirm করবে; না হলে standard checkout follow করুন।</p>
   <h2 class="mt3" style="font-size:21px">নতুনদের সাধারণ ভুল (এড়িয়ে চলুন)</h2>
   <p class="sub" style="font-size:15px">রেফারেন্সে অর্ডার আইডি না দেওয়া (খুঁজে পাব, তবে দেরিতে) · অন্য কোনো ওয়েবসাইটের নম্বরে টাকা পাঠানো (শুধু আমাদের চেকআউটের নম্বরই বিশ্বাস করুন) · শেয়ার্ড সিটের পাসওয়ার্ড বদলানো (সবার জন্য সিট নষ্ট হয় — ওয়ারেন্টি কভার করবে না)।</p>
   <div class="heroctas mt3"><a class="btn btn-primary" href="../all.html">শপিং শুরু করুন →</a></div>

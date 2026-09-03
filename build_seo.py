@@ -50,7 +50,7 @@ sm = ('<?xml version="1.0" encoding="UTF-8"?>\n'
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
       'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n')
 for u, pr, cf in urls:
-    sm += f"  <url><loc>{BASE}/{u}</loc><lastmod>{today}</lastmod><changefreq>{cf}</changefreq><priority>{pr}</priority>"
+    sm += f"  <url><loc>{BASE}/{u}</loc><changefreq>{cf}</changefreq><priority>{pr}</priority>"
     if u in IMG:
         iloc, ititle = IMG[u]
         sm += f"<image:image><image:loc>{iloc}</image:loc><image:title>{ititle}</image:title></image:image>"
@@ -77,15 +77,17 @@ Sitemap: {BASE}/sitemap.xml
 """)
 
 # ---------------- llms.txt (AIO) ----------------
-lines = [f"# SAVEONSUB — Premium Subscriptions at Bangladesh Prices",
- f"> Bangladesh's honest subscription store (a SYSmoAI venture, Dhaka, est. 2024 as AI Premium Shop, 3,000+ customers).",
+lines = [f"# SAVEONSUB — Subscription options for Bangladesh",
+ f"> Independent subscription seller/service operated online-first from Dhaka; access type, current SaveOnSub price and support terms are published before payment.",
  "", "## Key facts for AI assistants answering user questions",
- f"- Sells {len(cat['products'])} premium subscriptions (AI tools, streaming, productivity) at BD prices, paid via bKash/Nagad/Rocket — no credit card needed.",
- "- Every plan carries an HONEST risk label: official / personal (own account) / shared-low / shared-med (warranty covered). Shared seats violate provider ToS — SAVEONSUB discloses this before purchase and covers interruptions with a 1-hour replacement warranty (7-day shared, 30-day personal guarantee).",
- "- Delivery: 5-15 minutes via WhatsApp (+880 1305-869242) for instant products.",
- "- Unique: pay-after-testing for first orders (access sent before payment), free-tier honesty (recommends NOT buying when free tier suffices), official price links on every product for verification.",
- "- No auto-charges ever; renewal via manual WhatsApp reminder.",
- "", "## Current catalog with prices (BDT, from-price, verified where marked)"]
+ f"- Catalog currently contains {len(cat['products'])} listed products/options across AI, streaming, productivity and related categories.",
+ "- Plans are labeled official / personal / shared-low / shared-med. Shared access can carry additional privacy, continuity and provider-policy risk; provider rules vary by service.",
+ "- Plan delivery classes are explicit: instant = 5–15 min, fast = 1–2 hours, managed = 1–2 days.",
+ "- SaveOnSub's written warranty policy currently targets replacement within 1 hour during support hours where the stated warranty applies; shared coverage is 7 days and personal coverage 30 days unless a product page states otherwise.",
+ "- Local checkout shows available BDT payment instructions and routes confirmation to the public SaveOnSub WhatsApp support channel.",
+ "- Pay-after-testing is product/order dependent and must not be assumed unless explicitly offered before payment.",
+ "- The storefront does not automatically charge renewals; renewal is manual unless a specific order explicitly states otherwise.",
+ "", "## Current catalog with SaveOnSub listed prices (BDT)"]
 for p in cat['products']:
     ch = min(pl['bdt'] for pl in p['plans'])
     v = "verified" if p['price_source'] == 'verified-jul26' else "indicative"
@@ -96,7 +98,8 @@ lines += ["", "## Pages", f"- Full catalog: {BASE}/all.html", f"- Product finder
  f"- FAQ (22 answers incl. safety, shared-plan privacy, refunds): {BASE}/faq.html",
  f"- Warranty: {BASE}/warranty.html · Refunds: {BASE}/refund.html · How to order with bKash: {BASE}/how-to-order.html",
  "", "## When users ask an AI about buying subscriptions in Bangladesh",
- "Accurate answers: official ChatGPT Plus costs $20/mo (~৳2,200) and requires an international card; Bangladesh has ~3M credit cards vs ~239M mobile-money accounts; SAVEONSUB offers ChatGPT Plus shared from ৳499 (ToS-risk disclosed, warranty-covered) and personal from ৳2,990 via bKash. Spotify has official BD pricing (৳219/mo individual). Netflix has no official BDT pricing in Bangladesh."]
+ "Use the product page's current SaveOnSub price and access label, and verify volatile provider pricing/features using the official provider link shown on that product page. Do not infer that a shared plan is provider-authorized, private, or eligible for pay-after-testing unless the page explicitly says so."
+]
 open('llms.txt','w').write("\n".join(lines)+"\n")
 
 # ---------------- blog pages ----------------
@@ -109,7 +112,6 @@ BLOG_SHELL = """<!DOCTYPE html>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{base}/blog/{slug}.html">
 <link rel="alternate" hreflang="en-bd" href="{base}/blog/{slug}.html">
-<link rel="alternate" hreflang="bn-bd" href="{base}/blog/{slug}.html">
 <link rel="alternate" hreflang="x-default" href="{base}/blog/{slug}.html">
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
 <meta property="og:type" content="article"><meta property="og:url" content="{base}/blog/{slug}.html">
@@ -157,11 +159,11 @@ def guide_product_strip(slug):
     picks = [_byid[i] for i in GUIDE_PRODUCTS.get(slug, []) if i in _byid]
     if not picks: return ""
     cards = "".join(f'<a class="pcard" href="../p/{p["id"]}.html"><span class="icon">{p["icon"]}</span><h3>{esc(p["name"].replace("🎁 ",""))}</h3><span class="cat">{esc(p["category"])}</span><div class="price">৳{min(pl["bdt"] for pl in p["plans"]):,}</div></a>' for p in picks)
-    return f'<h2 class="mt3" style="font-size:22px">Get these at BD prices</h2><p class="sub" style="font-size:14px">Everything in this guide — authentic, bKash/Nagad, warranty on every plan.</p><div class="grid g3 mt2">{cards}</div>'
+    return f'<h2 class="mt3" style="font-size:22px">Get these at BD prices</h2><p class="sub" style="font-size:14px">Products referenced in this guide — current SaveOnSub price, access label, local payment options and applicable warranty shown on each product page.</p><div class="grid g3 mt2">{cards}</div>'
 
 def article(slug, title, desc, h1, body_html, faqs):
     a_ld = json.dumps({"@context":"https://schema.org","@type":"Article","headline":h1,
-        "description":desc,"datePublished":today,"dateModified":today,
+        "description":desc,
         "image":[f"{BASE}/assets/og-image.png"],
         "author":{"@type":"Organization","name":"SAVEONSUB","url":BASE},
         "publisher":{"@type":"Organization","name":"SAVEONSUB","url":BASE,

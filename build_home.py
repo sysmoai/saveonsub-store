@@ -51,14 +51,14 @@ page=f'''<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAVEONSUB — Premium Subscriptions at BD Prices with bKash</title>
-<meta name="description" content="ChatGPT ৳{chat_from}, Google AI Pro ৳{frm(next(p for p in P if p['id']=='google-ai-pro'))}, Netflix ৳{frm(next(p for p in P if p['id']=='netflix'))} — authentic subscriptions, bKash/Nagad, 5–15 min delivery, warranty. Official, personal and shared options are labeled before checkout.">
+<meta name="description" content="ChatGPT ৳{chat_from}, Google AI Pro ৳{frm(next(p for p in P if p['id']=='google-ai-pro'))}, Netflix ৳{frm(next(p for p in P if p['id']=='netflix'))} — BDT subscription options with access type, delivery SLA and warranty shown before checkout.">
 <link rel="canonical" href="https://saveonsub.com/">
 <link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/">
 <link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn.html">
 <link rel="alternate" hreflang="x-default" href="https://saveonsub.com/">
 <meta name="geo.region" content="BD"><meta name="geo.placename" content="Dhaka">
 <meta property="og:title" content="SAVEONSUB — Premium Subscriptions at BD Prices">
-<meta property="og:description" content="{len(nonb)}+ subscriptions at honest BD prices. bKash/Nagad, 5–15 min delivery, honest labels, warranty.">
+<meta property="og:description" content="{len(nonb)}+ subscription options at BD prices. Local payment options, access labels and plan-specific delivery/warranty terms are shown before checkout.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://saveonsub.com/">
 <meta property="og:locale" content="en_BD">
@@ -90,8 +90,8 @@ page=f'''<!DOCTYPE html>
 
 <div class="trustbar"><div class="wrap">
   <span>🏷️ <b>Every plan clearly labeled</b>: Official · Personal · Shared</span>
-  <span>⚡ <b>5–15 min</b> delivery</span>
-  <span>🛡️ <b>1-hour</b> replacement warranty</span>
+  <span>⚡ <b>Instant plans:</b> 5–15 min SLA</span>
+  <span>🛡️ <b>Warranty:</b> replacement policy shown by plan</span>
   <span>💳 bKash · Nagad · Rocket</span>
 </div></div>
 
@@ -129,12 +129,12 @@ page=f'''<!DOCTYPE html>
 
 <section><div class="wrap">
   <span class="pill">HOW IT WORKS</span>
-  <h2>Ordered in <span class="grad-text">2 minutes</span>. Delivered in 15.</h2>
+  <h2>Order quickly. <span class="grad-text">Delivery follows the selected plan SLA.</span></h2>
   <div class="steps mt3">
     <div class="step"><h3>Pick your product</h3><p>{len(nonb)} subscriptions with honest labels — shared, personal or official. Prices in ৳, savings shown vs official.</p></div>
     <div class="step"><h3>Pay with bKash/Nagad</h3><p>Send money to the payment number shown at checkout with your order ID. No card, no bank, no forms.</p></div>
-    <div class="step"><h3>Confirm on WhatsApp</h3><p>One tap sends your order + payment info. A human replies in minutes — in Bangla or English.</p></div>
-    <div class="step"><h3>Start using it</h3><p>Credentials or invite arrive in 5–15 min (instant products). Warranty covers you from minute one.</p></div>
+    <div class="step"><h3>Confirm on WhatsApp</h3><p>One tap prepares your order + payment details for WhatsApp. Human support is available in Bangla or English.</p></div>
+    <div class="step"><h3>Start using it</h3><p>Delivery follows the SLA shown on the selected plan: instant, fast or managed. Applicable warranty terms are shown before payment.</p></div>
   </div>
   <p class="mt2"><a class="btn btn-ghost" href="how-to-order.html">See the full guide →</a></p>
 </div></section>
@@ -153,12 +153,12 @@ page=f'''<!DOCTYPE html>
   <div class="grid g3 mt3">
     <div class="tcard"><b style="color:var(--green2)">🏷️ Every plan risk-labeled</b><p class="sub" style="font-size:14px;margin-top:8px">Shared, personal or official — we tell you exactly what you're buying and what the risks are. The access method and known risks are shown before payment.</p></div>
     <div class="tcard"><b style="color:var(--green2)">🛡️ Warranty that means it</b><p class="sub" style="font-size:14px;margin-top:8px">Warranty scope and replacement timing vary by plan. The applicable terms are shown on each product before payment.</p></div>
-    <div class="tcard"><b style="color:var(--green2)">🤝 We'll talk you OUT of buying</b><p class="sub" style="font-size:14px;margin-top:8px">Student? Copilot is free for you — we'll show you how instead of selling it. That's why customers come back.</p></div>
+    <div class="tcard"><b style="color:var(--green2)">🤝 We'll talk you OUT of buying</b><p class="sub" style="font-size:14px;margin-top:8px">If a provider offers a free or student path that fits your use, check that first. Buy only when the paid option solves a real need.</p></div>
   </div>
   <div class="grid g3 mt3">
     <div class="tcard"><b style="color:var(--gold);font-size:22px">Public support channel</b><p style="margin-top:6px">Questions, delivery issues and warranty requests route to the same SaveOnSub WhatsApp support number shown across this site.</p><div class="who">{SUPPORT_PHONE_DISPLAY} · verify before paying</div></div>
     <div class="tcard"><b style="color:var(--gold);font-size:22px">Product facts first</b><p style="margin-top:6px">We publish plan type, access method, current price and warranty terms instead of manufacturing star ratings or popularity claims.</p><div class="who">Clear labels before payment</div></div>
-    <div class="tcard"><b style="color:var(--gold);font-size:22px">Reviews: earning them</b><p style="margin-top:6px">This store is new. Rather than paste fake testimonials, judge us by <b style="color:var(--green2)">pay-after-testing</b> — we send access before you pay.</p><div class="who">First public reviews will appear here, screenshot-verified</div></div>
+    <div class="tcard"><b style="color:var(--gold);font-size:22px">Reviews: earning them</b><p style="margin-top:6px">This store is new. Rather than paste fake testimonials, check the access label, written terms and public support channel. If pay-after-testing is explicitly offered for your selected product, its process is confirmed before payment.</p><div class="who">First public reviews will appear here, screenshot-verified</div></div>
   </div>
 </div></section>
 
@@ -190,7 +190,7 @@ page=f'''<!DOCTYPE html>
 
 <section class="center"><div class="wrap">
   <h2>Stop overpaying. <span class="grad-text">Start today.</span></h2>
-  <p class="sub" style="margin:0 auto 26px">{len(nonb)} products · bKash/Nagad · 5–15 min delivery · warranty on everything.</p>
+  <p class="sub" style="margin:0 auto 26px">{len(nonb)} products · local BDT payment options · delivery SLA and warranty shown by plan.</p>
   <a href="all.html" class="btn btn-primary" style="font-size:17px;padding:16px 34px">Browse Subscriptions →</a>
 </div></section>
 
@@ -254,7 +254,7 @@ bn = f'''<!DOCTYPE html>
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAVEONSUB — বাংলাদেশি দামে প্রিমিয়াম সাবস্ক্রিপশন, বিকাশে</title>
-<meta name="description" content="ChatGPT ৳{chat_from}, Google AI Pro ৳{frm(gap)}, Netflix ৳{frm(next(p for p in P if p['id']=='netflix'))} — অথেনটিক সাবস্ক্রিপশন, বিকাশ/নগদ, ৫-১৫ মিনিটে ডেলিভারি, ওয়ারেন্টি সহ।">
+<meta name="description" content="ChatGPT ৳{chat_from}, Google AI Pro ৳{frm(gap)}, Netflix ৳{frm(next(p for p in P if p['id']=='netflix'))} — BDT subscription options; access type, delivery SLA এবং warranty অর্ডারের আগে দেখুন।">
 <link rel="canonical" href="https://saveonsub.com/bn.html">
 <link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn.html">
 <link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/">
@@ -272,7 +272,7 @@ bn = f'''<!DOCTYPE html>
 <body>
 <a class="skip" href="#main">মূল কন্টেন্টে যান</a>
 <div class="trustbar"><div class="wrap">
-  <span>✅ <b>৩,০০০+ কাস্টমার</b> ২০২৪ থেকে</span><span>⚡ <b>৫–১৫ মিনিটে</b> ডেলিভারি</span><span>🛡️ <b>১ ঘণ্টায়</b> রিপ্লেসমেন্ট ওয়ারেন্টি</span><span>💳 বিকাশ · নগদ · রকেট</span>
+  <span>🔎 <b>Access type</b> অর্ডারের আগে দেখুন</span><span>⚡ <b>Instant plan:</b> ৫–১৫ মিনিট SLA</span><span>🛡️ <b>Warranty:</b> plan অনুযায়ী</span><span>💳 বিকাশ · নগদ · রকেট</span>
 </div></div>
 {nav_bn()}
 <header class="hero" id="main"><div class="wrap hgrid">
@@ -300,9 +300,9 @@ bn = f'''<!DOCTYPE html>
 <section style="background:var(--bg2);border-block:1px solid var(--line)"><div class="wrap" style="max-width:760px">
   <span class="pill">দ্রুত উত্তর</span><h2>কেনার আগে…</h2>
   <div class="mt3">
-    <details open><summary>এটা কি নিরাপদ? আপনারা scam না তো?</summary><p>২০২৪ থেকে ৩,০০০+ কাস্টমার, পাবলিক WhatsApp, verifiable brand (SYSmoAI, aipremiumshop.com)। প্রথম অর্ডারে ভয়? <b>Pay-After-Testing</b> — আগে access, verify করে তারপর টাকা। বাংলাদেশে আর কোনো দোকান এটা দেয় না।</p></details>
-    <details><summary>শেয়ার্ড প্ল্যানে অন্যরা কি আমার ChatGPT চ্যাট দেখবে?</summary><p>না। প্রতিটা ইউজারের কথোপকথন আলাদা ও প্রাইভেট। শুধু সাবস্ক্রিপশনের খরচ শেয়ার হয়, আপনার ডেটা নয়। কাজের জন্য চাইলে Personal নিন — নিজের ইমেইলে।</p></details>
-    <details><summary>কার্ড ছাড়া কিভাবে পে করবো?</summary><p>বিকাশ, নগদ বা রকেট Send Money। Checkout-এ merchant নাম্বার copy বাটন সহ, অর্ডার আইডি রেফারেন্স। ৬০ সেকেন্ডে শেষ।</p></details>
+    <details open><summary>এটা কি নিরাপদ? আপনারা scam না তো?</summary><p>যাচাইযোগ্য তথ্য দেখুন: পাবলিক WhatsApp, current price, access label, provider link যেখানে আছে, এবং written warranty/refund terms। Pay-After-Testing শুধু selected product/order-এ explicitly offered হলে প্রযোজ্য।</p></details>
+    <details><summary>শেয়ার্ড প্ল্যানে অন্যরা কি আমার ChatGPT চ্যাট দেখবে?</summary><p>Privacy exact access method-এর ওপর নির্ভর করে। Shared credentials-এ অন্য access holder activity বা data দেখতে পারে; sensitive information-এর জন্য personal/customer-specific plan নিন।</p></details>
+    <details><summary>কার্ড ছাড়া কিভাবে পে করবো?</summary><p>বিকাশ, নগদ বা রকেটের available payment instructions Checkout-এ দেখুন। সেখানে payment number এবং order reference থাকবে; টাকা পাঠানোর আগে details মিলিয়ে নিন।</p></details>
   </div>
   <p class="mt2 center"><a href="faq.html" class="btn btn-ghost">সব প্রশ্ন-উত্তর →</a></p>
 </div></section>

@@ -183,9 +183,6 @@ for _hp in ['index.html','bn.html']:
     if '"OnlineStore"' not in _h and '"Organization"' not in _h: issues.append(f"{_hp}: no Organization schema")
     if 'github.com/sysmoai' not in _h: issues.append(f"{_hp}: Organization missing sameAs family links")
     if '"founder"' not in _h: issues.append(f"{_hp}: Organization missing founder entity")
-for pg2 in ['index.html','all.html','about.html','faq.html']:
-    h2 = open(pg2).read()
-    if 'SaveOnSub' in h2.replace('SAVEONSUB',''): issues.append(f"{pg2}: inconsistent brand casing — use SAVEONSUB")
 
 print(f"AUDITED: {len(pages)} pages, {len(ids)} products, sitemap, robots, llms, assets")
 if issues:

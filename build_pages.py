@@ -7,12 +7,6 @@ from templates import nav_en, nav_bn, footer_en, footer_bn
 
 cat = json.load(open('catalog.json'))
 rate = cat['meta']['usd_anchor_rate']
-PRICE_VALID = (datetime.date.today() + datetime.timedelta(days=90)).isoformat()
-# Honest merchant return policy — reflects the real minimum warranty (7-day shared seat replacement).
-RETURN_POLICY = {"@type": "MerchantReturnPolicy", "applicableCountry": "BD",
-                 "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-                 "merchantReturnDays": 7, "returnMethod": "https://schema.org/ReturnByMail",
-                 "returnFees": "https://schema.org/FreeReturn"}
 tos_meta = cat['meta']['tos_risk_levels']
 sla_meta = cat['meta']['delivery_slas']
 os.makedirs('p', exist_ok=True)
@@ -54,14 +48,11 @@ def page(p):
     title = f"{name_clean} Price in Bangladesh — ৳{cheapest['bdt']:,} | SAVEONSUB"
     if len(title) > 60: title = f"{name_clean} BD Price — ৳{cheapest['bdt']:,} | SAVEONSUB"
     if len(title) > 60: title = f"{name_clean[:40]} — ৳{cheapest['bdt']:,} | SAVEONSUB"
-    desc = f"{name_clean} in Bangladesh from ৳{cheapest['bdt']:,}/{cheapest['duration']} (official ~৳{official_bdt:,}). bKash/Nagad, {sla_meta[cheapest['sla']]} delivery, warranty. Honest labels."
+    desc = f"{name_clean} in Bangladesh from ৳{cheapest['bdt']:,}/{cheapest['duration']} (official reference ~৳{official_bdt:,}). Local BDT payment, {sla_meta[cheapest['sla']]} delivery for this plan; access and SaveOnSub warranty terms shown on-page."
     if len(desc) > 155: desc = desc[:152] + "…"
 
     offers = [{"@type": "Offer", "name": pl['label'], "price": pl['bdt'], "priceCurrency": "BDT",
-               "availability": "https://schema.org/InStock",
-               "priceValidUntil": PRICE_VALID,
-               "hasMerchantReturnPolicy": RETURN_POLICY,
-               "url": f"https://saveonsub.com/p/{p['id']}.html"} for pl in p['plans']]
+               "availability": "https://schema.org/InStock", "url": f"https://saveonsub.com/p/{p['id']}.html"} for pl in p['plans']]
     product_ld = {"@context": "https://schema.org", "@type": "Product", "sku": f"BD-{p['id'].upper()}", "name": name,
                   "description": desc, "brand": {"@type": "Brand", "name": name.split()[0]},
                   "image": [f"https://saveonsub.com/assets/social/{p['id']}.png"],
@@ -106,17 +97,15 @@ def page(p):
     mk = p.get('market', {})
     ours_low = cheapest['bdt']
     if mk.get('surveyed'):
-        beat = ours_low <= mk['low']
-        honesty = ("We're the cheapest surveyed option — AND the only one with a written warranty." if beat else
-                   "Cheaper exists in the market — without pay-after-testing, written warranty or honest risk labels. That's the trade; your call.")
-        market_html = f"""<h2 class="mt3" style="font-size:22px">BD Market Reality — {esc(name)}</h2>
+        position = "at or below" if ours_low <= mk['low'] else "within/above"
+        market_html = f"""<h2 class="mt3" style="font-size:22px">BD Market Snapshot — {esc(name)}</h2>
   <div class="tbl mt2"><table>
-  <tr><th>Where</th><th>Price range</th><th>Warranty?</th></tr>
-  <tr><td>Official (intl. card needed)</td><td>~৳{official_bdt:,}/mo</td><td>n/a</td></tr>
-  <tr><td>BD market (surveyed)</td><td>৳{mk['low']:,} – ৳{mk['high']:,}</td><td>Usually none/unclear</td></tr>
-  <tr style="background:rgba(20,212,184,.07)"><td><b>SAVEONSUB</b></td><td><b>from ৳{ours_low:,}</b></td><td><b>✅ 1-hour replacement, in writing</b></td></tr>
+  <tr><th>Reference</th><th>Price</th><th>Notes</th></tr>
+  <tr><td>Official list converted at site anchor rate</td><td>~৳{official_bdt:,}/mo</td><td>Verify the current provider price at the official link above</td></tr>
+  <tr><td>BD market snapshot</td><td>৳{mk['low']:,} – ৳{mk['high']:,}</td><td>Historical survey; seller access/warranty terms can differ</td></tr>
+  <tr style="background:rgba(20,212,184,.07)"><td><b>SAVEONSUB</b></td><td><b>from ৳{ours_low:,}</b></td><td><b>Access type + SaveOnSub warranty shown before payment</b></td></tr>
   </table></div>
-  <p style="font-size:13px;color:var(--muted);margin-top:8px">{esc(mk['who'])} <i>(source: {esc(mk['src'])})</i>. {honesty}</p>"""
+  <p style="font-size:13px;color:var(--muted);margin-top:8px">Last cited snapshot: {esc(mk['who'])} <i>(source: {esc(mk['src'])})</i>. At that snapshot, the current SaveOnSub from-price is {position} the cited range; verify current competitor pricing yourself before buying.</p>"""
     else:
         market_html = f"""<div class="notice mt3" style="font-size:13.5px">📊 <b>Market survey pending for {esc(name)}</b> — we publish competitor ranges only when we've actually verified them. No invented numbers, ever. Seen a better BD price? <a href="https://wa.me/8801305869242?text=Better%20price%20found%20for%20{esc(name)}:%20" style="color:var(--green2)">Tell us</a> — we'll verify and show it here.</div>"""
 
@@ -189,7 +178,7 @@ def page(p):
   <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
     <span style="font-size:46px">{p['icon']}</span>
     <div><h1 style="font-size:clamp(26px,4vw,38px)">{esc(name)}</h1>
-    <span class="cat" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:800"><a href="../c/{_cs}.html" style="color:inherit">{esc(p['category'])}</a>{' · 🔥 '+str(p['orders'])+'+ orders' if p.get('orders',0)>100 else ''}</span></div>
+    <span class="cat" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:800"><a href="../c/{_cs}.html" style="color:inherit">{esc(p['category'])}</a></span></div>
   </div>
   <div class="anchor mt2">
     <span class="official">Official: ~৳{official_bdt:,}/mo (${p['official_usd']})</span>
@@ -239,15 +228,15 @@ def sla_bn(s): return SLA_BN.get(s, esc(sla_meta.get(s, s)))
 def bn_faq(name, frm):
     return [
       ("এটা কি আসল এবং নিরাপদ?",
-       f"হ্যাঁ — ২০২৪ সাল থেকে ৩,০০০+ কাস্টমার। প্রতিটি প্ল্যানে সৎ ঝুঁকির লেবেল দেওয়া, আর যেকোনো সমস্যায় ১ ঘণ্টার মধ্যে রিপ্লেসমেন্ট। প্রথমবার নার্ভাস? আগে টেস্ট করে তারপর টাকা দিন (pay-after-testing)।"),
+       "অ্যাক্সেস পদ্ধতি, shared/personal ঝুঁকি এবং প্রযোজ্য warranty অর্ডারের আগে দেখুন। shared access-এ sensitive data ব্যবহার করবেন না। Pay-after-testing শুধু যে product/order-এ স্পষ্টভাবে offer করা হয় সেখানে প্রযোজ্য।"),
       ("কত দ্রুত ডেলিভারি পাব?",
        "ইনস্ট্যান্ট প্রোডাক্ট হোয়াটসঅ্যাপে ৫–১৫ মিনিটে। পার্সোনাল অ্যাকাউন্ট সেটআপে ১–২ দিন লাগতে পারে — প্রতিটি প্ল্যানে সময় লেখা আছে।"),
       ("কীভাবে পেমেন্ট করব?",
        "বিকাশ, নগদ বা রকেটে সেন্ড মানি — কোনো কার্ড বা ব্যাংক অ্যাকাউন্ট লাগবে না। চেকআউটে পুরো নির্দেশনা কপি বাটনসহ দেওয়া থাকে।"),
       ("শেয়ার্ড প্ল্যানে আমার তথ্য কি অন্যরা দেখবে?",
-       "না। শুধু সাবস্ক্রিপশনের খরচটাই শেয়ার হয় — আপনার চ্যাট, ফাইল বা ব্যক্তিগত ডেটা কেউ দেখে না।"),
+       "নিশ্চিতভাবে বলা যায় না — privacy exact access method-এর ওপর নির্ভর করে। shared credentials-এ অন্য access holder activity বা data দেখতে পারে। sensitive information-এর জন্য personal/customer-specific plan নিন।"),
       ("যদি কাজ না করে?",
-       "সাপোর্ট আওয়ারে ১ ঘণ্টার মধ্যে রিপ্লেসমেন্ট। শেয়ার্ড সিটে ৭ দিন, পার্সোনাল প্ল্যানে ৩০ দিন গ্যারান্টি — লিখিতভাবে।"),
+       "SaveOnSub policy অনুযায়ী applicable warranty-তে support hours-এর মধ্যে ১ ঘণ্টার replacement target আছে; shared coverage ৭ দিন এবং personal coverage ৩০ দিন, যদি product page-এ অন্য কিছু না লেখা থাকে।"),
       (f"{name} বাংলাদেশে দাম কত?",
        f"{name} আমাদের এখানে ৳{frm:,} থেকে শুরু — বিকাশ/নগদে, ওয়ারেন্টিসহ। অফিসিয়াল দামের চেয়ে অনেক কম, আর প্রতিটি প্ল্যানের ঝুঁকি আগে থেকে জানিয়ে দিই।"),
     ]
@@ -266,13 +255,11 @@ def bn_page(p):
     title = f"{name_clean_bn} দাম বাংলাদেশে — ৳{frm:,} থেকে | SAVEONSUB"
     if len(title) > 60: title = f"{name_clean_bn[:40]} — ৳{frm:,} থেকে | SAVEONSUB"
     if len(title) > 60: title = f"{name_clean_bn[:30]} | SAVEONSUB"
-    desc = f"{name_clean_bn} বাংলাদেশে ৳{frm:,} থেকে — বিকাশ/নগদ, ৫–১৫ মিনিটে ডেলিভারি, ১ ঘণ্টার ওয়ারেন্টি। সৎ দামে আসল সাবস্ক্রিপশন।"
+    desc = f"{name_clean_bn} বাংলাদেশে ৳{frm:,} থেকে — local BDT payment, {sla_bn(cheapest['sla'])} delivery। access type এবং প্রযোজ্য SaveOnSub warranty এই page-এ দেখানো আছে।"
     if len(desc) > 155: desc = desc[:152] + "…"
 
     offers = [{"@type": "Offer", "name": pl['label'], "price": pl['bdt'], "priceCurrency": "BDT",
-               "availability": "https://schema.org/InStock", "priceValidUntil": PRICE_VALID,
-               "hasMerchantReturnPolicy": RETURN_POLICY,
-               "url": f"https://saveonsub.com/bn/p/{p['id']}.html"} for pl in p['plans']]
+               "availability": "https://schema.org/InStock", "url": f"https://saveonsub.com/bn/p/{p['id']}.html"} for pl in p['plans']]
     product_ld = {"@context": "https://schema.org", "@type": "Product", "sku": f"BD-{p['id'].upper()}", "name": name,
                   "description": desc, "brand": {"@type": "Brand", "name": name.split()[0]},
                   "image": [f"https://saveonsub.com/assets/social/{p['id']}.png"],
@@ -312,17 +299,15 @@ def bn_page(p):
 
     mk = p.get('market', {})
     if mk.get('surveyed'):
-        beat = frm <= mk['low']
-        honesty = ("সার্ভে করা অপশনগুলোর মধ্যে আমরাই সবচেয়ে সস্তা — এবং একমাত্র লিখিত ওয়ারেন্টিসহ।" if beat else
-                   "বাজারে আরও সস্তা আছে — কিন্তু pay-after-testing, লিখিত ওয়ারেন্টি বা সৎ ঝুঁকির লেবেল ছাড়া। পছন্দ আপনার।")
+        position = "cited range-এর সমান বা নিচে" if frm <= mk['low'] else "cited range-এর মধ্যে/উপরে"
         market_html = f"""<h2 class="mt3" style="font-size:22px">বাজারের বাস্তবতা — {esc(name)}</h2>
   <div class="tbl mt2"><table>
   <tr><th>কোথায়</th><th>দাম</th><th>ওয়ারেন্টি?</th></tr>
-  <tr><td>অফিসিয়াল (কার্ড লাগবে)</td><td>~৳{official_bdt:,}/মাস</td><td>নেই</td></tr>
-  <tr><td>বাংলাদেশ বাজার (সার্ভে করা)</td><td>৳{mk['low']:,} – ৳{mk['high']:,}</td><td>সাধারণত নেই/অস্পষ্ট</td></tr>
+  <tr><td>Official list, site anchor rate-এ converted</td><td>~৳{official_bdt:,}/মাস</td><td>বর্তমান provider price official link-এ verify করুন</td></tr>
+  <tr><td>বাংলাদেশ market snapshot</td><td>৳{mk['low']:,} – ৳{mk['high']:,}</td><td>Historical survey; seller access/warranty terms ভিন্ন হতে পারে</td></tr>
   <tr style="background:rgba(20,212,184,.07)"><td><b>SAVEONSUB</b></td><td><b>৳{frm:,} থেকে</b></td><td><b>✅ ১ ঘণ্টার রিপ্লেসমেন্ট, লিখিত</b></td></tr>
   </table></div>
-  <p style="font-size:13px;color:var(--muted);margin-top:8px"><i>(সোর্স: {esc(mk['src'])})</i>. {honesty}</p>"""
+  <p style="font-size:13px;color:var(--muted);margin-top:8px"><i>(সোর্স: {esc(mk['src'])})</i>. বর্তমান SaveOnSub from-price {position}; কেনার আগে competitor-এর current price নিজে verify করুন।</p>"""
     else:
         market_html = f"""<div class="notice mt3" style="font-size:13.5px">📊 <b>{esc(name)} — বাজার সার্ভে চলছে।</b> যাচাই না করা কোনো সংখ্যা আমরা লিখি না। ভালো দাম দেখেছেন? <a href="https://wa.me/8801305869242" style="color:var(--green2)">জানান</a> — যাচাই করে এখানে দেখাব।</div>"""
 
@@ -371,7 +356,7 @@ def bn_page(p):
   <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
     <span style="font-size:46px">{p['icon']}</span>
     <div><h1 style="font-size:clamp(26px,4vw,38px)">{esc(name)} — দাম বাংলাদেশে</h1>
-    <span class="cat" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:800"><a href="../c/{_cs}.html" style="color:inherit">{esc(p['category'])}</a>{' · 🔥 '+str(p['orders'])+'+ অর্ডার' if p.get('orders',0)>100 else ''}</span></div>
+    <span class="cat" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:800"><a href="../c/{_cs}.html" style="color:inherit">{esc(p['category'])}</a></span></div>
   </div>
   <div class="anchor mt2">
     <span class="official">অফিসিয়াল: ~৳{official_bdt:,}/মাস</span>

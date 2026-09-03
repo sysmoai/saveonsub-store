@@ -49,6 +49,17 @@ FORBIDDEN = {
     'Delivery SLA: 5–15 min on instant products': 'blanket delivery SLA must not be emitted by runtime ticker',
     '7-day guarantee on shared, 30-day on personal': 'blanket warranty durations require plan-specific evidence',
     'Official subscriptions trusted in Bangladesh': 'unsupported trust/official blanket claim',
+    '৩,০০০+ কাস্টমার': 'unsupported customer-count claim',
+    '3,000+ customers': 'unsupported customer-count claim',
+    'We send a WhatsApp reminder 3 days before expiry': 'renewal reminder automation is not implemented',
+    "You'll have gotten a WhatsApp reminder 3 days before": 'renewal reminder automation is not implemented',
+    'we send access BEFORE you pay': 'pay-after-testing must be product/order-specific',
+    'we send access before you pay': 'pay-after-testing must be product/order-specific',
+    'Shared seats violate provider ToS': 'blanket provider-policy statement is unsafe',
+    'No. ChatGPT keeps each user': 'absolute shared-privacy claim is unsafe',
+    'আপনার চ্যাট, ফাইল বা ব্যক্তিগত ডেটা কেউ দেখে না': 'absolute shared-privacy claim is unsafe',
+    'only one with a written warranty': 'unsupported competitor superlative',
+    'thousands of times daily': 'unsupported scam-frequency claim',
 }
 
 WA_RE = re.compile(r'https://wa\.me/(\d+)')
@@ -79,6 +90,19 @@ def main() -> int:
         for number in WA_RE.findall(text):
             if number != SUPPORT_PHONE_DIGITS:
                 hits.append((rel, f'wa.me/{number}', 'non-canonical SaveOnSub WhatsApp number'))
+
+    CATALOG_FORBIDDEN = {
+        'No. ChatGPT keeps each user': 'absolute shared-privacy claim is unsafe',
+        'আপনার চ্যাট, ফাইল বা ব্যক্তিগত ডেটা কেউ দেখে না': 'absolute shared-privacy claim is unsafe',
+        '3,000+ customers': 'unsupported customer-count claim',
+        '৩,০০০+ কাস্টমার': 'unsupported customer-count claim',
+        'We send a WhatsApp reminder 3 days before expiry': 'renewal reminder automation is not implemented',
+        "You'll have gotten a WhatsApp reminder 3 days before": 'renewal reminder automation is not implemented',
+    }
+    catalog_claim_text = (ROOT / 'catalog.json').read_text(encoding='utf-8', errors='replace') if (ROOT / 'catalog.json').exists() else ''
+    for phrase, reason in CATALOG_FORBIDDEN.items():
+        if phrase in catalog_claim_text:
+            hits.append(('catalog.json', phrase, reason))
 
     # Public-repository data boundary: internal market-research metadata
     # must not be committed into the customer catalog or browser catalog.

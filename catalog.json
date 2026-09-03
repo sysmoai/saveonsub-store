@@ -13,17 +13,17 @@
       "proposed-new"
     ],
     "tos_risk_levels": {
-      "official": "Official personal account in YOUR name/email — zero sharing, zero ban risk.",
-      "personal": "Private account delivered to you — full control, lowest risk.",
-      "shared-low": "Shared subscription, private profile/workspace per user. Provider tolerant historically.",
-      "shared-med": "Shared seat on a multi-user plan. Provider ToS prohibits; replacement warranty covers bans."
+      "official": "Provider-billed/official access path where available. Access is not shared by SaveOnSub; provider policies still apply.",
+      "personal": "Personal/customer-specific access. Exact credential or invite method is shown before payment; lower sharing risk than shared access.",
+      "shared-low": "Shared access with a separate profile/workspace where the product supports it. Privacy, continuity and provider-policy risk still depend on the service.",
+      "shared-med": "Shared or multi-user access. Higher privacy/continuity risk; provider rules vary by service. SaveOnSub warranty terms apply as stated before payment."
     },
     "delivery_slas": {
       "instant": "5–15 min",
       "fast": "1–2 hours",
       "managed": "1–2 days"
     },
-    "warranty": "Full replacement within 1 hour during support hours; 7-day guarantee on shared seats, 30-day on personal plans."
+    "warranty": "SaveOnSub policy: replacement within 1 hour during support hours where the stated warranty applies; shared plans carry 7-day coverage and personal plans 30-day coverage unless a product page states otherwise."
   },
   "categories": [
     "AI Assistants",
@@ -86,15 +86,15 @@
       "faq": [
         {
           "q": "Will others see my chats on a shared plan?",
-          "a": "No. ChatGPT keeps each user's conversations private — only the subscription is shared, never your chat history."
+          "a": "Privacy depends on the exact access method. Shared credentials can expose activity or data to other people with access. Do not use shared access for sensitive information; choose a personal/customer-specific plan when privacy is important."
         },
         {
           "q": "Which plan should I pick?",
-          "a": "Daily heavy use or work data → Personal. Study/casual use → Starter Shared saves 84% vs the official ৳2,200/mo."
+          "a": "Work or sensitive data → choose a personal/customer-specific plan. Study or low-risk use → compare the shared options, current displayed savings, access method and warranty before ordering."
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "Choose by task and current provider features: compare ChatGPT, Claude, Gemini and Perplexity on their official pages, then check the SaveOnSub product page for access type and current BDT price. Buy a second tool only if it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
@@ -102,7 +102,7 @@
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features, models and limits can change. SaveOnSub updates product information after a material change is verified; available features remain subject to the provider and the exact plan/access method purchased."
         }
       ],
       "bundles": [
@@ -111,7 +111,6 @@
       ],
       "status": "live",
       "bestseller_rank": 5,
-      "orders": 145,
       "market": {
         "low": 250,
         "high": 2399,
@@ -236,7 +235,7 @@
         },
         {
           "q": "Go vs Plus?",
-          "a": "Go = higher limits than free with the standard model; Plus = full model lineup + tools. Start with Go ৳199 shared; upgrade anytime by paying the difference."
+          "a": "Go is the lower-cost ChatGPT tier and Plus is the higher-capability tier. Compare the current official feature matrix first; the current SaveOnSub Go option and BDT price are shown on this page."
         },
         {
           "q": "Which AI assistant is best for my use case?",
@@ -252,13 +251,12 @@
         },
         {
           "q": "Who is ChatGPT Go for?",
-          "a": "ChatGPT Go is OpenAI's budget tier — more capacity than free, below Plus. Best for BD students who found Plus too costly but hit free-tier limits. At ৳450, it is the most affordable personal ChatGPT experience in Bangladesh."
+          "a": "ChatGPT Go is a lower-cost personal ChatGPT option for people who need more than the free tier but do not need every Plus capability. Check the current official feature matrix and this page’s current SaveOnSub price before choosing."
         }
       ],
       "bundles": [],
       "status": "new",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 199,
         "high": 500,
@@ -410,7 +408,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 699,
         "high": 2499,
@@ -554,7 +551,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 2499,
         "high": 5000,
@@ -704,7 +700,6 @@
       ],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 1495,
         "high": 2990,
@@ -848,7 +843,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 7999,
         "high": 14950,
@@ -984,7 +978,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 1,
-      "orders": 211,
       "market": {
         "low": 500,
         "high": 1500,
@@ -1139,7 +1132,6 @@
       "bundles": [],
       "status": "new",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 299,
         "high": 599,
@@ -1281,7 +1273,6 @@
       ],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 699,
         "high": 1495,
@@ -1442,7 +1433,6 @@
       ],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 350,
         "high": 699,
@@ -1578,7 +1568,6 @@
       "bundles": [],
       "status": "new",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 799,
         "high": 1299,
@@ -1714,7 +1703,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 1500,
         "high": 3000,
@@ -1888,7 +1876,6 @@
       ],
       "status": "live",
       "bestseller_rank": 4,
-      "orders": 156,
       "market": {
         "low": 499,
         "high": 1999,
@@ -2045,7 +2032,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 3,
-      "orders": 178,
       "market": {
         "low": 399,
         "high": 1199,
@@ -2189,7 +2175,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 299,
         "high": 999,
@@ -2331,7 +2316,6 @@
       ],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 100,
         "high": 499,
@@ -2471,7 +2455,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 399,
         "high": 599,
@@ -2613,7 +2596,6 @@
       ],
       "status": "gap-fill",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 699,
         "high": 5250,
@@ -2753,7 +2735,6 @@
       "bundles": [],
       "status": "gap-fill",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 1299,
         "high": 13000,
@@ -2901,7 +2882,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 499,
         "high": 1999,
@@ -3058,7 +3038,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 699,
         "high": 6899,
@@ -3211,7 +3190,6 @@
       ],
       "status": "gap-fill",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 399,
         "high": 1249,
@@ -3359,7 +3337,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 399,
         "high": 1650,
@@ -3510,7 +3487,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 1350,
         "high": 4200,
@@ -3650,7 +3626,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 199,
         "high": 599,
@@ -3790,7 +3765,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 399,
         "high": 999,
@@ -3932,7 +3906,6 @@
       ],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 590,
         "high": 1495,
@@ -4080,7 +4053,6 @@
       ],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 590,
         "high": 1990,
@@ -4227,7 +4199,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 399,
         "high": 999,
@@ -4359,7 +4330,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 250,
         "high": 799,
@@ -4499,7 +4469,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 199,
         "high": 890,
@@ -4639,7 +4608,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 2,
-      "orders": 201,
       "market": {
         "low": 149,
         "high": 470,
@@ -4779,7 +4747,6 @@
       "bundles": [],
       "status": "new",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 199,
         "high": 599,
@@ -4923,7 +4890,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 799,
         "high": 2499,
@@ -5067,7 +5033,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 199,
         "high": 799,
@@ -5207,7 +5172,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 800,
         "high": 1920,
@@ -5343,7 +5307,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 399,
         "high": 1499,
@@ -5479,7 +5442,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 250,
         "high": 450,
@@ -5630,7 +5592,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 99,
         "high": 219,
@@ -5770,7 +5731,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 99,
         "high": 239,
@@ -5921,7 +5881,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 199,
         "high": 599,
@@ -6072,7 +6031,6 @@
       "bundles": [],
       "status": "new",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 599,
         "high": 899,
@@ -6223,7 +6181,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 699,
         "high": 1500,
@@ -6351,7 +6308,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 999,
         "high": 2999,
@@ -6487,7 +6443,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 150,
         "high": 3499,
@@ -6634,7 +6589,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 249,
         "high": 1700,
@@ -6762,7 +6716,6 @@
       "bundles": [],
       "status": "new",
       "bestseller_rank": 0,
-      "orders": 0,
       "contains": [
         "chatgpt-plus",
         "canva-pro"
@@ -6887,7 +6840,6 @@
       "bundles": [],
       "status": "new",
       "bestseller_rank": 0,
-      "orders": 0,
       "contains": [
         "supergrok",
         "midjourney"
@@ -7012,7 +6964,6 @@
       "bundles": [],
       "status": "new",
       "bestseller_rank": 0,
-      "orders": 0,
       "contains": [
         "chatgpt-plus",
         "perplexity-pro"
@@ -7137,7 +7088,6 @@
       "bundles": [],
       "status": "new",
       "bestseller_rank": 0,
-      "orders": 0,
       "contains": [
         "invideo",
         "capcut-pro"
@@ -7262,7 +7212,6 @@
       "bundles": [],
       "status": "new",
       "bestseller_rank": 0,
-      "orders": 0,
       "contains": [
         "cursor",
         "github-copilot"
@@ -7399,7 +7348,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 499,
         "high": 1495,
@@ -7543,7 +7491,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 190,
         "high": 599,
@@ -7694,7 +7641,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 450,
         "high": 2999,
@@ -7834,7 +7780,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 199,
         "high": 899,
@@ -7978,7 +7923,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 399,
         "high": 999,
@@ -8122,7 +8066,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 399,
         "high": 999,
@@ -8264,7 +8207,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 399,
         "high": 2499,
@@ -8404,7 +8346,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 399,
         "high": 999,
@@ -8536,7 +8477,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 449,
         "high": 599,
@@ -8662,7 +8602,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 899,
         "high": 1499,
@@ -8789,7 +8728,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 3999,
         "high": 5999,
@@ -8915,7 +8853,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 15000,
         "high": 25000,
@@ -9041,7 +8978,6 @@
       "bundles": [],
       "status": "live",
       "bestseller_rank": 0,
-      "orders": 0,
       "market": {
         "low": 25000,
         "high": 50000,
@@ -9148,7 +9084,6 @@
         "chorki bKash",
         "বাংলা স্ট্রিমিং"
       ],
-      "orders": 85,
       "bestseller_rank": 0,
       "faq": [
         {
@@ -9221,7 +9156,6 @@
         "bongo premium price",
         "bangla movies streaming bd"
       ],
-      "orders": 60,
       "bestseller_rank": 0,
       "faq": [
         {
@@ -9295,7 +9229,6 @@
         "truecaller premium bKash",
         "truecaller gold bd"
       ],
-      "orders": 120,
       "bestseller_rank": 0,
       "faq": [
         {
@@ -9369,7 +9302,6 @@
         "deepseek api bKash",
         "deepseek vs chatgpt bd"
       ],
-      "orders": 45,
       "bestseller_rank": 0,
       "faq": [
         {
@@ -9443,7 +9375,6 @@
         "adobe all apps bd price",
         "adobe creative cloud bKash"
       ],
-      "orders": 70,
       "bestseller_rank": 0,
       "faq": [
         {
@@ -9516,7 +9447,6 @@
         "tinder gold price bd",
         "tinder subscription bKash"
       ],
-      "orders": 50,
       "bestseller_rank": 0,
       "faq": [
         {
@@ -9589,7 +9519,6 @@
         "pandapro price bd",
         "foodpanda subscription bKash"
       ],
-      "orders": 95,
       "bestseller_rank": 0,
       "faq": [
         {
@@ -9663,7 +9592,6 @@
         "pubg elite pass bKash",
         "pubg mobile bd"
       ],
-      "orders": 150,
       "bestseller_rank": 0,
       "faq": [
         {
