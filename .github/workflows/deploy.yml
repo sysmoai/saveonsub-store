@@ -24,8 +24,8 @@ jobs:
       - name: Price consistency check
         run: python check_prices.py
 
-      # Builds are NOT re-run here on purpose: generated pages are committed and
-      # CI ships exactly what was reviewed. stage_deploy.py also enforces the
+      # Generated pages are committed and CI ships exactly what was reviewed.
+      # stage_deploy.py creates the public-only _site directory and enforces the
       # locked SaveOnSub brand assets on every staged HTML page.
       - name: Stage publishable files
         run: python stage_deploy.py
@@ -36,13 +36,13 @@ jobs:
           node-version: '22'
 
       - name: Install Wrangler
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: npm install -g wrangler
 
-      # Deploys ./_site, never the repo root. Cloudflare occasionally returns
-      # API code 10429 (rate limited), especially after several rapid commits.
-      # Retry with bounded exponential backoff instead of turning a transient
-      # provider throttle into a false production failure.
+      # PRs run all validation/staging checks above but can never deploy.
+      # Production publishing happens only after code reaches main by push/merge.
       - name: Deploy to Cloudflare Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -63,4 +63,3 @@ jobs:
             echo "Transient deploy failure; waiting ${wait_seconds}s before retry."
             sleep "$wait_seconds"
           done
-        continue-on-error: false
