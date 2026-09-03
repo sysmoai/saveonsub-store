@@ -27,7 +27,9 @@ jobs:
       - name: Dependencies
         run: python -m pip install --disable-pip-version-check -r requirements.txt
       - name: Apply hardening
-        run: python ops/provider-truth/harden_wave1.py
+        run: |
+          python ops/provider-truth/harden_wave1.py
+          python ops/provider-truth/harden_wave1_policy.py
       - name: Rebuild and audit
         run: bash build_all.sh && python cache_safe_brand.py && python truth_guard.py
       - name: Verify public artifact
@@ -36,12 +38,17 @@ jobs:
           ! grep -R -Fq 'Price-match guarantee:' _site --include='*.html'
           ! grep -R -Fq 'Every subscription is official' _site --include='*.html'
           ! grep -R -Fq '100% customer-owned' _site --include='*.html'
+          ! grep -R -Fq '100% official' _site --include='*.html'
           ! grep -R -Fq 'our ৳500 is market leader' _site --include='*.html'
           ! grep -R -Fq '83% off special' _site --include='*.html'
+          ! grep -R -Fq 'replacement within 1 hour' _site --include='*.html'
+          ! grep -R -Fq 'not illegal for you under BD law' _site --include='*.html'
+          ! grep -R -Fq 'activated on YOUR own account' _site --include='*.html'
           grep -Fq 'Personal (your Gmail)' _site/p/google-ai-pro.html
           grep -Fq '5 TB' _site/p/google-ai-pro.html
           grep -Fq 'Official: ~৳2,455/mo ($19.99)' _site/p/google-ai-pro.html
           grep -Fq 'Independent service notice:' _site/p/google-ai-pro.html
+          grep -Fq 'written warranty/refund terms for the selected plan or order' _site/p/chatgpt-plus.html
           grep -Fq '/assets/logo-' _site/index.html
       - name: Commit hardening
         run: |
