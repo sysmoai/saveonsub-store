@@ -1,0 +1,39 @@
+name: Audit Remaining Brand and Factual Drift
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/audit-copy-brand-drift.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Locate remaining drift safely
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          needles = {
+            'legacy_theme': '#06181a',
+            'renewal_automation_claim': 'We WhatsApp you 3 days before expiry',
+            'blanket_provider_terms_claim': "Providers' terms prohibit seat-sharing",
+            'blanket_pay_after_testing_claim': 'we send access before you pay',
+            'blanket_warranty_claim': '7-day guarantee on shared, 30-day on personal',
+          }
+          for label, needle in needles.items():
+              hits=[]
+              for p in Path('.').rglob('*'):
+                  if not p.is_file() or any(x in p.parts for x in ('.git','.github','_site','node_modules')):
+                      continue
+                  if p.suffix.lower() not in {'.py','.html','.js','.css','.json','.md'}:
+                      continue
+                  try: text=p.read_text(encoding='utf-8',errors='ignore')
+                  except OSError: continue
+                  if needle in text: hits.append(p.as_posix())
+              print(label, len(hits), ','.join(hits[:40]))
+          PY
