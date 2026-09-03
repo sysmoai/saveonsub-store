@@ -1,0 +1,62 @@
+{
+  "checked_at": "2026-09-03",
+  "scope": [
+    "chatgpt-go",
+    "chatgpt-plus",
+    "claude-pro",
+    "google-ai-pro",
+    "perplexity-pro",
+    "supergrok"
+  ],
+  "commercial_price_rule": "No SaveOnSub plans[].bdt value changed in this refresh.",
+  "fx": {
+    "usd_bdt_anchor": 122.8,
+    "source": "Bangladesh Bank inter-bank USD/BDT WAR published 2026-09-03",
+    "purpose": "Approximate USD-list-price comparison only; provider checkout/localized pricing may differ."
+  },
+  "providers": {
+    "chatgpt-plus": {
+      "official_usd": 20,
+      "official_url": "https://chatgpt.com/pricing/",
+      "source_url": "https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus",
+      "note": "OpenAI lists ChatGPT Plus at USD 20/month on the web; model availability and usage limits can change."
+    },
+    "chatgpt-go": {
+      "official_usd": 8,
+      "official_url": "https://chatgpt.com/pricing/",
+      "source_url": "https://openai.com/index/introducing-chatgpt-go/",
+      "note": "OpenAI lists USD 8/month as the US ChatGPT Go price and states that Go pricing is localized in some markets."
+    },
+    "claude-pro": {
+      "official_usd": 20,
+      "official_url": "https://claude.com/pricing",
+      "source_url": "https://support.claude.com/en/articles/11049762-choose-a-claude-plan",
+      "note": "Anthropic lists Claude Pro at USD 20/month or USD 200/year; Max 5x and Max 20x are USD 100 and USD 200 monthly."
+    },
+    "google-ai-pro": {
+      "official_usd": 19.99,
+      "official_url": "https://one.google.com/about/google-ai-plans/",
+      "source_url": "https://one.google.com/about/plans",
+      "note": "Google lists Google AI Pro at USD 19.99/month in the referenced US plan view with 5 TB storage; benefits and availability can vary by country."
+    },
+    "perplexity-pro": {
+      "official_usd": 20,
+      "official_url": "https://www.perplexity.ai/enterprise/pricing",
+      "source_url": "https://www.perplexity.ai/help-center/en/articles/11187416-which-perplexity-subscription-plan-is-right-for-you",
+      "note": "Perplexity currently lists individual Pro at USD 20/month; plan capabilities and limits can change."
+    },
+    "supergrok": {
+      "official_usd": 30,
+      "official_url": "https://x.ai/pricing",
+      "source_url": "https://x.ai/pricing",
+      "note": "xAI lists SuperGrok at USD 30/month and SuperGrok Plus at USD 100/month. Lite and Heavy are listed as plan names; this audit does not assert an unverified current price for those tiers."
+    }
+  },
+  "content_corrections": [
+    "Google AI Pro storage corrected from stale 2 TB wording to current 5 TB wording.",
+    "Removed unsupported #1-seller / 211+ order marketing proof from Google AI Pro FAQs.",
+    "Removed blanket shared-seat mobile equivalence language.",
+    "Removed guaranteed 24-hour provider-change notification wording.",
+    "Replaced subjective/absolute Claude and Grok claims with current official-plan wording."
+  ]
+}

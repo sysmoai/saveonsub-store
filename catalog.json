@@ -2,9 +2,9 @@
   "meta": {
     "brand": "SAVEONSUB",
     "version": "1.0.0",
-    "built": "2026-07-11",
+    "built": "2026-09-03",
     "currency": "BDT",
-    "usd_anchor_rate": 110,
+    "usd_anchor_rate": 122.8,
     "price_precedence": [
       "aips-live-jul26",
       "verified-jul26",
@@ -23,7 +23,10 @@
       "fast": "1–2 hours",
       "managed": "1–2 days"
     },
-    "warranty": "SaveOnSub policy: replacement within 1 hour during support hours where the stated warranty applies; shared plans carry 7-day coverage and personal plans 30-day coverage unless a product page states otherwise."
+    "warranty": "SaveOnSub policy: replacement within 1 hour during support hours where the stated warranty applies; shared plans carry 7-day coverage and personal plans 30-day coverage unless a product page states otherwise.",
+    "provider_truth_checked_at": "2026-09-03",
+    "usd_anchor_checked_at": "2026-09-03",
+    "usd_anchor_source": "Bangladesh Bank USD/BDT inter-bank WAR published 2026-09-03 (previous working day)"
   },
   "categories": [
     "AI Assistants",
@@ -47,7 +50,7 @@
       "category": "AI Assistants",
       "icon": "🤖",
       "official_usd": 20,
-      "official_url": "https://openai.com/chatgpt/pricing/",
+      "official_url": "https://chatgpt.com/pricing/",
       "price_source": "ceo-approved-2026-07-27",
       "plans": [
         {
@@ -94,15 +97,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "Choose by task and current provider features: compare ChatGPT, Claude, Gemini and Perplexity on their official pages, then check the SaveOnSub product page for access type and current BDT price. Buy a second tool only if it adds a capability you actually need."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "Provider features, models and limits can change. SaveOnSub updates product information after a material change is verified; available features remain subject to the provider and the exact plan/access method purchased."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         }
       ],
       "bundles": [
@@ -200,6 +203,11 @@
           "chatgpt plus kivabe kinbo",
           "chatgpt plus bd taka"
         ]
+      },
+      "official_verification": {
+        "checked_at": "2026-09-03",
+        "source_url": "https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus",
+        "note": "OpenAI lists ChatGPT Plus at USD 20/month on the web; model availability and usage limits can change."
       }
     },
     {
@@ -239,15 +247,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         },
         {
           "q": "Who is ChatGPT Go for?",
@@ -335,6 +343,11 @@
           "chatgpt go kivabe kinbo",
           "chatgpt go bd taka"
         ]
+      },
+      "official_verification": {
+        "checked_at": "2026-09-03",
+        "source_url": "https://openai.com/index/introducing-chatgpt-go/",
+        "note": "OpenAI lists USD 8/month as the US ChatGPT Go price and states that Go pricing is localized in some markets."
       }
     },
     {
@@ -390,15 +403,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         },
         {
           "q": "How does ChatGPT Business differ from Plus?",
@@ -533,15 +546,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         },
         {
           "q": "Who actually needs ChatGPT Pro?",
@@ -680,19 +693,19 @@
         },
         {
           "q": "Is shared Claude risky?",
-          "a": "Anthropic actively bans shared seats. We recommend Personal; shared carries replacement warranty but real risk."
+          "a": "Shared credentials can create privacy, security, continuity and provider-policy risk. Use personal/customer-specific access for sensitive or business work, and review Anthropic’s current consumer terms before choosing any shared-access option."
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         }
       ],
       "bundles": [
@@ -778,6 +791,11 @@
           "claude pro kivabe kinbo",
           "claude pro bd taka"
         ]
+      },
+      "official_verification": {
+        "checked_at": "2026-09-03",
+        "source_url": "https://support.claude.com/en/articles/11049762-choose-a-claude-plan",
+        "note": "Anthropic lists Claude Pro at USD 20/month or USD 200/year; Max 5x and Max 20x are USD 100 and USD 200 monthly."
       }
     },
     {
@@ -825,15 +843,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         },
         {
           "q": "When should I choose Claude Max over Claude Pro?",
@@ -952,27 +970,27 @@
       "faq": [
         {
           "q": "What's included?",
-          "a": "Gemini Pro models, Veo video, NotebookLM, 2TB Google One storage — activated on your own Gmail for Personal."
+          "a": "Google currently lists Google AI Pro with 5 TB cloud storage plus expanded Gemini access, Deep Research, Gemini in supported Google apps, and expanded creative-model access. Exact benefits and availability vary by country and can change."
         },
         {
-          "q": "Why our #1 seller?",
-          "a": "211+ orders — the AIPS special: full Google AI Pro activated on YOUR OWN Gmail at ৳500 (official ~৳2,200). Personal account, zero sharing."
+          "q": "What does the current Google AI Pro plan include?",
+          "a": "Google currently lists 5 TB cloud storage plus expanded Gemini and AI features. Check Google’s current plan page for country-specific benefits, then compare the SaveOnSub access method and current BDT price before ordering."
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         },
         {
-          "q": "Why is Google AI Pro our #1 seller at ৳500?",
-          "a": "211+ orders. Personal account on YOUR Gmail. Includes Gemini Pro models, Veo video generation, NotebookLM, and 2TB Google One storage. This is the best single-AI value in BD — lower risk than shared, better value than official."
+          "q": "What should I verify before choosing Google AI Pro?",
+          "a": "Verify the current Google AI Pro benefits available to your country and account, then compare the SaveOnSub access type, current BDT price and warranty. Google currently lists 5 TB storage for AI Pro; other benefits can vary by country."
         }
       ],
       "bundles": [],
@@ -1067,6 +1085,11 @@
           "google ai pro kivabe kinbo",
           "google ai pro bd taka"
         ]
+      },
+      "official_verification": {
+        "checked_at": "2026-09-03",
+        "source_url": "https://one.google.com/about/plans",
+        "note": "Google lists Google AI Pro at USD 19.99/month in the referenced US plan view with 5 TB storage; benefits and availability can vary by country."
       }
     },
     {
@@ -1114,15 +1137,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         },
         {
           "q": "Google AI Plus vs Pro — which budget tier to pick?",
@@ -1218,7 +1241,7 @@
       "category": "AI Assistants",
       "icon": "⚡",
       "official_usd": 30,
-      "official_url": "https://x.ai",
+      "official_url": "https://x.ai/pricing",
       "price_source": "aips-live-jul26",
       "plans": [
         {
@@ -1249,23 +1272,23 @@
       "faq": [
         {
           "q": "Why Grok?",
-          "a": "Real-time X/Twitter data, strong reasoning, fewer refusals — popular with traders and researchers."
+          "a": "xAI currently highlights real-time web and X search, Grok 4.6, connectors, image/video generation and higher rate limits on paid SuperGrok plans. Check the current xAI feature matrix because models and limits can change."
         },
         {
           "q": "Are there other Grok tiers?",
-          "a": "Yes — SuperGrok Lite $10/mo official for basic paid access, and Heavy $300/mo for extreme users. Ask on WhatsApp if you want Lite; most users fit standard SuperGrok."
+          "a": "Yes. xAI currently lists SuperGrok at USD 30/month and SuperGrok Plus at USD 100/month, and also lists Lite and Heavy plan names. Check xAI’s live pricing page for the current price and limits of every tier before buying."
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         }
       ],
       "bundles": [
@@ -1362,6 +1385,11 @@
           "supergrok kivabe kinbo",
           "supergrok bd taka"
         ]
+      },
+      "official_verification": {
+        "checked_at": "2026-09-03",
+        "source_url": "https://x.ai/pricing",
+        "note": "xAI lists SuperGrok at USD 30/month and SuperGrok Plus at USD 100/month. Lite and Heavy are listed as plan names; this audit does not assert an unverified current price for those tiers."
       }
     },
     {
@@ -1370,7 +1398,7 @@
       "category": "AI Assistants",
       "icon": "🔍",
       "official_usd": 20,
-      "official_url": "https://www.perplexity.ai/pro",
+      "official_url": "https://www.perplexity.ai/enterprise/pricing",
       "price_source": "aips-live-jul26",
       "plans": [
         {
@@ -1417,15 +1445,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         }
       ],
       "bundles": [
@@ -1511,6 +1539,11 @@
           "perplexity pro kivabe kinbo",
           "perplexity pro bd taka"
         ]
+      },
+      "official_verification": {
+        "checked_at": "2026-09-03",
+        "source_url": "https://www.perplexity.ai/help-center/en/articles/11187416-which-perplexity-subscription-plan-is-right-for-you",
+        "note": "Perplexity currently lists individual Pro at USD 20/month; plan capabilities and limits can change."
       }
     },
     {
@@ -1550,15 +1583,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         },
         {
           "q": "Why Mistral when ChatGPT and Claude dominate?",
@@ -1685,15 +1718,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         },
         {
           "q": "What can Manus actually do autonomously?",
@@ -7330,15 +7363,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "There is no single best assistant for every task. Compare the current official plan pages for ChatGPT, Claude, Gemini, Perplexity and other tools, then compare the SaveOnSub access type, current BDT price and warranty before ordering. Choose a second tool only when it adds a capability you actually need."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Most major AI providers offer web and/or mobile apps, subject to current regional and platform availability. The access method still matters: shared credentials can create privacy, session and continuity risks, so use personal/customer-specific access for sensitive work."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider models, features, usage limits and prices can change. Exact access depends on the provider and the purchased plan/access method; check the linked official source and the current SaveOnSub page before ordering or renewing."
         },
         {
           "q": "Microsoft Copilot Pro vs ChatGPT Plus — which for BD office work?",
