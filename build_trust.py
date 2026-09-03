@@ -56,14 +56,14 @@ pages = {}
 
 # ---------- FAQ (22 questions — every playbook objection) ----------
 FAQS = [
- ("Is SAVEONSUB legit? How do I know you're not a scam?", "Fair question — BD is full of subscription scams. Proof: Bangladesh's Subscription OS trusted in Bangladesh, part of the verifiable SYSmoAI family (sysmoai.com, aipremiumshop.com), public WhatsApp with a human reply, and a <b>pay-after-testing</b> option where we send access BEFORE you pay. Scammers can't afford to do that."),
+ ("Is SAVEONSUB legit? How do I know you're not a scam?", "Fair question — BD is full of subscription scams. Proof: Bangladesh's Subscription OS trusted in Bangladesh, part of the verifiable SYSmoAI family (sysmoai.com, aipremiumshop.com), public WhatsApp with a human reply, and a <b>pay-after-testing</b> option where we send access BEFORE you pay. On eligible orders, you can verify that access works before completing payment."),
  ("Why is it so cheap? What's the catch?", "Two honest reasons: (1) shared plans split one subscription's cost across several users — that's the discount, and it's also why providers' terms don't allow it (the 'catch', which we label on every product and cover with warranty); (2) personal plans use regional pricing and bulk activation. We show the official price next to ours so you always see what you're saving and why."),
- ("Will other people see my ChatGPT chats on a shared plan?", "No. ChatGPT keeps every user's conversations private — other seat-holders cannot see your chats, history or custom instructions. Only the subscription cost is shared, never your data."),
+ ("Will other people see my ChatGPT chats on a shared plan?", "Privacy depends on the exact access method. Before payment, we disclose whether you receive your own account/workspace seat or shared credentials. Do not put sensitive information into any shared-access product. If privacy is critical, choose a personal/customer-owned plan."),
  ("What's the difference between Shared, Personal and Official?", "<b>Official</b> = you pay the provider directly, we just guide/activate (e.g. Spotify BD ৳219). <b>Personal</b> = a subscription on YOUR OWN email — full control, lowest risk. <b>Shared</b> = a seat on a multi-user plan — 70-85% cheaper, provider terms prohibit it, so seats occasionally reset; our warranty replaces them within 1 hour."),
  ("Can a shared account get banned? What happens then?", "Yes, it happens — that's the honest trade-off for the price. When it does: message us, replacement within 1 hour during support hours, 7-day guarantee on every shared seat. If we can't replace, you get a refund for unused days."),
  ("How fast is delivery?", "Instant products: 5–15 minutes on WhatsApp. Fast products: 1–2 hours. Managed personal accounts: 1–2 days. The SLA is printed on every product page — if we miss it badly, ask for a free extension."),
  ("How do I pay? I don't have a card.", "bKash, Nagad or Rocket send-money — that's the point. No card, no bank account, no international payment. At checkout you get our merchant number (+880 1305-869242) with a copy button and your order ID as reference."),
- ("What is pay-after-testing?", "For nervous first-timers: we send the access first, you verify it works, then you pay within an hour. Available on most instant products for first orders. No other BD store offers this — because they can't."),
+ ("What is pay-after-testing?", "For nervous first-timers: we send the access first, you verify it works, then you pay within an hour. Available on most instant products for first orders. Availability depends on the product and first-order eligibility; ask before ordering."),
  ("Do you auto-charge renewals?", "Never. There is no auto-charge — you pay manually each time. We send a WhatsApp reminder 3 days before expiry with a one-tap renewal link. Ignore it and the subscription simply lapses. Your money stays yours."),
  ("Can I get a refund?", "Yes — see the <a href='refund.html' style='color:var(--green2)'>refund policy</a>. Short version: not delivered in 24h → full refund; dead seat we can't replace → refund for unused days; you changed your mind before delivery → full refund; after successful delivery → replacement-first, refund if we fail."),
  ("Can I get a discount?", "Three honest ways: pay 3 months upfront (10% off), refer a friend (you both get ৳100 off), or students get ৳100 off ChatGPT personal plans with a student ID. Ask on WhatsApp."),
@@ -72,33 +72,33 @@ FAQS = [
  ("I'm a student — what's the cheapest way to get AI tools?", "Real talk: GitHub Copilot is FREE with the Student Pack, Spotify BD student is ৳109 official, Canva Education is free for eligible institutions. For the rest: ChatGPT shared ৳499 or the Research Bundle ৳600 are the best student deals. We'll always point out the free path first."),
  ("Do you sell accounts with MY name on certificates (Coursera etc.)?", "Shared Coursera prints the account-holder's name on certificates — useless for your CV. If you need YOUR name, take the Personal plan. We say this on the product page before you pay, not after."),
  ("What devices/apps do these work on?", "Same as official — you're using the real service. Shared seats sometimes limit simultaneous devices (shown on the product). Personal plans have no restrictions."),
- ("Can I upgrade from shared to personal later?", "Yes — pay the difference any time and we migrate you. Many customers start shared at ৳350, then upgrade to personal once the tool starts earning them money."),
+ ("Can I upgrade from shared to personal later?", "Yes — pay the difference any time and we migrate you. Many customers start shared at ৳499, then upgrade to personal once the tool starts earning them money."),
  ("Do you offer team/business plans?", "Yes — ChatGPT Business seats, bulk Canva, and custom team setups. Message WhatsApp with your team size; bulk pricing starts at 3+ seats (10-15% off)."),
  ("What happens when my subscription expires?", "It just stops — no auto-charge, no debt. You'll have gotten a WhatsApp reminder 3 days before. Renew with one tap or walk away; your choice, no pressure."),
- ("Why should I trust you over Facebook/Telegram sellers?", "FB/Telegram sellers vanish when a seat dies — no brand, no website, no recourse. We have a public brand (SYSmoAI family), a written warranty, a refund policy, this store, and a 2-year track record. When something breaks, we're still here at the same number."),
- ("Is buying shared subscriptions legal in Bangladesh?", "It's not illegal for you — it's a violation of the provider's terms of service (their contract with the account holder), not BD law. Worst case for you: the seat gets reset and we replace it. We label this honestly so you decide with full information."),
+ ("Why should I trust you over Facebook/Telegram sellers?", "FB/Telegram sellers vanish when a seat dies — no brand, no website, no recourse. We have a public brand (SYSmoAI family), a written warranty, a refund policy, this store, and published policies and a persistent public support channel. When something breaks, we're still here at the same number."),
+ ("Is buying shared subscriptions legal in Bangladesh?", "We do not give legal advice. Provider terms and applicable law can differ by service and access method. Shared credentials may violate a provider's terms. We disclose the access method and known provider-policy restrictions before payment so you can decide whether the plan fits your risk tolerance."),
  ("Do you have a physical office?", "We operate online-first from Dhaka with registered company paperwork in progress (SYSmoAI). All support runs through WhatsApp with real humans — usually the founder's team directly."),
  ("What is the official ChatGPT price in Bangladesh and why can't I pay with bKash?",
-  "ChatGPT Plus costs $20/month (~৳2,200 as of July 2026). OpenAI only accepts international Visa/Mastercard — no bKash, no Nagad. Bangladesh has roughly 3 million credit cards for 170 million people. Resellers are the only path for the other 167 million. We sell shared from ৳350 (84% cheaper, warranty) and personal from ৳2,990."),
+  "ChatGPT Plus is $20/month on the web. OpenAI currently supports BDT-denominated web billing in Bangladesh; standard web payment methods include credit/debit cards, and available methods can vary by platform or checkout. SAVEONSUB offers local-payment purchase paths on eligible plans. Before payment, check the product page for the exact access method and current SAVEONSUB price."),
  ("Is Spotify available officially in Bangladesh?",
   "Yes — Spotify launched BD pricing in 2024: Individual ৳219/mo, Student ৳109, Duo ৳299, Family ৳379. Pay with local methods including bKash. We recommend official for zero risk. We also offer family slots at ৳129 — but official is the right answer for most people, and we say that."),
  ("What happens if I get scammed by a Facebook seller?",
-  "The seller blocks you and disappears. No brand, no website, no recourse. This happens thousands of times daily across BD subscription groups. Buy only from sellers with a real website, a written warranty, a refund policy, and a public WhatsApp number active for over a year. Scammers cannot sustain those."),
+  "The seller blocks you and disappears. No brand, no website, no recourse. This happens thousands of times daily across BD subscription groups. Buy only from sellers with a real website, a written warranty, a refund policy, and a public WhatsApp number active for over a year. Those checks make a seller easier to verify and contact if something goes wrong."),
  ("Which AI tools are actually worth it for Bangladeshi freelancers?",
   "Fiverr thumbnails → Midjourney ৳1,199 or Leonardo ৳599. Copywriting → ChatGPT Plus ৳499 or Jasper ৳1,520. Video editing → CapCut Pro ৳399. Web dev → GitHub Copilot FREE for students, Cursor ৳590. The Research Bundle (ChatGPT+Perplexity ৳600) covers 80% of use. Start free, buy one tool when free stops you, stack slowly."),
  ("How big is the Bangladesh subscription market?",
-  "BD ecommerce crossed $4 billion in 2026. Mobile money (bKash 70M users, Nagad, Rocket) processes more transactions than cards by far. Digital subscriptions are one of the fastest-growing segments because every global service assumes credit card access. Honest resellers disclose the mechanism; dishonest ones sell 'lifetime Netflix ৳999' — impossible since Netflix charges monthly."),
+  "Bangladesh has a large mobile-first digital-payment market, but we do not publish market-size claims without a dated source. SAVEONSUB focuses on the narrower problem we can verify directly: helping Bangladesh customers compare subscription access methods, prices, payment paths and support conditions clearly."),
  ("Can I resell subscriptions to others?",
-  "Legally in Bangladesh: yes — no law prohibits reselling digital access. Practically: only if you understand provider ToS and can absorb seat-reset risk. We have helped 50+ people start small reseller operations — message WhatsApp for honest advice. But reselling without telling customers about shared-seat reality is scamming. Do not do it."),
+  "We do not provide legal advice on reselling. Provider terms and applicable law vary by service and business model. If you resell any digital access, verify the provider's rules, disclose the access method truthfully, protect customer data, and get qualified legal advice when needed."),
  ("Why publish competitor prices?",
-  "Because hiding them is how dishonest sellers win. FanFlix sells ChatGPT at ৳500, we sell at ৳350 with warranty. BD Subscription lists 250+ products. We publish the full picture because trust earns repeat customers, and repeat customers are the only business model that survives in BD."),
+  "Because hiding them is how dishonest sellers win. FanFlix sells ChatGPT at ৳500, we sell at ৳499 with warranty. BD Subscription lists 250+ products. We publish the full picture because trust earns repeat customers, and repeat customers are the only business model that survives in BD."),
 ]
 body = f"""<span class="pill">FAQ</span>
 <h1 style="font-size:clamp(26px,4vw,38px)">Every question. <span class="grad-text">Straight answers.</span></h1>
 <p class="sub">30 real questions from Bangladesh's Subscription OS — answered the way we'd want to be answered.</p>
 <div class="mt3">{details(FAQS)}</div>
 <div class="notice green mt3">Didn't find yours? <a href="https://wa.me/8801305869242?text=Question:" style="color:var(--green2);font-weight:800">Ask on WhatsApp</a> — human reply, usually in minutes.</div>"""
-pages['faq'] = dict(title="FAQ — 22 Straight Answers | SAVEONSUB", desc="Is it safe? Will others see my chats? Refunds? Ban risk? Every question about buying subscriptions in Bangladesh — answered honestly.", crumb="FAQ", body=body, schema=faq_schema([(q, html.unescape(a).replace('<b>','').replace('</b>','')) for q,a in FAQS[:10]]), robots="")
+pages['faq'] = dict(title="FAQ — 30 Straight Answers | SAVEONSUB", desc="Is it safe? Will others see my chats? Refunds? Ban risk? Every question about buying subscriptions in Bangladesh — answered honestly.", crumb="FAQ", body=body, schema=faq_schema([(q, html.unescape(a).replace('<b>','').replace('</b>','')) for q,a in FAQS[:10]]), robots="")
 
 # ---------- Warranty ----------
 body = """<span class="pill">🛡️ WARRANTY</span>
@@ -371,19 +371,19 @@ import os as _os
 _os.makedirs('bn', exist_ok=True)
 FAQS_BN = [
  ("SAVEONSUB কি আসল? স্ক্যাম না তো?",
-  "ন্যায্য প্রশ্ন — বাংলাদেশে সাবস্ক্রিপশন স্ক্যাম অনেক। প্রমাণ: ২০২৪ থেকে ৩,০০০+ কাস্টমার, যাচাইযোগ্য SYSmoAI পরিবার (sysmoai.com, aipremiumshop.com), পাবলিক হোয়াটসঅ্যাপে মানুষ উত্তর দেয়, আর <b>pay-after-testing</b> — আগে অ্যাক্সেস, যাচাই করে তারপর টাকা। স্ক্যামার এটা পারে না।"),
+  "ন্যায্য প্রশ্ন — বাংলাদেশে সাবস্ক্রিপশন স্ক্যাম অনেক। প্রমাণ: ২০২৪ থেকে ৩,০০০+ কাস্টমার, যাচাইযোগ্য SYSmoAI পরিবার (sysmoai.com, aipremiumshop.com), পাবলিক হোয়াটসঅ্যাপে মানুষ উত্তর দেয়, আর <b>pay-after-testing</b> — আগে অ্যাক্সেস, যাচাই করে তারপর টাকা। যোগ্য অর্ডারে পেমেন্ট সম্পন্ন করার আগে অ্যাক্সেস কাজ করছে কি না যাচাই করা যায়।"),
  ("এত সস্তা কেন? সমস্যা কোথায়?",
   "দুটি সৎ কারণ: (১) শেয়ার্ড প্ল্যানে একটি সাবস্ক্রিপশনের খরচ কয়েকজন ভাগ করে নেয় — এটাই ডিসকাউন্ট, আর এ কারণেই প্রোভাইডারের শর্তে এটা অনুমোদিত নয় (এই 'সমস্যা'টা আমরা প্রতিটি প্রোডাক্টে লিখে দিই ও ওয়ারেন্টিতে কভার করি); (২) পার্সোনাল প্ল্যানে রিজিওনাল প্রাইসিং। অফিসিয়াল দামটাও পাশে দেখাই, যাতে কী বাঁচছে বোঝেন।"),
  ("শেয়ার্ড প্ল্যানে আমার ChatGPT চ্যাট কি অন্যরা দেখবে?",
-  "না। ChatGPT প্রত্যেকের কথোপকথন আলাদা ও প্রাইভেট রাখে — অন্য সিট-হোল্ডাররা আপনার চ্যাট, হিস্ট্রি বা কাস্টম ইনস্ট্রাকশন দেখতে পারে না। শুধু খরচটা শেয়ার হয়, ডেটা কখনো নয়।"),
+  "প্রাইভেসি নির্ভর করে অ্যাক্সেস মেথডের ওপর। কেনার আগে আমরা জানাই আপনি নিজের অ্যাকাউন্ট/ওয়ার্কস্পেস সিট পাচ্ছেন নাকি শেয়ার্ড ক্রেডেনশিয়াল। কোনো শেয়ার্ড-অ্যাক্সেস প্রোডাক্টে সংবেদনশীল তথ্য না দেওয়াই নিরাপদ। সর্বোচ্চ প্রাইভেসি দরকার হলে পার্সোনাল/নিজস্ব অ্যাকাউন্ট নিন।"),
  ("শেয়ার্ড, পার্সোনাল আর অফিসিয়াল — পার্থক্য কী?",
   "<b>অফিসিয়াল</b> = আপনি সরাসরি প্রোভাইডারকে দেন, আমরা শুধু সেটআপে সাহায্য করি। <b>পার্সোনাল</b> = আপনার নিজের ইমেইলে সাবস্ক্রিপশন — পূর্ণ নিয়ন্ত্রণ, সবচেয়ে কম ঝুঁকি। <b>শেয়ার্ড</b> = মাল্টি-ইউজার প্ল্যানে একটি সিট — ৭০–৮৫% সস্তা, শর্ত অনুযায়ী অনুমোদিত নয়, তাই মাঝে মাঝে রিসেট হয়; আমরা ১ ঘণ্টায় রিপ্লেস করি।"),
  ("শেয়ার্ড অ্যাকাউন্ট কি ব্যান হতে পারে? হলে কী হবে?",
   "হ্যাঁ, হতে পারে — সস্তা দামের সৎ ট্রেড-অফ এটাই। হলে: মেসেজ দিন, সাপোর্ট আওয়ারে ১ ঘণ্টার মধ্যে রিপ্লেসমেন্ট, প্রতিটি শেয়ার্ড সিটে ৭ দিন গ্যারান্টি। রিপ্লেস করতে না পারলে বাকি দিনের রিফান্ড।"),
  ("কীভাবে পেমেন্ট করব? আমার কার্ড নেই।",
-  "বিকাশ, নগদ বা রকেটে সেন্ড মানি — এটাই মূল কথা। কার্ড, ব্যাংক অ্যাকাউন্ট বা ইন্টারন্যাশনাল পেমেন্ট লাগবে না। চেকআউটে মার্চেন্ট নম্বর (+৮৮০ ১৭১৪-৬৭২০৯৪) কপি বাটনসহ আর অর্ডার আইডি রেফারেন্সে দেওয়া থাকে।"),
+  "বিকাশ, নগদ বা রকেটে সেন্ড মানি — এটাই মূল কথা। কার্ড, ব্যাংক অ্যাকাউন্ট বা ইন্টারন্যাশনাল পেমেন্ট লাগবে না। চেকআউটে মার্চেন্ট নম্বর (+৮৮০ ১৩০৫-৮৬৯২৪২) কপি বাটনসহ আর অর্ডার আইডি রেফারেন্সে দেওয়া থাকে।"),
  ("Pay-after-testing জিনিসটা কী?",
-  "নার্ভাস নতুনদের জন্য: আগে অ্যাক্সেস পাঠাই, আপনি যাচাই করেন যে কাজ করছে, তারপর এক ঘণ্টার মধ্যে টাকা দেন। বেশিরভাগ ইনস্ট্যান্ট প্রোডাক্টে প্রথম অর্ডারে পাওয়া যায়। বাংলাদেশে আর কেউ এটা দেয় না।"),
+  "নার্ভাস নতুনদের জন্য: আগে অ্যাক্সেস পাঠাই, আপনি যাচাই করেন যে কাজ করছে, তারপর এক ঘণ্টার মধ্যে টাকা দেন। বেশিরভাগ ইনস্ট্যান্ট প্রোডাক্টে প্রথম অর্ডারে পাওয়া যায়। প্রোডাক্ট ও প্রথম অর্ডারের যোগ্যতা অনুযায়ী এটি পাওয়া যায়; অর্ডারের আগে জেনে নিন।"),
  ("রিনিউয়ালে কি অটো-চার্জ হয়?",
   "কখনো না। কোনো অটো-চার্জ নেই — প্রতিবার আপনি ম্যানুয়ালি পে করেন। মেয়াদ শেষের ৩ দিন আগে হোয়াটসঅ্যাপে রিমাইন্ডার দিই; না চাইলে সাবস্ক্রিপশন এমনিই শেষ। আপনার টাকা আপনার নিয়ন্ত্রণে।"),
  ("রিফান্ড পাওয়া যাবে?",
@@ -391,9 +391,9 @@ FAQS_BN = [
  ("কোন AI কিনব বুঝতে পারছি না।",
   "৬০ সেকেন্ডের <a href='../quiz.html' style='color:var(--green2)'>Find My AI কুইজ</a> দিন — ৪টা প্রশ্ন, একটা সৎ পরামর্শ। বা হোয়াটসঅ্যাপে জিজ্ঞেস করুন। ফ্রি টিয়ার যথেষ্ট হলে সেটাই বলব — সত্যি।"),
  ("ফেসবুক/টেলিগ্রাম সেলারের বদলে আপনাদের বিশ্বাস করব কেন?",
-  "সিট নষ্ট হলে FB/টেলিগ্রাম সেলার উধাও — ব্র্যান্ড নেই, ওয়েবসাইট নেই, রিকোর্স নেই। আমাদের পাবলিক ব্র্যান্ড (SYSmoAI), লিখিত ওয়ারেন্টি, রিফান্ড পলিসি, এই স্টোর আর ২ বছরের ট্র্যাক রেকর্ড আছে। সমস্যা হলে আমরা একই নম্বরে আছি।"),
+  "সিট নষ্ট হলে FB/টেলিগ্রাম সেলার উধাও — ব্র্যান্ড নেই, ওয়েবসাইট নেই, রিকোর্স নেই। আমাদের পাবলিক ব্র্যান্ড (SYSmoAI), লিখিত ওয়ারেন্টি, রিফান্ড পলিসি, এই স্টোর এবং পাবলিক নীতিমালা ও স্থায়ী সাপোর্ট চ্যানেল আছে। সমস্যা হলে আমরা একই নম্বরে আছি।"),
  ("বাংলাদেশে শেয়ার্ড সাবস্ক্রিপশন কেনা কি বৈধ?",
-  "আপনার জন্য এটা অবৈধ নয় — এটা প্রোভাইডারের শর্ত (তাদের সাথে অ্যাকাউন্ট হোল্ডারের চুক্তি) লঙ্ঘন, বাংলাদেশের আইন নয়। আপনার সবচেয়ে খারাপ পরিস্থিতি: সিট রিসেট হবে, আমরা রিপ্লেস করব। এটা আমরা সৎভাবে লিখে দিই যাতে পূর্ণ তথ্য নিয়ে সিদ্ধান্ত নেন।"),
+  "আমরা আইনি পরামর্শ দিই না। প্রোভাইডারের শর্ত ও প্রযোজ্য আইন সার্ভিস ও অ্যাক্সেস মেথডভেদে আলাদা হতে পারে। শেয়ার্ড ক্রেডেনশিয়াল প্রোভাইডারের শর্ত ভঙ্গ করতে পারে। পেমেন্টের আগে অ্যাক্সেস মেথড ও জানা প্রোভাইডার-পলিসি সীমাবদ্ধতা জানাই, যাতে আপনি ঝুঁকি বুঝে সিদ্ধান্ত নিতে পারেন।"),
 ]
 _bn_faq_details = "".join(f"<details{' open' if i==0 else ''}><summary>{esc(q)}</summary><p>{a}</p></details>" for i,(q,a) in enumerate(FAQS_BN))
 _bn_faq_schema = '<script type="application/ld+json">'+json.dumps({"@context":"https://schema.org","@type":"FAQPage",
@@ -448,7 +448,7 @@ print("OK: generated bn/faq.html + linked English FAQ")
 # ---------- Bangla How-to-Order (bn/how-to-order.html) — completes the Bangla conversion path ----------
 _howto_ld_bn = {"@context":"https://schema.org","@type":"HowTo","name":"বিকাশে SAVEONSUB থেকে সাবস্ক্রিপশন কেনার নিয়ম","totalTime":"PT3M",
  "step":[{"@type":"HowToStep","position":1,"name":"প্রোডাক্ট বেছে নিন","text":"সব প্রোডাক্ট দেখুন বা Find My AI কুইজ দিন। কার্টে যোগ করুন — টাকায় দাম, প্রতিটি প্ল্যানে সৎ লেবেল।"},
- {"@type":"HowToStep","position":2,"name":"বিকাশ/নগদ/রকেটে টাকা পাঠান","text":"চেকআউটে মার্চেন্ট নম্বর +৮৮০ ১৭১৪-৬৭২০৯৪ কপি করে অর্ডার আইডি রেফারেন্সে দিয়ে মোট টাকা সেন্ড মানি করুন।"},
+ {"@type":"HowToStep","position":2,"name":"বিকাশ/নগদ/রকেটে টাকা পাঠান","text":"চেকআউটে মার্চেন্ট নম্বর +৮৮০ ১৩০৫-৮৬৯২৪২ কপি করে অর্ডার আইডি রেফারেন্সে দিয়ে মোট টাকা সেন্ড মানি করুন।"},
  {"@type":"HowToStep","position":3,"name":"হোয়াটসঅ্যাপে কনফার্ম করুন","text":"কনফার্ম বাটনে চাপ দিন — অর্ডারসহ একটি রেডি মেসেজ খুলবে, পাঠিয়ে দিন।"},
  {"@type":"HowToStep","position":4,"name":"৫–১৫ মিনিটে পান","text":"অ্যাক্সেস বা ইনভাইট হোয়াটসঅ্যাপে আসবে। প্রথম মিনিট থেকেই ওয়ারেন্টি চালু।"}]}
 bn_howto = f"""<!DOCTYPE html>
@@ -481,7 +481,7 @@ bn_howto = f"""<!DOCTYPE html>
   <h1 style="font-size:clamp(26px,4vw,38px)">প্রথমবার? <span class="grad-text">৩ মিনিটে ডেলিভারি পর্যন্ত।</span></h1>
   <div class="steps mt3" style="grid-template-columns:repeat(2,1fr)">
     <div class="step"><h3>প্রোডাক্ট বেছে নিন</h3><p><a href="../all.html" style="color:var(--green2)">সব প্রোডাক্ট</a> দেখুন বা <a href="../quiz.html" style="color:var(--green2)">কুইজ</a> দিন। প্রতিটি প্ল্যানে দাম, সৎ ঝুঁকির লেবেল ও ডেলিভারির সময় লেখা। <b>কার্টে যোগ করুন</b>।</p></div>
-    <div class="step"><h3>টাকা পাঠান</h3><p>বিকাশ/নগদ/রকেট খুলুন → <b>Send Money</b> → আমাদের নম্বর <b>+৮৮০ ১৭১৪-৬৭২০৯৪</b> (চেকআউটে কপি বাটন) → অ্যামাউন্ট = কার্টের মোট → রেফারেন্স = আপনার অর্ডার আইডি।</p></div>
+    <div class="step"><h3>টাকা পাঠান</h3><p>বিকাশ/নগদ/রকেট খুলুন → <b>Send Money</b> → আমাদের নম্বর <b>+৮৮০ ১৩০৫-৮৬৯২৪২</b> (চেকআউটে কপি বাটন) → অ্যামাউন্ট = কার্টের মোট → রেফারেন্স = আপনার অর্ডার আইডি।</p></div>
     <div class="step"><h3>হোয়াটসঅ্যাপে কনফার্ম</h3><p>বড় সবুজ বাটনে চাপ দিন। অর্ডারসহ একটি মেসেজ রেডি হয়ে খুলবে — শুধু পাঠান। TxnID থাকলে দিন, দ্রুত হয়।</p></div>
     <div class="step"><h3>ডেলিভারি নিন</h3><p>ইনস্ট্যান্ট প্রোডাক্ট <b>৫–১৫ মিনিটে</b> সেটআপ নির্দেশনাসহ আসে। শেয়ার্ড সিটের নিয়ম পড়ুন, উপভোগ করুন, আর নম্বরটা সেভ রাখুন — ওয়ারেন্টি একটা মেসেজ দূরে।</p></div>
   </div>

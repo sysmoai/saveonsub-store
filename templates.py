@@ -46,7 +46,7 @@ def footer_en(rel=""):
   <div class="fcols">
     <div>
       <span class="logo">SAVE<em>ON</em>SUB</span>
-      <p style="margin-top:10px;max-width:280px">Bangladesh's Subscription Operating System — official, customer-owned subscriptions paid in BDT — Dhaka, Bangladesh.</p>
+      <p style="margin-top:10px;max-width:280px">Bangladesh's Subscription Operating System — clearly labeled subscription options with local BDT payment support — Dhaka, Bangladesh.</p>
     </div>
     <div>
       <b>Store</b>
@@ -122,7 +122,7 @@ def footer_bn(rel=""):
   <div class="fcols">
     <div>
       <span class="logo">SAVE<em>ON</em>SUB</span>
-      <p style="margin-top:10px;max-width:280px">বাংলাদেশের সাবস্ক্রিপশন অপারেটিং সিস্টেম — অফিসিয়াল, গ্রাহক-নিয়ন্ত্রিত সাবস্ক্রিপশন — ঢাকা, বাংলাদেশ।</p>
+      <p style="margin-top:10px;max-width:280px">বাংলাদেশের সাবস্ক্রিপশন অপারেটিং সিস্টেম — পরিষ্কারভাবে লেবেল করা সাবস্ক্রিপশন অপশন ও BDT পেমেন্ট সাপোর্ট — ঢাকা, বাংলাদেশ।</p>
     </div>
     <div>
       <b>স্টোর</b>

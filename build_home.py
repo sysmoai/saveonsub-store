@@ -20,7 +20,7 @@ save_pct = round(100 - chat_from/chat_off*100)
 cards = ""
 for p in best:
     f=frm(p); o=offbdt(p); t=cheapest_tos(p)
-    cards += f'''<div class="pcard"><span class="icon">{p['icon']}</span><h3>{esc(p['name'])}</h3><span class="cat">#{p['bestseller_rank']} Bestseller</span><div class="price">৳{f:,}{f'<s>৳{o:,}</s>' if o>f else ''}</div><span class="tos {t}">{t.replace('-','·')}</span><div class="ctas"><a class="btn btn-primary btn-sm" href="p/{p['id']}.html">View</a></div></div>\n      '''
+    cards += f'''<div class="pcard"><span class="icon">{p['icon']}</span><h3>{esc(p['name'])}</h3><span class="cat">{esc(p['category'])}</span><div class="price">৳{f:,}{f'<s>৳{o:,}</s>' if o>f else ''}</div><span class="tos {t}">{t.replace('-','·')}</span><div class="ctas"><a class="btn btn-primary btn-sm" href="p/{p['id']}.html">View</a></div></div>\n      '''
 cards += f'''<div class="pcard" style="justify-content:center;text-align:center"><span class="icon">➕</span><h3>{len(nonb)-5} more</h3><div class="ctas" style="justify-content:center"><a class="btn btn-ghost btn-sm" href="all.html">See all</a></div></div>'''
 
 from templates import nav_en, nav_bn, footer_en, footer_bn
@@ -50,10 +50,10 @@ page=f'''<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAVEONSUB — Premium Subscriptions at BD Prices with bKash</title>
-<meta name="description" content="ChatGPT ৳{chat_from}, Google AI Pro ৳{frm(next(p for p in P if p['id']=='google-ai-pro'))}, Netflix ৳{frm(next(p for p in P if p['id']=='netflix'))} — authentic subscriptions, bKash/Nagad, 5–15 min delivery, warranty. Official subscriptions. No shortcuts.">
+<meta name="description" content="ChatGPT ৳{chat_from}, Google AI Pro ৳{frm(next(p for p in P if p['id']=='google-ai-pro'))}, Netflix ৳{frm(next(p for p in P if p['id']=='netflix'))} — authentic subscriptions, bKash/Nagad, 5–15 min delivery, warranty. Official, personal and shared options are labeled before checkout.">
 <link rel="canonical" href="https://saveonsub.com/">
 <link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/">
-<link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/">
+<link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn.html">
 <link rel="alternate" hreflang="x-default" href="https://saveonsub.com/">
 <meta name="geo.region" content="BD"><meta name="geo.placename" content="Dhaka">
 <meta property="og:title" content="SAVEONSUB — Premium Subscriptions at BD Prices">
@@ -69,7 +69,7 @@ page=f'''<!DOCTYPE html>
 <meta property="og:image" content="https://saveonsub.com/assets/og-image.png">
 <link rel="stylesheet" href="assets/style.css">
 <script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"OnlineStore","name":"SAVEONSUB","url":"https://saveonsub.com","logo":"https://saveonsub.com/assets/logo.svg","image":"https://saveonsub.com/assets/og-image.png","description":"Bangladesh's honest premium subscription store — authentic subscriptions at affordable BD prices, paid with bKash/Nagad/Rocket.","slogan":"সাবস্ক্রিপশনের সৎ দোকান","foundingDate":"2026","founder":{{"@type":"Person","name":"Emon Hossain","url":"https://emonhossain.pro"}},"parentOrganization":{{"@type":"Organization","name":"SYSmoAI","url":"https://sysmoai.com","sameAs":["https://aipremiumshop.com","https://github.com/sysmoai"]}},"areaServed":{{"@type":"Country","name":"Bangladesh"}},"currenciesAccepted":"BDT","paymentAccepted":"bKash, Nagad, Rocket","knowsLanguage":["bn","en"],"address":{{"@type":"PostalAddress","addressCountry":"BD","addressLocality":"Dhaka"}},"contactPoint":{{"@type":"ContactPoint","telephone":"+8801305869242","contactType":"customer service","availableLanguage":["en","bn"]}}}}
+{{"@context":"https://schema.org","@type":"OnlineStore","name":"SAVEONSUB","url":"https://saveonsub.com","logo":"https://saveonsub.com/assets/logo.svg","image":"https://saveonsub.com/assets/og-image.png","description":"Bangladesh's subscription store — clearly labeled subscription options with local BDT payment support.","slogan":"সাবস্ক্রিপশনের সৎ দোকান","foundingDate":"2026","founder":{{"@type":"Person","name":"Emon Hossain","url":"https://emonhossain.pro"}},"parentOrganization":{{"@type":"Organization","name":"SYSmoAI","url":"https://sysmoai.com","sameAs":["https://aipremiumshop.com","https://github.com/sysmoai"]}},"areaServed":{{"@type":"Country","name":"Bangladesh"}},"currenciesAccepted":"BDT","paymentAccepted":"bKash, Nagad, Rocket","knowsLanguage":["bn","en"],"address":{{"@type":"PostalAddress","addressCountry":"BD","addressLocality":"Dhaka"}},"contactPoint":{{"@type":"ContactPoint","telephone":"+8801305869242","contactType":"customer service","availableLanguage":["en","bn"]}}}}
 </script>
 <script type="application/ld+json">
 {{"@context":"https://schema.org","@type":"WebSite","name":"SAVEONSUB","url":"https://saveonsub.com","potentialAction":{{"@type":"SearchAction","target":{{"@type":"EntryPoint","urlTemplate":"https://saveonsub.com/all.html?q={{search_term_string}}"}},"query-input":"required name=search_term_string"}}}}
@@ -78,7 +78,7 @@ page=f'''<!DOCTYPE html>
 {{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
  {{"@type":"Question","name":"Is SAVEONSUB safe and authentic?","acceptedAnswer":{{"@type":"Answer","text":"Yes — Bangladesh's trusted subscription OS, replacement within 1 hour, and honest risk labels on every plan. Nervous? Use our pay-after-testing option on your first order."}}}},
  {{"@type":"Question","name":"How fast is delivery?","acceptedAnswer":{{"@type":"Answer","text":"5–15 minutes on WhatsApp for instant products, up to 1–2 days for managed personal accounts. The SLA is shown on every product."}}}},
- {{"@type":"Question","name":"Will others see my chats on a shared ChatGPT plan?","acceptedAnswer":{{"@type":"Answer","text":"No. ChatGPT keeps every user's conversations private. Only the subscription cost is shared — never your chat history."}}}},
+ {{"@type":"Question","name":"Will others see my chats on a shared ChatGPT plan?","acceptedAnswer":{{"@type":"Answer","text":"Privacy depends on the exact access method. Before payment, we disclose whether you receive your own account/workspace seat or shared credentials. Do not put sensitive information into any shared-access product. If privacy is critical, choose a personal/customer-owned plan."}}}},
  {{"@type":"Question","name":"How do I pay?","acceptedAnswer":{{"@type":"Answer","text":"bKash, Nagad or Rocket send-money — no card or bank account needed. Full instructions appear at checkout with a copy button."}}}},
  {{"@type":"Question","name":"What if my subscription stops working?","acceptedAnswer":{{"@type":"Answer","text":"Replacement within 1 hour during support hours. Shared seats carry a 7-day guarantee; personal plans 30 days."}}}}
 ]}}
@@ -88,7 +88,7 @@ page=f'''<!DOCTYPE html>
 <a class="skip" href="#main">Skip to content</a>
 
 <div class="trustbar"><div class="wrap">
-  <span>✅ <b>100% official, customer-owned</b> on your own account</span>
+  <span>🏷️ <b>Every plan clearly labeled</b>: Official · Personal · Shared</span>
   <span>⚡ <b>5–15 min</b> delivery</span>
   <span>🛡️ <b>1-hour</b> replacement warranty</span>
   <span>💳 bKash · Nagad · Rocket</span>
@@ -100,18 +100,18 @@ page=f'''<!DOCTYPE html>
   <div>
     <span class="pill">🇧🇩 BANGLADESH'S HONEST SUBSCRIPTION STORE</span>
     <h1>Premium subscriptions at <span class="grad-text">prices that make sense</span> in Bangladesh.</h1>
-    <p class="sub">ChatGPT, Claude, Netflix, Canva, Midjourney and {len(nonb)-4}+ more — authentic, delivered to WhatsApp in 5–15 minutes, paid with bKash. Every plan honestly labeled. Every seat covered by warranty.</p>
+    <p class="sub">ChatGPT, Claude, Netflix, Canva, Midjourney and {len(nonb)-4}+ more — clearly labeled by access method, delivered to WhatsApp, and payable through the options shown at checkout. Warranty terms are shown by plan.</p>
     <div class="heroctas">
       <a href="all.html" class="btn btn-primary">Browse Subscriptions →</a>
       <a href="quiz.html" class="btn btn-ghost">🧭 Not sure? Find My AI</a>
       <button id="installBtn" class="btn btn-ghost" style="display:none">📲 Install app</button>
     </div>
     <div class="anchor">
-      <span class="official">Official ChatGPT Plus: ৳{chat_off:,}/mo</span>
-      <span class="ours">Ours: ৳{chat_from}</span>
-      <span class="savepct">SAVE {save_pct}%</span>
+      <span class="official">ChatGPT Plus web list: $20/mo</span>
+      <span class="ours">SAVEONSUB: ৳{chat_from}</span>
+      <span class="savepct">CHECK ACCESS TYPE</span>
     </div>
-    <div class="ticker mt2"><span class="dotp"></span><span id="tick">211+ lifetime orders — Google AI Pro (our #1)</span></div>
+    <div class="ticker mt2"><span class="dotp"></span><span id="tick">Every plan clearly labeled — Official · Personal · Shared</span></div>
   </div>
   <div>
     <div class="grid g3" style="gap:12px">
@@ -148,15 +148,15 @@ page=f'''<!DOCTYPE html>
 
 <section><div class="wrap">
   <span class="pill">WHY US</span>
-  <h2>The only BD store with <span class="grad-text">honest labels</span>.</h2>
+  <h2>A BD store built around <span class="grad-text">honest labels</span>.</h2>
   <div class="grid g3 mt3">
-    <div class="tcard"><b style="color:var(--green2)">🏷️ Every plan risk-labeled</b><p class="sub" style="font-size:14px;margin-top:8px">Shared, personal or official — we tell you exactly what you're buying and what the risks are. Nobody else in BD dares.</p></div>
+    <div class="tcard"><b style="color:var(--green2)">🏷️ Every plan risk-labeled</b><p class="sub" style="font-size:14px;margin-top:8px">Shared, personal or official — we tell you exactly what you're buying and what the risks are. The access method and known risks are shown before payment.</p></div>
     <div class="tcard"><b style="color:var(--green2)">🛡️ Warranty that means it</b><p class="sub" style="font-size:14px;margin-top:8px">Replacement within 1 hour. 7-day guarantee on shared, 30-day on personal. In writing, on every product.</p></div>
     <div class="tcard"><b style="color:var(--green2)">🤝 We'll talk you OUT of buying</b><p class="sub" style="font-size:14px;margin-top:8px">Student? Copilot is free for you — we'll show you how instead of selling it. That's why customers come back.</p></div>
   </div>
   <div class="grid g3 mt3">
-    <div class="tcard"><b style="color:var(--gold);font-size:22px">1,600+</b><p style="margin-top:6px">orders delivered trusted in Bangladesh across our store family — every one via the same WhatsApp number that's still answering today.</p><div class="who">Verifiable: same +880 1305-869242 since day one</div></div>
-    <div class="tcard"><b style="color:var(--gold);font-size:22px">211 · 201 · 178</b><p style="margin-top:6px">lifetime orders of our top three products. Real counts from our order records — not invented reviews.</p><div class="who">We publish numbers, not fake stars</div></div>
+    <div class="tcard"><b style="color:var(--gold);font-size:22px">Public support channel</b><p style="margin-top:6px">Questions, delivery issues and warranty requests route to the same SaveOnSub WhatsApp support number shown across this site.</p><div class="who">+880 1305-869242 · verify before paying</div></div>
+    <div class="tcard"><b style="color:var(--gold);font-size:22px">Product facts first</b><p style="margin-top:6px">We publish plan type, access method, current price and warranty terms instead of manufacturing star ratings or popularity claims.</p><div class="who">Clear labels before payment</div></div>
     <div class="tcard"><b style="color:var(--gold);font-size:22px">Reviews: earning them</b><p style="margin-top:6px">This store is new. Rather than paste fake testimonials, judge us by <b style="color:var(--green2)">pay-after-testing</b> — we send access before you pay.</p><div class="who">First public reviews will appear here, screenshot-verified</div></div>
   </div>
 </div></section>
@@ -215,7 +215,7 @@ page=f'''<!DOCTYPE html>
 </body>
 </html>'''
 # add EN/বাংলা language toggle + honest bn hreflang to the English homepage
-page = page.replace('<link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/">',
+page = page.replace('<link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn.html">',
                     '<link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn.html">')
 page = page.replace('<a href="faq.html">FAQ</a>\n  </div>\n  <div class="navright">',
                     '<a href="faq.html">FAQ</a>\n    <a href="bn.html" style="color:var(--gold);font-weight:800">বাংলা</a>\n  </div>\n  <div class="navright">', 1)
