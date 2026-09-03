@@ -108,10 +108,10 @@ jobs:
         if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
         run: npm install -g wrangler
 
-      # Cloudflare now supports both user-owned and account-owned API tokens.
-      # Account-owned tokens are designed for durable CI/CD integrations and
-      # verify at /accounts/{account_id}/tokens/verify rather than the user
-      # token endpoint. Accept either model, then separately verify Pages access.
+      # The deployment gate is the exact Cloudflare Pages resource we need to
+      # publish to. This works for supported bearer-token ownership models and
+      # avoids rejecting a usable account-owned token merely because a generic
+      # token-introspection endpoint differs. Never print the token or response.
       - name: Verify Cloudflare deployment credentials
         if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
         env:
@@ -123,43 +123,30 @@ jobs:
             exit 1
           fi
 
-          user_http=$(curl -sS -o /tmp/cf-user-token.json -w "%{http_code}" \
-            "https://api.cloudflare.com/client/v4/user/tokens/verify" \
-            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" || true)
-
-          account_http=$(curl -sS -o /tmp/cf-account-token.json -w "%{http_code}" \
-            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/tokens/verify" \
-            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" || true)
-
-          token_scope=""
-          if [ "$user_http" = "200" ]; then
-            cp /tmp/cf-user-token.json /tmp/cf-token.json
-            token_scope="user-owned"
-          elif [ "$account_http" = "200" ]; then
-            cp /tmp/cf-account-token.json /tmp/cf-token.json
-            token_scope="account-owned"
-          else
-            echo "::error::Cloudflare token verification failed at both supported endpoints (user HTTP ${user_http}, account HTTP ${account_http}). The stored token is invalid, expired or revoked for the verified SaveOnSub Cloudflare account."
-            exit 1
-          fi
-
-          TOKEN_SCOPE="$token_scope" python3 - <<'PY'
-          import json, os, sys
-          data = json.load(open('/tmp/cf-token.json'))
-          result = data.get('result') or {}
-          if not data.get('success') or result.get('status') != 'active':
-              print('::error::Cloudflare API token is not active.', file=sys.stderr)
-              sys.exit(1)
-          print(f"Cloudflare API token is active ({os.environ.get('TOKEN_SCOPE','supported token')}).")
-          PY
-
           project_http=$(curl -sS -o /tmp/cf-project.json -w "%{http_code}" \
             "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/saveonsub" \
-            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}")
-          if [ "$project_http" != "200" ]; then
-            echo "::error::Token is active but cannot access the Cloudflare Pages project 'saveonsub' in the verified account (HTTP ${project_http}). Grant Cloudflare Pages Edit/Pages Write access."
-            exit 1
-          fi
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" || true)
+
+          case "$project_http" in
+            200) ;;
+            401)
+              echo "::error::Cloudflare rejected CLOUDFLARE_API_TOKEN (HTTP 401): token is invalid, expired or revoked."
+              exit 1
+              ;;
+            403)
+              echo "::error::Cloudflare authenticated the token but denied Pages project access (HTTP 403). Grant Cloudflare Pages Edit/Write for this account."
+              exit 1
+              ;;
+            404)
+              echo "::error::Cloudflare account/project mismatch (HTTP 404): verified account does not expose Pages project 'saveonsub' to this token."
+              exit 1
+              ;;
+            *)
+              echo "::error::Cloudflare Pages project authorization check failed with HTTP ${project_http}."
+              exit 1
+              ;;
+          esac
+
           python3 - <<'PY'
           import json, sys
           data = json.load(open('/tmp/cf-project.json'))
@@ -167,7 +154,7 @@ jobs:
           if not data.get('success') or result.get('name') != 'saveonsub':
               print("::error::Cloudflare Pages project verification failed.", file=sys.stderr)
               sys.exit(1)
-          print("Cloudflare Pages project 'saveonsub' access verified.")
+          print("Cloudflare Pages project 'saveonsub' authorization verified.")
           PY
 
       # PRs run validation/staging but never deploy. Production publishing
@@ -225,7 +212,7 @@ jobs:
             exit 1
           fi
 
-          for path in catalog.json build_assets.py; do
+          for path in catalog.json build_assets.py .env; do
             code=$(curl -LsS -o /dev/null -w "%{http_code}" "https://saveonsub.com/${path}" || true)
             if [ "$code" != "404" ]; then
               echo "::error::Internal source path /${path} is publicly reachable (HTTP ${code})."
