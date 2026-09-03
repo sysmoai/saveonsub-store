@@ -71,6 +71,21 @@ def main() -> int:
             if number != SUPPORT_PHONE_DIGITS:
                 hits.append((rel, f'wa.me/{number}', 'non-canonical SaveOnSub WhatsApp number'))
 
+    # Public-repository data boundary: internal market-research metadata
+    # must not be committed into the customer catalog or browser catalog.
+    catalog = ROOT / 'catalog.json'
+    if catalog.exists():
+        ctext = catalog.read_text(encoding='utf-8', errors='replace')
+        for key in ('\"market_survey\"', '\"competitor_watchlist\"'):
+            if key in ctext:
+                hits.append(('catalog.json', key, 'internal market-research metadata must stay outside the public catalog'))
+    public_catalog = ROOT / 'assets/catalog.js'
+    if public_catalog.exists():
+        ptext = public_catalog.read_text(encoding='utf-8', errors='replace')
+        for key in ('market_survey', 'competitor_watchlist'):
+            if key in ptext:
+                hits.append(('assets/catalog.js', key, 'internal market-research metadata leaked into browser catalog'))
+
     # Approved identity must remain the build source of truth.
     for rel in ('assets/logo.svg', 'assets/favicon.svg'):
         p = ROOT / rel
