@@ -48,6 +48,41 @@ jobs:
           test ! -e _site/.env
           echo "Staged production surface verified."
 
+      # Independent, read-only diagnostic. This runs before Cloudflare auth so
+      # the CI log records what the canonical domain is actually serving even
+      # when deployment credentials are broken.
+      - name: Audit current canonical route
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -u
+          echo "=== DNS ==="
+          getent ahostsv4 saveonsub.com | head -6 || true
+          echo "=== HOMEPAGE ==="
+          home_code=$(curl -LsS -D /tmp/sos-current-headers.txt -o /tmp/sos-current-home.html -w "%{http_code}" https://saveonsub.com/ || true)
+          echo "HTTP ${home_code}"
+          grep -Ei '^(server|cf-ray|cf-cache-status|x-vercel-id|x-vercel-cache|via|x-github-request-id|age|cache-control):' /tmp/sos-current-headers.txt || true
+          if [ -s /tmp/sos-current-home.html ]; then
+            echo "homepage_sha256=$(sha256sum /tmp/sos-current-home.html | cut -d' ' -f1)"
+            if grep -q 'data-brand-lock="2026-08-19-approved"' /tmp/sos-current-home.html; then
+              echo "homepage_brand_lock=approved"
+            else
+              echo "homepage_brand_lock=not-present"
+            fi
+          fi
+          echo "=== LOGO ==="
+          logo_code=$(curl -LsS -D /tmp/sos-logo-headers.txt -o /tmp/sos-current-logo.svg -w "%{http_code}" https://saveonsub.com/assets/logo.svg || true)
+          echo "HTTP ${logo_code}"
+          if grep -q 'data-brand-lock="2026-08-19-approved"' /tmp/sos-current-logo.svg 2>/dev/null; then
+            echo "logo_brand_lock=approved"
+          else
+            echo "logo_brand_lock=not-present"
+          fi
+          echo "=== INTERNAL PATHS ==="
+          for path in catalog.json build_assets.py .env; do
+            code=$(curl -LsS -o /dev/null -w "%{http_code}" "https://saveonsub.com/${path}" || true)
+            echo "HTTP ${code} /${path}"
+          done
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
