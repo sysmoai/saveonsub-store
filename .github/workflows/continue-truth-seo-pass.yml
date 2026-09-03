@@ -1,0 +1,76 @@
+name: Continue Truth and SEO Safety Pass
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/continue-truth-seo-pass.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  continue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reuse the reviewed v2 correction script
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          src=Path('.github/workflows/fix-truth-seo-safety-v2.yml').read_text(encoding='utf-8')
+          marker="          python3 - <<'PY'\n"
+          start=src.index(marker)+len(marker)
+          end=src.index("\n          PY",start)
+          block=src[start:end]
+          lines=[]
+          for line in block.splitlines():
+              lines.append(line[10:] if line.startswith('          ') else line)
+          Path('/tmp/saveonsub-truth-pass.py').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          print('extracted reviewed correction script:',len(lines),'lines')
+          PY
+          python3 /tmp/saveonsub-truth-pass.py
+
+      - name: Rebuild and run permanent quality gates
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements.txt
+          bash build_all.sh
+
+      - name: Validate corrected production candidate
+        run: |
+          set -euo pipefail
+          python truth_guard.py
+          python check_prices.py
+          grep -q 'data-brand-lock="2026-08-19-approved"' _site/index.html
+          ! grep -R -E '3,000\+ customers|৩,০০০\+ কাস্টমার|We send a WhatsApp reminder 3 days|You.ll have gotten a WhatsApp reminder 3 days|we send access BEFORE you pay|No\. ChatGPT keeps each user|আপনার চ্যাট, ফাইল বা ব্যক্তিগত ডেটা কেউ দেখে না|only one with a written warranty|thousands of times daily' _site --include='*.html' --include='*.txt' --include='*.js'
+          ! grep -q '<lastmod>' sitemap.xml
+          ! grep -q 'datePublished' blog/chatgpt-plus-price-in-bangladesh.html
+          ! grep -q 'hreflang="bn-bd" href="https://saveonsub.com/blog/' blog/chatgpt-plus-price-in-bangladesh.html
+          ! grep -q 'priceValidUntil' p/chatgpt-plus.html
+          ! grep -q 'hasMerchantReturnPolicy' p/chatgpt-plus.html
+          ! grep -q '145+ orders' p/chatgpt-plus.html
+          ! grep -q '145+ অর্ডার' bn/p/chatgpt-plus.html
+          ! grep -q '"orders"' assets/catalog.js
+          grep -q 'Instant plans:' index.html
+          grep -q 'Delivery follows the selected plan SLA' index.html
+          echo 'Truth + SEO candidate passed permanent and targeted gates.'
+
+      - name: Commit corrected source and generated pages
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          git config user.name 'sysmoai'
+          git config user.email 'sysmoai.com@gmail.com'
+          git add -A
+          git reset .github/workflows/continue-truth-seo-pass.yml
+          git reset .github/workflows/fix-truth-seo-safety-v2.yml
+          if git diff --cached --quiet; then
+            echo 'No content changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: harden shared-access truth and SEO metadata'
+          git push origin HEAD:main
