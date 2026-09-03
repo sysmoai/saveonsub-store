@@ -44,6 +44,7 @@ EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
 EXCLUDE_EXT = {'.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml'}
 EXCLUDE_FILES = {'.replit', '.gitignore', '.env.example', 'catalog.json',
                  'package.json', 'package-lock.json', 'vercel.json', 'AGENTS.md'}
+EXCLUDE_PREFIXES = ('assets/social/',)
 
 
 def runtime_fetched_json():
@@ -73,6 +74,7 @@ def apply_brand_lock():
         except OSError:
             continue
         new = old.replace('SAVE<em>ON</em>SUB', replacement)
+        new = re.sub(r'https://saveonsub\.com/assets/social/[^\"\'\s<]+\.png', 'https://saveonsub.com/assets/og-image.png', new)
         if new != old:
             page.write_text(new, encoding='utf-8')
             changed += 1
@@ -121,8 +123,8 @@ def build_public_brand_derivatives():
     assets = DEST / 'assets'
     assets.mkdir(parents=True, exist_ok=True)
 
-    icon = _embedded_png(assets / 'favicon.svg')
     lockup = _embedded_png(assets / 'logo.svg')
+    icon = lockup.crop((0, 0, lockup.height, lockup.height))
     resample = Image.Resampling.LANCZOS
 
     # Browser / iOS / PWA derivatives. The artwork is never redrawn: these are
@@ -213,6 +215,8 @@ def main():
         rel_base = pathlib.Path(base).relative_to(ROOT)
         for fn in files:
             rel = (rel_base / fn).as_posix().lstrip('./')
+            if rel.startswith(EXCLUDE_PREFIXES):
+                continue
             if rel in keep:
                 pass
             elif fn in EXCLUDE_FILES or pathlib.Path(fn).suffix.lower() in EXCLUDE_EXT:

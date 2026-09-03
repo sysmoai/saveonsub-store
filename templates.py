@@ -1,13 +1,14 @@
 """SAVEONSUB unified templates — ONE nav, ONE footer per language. Every build script imports this.
 Edit here, rebuild all, and every single page gets the update. Zero drift."""
 import html
+from site_config import SUPPORT_EMAIL, WHATSAPP_URL
 
 def esc(s): return html.escape(str(s), quote=True)
 
 # ===== ENGLISH NAV =====
 def nav_en(rel=""):
     return f'''<nav><div class="wrap navin">
-  <a class="logo" href="{rel}index.html">SAVE<em>ON</em>SUB</a>
+  <a class="logo" href="{rel}index.html" aria-label="SaveOnSub home"><img src="{rel}assets/logo.svg" alt="SaveOnSub.com" data-brand-lock="2026-08-19-approved" style="display:block;width:155px;max-width:42vw;height:auto"></a>
   <div class="navlinks">
     <a href="{rel}all.html">Subscriptions</a>
     <div class="navdrop">
@@ -45,7 +46,7 @@ def footer_en(rel=""):
     return f'''<footer><div class="wrap">
   <div class="fcols">
     <div>
-      <span class="logo">SAVE<em>ON</em>SUB</span>
+      <img src="{rel}assets/logo.svg" alt="SaveOnSub.com" data-brand-lock="2026-08-19-approved" style="display:block;width:180px;max-width:100%;height:auto">
       <p style="margin-top:10px;max-width:280px">Bangladesh's Subscription Operating System — clearly labeled subscription options with local BDT payment support — Dhaka, Bangladesh.</p>
     </div>
     <div>
@@ -75,8 +76,8 @@ def footer_en(rel=""):
     <div>
       <b>Company</b>
       <a href="{rel}about.html">About us</a>
-      <a href="https://wa.me/8801305869242">WhatsApp</a>
-      <a href="mailto:support@saveonsub.com">Email</a>
+      <a href="{WHATSAPP_URL}">WhatsApp</a>
+      <a href="mailto:{SUPPORT_EMAIL}">Email</a>
     </div>
   </div>
   <p class="fine">&copy; 2026 SAVEONSUB &middot; . All product names and trademarks belong to their owners. Official prices shown for comparison — verify using official links on product pages.</p>
@@ -85,7 +86,7 @@ def footer_en(rel=""):
 # ===== BANGLA NAV (with dropdown categories) =====
 def nav_bn(rel=""):
     return f'''<nav><div class="wrap navin">
-  <a class="logo" href="{rel}bn.html">SAVE<em>ON</em>SUB</a>
+  <a class="logo" href="{rel}bn.html" aria-label="SaveOnSub home"><img src="{rel}assets/logo.svg" alt="SaveOnSub.com" data-brand-lock="2026-08-19-approved" style="display:block;width:155px;max-width:42vw;height:auto"></a>
   <div class="navlinks">
     <a href="{rel}all.html">সাবস্ক্রিপশন</a>
     <div class="navdrop">
@@ -121,7 +122,7 @@ def footer_bn(rel=""):
     return f'''<footer><div class="wrap">
   <div class="fcols">
     <div>
-      <span class="logo">SAVE<em>ON</em>SUB</span>
+      <img src="{rel}assets/logo.svg" alt="SaveOnSub.com" data-brand-lock="2026-08-19-approved" style="display:block;width:180px;max-width:100%;height:auto">
       <p style="margin-top:10px;max-width:280px">বাংলাদেশের সাবস্ক্রিপশন অপারেটিং সিস্টেম — পরিষ্কারভাবে লেবেল করা সাবস্ক্রিপশন অপশন ও BDT পেমেন্ট সাপোর্ট — ঢাকা, বাংলাদেশ।</p>
     </div>
     <div>
