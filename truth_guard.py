@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """Fail builds when known P0 SaveOnSub truth/brand regressions return.
 
-This is intentionally narrow. It blocks claims/contact data that were verified as
-wrong, stale, unsafe or incompatible with the approved 2026-09-03 operating
-rules. It is not a substitute for human fact-checking of new claims.
+This guard blocks customer-facing claims/contact data that were verified as
+wrong, stale, unsafe or incompatible with the approved operating rules. It also
+ensures every SaveOnSub WhatsApp link uses the canonical public number from
+site_config.py. It is not a substitute for human fact-checking of new claims.
 """
 from pathlib import Path
+import re
 import sys
+
+from site_config import BRAND_LOCK_MARKER, SUPPORT_PHONE_DIGITS
 
 ROOT = Path(__file__).resolve().parent
 EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
                 '__pycache__', 'node_modules', '_site', 'ops', 'reports'}
-SCAN_EXT = {'.html', '.htm', '.py'}
 SOURCE_ALLOW = {
     'build_home.py', 'build_trust.py', 'build_pages.py', 'templates.py',
 }
@@ -36,6 +39,8 @@ FORBIDDEN = {
     'No shortcuts.': 'blanket official-only positioning conflicts with disclosed shared plans',
 }
 
+WA_RE = re.compile(r'https://wa\.me/(\d+)')
+
 
 def should_scan(p: Path) -> bool:
     rel = p.relative_to(ROOT)
@@ -55,9 +60,13 @@ def main() -> int:
             text = p.read_text(encoding='utf-8', errors='replace')
         except OSError:
             continue
+        rel = p.relative_to(ROOT).as_posix()
         for pattern, reason in FORBIDDEN.items():
             if pattern in text:
-                hits.append((p.relative_to(ROOT).as_posix(), pattern, reason))
+                hits.append((rel, pattern, reason))
+        for number in WA_RE.findall(text):
+            if number != SUPPORT_PHONE_DIGITS:
+                hits.append((rel, f'wa.me/{number}', 'non-canonical SaveOnSub WhatsApp number'))
 
     # Approved identity must remain the build source of truth.
     for rel in ('assets/logo.svg', 'assets/favicon.svg'):
@@ -66,7 +75,7 @@ def main() -> int:
             hits.append((rel, '<missing>', 'approved locked brand asset missing'))
             continue
         text = p.read_text(encoding='utf-8', errors='replace')
-        if 'data-brand-lock="2026-08-19-approved"' not in text:
+        if BRAND_LOCK_MARKER not in text:
             hits.append((rel, '<brand-lock>', 'approved brand-lock marker missing'))
         if '>৳<' in text or 'rotate(-12' in text:
             hits.append((rel, '<deprecated-art>', 'deprecated tilted ৳ logo artwork detected'))
