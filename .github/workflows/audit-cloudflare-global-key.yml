@@ -1,0 +1,48 @@
+name: Audit Cloudflare Global Key Fallback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/audit-cloudflare-global-key.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe known secret pairs safely
+        env:
+          ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          KEY_1: ${{ secrets.CLOUDFLARE_API_KEY }}
+          EMAIL_1: ${{ secrets.CLOUDFLARE_EMAIL }}
+          KEY_2: ${{ secrets.CF_API_KEY }}
+          EMAIL_2: ${{ secrets.CF_EMAIL }}
+          KEY_3: ${{ secrets.CLOUDFLARE_GLOBAL_API_KEY }}
+          EMAIL_3: ${{ secrets.CLOUDFLARE_ACCOUNT_EMAIL }}
+          KEY_4: ${{ secrets.CF_GLOBAL_API_KEY }}
+          EMAIL_4: ${{ secrets.CF_ACCOUNT_EMAIL }}
+        run: |
+          set -u
+          if [ -z "${ACCOUNT_ID:-}" ]; then
+            echo "account_id=missing"
+            exit 0
+          fi
+          probe() {
+            label="$1"; key="$2"; email="$3"
+            if [ -z "$key" ] || [ -z "$email" ]; then
+              echo "${label}=missing"
+              return
+            fi
+            code=$(curl -sS -o /tmp/cf-key-probe.json -w "%{http_code}" \
+              "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/pages/projects/saveonsub" \
+              -H "X-Auth-Email: ${email}" \
+              -H "X-Auth-Key: ${key}" || true)
+            echo "${label}=http_${code}"
+          }
+          probe pair_clouflare_api_key "$KEY_1" "$EMAIL_1"
+          probe pair_cf_api_key "$KEY_2" "$EMAIL_2"
+          probe pair_cloudflare_global "$KEY_3" "$EMAIL_3"
+          probe pair_cf_global "$KEY_4" "$EMAIL_4"
