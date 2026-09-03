@@ -1,0 +1,56 @@
+name: Audit SaveOnSub Canonical Origin
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/origin-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  origin-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe canonical and candidate origins
+        shell: bash
+        run: |
+          set -u
+          probe() {
+            name="$1"
+            base="$2"
+            safe=$(echo "$name" | tr -cd 'a-zA-Z0-9_-')
+            echo "=== ${name} ==="
+            code=$(curl -LsS -D "/tmp/${safe}.headers" -o "/tmp/${safe}.home" -w "%{http_code}" "${base}" || true)
+            echo "home_http=${code}"
+            grep -Ei '^(server|cf-ray|cf-cache-status|x-vercel-id|x-vercel-cache|via|x-github-request-id|age|cache-control|location):' "/tmp/${safe}.headers" || true
+            if [ -s "/tmp/${safe}.home" ]; then
+              echo "home_sha256=$(sha256sum "/tmp/${safe}.home" | cut -d' ' -f1)"
+              if grep -q 'data-brand-lock="2026-08-19-approved"' "/tmp/${safe}.home"; then echo "home_brand_lock=approved"; else echo "home_brand_lock=not-present"; fi
+            fi
+            logo_code=$(curl -LsS -o "/tmp/${safe}.logo" -w "%{http_code}" "${base%/}/assets/logo.svg" || true)
+            echo "logo_http=${logo_code}"
+            if [ -s "/tmp/${safe}.logo" ]; then
+              echo "logo_sha256=$(sha256sum "/tmp/${safe}.logo" | cut -d' ' -f1)"
+              if grep -q 'data-brand-lock="2026-08-19-approved"' "/tmp/${safe}.logo"; then echo "logo_brand_lock=approved"; else echo "logo_brand_lock=not-present"; fi
+            fi
+          }
+
+          getent ahostsv4 saveonsub.com | head -6 || true
+          probe canonical https://saveonsub.com/
+          probe cloudflare_pages https://saveonsub.pages.dev/
+          probe vercel https://saveonsub.vercel.app/
+          probe github_pages https://sysmoai.github.io/saveonsub-store/
+
+          echo "=== MATCHES ==="
+          for candidate in cloudflare_pages vercel github_pages; do
+            if [ -s "/tmp/${candidate}.home" ] && cmp -s /tmp/canonical.home "/tmp/${candidate}.home"; then
+              echo "canonical_home_matches=${candidate}"
+            fi
+            if [ -s "/tmp/${candidate}.logo" ] && cmp -s /tmp/canonical.logo "/tmp/${candidate}.logo"; then
+              echo "canonical_logo_matches=${candidate}"
+            fi
+          done
