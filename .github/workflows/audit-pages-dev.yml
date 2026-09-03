@@ -1,0 +1,35 @@
+name: Audit Cloudflare Pages Public Endpoint
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/audit-pages-dev.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build expected public surface
+        run: |
+          python -m pip install --disable-pip-version-check -r requirements.txt
+          python check_prices.py
+          python stage_deploy.py
+      - name: Probe pages.dev and canonical
+        run: |
+          set -euo pipefail
+          for url in https://saveonsub.pages.dev/ https://saveonsub.com/; do
+            safe=$(printf '%s' "$url" | sed 's#https://##;s#[^A-Za-z0-9]#_#g')
+            code=$(curl -LsS -D "/tmp/${safe}.headers" -o "/tmp/${safe}.html" -w '%{http_code}' "$url" || true)
+            echo "URL=$url HTTP=$code"
+            grep -Ei '^(server|cf-ray|cf-cache-status|etag|last-modified|age|cache-control):' "/tmp/${safe}.headers" || true
+            if [ -s "/tmp/${safe}.html" ]; then
+              echo "sha256=$(sha256sum "/tmp/${safe}.html" | cut -d' ' -f1)"
+              if grep -q 'data-brand-lock="2026-08-19-approved"' "/tmp/${safe}.html"; then echo 'brand_lock=approved'; else echo 'brand_lock=not-present'; fi
+            fi
+          done
+          echo "expected_staged_sha256=$(sha256sum _site/index.html | cut -d' ' -f1)"
