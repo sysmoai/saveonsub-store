@@ -1,0 +1,51 @@
+name: Phase 0 Content Truth Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/phase0-content-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Map high-risk stale or unsupported customer-facing claims
+        shell: bash
+        run: |
+          set -uo pipefail
+          patterns=(
+            '1714-672094'
+            '১৭১৪-৬৭২০৯৪'
+            '100% official'
+            'customer-owned'
+            '3,000+'
+            '৩,০০০+'
+            '1,600+'
+            '১,৬০০+'
+            '2-year track record'
+            'No other BD store offers this'
+            'বাংলাদেশে আর কেউ এটা দেয় না'
+            "It's not illegal for you"
+            'Legally in Bangladesh'
+            'আপনার জন্য এটা অবৈধ নয়'
+            'OpenAI only accepts international Visa/Mastercard'
+            'Resellers are the only path'
+            'other seat-holders cannot see your chats'
+            'শুধু খরচটা শেয়ার হয়, ডেটা কখনো নয়'
+            'shared at ৳350'
+            'shared from ৳350'
+            'we sell at ৳350'
+            'ChatGPT shared ৳350'
+            'স্ক্যামার এটা পারে না'
+          )
+          for p in "${patterns[@]}"; do
+            echo "===== PATTERN: ${p} ====="
+            grep -RInF --exclude-dir=.git --exclude-dir=.github --exclude-dir=.next --exclude-dir=.astro --exclude-dir=node_modules --exclude-dir=_site -- "$p" . || true
+          done
