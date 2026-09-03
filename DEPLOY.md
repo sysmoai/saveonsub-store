@@ -3,161 +3,104 @@
 **Canonical domain:** https://saveonsub.com  
 **Source repository:** `sysmoai/saveonsub-store`  
 **Source branch:** `main`  
-**Canonical target:** Cloudflare Pages project `saveonsub`  
-**Secondary mirror/preview:** connected Vercel project `saveonsub`
+**Canonical host:** Cloudflare Pages project `saveonsub`  
+**Secondary mirror:** connected Vercel project `saveonsub`
 
 Last operational review: **2026-09-03**.
 
-## 1. Deployment model
+## Current deployment truth
+
+The previous direct GitHub Actions Cloudflare deployment workflow (`.github/workflows/deploy.yml`) was removed on 2026-09-03 after repeated credential/authentication failures. Therefore **there is currently no active GitHub Actions job that automatically publishes `main` to canonical `saveonsub.com`**.
+
+Vercel still follows the repository through Git integration and is useful as an independent build/mirror signal, but `saveonsub.com` is not attached to that connected Vercel project. A Vercel READY deployment must never be called canonical-live.
+
+Do not silently re-create the removed Cloudflare workflow or move DNS to Vercel. Restoring canonical automation requires a reviewed deployment path, valid least-privilege Cloudflare credentials, staged-artifact validation and canonical smoke tests.
+
+## Required release pipeline
 
 ```text
-GitHub main
+GitHub reviewed source
   ↓
 check_prices.py
+  ↓
+audit_all.py / deploy_preflight.py as applicable
   ↓
 stage_deploy.py
   ↓
 _site/  (public files only)
   ↓
-staged-surface validation
+release_hardening.py
   ↓
-Cloudflare credential/project verification
+cache_safe_brand.py
   ↓
-Cloudflare Pages: saveonsub
+release-boundary checks
+  ↓
+reviewed Cloudflare Pages deployment
   ↓
 saveonsub.com
   ↓
-canonical production smoke tests
+canonical smoke tests
 ```
 
-Vercel separately follows `main` through its Git integration and publishes Vercel-owned production aliases. It is a useful independent build/mirror signal, but it is **not the canonical `saveonsub.com` host unless the custom domain is explicitly attached there and DNS is deliberately migrated**.
+## Non-negotiable rules
 
-## 2. Non-negotiable release rules
+1. Never publish repository root (`.`); publish only reviewed `_site/` output.
+2. Never expose `catalog.json`, build scripts, `.env*`, research/audit files, supplier data or secrets.
+3. Preserve the approved 2026-08-19 SaveOnSub brand lock and immutable/cache-safe logo references.
+4. `release_hardening.py` must run after staging and before brand cache versioning/deployment.
+5. Do not ship blanket claims that all products are official/customer-owned/private or that every plan receives the same warranty/replacement SLA.
+6. Preserve ranking URLs, canonicals, hreflang and internal-link equity unless a reviewed migration is necessary.
+7. Pull requests validate only. They never mean canonical production was updated.
+8. A release is complete only when `https://saveonsub.com/` itself is verified after deployment.
 
-1. Never publish repository root (`.`).
-2. Only deploy `_site/` created by `stage_deploy.py`.
-3. Do not run or restore legacy asset-generation behavior that can recreate the retired tilted-`৳` logo.
-4. `assets/logo.svg` and `assets/favicon.svg` must contain `data-brand-lock="2026-08-19-approved"`.
-5. Do not expose `catalog.json`, `build_assets.py`, `.env*`, audit/research files or private commercial data.
-6. Pull requests validate but never deploy production.
-7. A release is green only when `saveonsub.com` itself passes post-deploy verification.
-8. Authentication failures are not transient; fail fast and repair credentials.
+## Current automated validation
 
-## 3. Current GitHub Actions secrets
+`.github/workflows/quality-gates.yml` runs on pull requests, pushes to `main`, manual dispatch and weekly schedule. It validates source truth/prices, repository regression, staged public output, staged truth/SEO hardening, AI crawler policy, approved brand markers and public-source exclusion.
 
-The workflow expects these repository/environment secrets:
+The connected Vercel project builds with:
 
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_API_TOKEN`
+```text
+check_prices.py
+→ stage_deploy.py
+→ release_hardening.py
+→ cache_safe_brand.py
+```
 
-Never put their values in source files, issues, logs, screenshots or chat.
+This provides a useful release-preview artifact, not canonical proof.
 
-The Cloudflare API token must be active and must have permission to deploy/read the Pages project `saveonsub` in the configured account. Use the minimum required Pages edit/write scope for the correct account.
+## Canonical restoration requirements
 
-## 4. Current known production blocker — 2026-09-03
+Before restoring automated Cloudflare publishing:
 
-The build and staged release are healthy, but the configured Cloudflare API token currently fails Cloudflare's token verification endpoint with **HTTP 401**. Previous Wrangler output also reported Cloudflare API authentication errors (`10000`) / invalid access token (`9109`).
+- validate the exact Cloudflare account and Pages project `saveonsub`;
+- use a valid least-privilege credential without exposing it in code/logs/chat;
+- deploy only hardened `_site/`;
+- verify homepage, top commercial products, Bangla homepage, robots, sitemap, checkout/WhatsApp path and critical redirects;
+- verify approved immutable logo references;
+- verify internal source paths remain inaccessible;
+- keep a known-good rollback commit/deployment.
 
-Therefore:
-- do **not** classify current GitHub Actions runs as production-deployment failures caused by website code;
-- do **not** retry the invalid token repeatedly;
-- do **not** weaken authentication checks;
-- repair/replace the GitHub Actions secret and re-run the failed job.
+Credential rotation/replacement, DNS changes and domain ownership changes are human-controlled boundaries.
 
-Once the token is replaced, the workflow itself verifies token status and access to the exact `saveonsub` Pages project before upload.
+## SEO-sensitive release rule
 
-## 5. CI checks executed before production upload
+Before changing established URLs, title intent, canonical, hreflang, structured data, navigation or substantial money-page copy:
 
-`python check_prices.py`
-- prevents known retired prices from shipping beside affected product names.
+- capture current search intent and internal links;
+- preserve the URL whenever possible;
+- use permanent redirects only for necessary moves;
+- update internal links/canonical/sitemap together;
+- release material SEO/CRO changes in controlled cohorts;
+- measure post-release query, indexation and conversion impact.
 
-`python stage_deploy.py`
-- builds the public-only `_site/` directory;
-- applies the locked SaveOnSub brand assets across staged HTML;
-- excludes internal source and development files.
+## Definition of Done
 
-Staged production-surface check verifies:
-- approved logo marker;
-- approved favicon marker;
-- no staged `catalog.json`;
-- no staged `build_assets.py`;
-- no staged `.env`.
+Use these terms precisely:
 
-## 6. Cloudflare deployment behavior
-
-The workflow:
-1. verifies both required secrets are present;
-2. verifies the API token is active;
-3. verifies it can access account project `saveonsub`;
-4. deploys `_site/` with the current Git commit hash;
-5. uses bounded retries only for genuinely transient failures such as provider throttling;
-6. aborts immediately on authentication failures.
-
-## 7. Canonical production smoke test
-
-After Cloudflare reports a successful upload, the release is still not considered complete until the workflow verifies:
-
-- `https://saveonsub.com/` responds successfully;
-- `https://saveonsub.com/assets/logo.svg` responds successfully;
-- homepage and logo asset expose the approved brand lock marker;
-- internal source paths such as `/catalog.json` and `/build_assets.py` are not publicly served.
-
-Future smoke tests should additionally cover the top commercial product pages, Bangla homepage, checkout, WhatsApp links, robots, sitemap and critical redirects.
-
-## 8. Vercel mirror verification
-
-The connected Vercel project currently auto-builds GitHub `main`. A healthy Vercel production build means the repository can be staged/deployed independently, but it does not prove `saveonsub.com` is updated.
-
-Use Vercel as:
-- independent build validation;
-- staging/mirror comparison;
-- emergency reference during a Cloudflare incident.
-
-Do not silently point the canonical domain to Vercel as a workaround. Any host migration requires DNS/domain verification, SEO/canonical checks and rollback planning.
-
-## 9. Safe rollback
-
-If a canonical release causes a customer-facing regression:
-1. identify the last known-good Git commit/deployment;
-2. prefer reverting the offending Git change over editing production files manually;
-3. deploy the reviewed reverted `_site/` through the same pipeline;
-4. re-run canonical smoke tests;
-5. document the root cause before reintroducing the change.
-
-Never solve a production incident by publishing the repo root, bypassing brand/security checks or exposing secrets.
-
-## 10. SEO-sensitive deployment rule
-
-Before changing established URLs, canonicals, redirects, hreflang, major page intent or ranking content:
-- capture the current baseline;
-- preserve URL equity where possible;
-- add permanent redirects for necessary moves;
-- update internal links/canonical/sitemap consistently;
-- release in controlled cohorts for material SEO/CRO changes;
-- monitor after deployment.
-
-## 11. Definition of Done for production
-
-A SaveOnSub production change is **DONE** only when all applicable items are true:
-
-- [ ] Reviewed source change exists in Git.
-- [ ] Price/truth checks pass.
-- [ ] `_site/` staging passes.
-- [ ] Approved SaveOnSub brand remains intact.
-- [ ] Internal/non-public files are excluded.
-- [ ] Cloudflare credential/project verification passes.
-- [ ] Cloudflare Pages deployment succeeds.
-- [ ] Canonical `saveonsub.com` smoke test passes.
-- [ ] Critical customer journey still works.
-- [ ] No unplanned URL/canonical/SEO regression is detected.
-- [ ] Rollback commit/deployment is identifiable.
-
-## 12. Production status language
-
-Use precise wording:
-- **"Committed"** = code is in GitHub.
-- **"Vercel READY"** = Vercel mirror built successfully.
-- **"Cloudflare deployed"** = Cloudflare upload succeeded.
-- **"Canonical live"** = `saveonsub.com` itself was verified after deployment.
+- **Committed** — source exists in GitHub.
+- **Quality gates passed** — source and staged public artifact passed automated checks.
+- **Vercel READY** — the mirror/preview built successfully.
+- **Cloudflare deployed** — a reviewed upload to the Cloudflare Pages project succeeded.
+- **Canonical live** — `saveonsub.com` itself was smoke-tested after that deployment.
 
 Never use these interchangeably.
