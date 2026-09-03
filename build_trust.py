@@ -62,12 +62,12 @@ FAQS = [
  ("What's the difference between Shared, Personal and Official?", "<b>Official</b> = you pay the provider directly, we just guide/activate (e.g. Spotify BD ৳219). <b>Personal</b> = a subscription on YOUR OWN email — full control, lowest risk. <b>Shared</b> = a seat on a multi-user plan — 70-85% cheaper, provider terms prohibit it, so seats occasionally reset; our warranty replaces them within 1 hour."),
  ("Can a shared account get banned? What happens then?", "Yes, it happens — that's the honest trade-off for the price. When it does: message us, replacement within 1 hour during support hours, 7-day guarantee on every shared seat. If we can't replace, you get a refund for unused days."),
  ("How fast is delivery?", "Instant products: 5–15 minutes on WhatsApp. Fast products: 1–2 hours. Managed personal accounts: 1–2 days. The SLA is printed on every product page — if we miss it badly, ask for a free extension."),
- ("How do I pay? I don't have a card.", "bKash, Nagad or Rocket send-money — that's the point. No card, no bank account, no international payment. At checkout you get our merchant number (+880 1305-869242) with a copy button and your order ID as reference."),
+ ("How do I pay? I don't have a card.", "bKash, Nagad or Rocket send-money — that's the point. No card, no bank account, no international payment. At checkout you get our payment number shown at checkout (+880 1305-869242) with a copy button and your order ID as reference."),
  ("What is pay-after-testing?", "For nervous first-timers: we send the access first, you verify it works, then you pay within an hour. Available on most instant products for first orders. Availability depends on the product and first-order eligibility; ask before ordering."),
  ("Do you auto-charge renewals?", "Never. There is no auto-charge — you pay manually each time. We send a WhatsApp reminder 3 days before expiry with a one-tap renewal link. Ignore it and the subscription simply lapses. Your money stays yours."),
  ("Can I get a refund?", "Yes — see the <a href='refund.html' style='color:var(--green2)'>refund policy</a>. Short version: not delivered in 24h → full refund; dead seat we can't replace → refund for unused days; you changed your mind before delivery → full refund; after successful delivery → replacement-first, refund if we fail."),
  ("Can I get a discount?", "Three honest ways: pay 3 months upfront (10% off), refer a friend (you both get ৳100 off), or students get ৳100 off ChatGPT personal plans with a student ID. Ask on WhatsApp."),
- ("Is my payment information safe?", "We never see your bKash PIN or account — you send money from YOUR app to our merchant number. We only receive the payment notification. We don't store card numbers because we never touch cards."),
+ ("Is my payment information safe?", "We never see your bKash PIN or account — you send money from YOUR app to our payment number shown at checkout. We only receive the payment notification. We don't store card numbers because we never touch cards."),
  ("Which AI should I buy? I'm confused.", "Take the 60-second <a href='quiz.html' style='color:var(--green2)'>Find My AI quiz</a> — 4 questions, one honest recommendation. Or ask a human on WhatsApp. If a free tier fits your usage, we'll tell you to use that instead. Seriously."),
  ("I'm a student — what's the cheapest way to get AI tools?", "Real talk: GitHub Copilot is FREE with the Student Pack, Spotify BD student is ৳109 official, Canva Education is free for eligible institutions. For the rest: ChatGPT shared ৳499 or the Research Bundle ৳600 are the best student deals. We'll always point out the free path first."),
  ("Do you sell accounts with MY name on certificates (Coursera etc.)?", "Shared Coursera prints the account-holder's name on certificates — useless for your CV. If you need YOUR name, take the Personal plan. We say this on the product page before you pay, not after."),
@@ -189,7 +189,7 @@ pages['about'] = dict(title="About — Built for How BD Actually Pays | SAVEONSU
 # ---------- How to order ----------
 howto_ld = {"@context":"https://schema.org","@type":"HowTo","name":"How to buy a subscription with bKash on SAVEONSUB","totalTime":"PT3M",
  "step":[{"@type":"HowToStep","position":1,"name":"Pick your product","text":"Browse all.html or take the Find My AI quiz. Add to cart — prices in taka, honest labels on every plan."},
- {"@type":"HowToStep","position":2,"name":"Send money via bKash/Nagad/Rocket","text":"At checkout, copy the merchant number +880 1305-869242 and send the total with your order ID as reference."},
+ {"@type":"HowToStep","position":2,"name":"Send money via bKash/Nagad/Rocket","text":"At checkout, copy the payment number shown at checkout +880 1305-869242 and send the total with your order ID as reference."},
  {"@type":"HowToStep","position":3,"name":"Confirm on WhatsApp","text":"Tap Confirm — a prefilled WhatsApp message with your order opens. Send it."},
  {"@type":"HowToStep","position":4,"name":"Receive in 5–15 minutes","text":"Credentials or invite arrive on WhatsApp. Warranty active from minute one."}]}
 body = """<span class="pill">📖 HOW TO ORDER</span>
@@ -381,7 +381,7 @@ FAQS_BN = [
  ("শেয়ার্ড অ্যাকাউন্ট কি ব্যান হতে পারে? হলে কী হবে?",
   "হ্যাঁ, হতে পারে — সস্তা দামের সৎ ট্রেড-অফ এটাই। হলে: মেসেজ দিন, সাপোর্ট আওয়ারে ১ ঘণ্টার মধ্যে রিপ্লেসমেন্ট, প্রতিটি শেয়ার্ড সিটে ৭ দিন গ্যারান্টি। রিপ্লেস করতে না পারলে বাকি দিনের রিফান্ড।"),
  ("কীভাবে পেমেন্ট করব? আমার কার্ড নেই।",
-  "বিকাশ, নগদ বা রকেটে সেন্ড মানি — এটাই মূল কথা। কার্ড, ব্যাংক অ্যাকাউন্ট বা ইন্টারন্যাশনাল পেমেন্ট লাগবে না। চেকআউটে মার্চেন্ট নম্বর (+৮৮০ ১৩০৫-৮৬৯২৪২) কপি বাটনসহ আর অর্ডার আইডি রেফারেন্সে দেওয়া থাকে।"),
+  "বিকাশ, নগদ বা রকেটে সেন্ড মানি — এটাই মূল কথা। কার্ড, ব্যাংক অ্যাকাউন্ট বা ইন্টারন্যাশনাল পেমেন্ট লাগবে না। চেকআউটে চেকআউটে দেখানো পেমেন্ট নম্বর (+৮৮০ ১৩০৫-৮৬৯২৪২) কপি বাটনসহ আর অর্ডার আইডি রেফারেন্সে দেওয়া থাকে।"),
  ("Pay-after-testing জিনিসটা কী?",
   "নার্ভাস নতুনদের জন্য: আগে অ্যাক্সেস পাঠাই, আপনি যাচাই করেন যে কাজ করছে, তারপর এক ঘণ্টার মধ্যে টাকা দেন। বেশিরভাগ ইনস্ট্যান্ট প্রোডাক্টে প্রথম অর্ডারে পাওয়া যায়। প্রোডাক্ট ও প্রথম অর্ডারের যোগ্যতা অনুযায়ী এটি পাওয়া যায়; অর্ডারের আগে জেনে নিন।"),
  ("রিনিউয়ালে কি অটো-চার্জ হয়?",
@@ -448,7 +448,7 @@ print("OK: generated bn/faq.html + linked English FAQ")
 # ---------- Bangla How-to-Order (bn/how-to-order.html) — completes the Bangla conversion path ----------
 _howto_ld_bn = {"@context":"https://schema.org","@type":"HowTo","name":"বিকাশে SAVEONSUB থেকে সাবস্ক্রিপশন কেনার নিয়ম","totalTime":"PT3M",
  "step":[{"@type":"HowToStep","position":1,"name":"প্রোডাক্ট বেছে নিন","text":"সব প্রোডাক্ট দেখুন বা Find My AI কুইজ দিন। কার্টে যোগ করুন — টাকায় দাম, প্রতিটি প্ল্যানে সৎ লেবেল।"},
- {"@type":"HowToStep","position":2,"name":"বিকাশ/নগদ/রকেটে টাকা পাঠান","text":"চেকআউটে মার্চেন্ট নম্বর +৮৮০ ১৩০৫-৮৬৯২৪২ কপি করে অর্ডার আইডি রেফারেন্সে দিয়ে মোট টাকা সেন্ড মানি করুন।"},
+ {"@type":"HowToStep","position":2,"name":"বিকাশ/নগদ/রকেটে টাকা পাঠান","text":"চেকআউটে চেকআউটে দেখানো পেমেন্ট নম্বর +৮৮০ ১৩০৫-৮৬৯২৪২ কপি করে অর্ডার আইডি রেফারেন্সে দিয়ে মোট টাকা সেন্ড মানি করুন।"},
  {"@type":"HowToStep","position":3,"name":"হোয়াটসঅ্যাপে কনফার্ম করুন","text":"কনফার্ম বাটনে চাপ দিন — অর্ডারসহ একটি রেডি মেসেজ খুলবে, পাঠিয়ে দিন।"},
  {"@type":"HowToStep","position":4,"name":"৫–১৫ মিনিটে পান","text":"অ্যাক্সেস বা ইনভাইট হোয়াটসঅ্যাপে আসবে। প্রথম মিনিট থেকেই ওয়ারেন্টি চালু।"}]}
 bn_howto = f"""<!DOCTYPE html>

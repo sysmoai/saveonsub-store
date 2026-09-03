@@ -2,6 +2,7 @@
 """SAVEONSUB build step 6: GENERATE index.html from catalog.json (kills price drift forever).
 Run locally: python3 build_home.py"""
 import json, html
+from site_config import SUPPORT_PHONE_E164, SUPPORT_PHONE_DISPLAY
 
 cat = json.load(open('catalog.json'))
 rate = cat['meta']['usd_anchor_rate']
@@ -76,7 +77,7 @@ page=f'''<!DOCTYPE html>
 </script>
 <script type="application/ld+json">
 {{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
- {{"@type":"Question","name":"Is SAVEONSUB safe and authentic?","acceptedAnswer":{{"@type":"Answer","text":"Yes — Bangladesh's trusted subscription OS, replacement within 1 hour, and honest risk labels on every plan. Nervous? Use our pay-after-testing option on your first order."}}}},
+ {{"@type":"Question","name":"Is SAVEONSUB safe and authentic?","acceptedAnswer":{{"@type":"Answer","text":"SaveOnSub publishes clearly labeled access types, written warranty terms and a public support channel. If you are nervous on your first order, check whether pay-after-testing is available for that product before paying."}}}},
  {{"@type":"Question","name":"How fast is delivery?","acceptedAnswer":{{"@type":"Answer","text":"5–15 minutes on WhatsApp for instant products, up to 1–2 days for managed personal accounts. The SLA is shown on every product."}}}},
  {{"@type":"Question","name":"Will others see my chats on a shared ChatGPT plan?","acceptedAnswer":{{"@type":"Answer","text":"Privacy depends on the exact access method. Before payment, we disclose whether you receive your own account/workspace seat or shared credentials. Do not put sensitive information into any shared-access product. If privacy is critical, choose a personal/customer-owned plan."}}}},
  {{"@type":"Question","name":"How do I pay?","acceptedAnswer":{{"@type":"Answer","text":"bKash, Nagad or Rocket send-money — no card or bank account needed. Full instructions appear at checkout with a copy button."}}}},
@@ -131,7 +132,7 @@ page=f'''<!DOCTYPE html>
   <h2>Ordered in <span class="grad-text">2 minutes</span>. Delivered in 15.</h2>
   <div class="steps mt3">
     <div class="step"><h3>Pick your product</h3><p>{len(nonb)} subscriptions with honest labels — shared, personal or official. Prices in ৳, savings shown vs official.</p></div>
-    <div class="step"><h3>Pay with bKash/Nagad</h3><p>Send money to our merchant number with your order ID. No card, no bank, no forms.</p></div>
+    <div class="step"><h3>Pay with bKash/Nagad</h3><p>Send money to the payment number shown at checkout with your order ID. No card, no bank, no forms.</p></div>
     <div class="step"><h3>Confirm on WhatsApp</h3><p>One tap sends your order + payment info. A human replies in minutes — in Bangla or English.</p></div>
     <div class="step"><h3>Start using it</h3><p>Credentials or invite arrive in 5–15 min (instant products). Warranty covers you from minute one.</p></div>
   </div>
@@ -155,7 +156,7 @@ page=f'''<!DOCTYPE html>
     <div class="tcard"><b style="color:var(--green2)">🤝 We'll talk you OUT of buying</b><p class="sub" style="font-size:14px;margin-top:8px">Student? Copilot is free for you — we'll show you how instead of selling it. That's why customers come back.</p></div>
   </div>
   <div class="grid g3 mt3">
-    <div class="tcard"><b style="color:var(--gold);font-size:22px">Public support channel</b><p style="margin-top:6px">Questions, delivery issues and warranty requests route to the same SaveOnSub WhatsApp support number shown across this site.</p><div class="who">+880 1305-869242 · verify before paying</div></div>
+    <div class="tcard"><b style="color:var(--gold);font-size:22px">Public support channel</b><p style="margin-top:6px">Questions, delivery issues and warranty requests route to the same SaveOnSub WhatsApp support number shown across this site.</p><div class="who">{SUPPORT_PHONE_DISPLAY} · verify before paying</div></div>
     <div class="tcard"><b style="color:var(--gold);font-size:22px">Product facts first</b><p style="margin-top:6px">We publish plan type, access method, current price and warranty terms instead of manufacturing star ratings or popularity claims.</p><div class="who">Clear labels before payment</div></div>
     <div class="tcard"><b style="color:var(--gold);font-size:22px">Reviews: earning them</b><p style="margin-top:6px">This store is new. Rather than paste fake testimonials, judge us by <b style="color:var(--green2)">pay-after-testing</b> — we send access before you pay.</p><div class="who">First public reviews will appear here, screenshot-verified</div></div>
   </div>
@@ -165,10 +166,10 @@ page=f'''<!DOCTYPE html>
   <span class="pill">QUICK ANSWERS</span>
   <h2>Before you ask…</h2>
   <div class="mt3">
-    <details open><summary>Is this safe? How do I know you're not a scam?</summary><p>Bangladesh's trusted subscription OS, public WhatsApp, verifiable brand family (SYSmoAI, aipremiumshop.com). First order and nervous? Use <b>pay-after-testing</b> — we send access before you pay. Availability varies by product; the exact access and payment terms are shown before you order.</p></details>
+    <details open><summary>Is this safe? How do I know you're not a scam?</summary><p>SaveOnSub publishes a public WhatsApp support channel, clearly labeled access types and written warranty terms. For a first order, check whether <b>pay-after-testing</b> is available for that product before paying. Availability varies by product; the exact access and payment terms are shown before you order.</p></details>
     <details><summary>Shared plan — will others see my ChatGPT chats?</summary><p>Privacy depends on the exact access method. We disclose whether you receive your own account/workspace seat or shared credentials before payment. Do not put sensitive information into shared-access products; choose a personal/customer-owned plan when privacy is critical.</p></details>
     <details><summary>What's the catch with shared plans?</summary><p>Providers' terms prohibit seat-sharing, so a shared seat can occasionally get reset — that's why they're much cheaper AND why our warranty replaces any dead seat within 1 hour. We label the risk honestly on every product; personal plans have no such risk.</p></details>
-    <details><summary>How do I pay without a card?</summary><p>bKash, Nagad or Rocket send-money. At checkout you get our merchant number with a copy button and your order ID as reference. Done in 60 seconds.</p></details>
+    <details><summary>How do I pay without a card?</summary><p>bKash, Nagad or Rocket send-money. At checkout you get the current payment number with a copy button and your order ID as reference. Done in 60 seconds.</p></details>
     <details><summary>Do prices include renewal?</summary><p>Prices are per duration shown (mostly monthly). We WhatsApp you 3 days before expiry with one-tap renewal — no auto-charges, ever.</p></details>
   </div>
   <p class="mt2 center"><a href="faq.html" class="btn btn-ghost">All 22 questions answered →</a></p>

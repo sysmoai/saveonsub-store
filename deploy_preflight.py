@@ -33,13 +33,13 @@ for f in html_files:
     if BROKEN_PRICE.search(h): fails.append(f"{f}: BROKEN PRICE render (৳NaN/undefined)")
     if STANDALONE_BAD.search(h): fails.append(f"{f}: renders a NaN/undefined value as text")
 
-# 3) Contact-number consistency (one sales number, one merchant number, everywhere)
+# 3) Contact-number consistency (one sales number, one payment number shown at checkout, everywhere)
 for f in html_files:
     h = open(f).read().replace('-', '').replace(' ', '')
     # any wa.me link must point to the sales number
     for wanum in re.findall(r'wa\.me/(\d+)', h):
         if wanum != WA_SALES: fails.append(f"{f}: wa.me points to {wanum}, expected {WA_SALES}")
-    # merchant number only appears at checkout; if present elsewhere it's fine but must be the right one
+    # payment number shown at checkout only appears at checkout; if present elsewhere it's fine but must be the right one
     for mnum in re.findall(r'\+?8801\d{9}', h):
         if mnum.lstrip('+') not in (WA_SALES, BKASH):
             warns.append(f"{f}: unknown BD phone number {mnum}")

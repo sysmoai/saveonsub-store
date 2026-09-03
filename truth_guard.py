@@ -37,6 +37,9 @@ FORBIDDEN = {
     'shared from ৳350': 'retired ChatGPT shared price wording',
     'we sell at ৳350': 'retired ChatGPT shared price wording',
     'No shortcuts.': 'blanket official-only positioning conflicts with disclosed shared plans',
+    'merchant number': 'account type is not independently verified; use neutral checkout payment wording',
+    'মার্চেন্ট নম্বর': 'account type is not independently verified; use neutral checkout payment wording',
+    "Bangladesh's trusted subscription OS": 'unsupported trust-superlative claim; use verifiable facts instead',
 }
 
 WA_RE = re.compile(r'https://wa\.me/(\d+)')
