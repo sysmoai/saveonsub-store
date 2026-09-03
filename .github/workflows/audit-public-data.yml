@@ -1,0 +1,61 @@
+name: Audit Public Repository Data Schema
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/audit-public-data.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect field names and secret-like patterns without printing values
+        run: |
+          python3 - <<'PY'
+          import json, re
+          from pathlib import Path
+
+          suspicious_key = re.compile(r'(cost|supplier|wholesale|margin|profit|secret|token|password|credential|api.?key|customer|email|phone|proof|internal|competitor|survey|source.?cost|purchase)', re.I)
+          secret_value = re.compile(r'(sk-[A-Za-z0-9_-]{16,}|gh[pousr]_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----|api[_-]?key\s*[:=])', re.I)
+
+          data=json.loads(Path('catalog.json').read_text(encoding='utf-8'))
+          hits=[]
+          values=[]
+          allkeys=set()
+          def walk(obj,path='catalog'):
+              if isinstance(obj,dict):
+                  for k,v in obj.items():
+                      allkeys.add(k)
+                      p=f'{path}.{k}'
+                      if suspicious_key.search(k): hits.append(p)
+                      walk(v,p)
+              elif isinstance(obj,list):
+                  for i,v in enumerate(obj): walk(v,f'{path}[{i}]')
+              elif isinstance(obj,str) and secret_value.search(obj):
+                  values.append(path)
+          walk(data)
+          print(f'catalog_products={len(data.get("products",[]))}')
+          print(f'unique_field_names={len(allkeys)}')
+          print(f'suspicious_field_paths={len(hits)}')
+          for p in sorted(set(hits))[:100]: print('FIELD',p)
+          print(f'secret_like_value_paths={len(values)}')
+          for p in sorted(set(values))[:50]: print('VALUE_PATTERN',p)
+
+          # Scan tracked text outside ops/docs for obvious credentials; report path only.
+          repo_hits=[]
+          for p in Path('.').rglob('*'):
+              if not p.is_file() or any(x in p.parts for x in ('.git','node_modules','_site')):
+                  continue
+              if p.suffix.lower() not in {'.py','.js','.json','.html','.yml','.yaml','.toml','.txt','.env'}:
+                  continue
+              try: s=p.read_text(encoding='utf-8',errors='ignore')
+              except OSError: continue
+              if secret_value.search(s): repo_hits.append(p.as_posix())
+          print(f'repository_secret_like_files={len(repo_hits)}')
+          for p in sorted(set(repo_hits))[:50]: print('FILE_PATTERN',p)
+          PY
