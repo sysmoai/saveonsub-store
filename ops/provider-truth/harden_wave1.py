@@ -46,7 +46,7 @@ mode_new_important = '''<div class="notice mt3">
   </div>'''
 for mp in sorted(Path('modes').glob('*.html')):
     s = mp.read_text(encoding='utf-8')
-    s = s.replace('Official, customer-owned, activated on your account, paid in BDT via bKash.', 'Access method and plan terms disclosed before payment, with local BDT checkout.')
+    s = s.replace('Official, customer-owned, activated on your account, paid in BDT via bKash.', 'Access type, BDT price and plan terms shown before payment.')
     s = s.replace('Official, customer-owned, Bangladesh-first.', 'Access-type transparent, Bangladesh-first.')
     s = s.replace('Role-based subscription pack — official, customer-owned, activated on your account', 'Role-based subscription pack — access method, price and warranty disclosed before payment')
     s = s.replace(mode_old_notice, mode_new_notice)
