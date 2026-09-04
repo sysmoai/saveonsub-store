@@ -25,13 +25,6 @@ student = facts["student_offer"]
 plans = facts["official_plans"]
 
 
-def replace_once(text, pattern, replacement, flags=0, label="pattern"):
-    new, n = re.subn(pattern, replacement, text, count=1, flags=flags)
-    if n != 1:
-        raise RuntimeError(f"expected exactly one {label}, found {n}")
-    return new
-
-
 def cohort_panel(lang="en"):
     plus = plans["google-ai-plus"]
     pro = plans["google-ai-pro"]
@@ -64,23 +57,15 @@ def cohort_panel(lang="en"):
 
 def patch_page(path: Path, product_id: str, lang="en"):
     text = path.read_text(encoding="utf-8", errors="strict")
-    plan = plans[product_id]
-    official = plan["official_bdt_month"]
+    official = plans[product_id]["official_bdt_month"]
+    storage = "5 TB" if product_id == "google-ai-pro" else "400 GB"
 
-    # Replace stale official reference in visible anchor and market table.
     if lang == "en":
         text = re.sub(r'<span class="official">Official: ~?৳[\d,]+/mo(?: \([^<]+\))?</span>',
                       f'<span class="official">Google Bangladesh: ৳{official:,}/mo</span>', text, count=1)
         text = re.sub(r'<span class="savepct">[^<]*</span>\s*', '', text, count=1)
         text = re.sub(r'Official list converted at site anchor rate</td><td>~?৳[\d,]+/mo',
                       f'Google Bangladesh official page</td><td>৳{official:,}/mo', text, count=1)
-        text = text.replace('https://one.google.com/about/google-ai-plans/', source)
-        text = text.replace('2TB Google One storage', '5 TB storage' if product_id == 'google-ai-pro' else '400 GB storage')
-        text = text.replace('2TB storage', '5 TB storage' if product_id == 'google-ai-pro' else '400 GB storage')
-        # Remove cross-brand proof and absolute superiority claims.
-        text = re.sub(r'<details><summary>Why our #1 seller\?</summary><p>.*?</p></details>', '', text, flags=re.S)
-        text = re.sub(r'<details><summary>Why is Google AI Pro our #1 seller at ৳500\?</summary><p>.*?</p></details>', '', text, flags=re.S)
-        text = text.replace('Personal (your Gmail) — 83% off special', 'Personal (your Gmail)')
         insert_marker = '<h2 class="mt3" style="font-size:22px">Choose your plan</h2>'
     else:
         text = re.sub(r'<span class="official">অফিসিয়াল: ~?৳[\d,]+/মাস</span>',
@@ -88,36 +73,43 @@ def patch_page(path: Path, product_id: str, lang="en"):
         text = re.sub(r'<span class="savepct">[^<]*</span>\s*', '', text, count=1)
         text = re.sub(r'Official list, site anchor rate-এ converted</td><td>~?৳[\d,]+/মাস',
                       f'Google Bangladesh official page</td><td>৳{official:,}/মাস', text, count=1)
-        text = text.replace('https://one.google.com/about/google-ai-plans/', source)
-        text = text.replace('2TB Google One storage', '5 TB storage' if product_id == 'google-ai-pro' else '400 GB storage')
-        text = text.replace('2TB storage', '5 TB storage' if product_id == 'google-ai-pro' else '400 GB storage')
-        text = text.replace('Personal (your Gmail) — 83% off special', 'Personal (your Gmail)')
         insert_marker = '<h2 class="mt3" style="font-size:22px">আপনার প্ল্যান বেছে নিন</h2>'
+
+    text = text.replace('https://one.google.com/about/google-ai-plans/', source)
+    text = text.replace('2TB Google One storage', f'{storage} storage')
+    text = text.replace('2TB storage', f'{storage} storage')
+    text = text.replace('Personal (your Gmail) — 83% off special', 'Personal (your Gmail)')
+
+    # Remove/neutralize unsupported portfolio proof and absolute value claims.
+    text = re.sub(r'<details><summary>Why our #1 seller\?</summary><p>.*?</p></details>', '', text, flags=re.S)
+    text = re.sub(r'<details><summary>Why is Google AI Pro our #1 seller at ৳500\?</summary><p>.*?</p></details>', '', text, flags=re.S)
+    text = re.sub(r'211\+ orders[^<\"]*', 'Current SaveOnSub plan details are shown on this page. ', text)
+    text = text.replace('our #1 seller at ৳500', 'a current SaveOnSub option')
+    text = text.replace('our #1 seller', 'a current SaveOnSub option')
+    text = text.replace('This is the best single-AI value in BD — lower risk than shared, better value than official.',
+                        'Compare the access method, Google’s current Bangladesh price, and the exact SaveOnSub terms before choosing.')
+    text = text.replace('our ৳500 is market leader', 'SaveOnSub listed ৳500 in that historical snapshot')
 
     if 'data-google-ai-facts=' not in text:
         if insert_marker not in text:
             raise RuntimeError(f"insert marker missing in {path}")
         text = text.replace(insert_marker, cohort_panel(lang) + '\n  ' + insert_marker, 1)
 
-    # Update stale meta/JSON-LD official-reference snippets that are public-visible to search engines.
     text = re.sub(r'official reference ~?৳[\d,]+', f'Google Bangladesh reference ৳{official:,}', text)
     text = re.sub(r'official ~?৳[\d,]+', f'Google Bangladesh ৳{official:,}', text)
-
     path.write_text(text, encoding="utf-8")
 
 
 for pid in ("google-ai-pro", "google-ai-plus"):
-    en = SITE / "p" / f"{pid}.html"
-    bn = SITE / "bn" / "p" / f"{pid}.html"
-    if not en.exists() or not bn.exists():
-        raise SystemExit(f"ERROR: missing staged Google AI page(s) for {pid}")
-    patch_page(en, pid, "en")
-    patch_page(bn, pid, "bn")
+    for lang, rel in (("en", Path("p") / f"{pid}.html"), ("bn", Path("bn") / "p" / f"{pid}.html")):
+        path = SITE / rel
+        if not path.exists():
+            raise SystemExit(f"ERROR: missing staged Google AI page: {rel}")
+        patch_page(path, pid, lang)
 
-# Fail closed if known stale cohort claims survive.
 checks = {
-    "p/google-ai-pro.html": ["2TB", "83% off special", "our #1 seller", "official reference ~৳2,199"],
-    "bn/p/google-ai-pro.html": ["2TB", "83% off special", "official reference ~৳2,199"],
+    "p/google-ai-pro.html": ["2TB", "83% off special", "our #1 seller", "211+ orders", "market leader", "official reference ~৳2,199"],
+    "bn/p/google-ai-pro.html": ["2TB", "83% off special", "211+ orders", "official reference ~৳2,199"],
 }
 for rel, forbidden in checks.items():
     text = (SITE / rel).read_text(encoding="utf-8", errors="replace")
@@ -125,9 +117,15 @@ for rel, forbidden in checks.items():
         if phrase.lower() in text.lower():
             raise SystemExit(f"ERROR: stale Google AI cohort phrase survived in {rel}: {phrase}")
 
-for rel in ("p/google-ai-pro.html", "p/google-ai-plus.html", "bn/p/google-ai-pro.html", "bn/p/google-ai-plus.html"):
+required = {
+    "p/google-ai-pro.html": "Google Bangladesh: ৳2,500/mo",
+    "p/google-ai-plus.html": "Google Bangladesh: ৳600/mo",
+    "bn/p/google-ai-pro.html": "Google Bangladesh: ৳2,500/মাস",
+    "bn/p/google-ai-plus.html": "Google Bangladesh: ৳600/মাস",
+}
+for rel, marker in required.items():
     text = (SITE / rel).read_text(encoding="utf-8", errors="replace")
-    if f'data-google-ai-facts="{verified_on}"' not in text:
-        raise SystemExit(f"ERROR: verified Google AI fact panel missing in {rel}")
+    if f'data-google-ai-facts="{verified_on}"' not in text or marker not in text:
+        raise SystemExit(f"ERROR: verified Google AI cohort marker missing in {rel}")
 
-print("Google AI cohort hardening OK — official BD facts, comparison, and student path applied.")
+print("Google AI cohort hardening OK — official BD facts, comparison, student path, and proof cleanup applied.")
