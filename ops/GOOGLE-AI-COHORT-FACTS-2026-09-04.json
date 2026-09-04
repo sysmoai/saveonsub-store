@@ -1,0 +1,39 @@
+{
+  "verified_on": "2026-09-04",
+  "market": "Bangladesh",
+  "official_source": "https://gemini.google/bd/subscriptions/?hl=bn",
+  "official_plans": {
+    "google-ai-plus": {
+      "official_bdt_month": 600,
+      "storage": "400 GB",
+      "usage_vs_free": "2x",
+      "flow_credits_month": 200,
+      "availability": "160+ countries"
+    },
+    "google-ai-pro": {
+      "official_bdt_month": 2500,
+      "storage": "5 TB",
+      "usage_vs_free": "4x",
+      "flow_credits_month": 1000,
+      "availability": "150+ countries"
+    }
+  },
+  "student_offer": {
+    "plan": "Google AI Plus",
+    "price_during_offer_bdt": 0,
+    "duration": "1 year",
+    "claim_deadline": "2026-12-31",
+    "regular_auto_renew_bdt_month": 600,
+    "eligibility_summary": "Eligible college students aged 18+; Google terms and verification apply.",
+    "official_source": "https://gemini.google/bd/students/?hl=bn"
+  },
+  "bd_competitor_snapshot": {
+    "google-ai-pro": [
+      {"seller": "DeltaBox IT", "visible_price_bdt": "390-2490", "note": "multiple durations/access variants"},
+      {"seller": "Digi Subscriber", "visible_price_bdt": "599-1850", "note": "Pro/Ultra variants"},
+      {"seller": "Subscriptions Mart BD", "visible_price_bdt": "850", "note": "1 month, family invitation disclosed"},
+      {"seller": "BD Subscription", "visible_price_bdt": "650-2250", "note": "multiple plan variants"},
+      {"seller": "MARTsoon", "visible_price_bdt": "679", "note": "1 month product page"}
+    ]
+  }
+}
