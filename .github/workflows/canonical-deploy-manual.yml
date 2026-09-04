@@ -45,6 +45,7 @@ jobs:
           set -euo pipefail
           python stage_deploy.py
           python release_hardening.py
+          python google_ai_cohort.py
           python cache_safe_brand.py
           test -f _site/index.html
           test -f _site/robots.txt
@@ -53,6 +54,9 @@ jobs:
           test ! -e _site/catalog.json
           test ! -e _site/build_assets.py
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
+          grep -q 'data-google-ai-facts="2026-09-04"' _site/p/google-ai-pro.html
+          grep -q 'Google Bangladesh: ৳2,500/mo' _site/p/google-ai-pro.html
+          grep -q 'Google Bangladesh: ৳600/mo' _site/p/google-ai-plus.html
           ! grep -R -q 'Commonly searched as' _site --include='*.html'
           ! grep -R -q '<meta name="keywords"' _site --include='*.html'
 
@@ -102,9 +106,12 @@ jobs:
             curl -fsSL --max-time 20 https://saveonsub.com/ -o /tmp/home.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/robots.txt -o /tmp/robots.txt || true
             curl -fsSL --max-time 20 https://saveonsub.com/p/chatgpt-plus.html -o /tmp/chatgpt.html || true
+            curl -fsSL --max-time 20 https://saveonsub.com/p/google-ai-pro.html -o /tmp/google-ai-pro.html || true
             if grep -q 'User-agent: OAI-SearchBot' /tmp/robots.txt 2>/dev/null \
               && grep -q '/assets/measurement.js' /tmp/home.html 2>/dev/null \
               && grep -q '/assets/measurement.js' /tmp/chatgpt.html 2>/dev/null \
+              && grep -q 'data-google-ai-facts="2026-09-04"' /tmp/google-ai-pro.html 2>/dev/null \
+              && grep -q 'Google Bangladesh: ৳2,500/mo' /tmp/google-ai-pro.html 2>/dev/null \
               && ! grep -q 'Commonly searched as' /tmp/chatgpt.html 2>/dev/null; then
               echo 'Canonical production verified.'
               exit 0
