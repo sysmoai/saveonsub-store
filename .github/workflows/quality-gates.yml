@@ -7,7 +7,6 @@ on:
   push:
     branches: [main]
   schedule:
-    # Monday 08:15 Asia/Dhaka (02:15 UTC)
     - cron: '15 2 * * 1'
 
 concurrency:
@@ -49,6 +48,9 @@ jobs:
       - name: Apply verified Google AI cohort facts
         run: python google_ai_cohort.py
 
+      - name: Apply verified ChatGPT cohort facts
+        run: python chatgpt_cohort.py
+
       - name: Make approved logo cache-safe
         run: python cache_safe_brand.py
 
@@ -58,10 +60,17 @@ jobs:
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/logo.svg
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/favicon.svg
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
+
           grep -q 'data-google-ai-facts="2026-09-04"' _site/p/google-ai-pro.html
-          grep -q 'data-google-ai-facts="2026-09-04"' _site/p/google-ai-plus.html
           grep -q 'Google Bangladesh: ৳2,500/mo' _site/p/google-ai-pro.html
           grep -q 'Google Bangladesh: ৳600/mo' _site/p/google-ai-plus.html
+
+          grep -q 'data-chatgpt-facts="2026-09-07"' _site/p/chatgpt-plus.html
+          grep -q 'BDT is a supported currency' _site/p/chatgpt-plus.html
+          grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
+          grep -q 'data-chatgpt-go-facts="2026-09-07"' _site/p/chatgpt-go.html
+          grep -q 'data-chatgpt-facts="2026-09-07"' _site/blog/chatgpt-plus-price-in-bangladesh.html
+
           if grep -R -q '<meta name="keywords"' _site --include='*.html'; then
             echo "::error::Generated meta-keywords remain in staged HTML."
             exit 1
@@ -70,16 +79,26 @@ jobs:
             echo "::error::Visible keyword-dump section remains in staged HTML."
             exit 1
           fi
+
           for phrase in 'Every subscription is official' '100% customer-owned' 'Price-match guarantee' 'replace dead seats within 1 hour'; do
             if grep -R -F -q "$phrase" _site --include='*.html' --include='llms.txt'; then
               echo "::error::Unsafe blanket claim remains in staged public artifact: $phrase"
               exit 1
             fi
           done
+
           if grep -i -q '2TB\|83% off special\|our #1 seller' _site/p/google-ai-pro.html; then
             echo "::error::Stale Google AI Pro claim remains in staged page."
             exit 1
           fi
+
+          for f in _site/p/chatgpt-plus.html _site/bn/p/chatgpt-plus.html _site/blog/chatgpt-plus-price-in-bangladesh.html; do
+            if grep -i -q 'official: ~৳2,200/mo\|official reference ~৳2,200\|your chats stay private\|your conversations remain private per-user\|shared · low risk\|shared · warranty covered\|accepts only international cards' "$f"; then
+              echo "::error::Stale/high-risk ChatGPT claim remains in $f"
+              exit 1
+            fi
+          done
+
           versioned_logo=$(grep -o '/assets/logo-[0-9a-f]\{16\}\.svg' _site/index.html | head -1)
           test -n "$versioned_logo"
           test -f "_site${versioned_logo}"
@@ -88,10 +107,11 @@ jobs:
             echo "::error::Mutable logo URL remains in staged HTML."
             exit 1
           fi
+
           test ! -e _site/catalog.json
           test ! -e _site/build_assets.py
           test ! -e _site/.env
           test -f _site/index.html
           test -f _site/sitemap.xml
           test -f _site/robots.txt
-          echo "Quality gates passed; staged SEO/truth surface, Google AI cohort, public boundary and cache-safe brand references are clean."
+          echo "Quality gates passed; staged SEO/truth surface, Google AI + ChatGPT cohorts, public boundary and brand references are clean."
