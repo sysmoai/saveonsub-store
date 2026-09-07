@@ -1,0 +1,99 @@
+{
+  "verified_on": "2026-09-08",
+  "market": "Bangladesh",
+  "claude": {
+    "official_sources": {
+      "pricing": "https://claude.com/pricing",
+      "pro_help": "https://support.claude.com/en/articles/8325606-what-is-the-pro-plan",
+      "plan_guide": "https://support.claude.com/en/articles/11049762-choose-a-claude-plan",
+      "supported_countries": "https://support.claude.com/en/articles/8461763-where-can-i-access-claude",
+      "consumer_terms": "https://www.anthropic.com/legal/consumer-terms"
+    },
+    "official_plans": {
+      "Pro": {"monthly_usd": 20, "annual_usd": 200},
+      "Max_5x": {"monthly_usd": 100},
+      "Max_20x": {"monthly_usd": 200}
+    },
+    "bangladesh_supported": true,
+    "billing_note": "Anthropic publishes US pricing and says local-currency pricing is available where supported. Do not convert US$20 with SaveOnSub's internal FX rate and call it the official Bangladesh checkout price; users should verify their own current checkout and tax.",
+    "account_policy": {
+      "consumer_account_is_individual": true,
+      "credential_sharing_allowed": false,
+      "rule": "Do not market shared Claude credentials as provider-authorized, low-risk, private, or equivalent to an individual Pro subscription."
+    },
+    "team_note": "A Claude Team seat is an organization-managed commercial account, not the same thing as an individual Pro account. The organization owner/admin can manage access and organizational data under Claude for Work terms.",
+    "saveonsub_offer_snapshot": [
+      {"label": "Premium Shared (2–3)", "bdt": 1495, "duration": "1 month", "required_disclosure": "Shared consumer-account credentials conflict with Anthropic account terms and carry privacy, continuity and suspension risk."},
+      {"label": "Personal (your email)", "bdt": 2990, "duration": "1 month", "required_disclosure": "Confirm exact activation, billing control, renewal and account ownership before payment."},
+      {"label": "Team Seat — Personal", "bdt": 3990, "duration": "1 month", "required_disclosure": "Must be described as organization/admin-controlled team access if it is actually a Claude Team seat; do not label it equivalent to a personal Pro account."}
+    ]
+  },
+  "supergrok": {
+    "official_sources": {
+      "pricing": "https://x.ai/pricing",
+      "terms": "https://x.ai/legal/terms-of-service",
+      "grok_bot": "https://x.ai/news/grok-bot-more-plans"
+    },
+    "provider": "SpaceXAI LLC",
+    "official_plans": {
+      "Free": {"monthly_usd": 0},
+      "SuperGrok": {"monthly_usd": 30},
+      "SuperGrok_Plus": {"monthly_usd": 100}
+    },
+    "current_highlights": ["Grok 4.6", "Grok Bot access", "connectors", "higher rate limits", "image and video generation"],
+    "account_policy": {
+      "credential_sharing_allowed": false,
+      "rule": "Current SpaceXAI consumer terms say users may not share account credentials or make the account available to anyone else."
+    },
+    "tier_mapping_rule": "SaveOnSub seller labels such as 'Lite — Personal' and 'Standard — Personal' must not be presented as verified current official provider tier names unless the exact provider plan shown in the delivered account is confirmed before payment. Current official public pricing verified here is SuperGrok US$30/month and SuperGrok Plus US$100/month.",
+    "saveonsub_offer_snapshot": [
+      {"label": "Lite — Personal", "bdt": 1495, "duration": "1 month", "required_disclosure": "Confirm exact SpaceXAI plan name and included entitlements before payment."},
+      {"label": "Standard — Personal", "bdt": 3990, "duration": "1 month", "required_disclosure": "Confirm exact SpaceXAI plan name and included entitlements before payment."}
+    ]
+  },
+  "perplexity": {
+    "official_sources": {
+      "overview": "https://www.perplexity.ai/hub",
+      "max": "https://www.perplexity.ai/help-center/en/articles/11680686-perplexity-max",
+      "plan_guide": "https://www.perplexity.ai/help-center/en/articles/11187416-which-perplexity-subscription-plan-is-right-for-you",
+      "account_security": "https://www.perplexity.ai/help-center/en/articles/10352998-account-management-and-security",
+      "local_currency": "https://www.perplexity.ai/help-center/en/articles/13182759-paying-in-local-currency",
+      "billing": "https://www.perplexity.ai/help-center/en/articles/10353002-billing-faq-for-pro-plan-subscribers"
+    },
+    "official_plans": {
+      "Pro": {"monthly_usd": 20, "annual_usd": 200},
+      "Max": {"monthly_usd": 200, "annual_usd": 2000},
+      "Education_Pro": {"monthly_usd": 10, "verification": "SheerID"}
+    },
+    "billing_note": "Perplexity web checkout can offer local-currency or USD billing. Do not assert BDT availability without seeing the user's checkout; exact price and currency at checkout are authoritative. Direct web payment methods currently include major credit/debit cards plus other methods listed by Perplexity; SaveOnSub local bKash/Nagad payment is a seller payment path, not evidence that Perplexity directly accepts bKash/Nagad.",
+    "account_policy": {
+      "sharing_allowed": false,
+      "rule": "Perplexity says sharing an account violates its Terms of Use and risks suspension or termination."
+    },
+    "transfer_note": "Eligible standard web-purchased consumer Pro and Max subscriptions can be self-transferred to another email, but account data stays with the original account and some plan types are ineligible.",
+    "saveonsub_offer_snapshot": [
+      {"label": "Shared", "bdt": 350, "duration": "1 month", "required_disclosure": "Conflicts with Perplexity account-sharing policy and carries privacy, misuse, continuity and suspension risk."},
+      {"label": "Personal", "bdt": 2990, "duration": "1 month", "required_disclosure": "Confirm exact account/subscription ownership, activation and renewal control before payment."},
+      {"label": "Max — Personal", "bdt": 29900, "duration": "1 month", "required_disclosure": "Confirm that the delivered provider tier is actually Perplexity Max before payment."}
+    ]
+  },
+  "portfolio_intent_ownership": {
+    "saveonsub": {
+      "role": "neutral consumer comparison, Bangladesh payment guidance, access-method disclosure and provider-policy risk authority",
+      "owns": [
+        "claude pro price in bangladesh",
+        "claude pro bkash",
+        "claude shared vs personal bangladesh",
+        "supergrok price in bangladesh",
+        "supergrok bkash",
+        "supergrok plan comparison bangladesh",
+        "perplexity pro price in bangladesh",
+        "perplexity pro bkash",
+        "perplexity shared vs personal bangladesh"
+      ]
+    },
+    "aips": {"overlap": "high for Claude and Perplexity use-case/store content", "recommended_future_role": "store-brand, vertical use-case and customer-service intent rather than cloning SaveOnSub's exact neutral comparison pages"},
+    "aitp": {"overlap": "high for Perplexity and broad AI-tool purchase intent", "recommended_future_role": "personal-seat, workflow/tutorial and its own brand demand"},
+    "aipt": {"overlap": "high for Perplexity shared and Claude catalog demand", "recommended_future_role": "bundle/student/store-specific intent"}
+  }
+}
