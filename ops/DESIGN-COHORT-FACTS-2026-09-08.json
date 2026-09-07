@@ -1,0 +1,84 @@
+{
+  "verified_on": "2026-09-08",
+  "market": "Bangladesh",
+  "canva": {
+    "official_sources": {
+      "pricing": "https://www.canva.com/pricing/",
+      "pro": "https://www.canva.com/pro/",
+      "business_announcement": "https://www.canva.com/newsroom/news/introducing-canva-business/",
+      "terms": "https://www.canva.com/policies/terms-of-use/",
+      "team_workspace": "https://www.canva.com/en_in/help/switch-from-pro-to-business/"
+    },
+    "official_reference": {
+      "pro_yearly_usd": 180,
+      "pro_scope": "one person",
+      "pro_storage": "100 GB",
+      "pro_brand_kits": 5,
+      "pro_ai_vs_free": "10x",
+      "business_yearly_usd_per_person": 250,
+      "business_storage": "500 GB",
+      "business_brand_kits": 100,
+      "business_ai_vs_free": "20x"
+    },
+    "plan_truth": {
+      "pro_is_individual": true,
+      "new_team_signup_plan": "Canva Business",
+      "legacy_teams_note": "Existing Canva Teams subscribers can continue on their existing Teams plan; new team sign-ups/upgrades use Canva Business.",
+      "credential_sharing_allowed": false,
+      "team_workspace_note": "Designs created inside a team workspace stay in that team workspace; a removed member can lose access to those team designs."
+    },
+    "saveonsub_offer_snapshot": [
+      {"label": "Team seat (your login)", "bdt": 299, "duration": "1 month", "required_disclosure": "Exact source plan (Canva Business or existing legacy Teams), team owner/admin control, and what happens to workspace designs if membership ends must be disclosed before payment."},
+      {"label": "Personal Pro", "bdt": 1499, "duration": "1 year", "required_disclosure": "Exact activation/source method and renewal/control terms must be disclosed before payment; do not imply that a low reseller price itself proves a direct Canva-billed subscription."}
+    ],
+    "bd_serp_snapshot": [
+      {"seller": "ToolMartBD", "visible_price_bdt": 59, "duration": "1 year", "note": "team invite/access details after payment"},
+      {"seller": "Sohan Online Shop", "visible_price_bdt": "350-2999", "note": "1-year/lifetime variants"},
+      {"seller": "NexifyBD", "visible_price_bdt": 500, "duration": "1 month", "note": "premium access"},
+      {"seller": "Daraz seller listing", "visible_price_bdt": 2999, "duration": "1 year", "note": "marketplace listing"}
+    ]
+  },
+  "midjourney": {
+    "official_sources": {
+      "plans": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans",
+      "terms": "https://docs.midjourney.com/hc/en-us/articles/32083055291277-Terms-of-Service",
+      "community": "https://docs.midjourney.com/hc/en-us/articles/32013696484109-Community-Guidelines",
+      "commercial_use": "https://docs.midjourney.com/hc/en-us/articles/27870375276557-Using-Images-Videos-Commercially"
+    },
+    "official_plans": {
+      "Basic": {"monthly_usd": 10, "annual_usd": 96, "fast_gpu": "3.3 hr/month", "relax": "none", "stealth": false},
+      "Standard": {"monthly_usd": 30, "annual_usd": 288, "fast_gpu": "15 hr/month", "relax": "unlimited images", "stealth": false},
+      "Pro": {"monthly_usd": 60, "annual_usd": 576, "fast_gpu": "30 hr/month", "relax": "unlimited images + SD video", "stealth": true},
+      "Mega": {"monthly_usd": 120, "annual_usd": 1152, "fast_gpu": "60 hr/month", "relax": "unlimited images + SD video", "stealth": true}
+    },
+    "annual_discount_pct": 20,
+    "account_policy": {
+      "one_user_per_account": true,
+      "resale_or_redistribution_of_service_access_allowed": false,
+      "shared_account_allowed": false,
+      "risk_summary": "Midjourney says only one user may use a registered account and users may not resell or redistribute the Services or access to the Service, including sharing an account. Shared access therefore carries explicit provider-policy and suspension/ban risk."
+    },
+    "commercial_use_note": "General commercial terms apply to subscribed users, but a company with more than US$1,000,000 in annual gross revenue must use Pro or Mega for company commercial use.",
+    "bd_serp_snapshot": [
+      {"seller": "MARTsoon", "basic_bdt": 1550, "standard_bdt": 4350, "pro_bdt": 8750, "mega_bdt": 16500},
+      {"seller": "Any AI Pro", "standard_personal_bdt": 3700, "standard_shared_bdt": 1500, "note": "shared option advertised"}
+    ]
+  },
+  "portfolio_intent_ownership": {
+    "saveonsub": {
+      "role": "consumer comparison, price, payment and risk-disclosure authority",
+      "owns": [
+        "canva pro price in bangladesh",
+        "canva pro bkash",
+        "canva team seat vs personal",
+        "midjourney price in bangladesh",
+        "midjourney bkash",
+        "midjourney standard vs pro bangladesh",
+        "midjourney shared vs personal risk"
+      ]
+    },
+    "aips": {"overlap": "medium", "recommended_future_role": "store-brand and use-case demand, not duplicate exact generic comparison pages"},
+    "aitp": {"overlap": "high for Canva/use-case content", "recommended_future_role": "personal-seat and workflow/tutorial intent"},
+    "aipt": {"overlap": "high for Midjourney shared/student intent", "recommended_future_role": "student bundles and brand-specific demand"}
+  }
+}
