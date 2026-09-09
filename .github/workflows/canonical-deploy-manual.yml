@@ -51,7 +51,9 @@ jobs:
           test ! -e _site/catalog.json
           test ! -e _site/build_assets.py
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
-          grep -q 'data-google-ai-facts="2026-09-04"' _site/p/google-ai-pro.html
+          grep -q 'data-google-ai-facts="2026-09-09"' _site/p/google-ai-pro.html
+          grep -q 'Google Bangladesh: ৳2,500/mo' _site/p/google-ai-pro.html
+          grep -q '5 TB' _site/p/google-ai-pro.html
           grep -q 'data-chatgpt-facts="2026-09-07"' _site/p/chatgpt-plus.html
           grep -q 'data-canva-facts="2026-09-08"' _site/p/canva-pro.html
           grep -q 'data-midjourney-facts="2026-09-08"' _site/p/midjourney.html
@@ -111,6 +113,7 @@ jobs:
             curl -fsSL --max-time 20 https://saveonsub.com/ -o /tmp/home.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/robots.txt -o /tmp/robots.txt || true
             curl -fsSL --max-time 20 https://saveonsub.com/sitemap.xml -o /tmp/sitemap.xml || true
+            curl -fsSL --max-time 20 https://saveonsub.com/p/google-ai-pro -o /tmp/google-ai.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/p/chatgpt-plus -o /tmp/chatgpt.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/p/claude-pro -o /tmp/claude.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/p/supergrok -o /tmp/supergrok.html || true
@@ -118,6 +121,9 @@ jobs:
             curl -fsSL --max-time 20 https://saveonsub.com/checkout -o /tmp/checkout.html || true
             if grep -q 'User-agent: OAI-SearchBot' /tmp/robots.txt 2>/dev/null \
               && grep -q '/assets/measurement.js' /tmp/home.html 2>/dev/null \
+              && grep -q 'data-google-ai-facts="2026-09-09"' /tmp/google-ai.html 2>/dev/null \
+              && grep -q 'Google Bangladesh: ৳2,500/mo' /tmp/google-ai.html 2>/dev/null \
+              && grep -q '5 TB' /tmp/google-ai.html 2>/dev/null \
               && grep -q 'data-chatgpt-facts="2026-09-07"' /tmp/chatgpt.html 2>/dev/null \
               && grep -q 'SHARED · POLICY RISK' /tmp/chatgpt.html 2>/dev/null \
               && grep -q 'data-claude-facts="2026-09-09"' /tmp/claude.html 2>/dev/null \
