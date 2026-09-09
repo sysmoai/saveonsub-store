@@ -1,0 +1,38 @@
+{
+  "verified_on": "2026-09-09",
+  "netflix": {
+    "official_source": "https://www.netflix.com/bd/",
+    "currency": "USD",
+    "plans": {
+      "Mobile": {"price_month": 2.99, "quality": "480p", "devices": "phone/tablet"},
+      "Basic": {"price_month": 3.99, "quality": "720p", "devices": "phone/tablet/laptop/TV"},
+      "Standard": {"price_month": 7.99, "quality": "1080p", "devices": "phone/tablet/laptop/TV"},
+      "Premium": {"price_month": 9.99, "quality": "4K + HDR", "devices": "phone/tablet/laptop/TV"}
+    }
+  },
+  "spotify": {
+    "official_source": "https://www.spotify.com/bd-en/premium/",
+    "currency": "BDT",
+    "plans": {
+      "Individual": 219,
+      "Student": 109,
+      "Duo": 299,
+      "Family": 379
+    },
+    "family_same_address": true,
+    "promo": {
+      "eligible_new_individual_months": 3,
+      "price_bdt": 0,
+      "ends": "2026-09-23"
+    }
+  },
+  "youtube": {
+    "availability_source": "https://support.google.com/youtube/answer/6307365?hl=en-EN",
+    "family_source": "https://support.google.com/youtube/answer/12156000?co=GENIE.Platform%3DAndroid&hl=en",
+    "payment_source": "https://support.google.com/youtube/answer/10239146",
+    "premium_available_bangladesh": true,
+    "family_same_residential_address": true,
+    "family_electronic_check_days": 30,
+    "price_policy": "Use live YouTube checkout as authority; verified official help confirms Bangladesh availability and household rules but this cohort does not publish an unverified exact BDT checkout price."
+  }
+}
