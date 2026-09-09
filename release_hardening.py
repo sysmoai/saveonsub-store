@@ -38,6 +38,22 @@ REPLACEMENTS = {
         'shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk',
     'You get whatever the provider ships — same as an official subscriber.':
         'Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order.',
+    # Bangla parity: do not let the localized homepage preserve stronger claims
+    # than the English release boundary allows.
+    'ChatGPT, Netflix, Canva, Midjourney সহ ৫০+ টুল — অথেনটিক, ৫–১৫ মিনিটে WhatsApp-এ ডেলিভারি, বিকাশে পেমেন্ট। প্রতিটা প্ল্যানে সৎ লেবেল, প্রতিটা সিটে ওয়ারেন্টি।':
+        'ChatGPT, Netflix, Canva, Midjourney সহ ৫০+ টুল — access type, delivery SLA এবং প্রযোজ্য warranty অর্ডারের আগে দেখুন; checkout-এ দেখানো local payment option ব্যবহার করুন।',
+    'অফিসিয়াল ChatGPT Plus: ৳2,200/মাস':
+        'ChatGPT Plus web list: $20/মাস',
+    '77% সাশ্রয়':
+        'access type যাচাই করুন',
+    'শেয়ার্ড·কম-ঝুঁকি':
+        'শেয়ার্ড·অ্যাক্সেস ঝুঁকি দেখুন',
+    'শেয়ার্ড·ওয়ারেন্টিসহ':
+        'শেয়ার্ড·পলিসি ঝুঁকি',
+    'ইনস্ট্যান্ট প্রোডাক্ট ৫–১৫ মিনিটে আসে। প্রথম মিনিট থেকেই ওয়ারেন্টি।':
+        'ডেলিভারি সময় ও warranty নির্বাচিত plan অনুযায়ী; অর্ডারের আগে applicable terms দেখুন।',
+    '62টি প্রোডাক্ট · বিকাশ/নগদ · ৫–১৫ মিনিটে ডেলিভারি · সবকিছুতে ওয়ারেন্টি।':
+        '62টি প্রোডাক্ট · local BDT payment option · delivery SLA ও warranty plan অনুযায়ী।',
 }
 
 GENERIC_REPLACEMENTS = {
@@ -61,6 +77,12 @@ FORBIDDEN_PUBLIC = {
     'seat type doesn&#x27;t affect functionality': 'shared/personal equivalence claim',
     'You get whatever the provider ships — same as an official subscriber.': 'blanket official-equivalence claim',
     'SHARED · LOW RISK': 'unverified blanket shared-risk label',
+    'অথেনটিক, ৫–১৫ মিনিটে WhatsApp-এ ডেলিভারি': 'localized blanket authenticity/delivery claim',
+    'প্রতিটা সিটে ওয়ারেন্টি': 'localized blanket warranty claim',
+    'শেয়ার্ড·কম-ঝুঁকি': 'localized unverified shared-risk label',
+    'শেয়ার্ড·ওয়ারেন্টিসহ': 'localized shared warranty implication',
+    'প্রথম মিনিট থেকেই ওয়ারেন্টি': 'localized blanket immediate warranty claim',
+    'সবকিছুতে ওয়ারেন্টি': 'localized blanket warranty claim',
 }
 
 changed = 0
