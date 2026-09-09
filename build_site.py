@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Canonical Vercel build orchestrator.
+"""Canonical staged-site build orchestrator.
 
 Keep vercel.json's buildCommand short enough for Vercel schema limits while
-preserving the exact ordered, fail-closed build pipeline.
+preserving the exact ordered, fail-closed build pipeline used to validate the
+same hardened artifact intended for canonical Cloudflare Pages production.
 """
 import subprocess
 import sys
@@ -18,6 +19,7 @@ STEPS = [
     "supergrok_cohort.py",
     "perplexity_cohort.py",
     "cache_safe_brand.py",
+    "technical_seo_hardening.py",
 ]
 
 
