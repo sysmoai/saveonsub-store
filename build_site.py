@@ -19,6 +19,7 @@ STEPS = [
     "claude_cohort.py",
     "supergrok_cohort.py",
     "perplexity_cohort.py",
+    "entertainment_cohort.py",
     "cache_safe_brand.py",
     "technical_seo_hardening.py",
 ]
