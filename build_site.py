@@ -22,6 +22,7 @@ STEPS = [
     "entertainment_cohort.py",
     "runway_cohort.py",
     "trust_cohort.py",
+    "homepage_truth_cohort.py",
     "cache_safe_brand.py",
     "technical_seo_hardening.py",
 ]
