@@ -5,7 +5,7 @@
 - Canonical domain: https://saveonsub.com
 - Repository: sysmoai/saveonsub-store
 - Owner / CEO: Emon Hossain
-- Current operating authority date: 2026-09-03
+- Current operating authority date: 2026-09-09
 - 50,000+ monthly organic visitors is a growth target, never a current fact or guarantee.
 
 ## Primary operating doctrine
@@ -18,13 +18,14 @@ Preserve existing ranking URLs, search intent, useful content, internal-link equ
 ## Current stack truth
 - Frontend: generated static HTML + CSS + vanilla JavaScript.
 - Data/build source: repository data and Python generators.
-- Public release directory: `_site/`, produced by `stage_deploy.py`.
+- Public release directory: `_site/`, produced by the canonical `build_site.py` pipeline.
 - Browser state currently handles cart/recent order history; there is not yet a central production order database, customer-account backend or automated payment gateway.
 - GitHub `main` is the source branch.
-- Vercel is connected to this repository and auto-deploys `main` to Vercel-owned production aliases. `saveonsub.com` is not currently attached to the connected Vercel project.
-- Canonical production path is intended to be GitHub Actions → Cloudflare Pages project `saveonsub` → `saveonsub.com`.
+- Vercel is connected to this repository and auto-deploys `main` to Vercel-owned production aliases. `saveonsub.com` is not attached to the connected Vercel project.
+- Canonical production path is GitHub Actions → Cloudflare Pages project `saveonsub` → `saveonsub.com`.
 - Do not describe GitHub Pages / `gh-pages` as the current production path.
-- As of 2026-09-03, the Cloudflare deployment workflow is fail-closed because the configured `CLOUDFLARE_API_TOKEN` returns HTTP 401. Build/staging and the Vercel mirror are healthy. Do not claim the newest commit is canonical-live until the Cloudflare credential is repaired and canonical smoke tests pass.
+- Canonical deployment is fail-closed: the workflow must validate the exact Cloudflare Pages project, deploy only `_site/`, and then smoke-test `saveonsub.com`. If the credential is missing/invalid, deployment must stop without bypass.
+- Do not call a commit canonical-live until the canonical smoke tests pass.
 
 ## Final brand lock
 - The CEO-approved SaveOnSub logo/icon supplied on 2026-08-19 is final and locked.
@@ -73,17 +74,17 @@ Before changing an established indexable URL, title intent, canonical, hreflang,
 - If Cloudflare authentication fails, do not weaken the workflow or route around validation. Repair credentials.
 
 ## Deployment authority
-The authoritative deployment procedure is `DEPLOY.md` plus `.github/workflows/deploy.yml`.
+The authoritative deployment procedure is `DEPLOY.md` plus `.github/workflows/canonical-deploy-manual.yml`.
 
 A green production release requires, at minimum:
 - price consistency check passes;
-- `_site/` staging passes;
+- repository audits/preflight pass;
+- `build_site.py` completes;
 - approved brand markers pass;
 - internal-source exclusion checks pass;
 - Cloudflare token is active and can access project `saveonsub`;
-- deployment completes;
-- `https://saveonsub.com/` returns successfully;
-- canonical `assets/logo.svg` carries the approved brand-lock marker;
+- deployment completes from the exact release SHA;
+- `https://saveonsub.com/` and priority money pages pass canonical smoke tests;
 - prohibited source paths remain inaccessible.
 
 ## Management system
