@@ -6,81 +6,83 @@
 **Canonical host:** Cloudflare Pages project `saveonsub`  
 **Secondary mirror:** connected Vercel project `saveonsub`
 
-Last operational review: **2026-09-03**.
+Last operational review: **2026-09-09**.
 
 ## Current deployment truth
 
-The previous direct GitHub Actions Cloudflare deployment workflow (`.github/workflows/deploy.yml`) was removed on 2026-09-03 after repeated credential/authentication failures. Therefore **there is currently no active GitHub Actions job that automatically publishes `main` to canonical `saveonsub.com`**.
+The canonical deployment workflow is `.github/workflows/canonical-deploy-manual.yml`. It remains manually dispatchable and, once the reviewed automation change is merged, also runs on pushes to `main`.
 
-Vercel still follows the repository through Git integration and is useful as an independent build/mirror signal, but `saveonsub.com` is not attached to that connected Vercel project. A Vercel READY deployment must never be called canonical-live.
+The workflow is deliberately fail-closed. It validates repository truth, builds the exact hardened `_site/` artifact, verifies the exact Cloudflare account/project before upload, deploys only `_site/`, and then smoke-tests the real `saveonsub.com` canonical host. Missing/invalid Cloudflare credentials stop the release; they must never be bypassed.
 
-Do not silently re-create the removed Cloudflare workflow or move DNS to Vercel. Restoring canonical automation requires a reviewed deployment path, valid least-privilege Cloudflare credentials, staged-artifact validation and canonical smoke tests.
+Vercel follows `main` through Git integration and remains an independent build/mirror signal. `saveonsub.com` is not attached to that Vercel project, so Vercel READY is not canonical-live proof.
 
 ## Required release pipeline
 
 ```text
-GitHub reviewed source
+reviewed GitHub main commit
   ↓
-check_prices.py
+check_prices.py + audit_all.py + deploy_preflight.py
   ↓
-audit_all.py / deploy_preflight.py as applicable
+build_site.py
   ↓
-stage_deploy.py
+canonical ordered hardening/cohort pipeline
   ↓
-_site/  (public files only)
-  ↓
-release_hardening.py
-  ↓
-cache_safe_brand.py
+_site/ only
   ↓
 release-boundary checks
   ↓
-reviewed Cloudflare Pages deployment
+exact Cloudflare Pages project verification
+  ↓
+Cloudflare Pages deployment using exact release SHA
   ↓
 saveonsub.com
   ↓
 canonical smoke tests
 ```
 
+`build_site.py` is the canonical build orchestrator. Do not maintain a second hand-written build sequence in deployment configuration.
+
 ## Non-negotiable rules
 
 1. Never publish repository root (`.`); publish only reviewed `_site/` output.
 2. Never expose `catalog.json`, build scripts, `.env*`, research/audit files, supplier data or secrets.
 3. Preserve the approved 2026-08-19 SaveOnSub brand lock and immutable/cache-safe logo references.
-4. `release_hardening.py` must run after staging and before brand cache versioning/deployment.
+4. Run the canonical `build_site.py` pipeline rather than cherry-picking individual cohort scripts.
 5. Do not ship blanket claims that all products are official/customer-owned/private or that every plan receives the same warranty/replacement SLA.
 6. Preserve ranking URLs, canonicals, hreflang and internal-link equity unless a reviewed migration is necessary.
-7. Pull requests validate only. They never mean canonical production was updated.
-8. A release is complete only when `https://saveonsub.com/` itself is verified after deployment.
+7. Pull requests validate only; they do not deploy canonical production.
+8. A release is complete only when `https://saveonsub.com/` itself passes post-deploy smoke tests.
+9. If Cloudflare authentication or project verification fails, repair the credential/permission; do not route around the guard.
 
 ## Current automated validation
 
-`.github/workflows/quality-gates.yml` runs on pull requests, pushes to `main`, manual dispatch and weekly schedule. It validates source truth/prices, repository regression, staged public output, staged truth/SEO hardening, AI crawler policy, approved brand markers and public-source exclusion.
+`.github/workflows/quality-gates.yml` runs on pull requests and pushes to `main` (plus its configured manual/scheduled modes). It validates source truth/prices, regression safety, staged public output, provider cohorts, technical SEO, crawler policy, approved brand markers and public-source exclusion.
 
-The connected Vercel project builds with:
+The connected Vercel project executes `python3 build_site.py` and publishes `_site/`. That is a useful mirror and release-preview signal, not canonical proof.
 
-```text
-check_prices.py
-→ stage_deploy.py
-→ release_hardening.py
-→ cache_safe_brand.py
-```
+The canonical Cloudflare workflow runs the same build orchestrator and adds exact-project credential verification plus real-host smoke tests. On a `push` event it checks out and deploys the exact pushed SHA; on manual dispatch it deploys current `main`.
 
-This provides a useful release-preview artifact, not canonical proof.
+## Cloudflare credential requirements
 
-## Canonical restoration requirements
+The production secret `CLOUDFLARE_API_TOKEN` must be least-privilege and able to access account `4ca6269edabb6ad2906d70ec6845de22`, Pages project `saveonsub`.
 
-Before restoring automated Cloudflare publishing:
+The workflow verifies this project through the Cloudflare API before Wrangler is allowed to upload anything. Secret values must never be printed, committed or requested in chat.
 
-- validate the exact Cloudflare account and Pages project `saveonsub`;
-- use a valid least-privilege credential without exposing it in code/logs/chat;
-- deploy only hardened `_site/`;
-- verify homepage, top commercial products, Bangla homepage, robots, sitemap, checkout/WhatsApp path and critical redirects;
-- verify approved immutable logo references;
-- verify internal source paths remain inaccessible;
-- keep a known-good rollback commit/deployment.
+Credential rotation/replacement, DNS changes and domain ownership changes remain human-controlled boundaries.
 
-Credential rotation/replacement, DNS changes and domain ownership changes are human-controlled boundaries.
+## Canonical smoke-test minimum
+
+After upload, verify at least:
+
+- homepage responds and contains the staged measurement script;
+- `robots.txt` retains `OAI-SearchBot` policy;
+- sitemap has clean canonical URLs and no same-origin `.html` entries;
+- top governed money pages contain their current fact markers and truth-safe disclosures;
+- checkout remains `noindex,follow`;
+- old keyword-dump, converted-price, unsupported low-risk/warranty/privacy claims are absent;
+- approved branding remains intact.
+
+An upload that does not converge on the canonical host is a failed release.
 
 ## SEO-sensitive release rule
 
@@ -100,7 +102,7 @@ Use these terms precisely:
 - **Committed** — source exists in GitHub.
 - **Quality gates passed** — source and staged public artifact passed automated checks.
 - **Vercel READY** — the mirror/preview built successfully.
-- **Cloudflare deployed** — a reviewed upload to the Cloudflare Pages project succeeded.
-- **Canonical live** — `saveonsub.com` itself was smoke-tested after that deployment.
+- **Cloudflare deployed** — the hardened artifact was uploaded to the verified Cloudflare Pages project.
+- **Canonical live** — `saveonsub.com` itself was smoke-tested successfully after that deployment.
 
 Never use these interchangeably.
