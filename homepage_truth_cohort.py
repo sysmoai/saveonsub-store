@@ -42,7 +42,9 @@ def bn():
                rf'\g<1>{count}টি subscription option — access type, payment method, delivery SLA এবং applicable warranty terms অর্ডারের আগে দেখুন।\g<2>', t, count=1)
     t = t.replace('"description":"সৎ দামে আসল প্রিমিয়াম সাবস্ক্রিপশন — বিকাশ/নগদ/রকেটে।"',
                   '"description":"বাংলাদেশে clearly labeled subscription options with local BDT payment support."')
-    t = re.sub(r'ChatGPT, Netflix, Canva, Midjourney সহ ৫০\+ টুল —.*?প্রতিটা সিটে ওয়ারেন্টি।',
+    # Later release hardening can partially rewrite this legacy hero sentence, so normalize any
+    # remaining 50+ tool statement rather than depending on its full original wording.
+    t = re.sub(r'ChatGPT, Netflix, Canva, Midjourney সহ ৫০\+ টুল[^<]*',
                f'ChatGPT, Netflix, Canva, Midjourney সহ {count}টি subscription option — access type, current price, delivery SLA এবং applicable warranty/payment terms অর্ডারের আগে দেখুন।', t, count=1)
     t = re.sub(r'<span class="official">অফিসিয়াল ChatGPT Plus: ৳[\d,]+/মাস</span><span class="ours">আমাদের: ৳([\d,]+)</span><span class="savepct">\d+% সাশ্রয়</span>',
                r'<span class="official">ChatGPT Plus web list: $20/mo</span><span class="ours">SAVEONSUB: ৳\1</span><span class="savepct">ACCESS TYPE দেখুন</span>', t, count=1)
