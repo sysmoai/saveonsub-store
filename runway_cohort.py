@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Harden Runway money pages with verified 2026-09-09 plan facts.
-
-Preserves existing URLs and active SaveOnSub Standard/Pro prices. Prevents the
-legacy Unlimited offer from being presented as a new-order plan after Runway
-ended new Unlimited subscriptions on 2026-06-01, and explains the Max transition.
-"""
+"""Harden Runway money pages with verified 2026-09-09 plan facts."""
 from pathlib import Path
 import json
 import re
@@ -14,7 +9,6 @@ FACTS = json.loads(Path("ops/RUNWAY-COHORT-FACTS-2026-09-09.json").read_text(enc
 VERIFIED = FACTS["verified_on"]
 SOURCES = FACTS["official_sources"]
 PLANS = FACTS["plans"]
-LEGACY = FACTS["unlimited"]
 
 if not ROOT.is_dir():
     raise SystemExit("RUNWAY COHORT ERROR — _site missing")
@@ -74,19 +68,9 @@ def panel(bn=False):
 
 
 def disable_legacy_unlimited(text, bn=False):
-    # Remove the legacy Unlimited offer from Product structured data so search
-    # engines do not receive an InStock new-sale signal for a retired new tier.
-    text = re.sub(
-        r',?\s*\{"@type":\s*"Offer",\s*"name":\s*"Unlimited Personal".*?\}',
-        '',
-        text,
-        count=1,
-        flags=re.S,
-    )
+    text = re.sub(r',?\s*\{"@type":\s*"Offer",\s*"name":\s*"Unlimited Personal".*?\}', '', text, count=1, flags=re.S)
     text = text.replace('"offerCount": 3', '"offerCount": 2')
     text = text.replace('"highPrice": 11362', '"highPrice": 4186')
-
-    # Convert the visible card into a non-purchasable legacy transition notice.
     pattern = re.compile(
         r'<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">\s*'
         r'<div><b>Unlimited Personal</b><br>.*?'</n        r'</div></div>',
@@ -139,8 +123,6 @@ def patch(rel, bn=False):
 patch("p/runway.html", False)
 patch("bn/p/runway.html", True)
 
-# Refresh the AI-video guide's stale Runway row/marketing language without
-# inventing a Higgsfield offer or new SaveOnSub Max inventory.
 gp, g = load("blog/ai-video-tools-price-comparison-bd-2026.html")
 gdesc = "AI video tools in Bangladesh: current SaveOnSub prices plus provider-plan caveats. Runway facts verified 2026-09-09; compare access type, credits and current provider pricing before buying."
 g = meta(g, "description", gdesc)
