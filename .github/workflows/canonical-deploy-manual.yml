@@ -43,12 +43,7 @@ jobs:
       - name: Build exact hardened public artifact
         run: |
           set -euo pipefail
-          python stage_deploy.py
-          python release_hardening.py
-          python google_ai_cohort.py
-          python chatgpt_cohort.py
-          python design_cohort.py
-          python cache_safe_brand.py
+          python build_site.py
           test -f _site/index.html
           test -f _site/robots.txt
           test -f _site/sitemap.xml
@@ -57,18 +52,18 @@ jobs:
           test ! -e _site/build_assets.py
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
           grep -q 'data-google-ai-facts="2026-09-04"' _site/p/google-ai-pro.html
-          grep -q 'Google Bangladesh: ৳2,500/mo' _site/p/google-ai-pro.html
-          grep -q 'Google Bangladesh: ৳600/mo' _site/p/google-ai-plus.html
           grep -q 'data-chatgpt-facts="2026-09-07"' _site/p/chatgpt-plus.html
-          grep -q 'BDT is a supported currency' _site/p/chatgpt-plus.html
-          grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
-          grep -q 'data-chatgpt-go-facts="2026-09-07"' _site/p/chatgpt-go.html
           grep -q 'data-canva-facts="2026-09-08"' _site/p/canva-pro.html
-          grep -q 'TEAM WORKSPACE · ADMIN-CONTROLLED' _site/p/canva-pro.html
           grep -q 'data-midjourney-facts="2026-09-08"' _site/p/midjourney.html
-          grep -q 'SHARED · PROVIDER-POLICY RISK' _site/p/midjourney.html
+          grep -q 'data-claude-facts="2026-09-09"' _site/p/claude-pro.html
+          grep -q 'data-supergrok-facts="2026-09-09"' _site/p/supergrok.html
+          grep -q 'data-perplexity-facts="2026-09-09"' _site/p/perplexity-pro.html
+          grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
+          grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
+          grep -q 'favicon-32.png" type="image/png"' _site/p/chatgpt-plus.html
           ! grep -R -q 'Commonly searched as' _site --include='*.html'
           ! grep -R -q '<meta name="keywords"' _site --include='*.html'
+          ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -115,20 +110,22 @@ jobs:
           for attempt in 1 2 3 4; do
             curl -fsSL --max-time 20 https://saveonsub.com/ -o /tmp/home.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/robots.txt -o /tmp/robots.txt || true
-            curl -fsSL --max-time 20 https://saveonsub.com/p/chatgpt-plus.html -o /tmp/chatgpt.html || true
-            curl -fsSL --max-time 20 https://saveonsub.com/p/google-ai-pro.html -o /tmp/google-ai-pro.html || true
-            curl -fsSL --max-time 20 https://saveonsub.com/p/canva-pro.html -o /tmp/canva.html || true
-            curl -fsSL --max-time 20 https://saveonsub.com/p/midjourney.html -o /tmp/midjourney.html || true
+            curl -fsSL --max-time 20 https://saveonsub.com/sitemap.xml -o /tmp/sitemap.xml || true
+            curl -fsSL --max-time 20 https://saveonsub.com/p/chatgpt-plus -o /tmp/chatgpt.html || true
+            curl -fsSL --max-time 20 https://saveonsub.com/p/claude-pro -o /tmp/claude.html || true
+            curl -fsSL --max-time 20 https://saveonsub.com/p/supergrok -o /tmp/supergrok.html || true
+            curl -fsSL --max-time 20 https://saveonsub.com/p/perplexity-pro -o /tmp/perplexity.html || true
+            curl -fsSL --max-time 20 https://saveonsub.com/checkout -o /tmp/checkout.html || true
             if grep -q 'User-agent: OAI-SearchBot' /tmp/robots.txt 2>/dev/null \
               && grep -q '/assets/measurement.js' /tmp/home.html 2>/dev/null \
               && grep -q 'data-chatgpt-facts="2026-09-07"' /tmp/chatgpt.html 2>/dev/null \
               && grep -q 'SHARED · POLICY RISK' /tmp/chatgpt.html 2>/dev/null \
-              && grep -q 'data-google-ai-facts="2026-09-04"' /tmp/google-ai-pro.html 2>/dev/null \
-              && grep -q 'Google Bangladesh: ৳2,500/mo' /tmp/google-ai-pro.html 2>/dev/null \
-              && grep -q 'data-canva-facts="2026-09-08"' /tmp/canva.html 2>/dev/null \
-              && grep -q 'TEAM WORKSPACE · ADMIN-CONTROLLED' /tmp/canva.html 2>/dev/null \
-              && grep -q 'data-midjourney-facts="2026-09-08"' /tmp/midjourney.html 2>/dev/null \
-              && grep -q 'SHARED · PROVIDER-POLICY RISK' /tmp/midjourney.html 2>/dev/null \
+              && grep -q 'data-claude-facts="2026-09-09"' /tmp/claude.html 2>/dev/null \
+              && grep -q 'data-supergrok-facts="2026-09-09"' /tmp/supergrok.html 2>/dev/null \
+              && grep -q 'data-perplexity-facts="2026-09-09"' /tmp/perplexity.html 2>/dev/null \
+              && grep -q 'href="https://saveonsub.com/p/chatgpt-plus"' /tmp/chatgpt.html 2>/dev/null \
+              && grep -q '<meta name="robots" content="noindex,follow">' /tmp/checkout.html 2>/dev/null \
+              && ! grep -q 'https://saveonsub.com/.*\.html' /tmp/sitemap.xml 2>/dev/null \
               && ! grep -q 'Commonly searched as' /tmp/chatgpt.html 2>/dev/null; then
               echo 'Canonical production verified.'
               exit 0
