@@ -10,6 +10,7 @@ import sys
 
 STEPS = [
     "check_prices.py",
+    "catalog_source_hardening.py",
     "stage_deploy.py",
     "release_hardening.py",
     "google_ai_cohort.py",
