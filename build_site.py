@@ -21,6 +21,7 @@ STEPS = [
     "perplexity_cohort.py",
     "entertainment_cohort.py",
     "runway_cohort.py",
+    "trust_cohort.py",
     "cache_safe_brand.py",
     "technical_seo_hardening.py",
 ]
