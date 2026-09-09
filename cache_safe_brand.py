@@ -40,7 +40,7 @@ def transparentize_white_matte(image: Image.Image) -> Image.Image:
     src = image.convert("RGB")
     out = Image.new("RGBA", src.size)
     dst = []
-    for r, g, b in src.getdata():
+    for r, g, b in src.get_flattened_data():
         # Estimate coverage over a white matte from the darkest channel.
         alpha = 255 - min(r, g, b)
         if alpha <= 5:
