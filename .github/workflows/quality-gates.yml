@@ -50,7 +50,9 @@ jobs:
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/favicon.svg
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
 
-          grep -q 'data-google-ai-facts="2026-09-04"' _site/p/google-ai-pro.html
+          grep -q 'data-google-ai-facts="2026-09-09"' _site/p/google-ai-pro.html
+          grep -q 'Google Bangladesh: ৳2,500/mo' _site/p/google-ai-pro.html
+          grep -q '5 TB' _site/p/google-ai-pro.html
           grep -q 'data-chatgpt-facts="2026-09-07"' _site/p/chatgpt-plus.html
           grep -q 'data-canva-facts="2026-09-08"' _site/p/canva-pro.html
           grep -q 'data-midjourney-facts="2026-09-08"' _site/p/midjourney.html
