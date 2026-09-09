@@ -61,6 +61,7 @@ GENERIC_REPLACEMENTS = {
     'we do not retain access to your credentials': 'credential handling depends on the selected access method and is disclosed before payment',
     'Every subscription is official': 'Every plan is labeled by access type',
     'SHARED · LOW RISK': 'SHARED · CHECK ACCESS RISK',
+    'SHARED · WARRANTY COVERED': 'SHARED · CHECK ACCESS / PROVIDER-POLICY RISK',
 }
 
 FORBIDDEN_PUBLIC = {
@@ -77,6 +78,7 @@ FORBIDDEN_PUBLIC = {
     'seat type doesn&#x27;t affect functionality': 'shared/personal equivalence claim',
     'You get whatever the provider ships — same as an official subscriber.': 'blanket official-equivalence claim',
     'SHARED · LOW RISK': 'unverified blanket shared-risk label',
+    'SHARED · WARRANTY COVERED': 'shared warranty label that can imply provider-risk equivalence',
     'অথেনটিক, ৫–১৫ মিনিটে WhatsApp-এ ডেলিভারি': 'localized blanket authenticity/delivery claim',
     'প্রতিটা সিটে ওয়ারেন্টি': 'localized blanket warranty claim',
     'শেয়ার্ড·কম-ঝুঁকি': 'localized unverified shared-risk label',

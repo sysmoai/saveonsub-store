@@ -25,7 +25,6 @@ def save(path, text):
 
 
 def replace_all(text):
-    # Fixed FX conversions are not an official Bangladesh checkout price.
     text = re.sub(r'official reference ~?৳2,200', 'OpenAI reference $20/month; BDT web billing supported', text, flags=re.I)
     text = re.sub(r'official reference ~?৳880', 'OpenAI Go reference $8/month; localized pricing may apply', text, flags=re.I)
     text = re.sub(r'Official: ~?৳2,200/mo \(\$20\)', 'OpenAI reference: $20/month · BDT web billing supported', text)
@@ -34,7 +33,6 @@ def replace_all(text):
     text = re.sub(r'Official list converted at site anchor rate</td><td>~?৳880/mo', 'OpenAI Go published reference</td><td>$8/month; localized checkout may differ', text)
     text = re.sub(r'<span class="savepct">[^<]*</span>\s*', '', text)
 
-    # Remove unsafe reassurance / obsolete payment assertions wherever they occur.
     replacements = {
         'Your chats stay private — other users can\'t see them.': 'Do not assume shared-account chats or account data are private from other people who can access the same credentials.',
         'Your conversations remain private per-user.': 'Do not treat shared credentials as private: other people with account access may be able to see account activity or data.',
@@ -51,6 +49,7 @@ def replace_all(text):
         'replaces dead seats within 1 hour (7-day guarantee)': 'shows the applicable warranty terms before payment',
         'SHARED · LOW RISK': 'SHARED · POLICY RISK',
         'SHARED · WARRANTY COVERED': 'SHARED · POLICY RISK',
+        'SHARED · CHECK ACCESS / PROVIDER-POLICY RISK': 'SHARED · POLICY RISK',
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
@@ -95,13 +94,11 @@ def go_panel(lang='en'):
 
 def patch_product(path: Path, kind: str, lang='en'):
     text = replace_all(path.read_text(encoding="utf-8", errors="strict"))
+    marker = '<h2 class="mt3" style="font-size:22px">Choose your plan</h2>' if lang == 'en' else '<h2 class="mt3" style="font-size:22px">আপনার প্ল্যান বেছে নিন</h2>'
     if kind == 'plus':
-        marker = '<h2 class="mt3" style="font-size:22px">Choose your plan</h2>' if lang == 'en' else '<h2 class="mt3" style="font-size:22px">আপনার প্ল্যান বেছে নিন</h2>'
         panel = plus_panel(lang)
-        # Ensure plan labels themselves do not imply provider authorization or low risk.
-        text = text.replace('SHARED · LOW RISK', 'SHARED · POLICY RISK').replace('SHARED · WARRANTY COVERED', 'SHARED · POLICY RISK')
+        text = text.replace('SHARED · LOW RISK', 'SHARED · POLICY RISK').replace('SHARED · WARRANTY COVERED', 'SHARED · POLICY RISK').replace('SHARED · CHECK ACCESS / PROVIDER-POLICY RISK', 'SHARED · POLICY RISK')
     else:
-        marker = '<h2 class="mt3" style="font-size:22px">Choose your plan</h2>' if lang == 'en' else '<h2 class="mt3" style="font-size:22px">আপনার প্ল্যান বেছে নিন</h2>'
         panel = go_panel(lang)
     if ('data-chatgpt-facts=' not in text and kind == 'plus') or ('data-chatgpt-go-facts=' not in text and kind == 'go'):
         if marker not in text:
@@ -112,11 +109,9 @@ def patch_product(path: Path, kind: str, lang='en'):
 
 def patch_guide(path: Path):
     text = replace_all(path.read_text(encoding="utf-8", errors="strict"))
-    # Replace stale title/description comparisons against a fake fixed official BDT amount.
     text = text.replace('ChatGPT Plus Price in Bangladesh (2026) — ৳499 vs ৳2,200', 'ChatGPT Plus Price in Bangladesh (2026) — Plans, BDT Billing & Risks')
     text = text.replace('ChatGPT Plus costs $20/mo officially (~৳2,200, card required). Real BD options compared: shared ৳499, personal ৳2,990, bKash payment — honest guide with risks.', 'ChatGPT Plus is $20/month as OpenAI’s published reference and BDT web billing is supported. Compare SaveOnSub options, payment paths, and shared-access policy/privacy risks.')
-    text = re.sub(r'<h2 class="mt3" style="font-size:22px">The official price</h2>.*?</p>',
-                  '<h2 class="mt3" style="font-size:22px">The official reference</h2><p class="sub" style="font-size:15px">OpenAI publishes ChatGPT Plus at <b>$20/month</b>. BDT is supported for ChatGPT web billing, so the exact Bangladesh checkout amount should be read from your own OpenAI checkout rather than calculated with a fixed exchange rate. API usage is separate.</p>', text, count=1, flags=re.S)
+    text = re.sub(r'<h2 class="mt3" style="font-size:22px">The official price</h2>.*?</p>', '<h2 class="mt3" style="font-size:22px">The official reference</h2><p class="sub" style="font-size:15px">OpenAI publishes ChatGPT Plus at <b>$20/month</b>. BDT is supported for ChatGPT web billing, so the exact Bangladesh checkout amount should be read from your own OpenAI checkout rather than calculated with a fixed exchange rate. API usage is separate.</p>', text, count=1, flags=re.S)
     if 'data-chatgpt-facts=' not in text:
         marker = '<h2 class="mt3" style="font-size:22px">Your real options in BD</h2>'
         if marker not in text:
@@ -141,7 +136,6 @@ if not blog.exists():
     raise SystemExit('ERROR: missing staged ChatGPT price guide')
 patch_guide(blog)
 
-# Fail closed on known stale/high-risk claims in the governed cohort.
 for rel in [
     'p/chatgpt-plus.html', 'bn/p/chatgpt-plus.html',
     'p/chatgpt-go.html', 'bn/p/chatgpt-go.html',

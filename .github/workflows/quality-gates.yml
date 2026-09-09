@@ -59,6 +59,13 @@ jobs:
           grep -q 'data-claude-facts="2026-09-09"' _site/p/claude-pro.html
           grep -q 'data-supergrok-facts="2026-09-09"' _site/p/supergrok.html
           grep -q 'data-perplexity-facts="2026-09-09"' _site/p/perplexity-pro.html
+          grep -q 'data-entertainment-facts="2026-09-09"' _site/p/netflix.html
+          grep -q 'data-entertainment-facts="2026-09-09"' _site/p/spotify.html
+          grep -q 'data-entertainment-facts="2026-09-09"' _site/p/youtube-premium.html
+          grep -q 'data-entertainment-guide-facts="2026-09-09"' _site/blog/netflix-spotify-youtube-premium-price-bd.html
+          grep -q 'Netflix BD: US$2.99–US$9.99/month' _site/p/netflix.html
+          grep -q 'Spotify BD: Individual ৳219/mo' _site/p/spotify.html
+          grep -q 'YouTube Premium: available in Bangladesh' _site/p/youtube-premium.html
 
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
           grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
@@ -74,9 +81,9 @@ jobs:
             exit 1
           fi
 
-          for phrase in 'Every subscription is official' '100% customer-owned' 'Price-match guarantee' 'replace dead seats within 1 hour' 'Shared seats work the same as personal on mobile' 'SHARED · LOW RISK'; do
+          for phrase in 'Every subscription is official' '100% customer-owned' 'Price-match guarantee' 'replace dead seats within 1 hour' 'Shared seats work the same as personal on mobile' 'SHARED · LOW RISK' 'SHARED · WARRANTY COVERED' 'enforcement is light but real' 'No official path without a card' 'Netflix has no official taka price' 'regional pricing around ৳239/month'; do
             if grep -R -F -q "$phrase" _site --include='*.html' --include='llms.txt'; then
-              echo "::error::Unsafe blanket claim remains in staged public artifact: $phrase"
+              echo "::error::Unsafe or stale claim remains in staged public artifact: $phrase"
               exit 1
             fi
           done
