@@ -28,12 +28,23 @@ REPLACEMENTS = {
         'Privacy and continuity depend on the exact access method. Shared credentials can expose activity or data to other people with access, and provider policies can change. Check the current plan disclosure before ordering.',
     'Your conversations remain private per-user. The risk is seat interruption because sharing violates OpenAI ToS — SAVEONSUB discloses this and covers it with a 1-hour replacement warranty.':
         'Privacy and continuity depend on the exact access method. Shared access can carry additional privacy, continuity and provider-policy risk; check the current plan disclosure before ordering.',
+    'Shared seats work the same as personal on mobile':
+        'Mobile availability depends on the provider and exact access method',
+    "the seat type doesn't affect functionality":
+        'shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk',
+    'the seat type doesn’t affect functionality':
+        'shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk',
+    'the seat type doesn&#x27;t affect functionality':
+        'shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk',
+    'You get whatever the provider ships — same as an official subscriber.':
+        'Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order.',
 }
 
 GENERIC_REPLACEMENTS = {
     '100% customer-owned': 'customer-specific where the selected plan explicitly says so',
     'we do not retain access to your credentials': 'credential handling depends on the selected access method and is disclosed before payment',
     'Every subscription is official': 'Every plan is labeled by access type',
+    'SHARED · LOW RISK': 'SHARED · CHECK ACCESS RISK',
 }
 
 FORBIDDEN_PUBLIC = {
@@ -44,6 +55,12 @@ FORBIDDEN_PUBLIC = {
     'replace dead seats within 1 hour': 'unsupported blanket replacement SLA',
     'Your chats stay private — other users can\'t see them': 'absolute shared privacy claim',
     'Your conversations remain private per-user': 'absolute shared privacy claim',
+    'Shared seats work the same as personal on mobile': 'shared/personal equivalence claim',
+    "seat type doesn't affect functionality": 'shared/personal equivalence claim',
+    'seat type doesn’t affect functionality': 'shared/personal equivalence claim',
+    'seat type doesn&#x27;t affect functionality': 'shared/personal equivalence claim',
+    'You get whatever the provider ships — same as an official subscriber.': 'blanket official-equivalence claim',
+    'SHARED · LOW RISK': 'unverified blanket shared-risk label',
 }
 
 changed = 0
