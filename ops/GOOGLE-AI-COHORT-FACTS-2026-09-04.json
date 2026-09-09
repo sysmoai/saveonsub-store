@@ -1,21 +1,27 @@
 {
-  "verified_on": "2026-09-04",
+  "verified_on": "2026-09-09",
   "market": "Bangladesh",
   "official_source": "https://gemini.google/bd/subscriptions/?hl=bn",
+  "verified_sources": [
+    "https://gemini.google/bd/subscriptions/?hl=bn",
+    "https://one.google.com/intl/bn_bd/about/",
+    "https://one.google.com/intl/bn_bd/about/google-ai-plans/",
+    "https://gemini.google/bd/students/?hl=bn"
+  ],
   "official_plans": {
     "google-ai-plus": {
       "official_bdt_month": 600,
       "storage": "400 GB",
       "usage_vs_free": "2x",
       "flow_credits_month": 200,
-      "availability": "160+ countries"
+      "availability": "140+ countries/regions"
     },
     "google-ai-pro": {
       "official_bdt_month": 2500,
       "storage": "5 TB",
       "usage_vs_free": "4x",
       "flow_credits_month": 1000,
-      "availability": "150+ countries"
+      "availability": "140+ countries/regions"
     }
   },
   "student_offer": {
@@ -24,9 +30,15 @@
     "duration": "1 year",
     "claim_deadline": "2026-12-31",
     "regular_auto_renew_bdt_month": 600,
-    "eligibility_summary": "Eligible college students aged 18+; Google terms and verification apply.",
+    "eligibility_summary": "Eligible college students aged 18+; Google terms and annual eligibility verification apply.",
     "official_source": "https://gemini.google/bd/students/?hl=bn"
   },
+  "verification_notes": [
+    "Bangladesh subscriptions page showed Google AI Plus at BDT 600/month and Google AI Pro at BDT 2,500/month on 2026-09-09.",
+    "Google AI Plus showed 400 GB storage, 2x usage versus free and 200 Flow credits/month.",
+    "Google AI Pro showed 5 TB storage, 4x usage versus free and 1,000 Flow credits/month.",
+    "Bangladesh student page showed eligible college students age 18+ can claim one year of Google AI Plus at no charge by 2026-12-31; a valid payment method is required and the plan auto-renews at BDT 600/month unless cancelled earlier."
+  ],
   "bd_competitor_snapshot": {
     "google-ai-pro": [
       {"seller": "DeltaBox IT", "visible_price_bdt": "390-2490", "note": "multiple durations/access variants"},
