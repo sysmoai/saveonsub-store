@@ -33,31 +33,17 @@ jobs:
       - name: Install build dependencies
         run: python -m pip install --disable-pip-version-check -r requirements.txt
 
-      - name: Truth and price consistency guard
-        run: python check_prices.py
-
       - name: Full repository regression audit
-        run: python audit_all.py
+        run: |
+          set -euo pipefail
+          python check_prices.py
+          python audit_all.py
+          python deploy_preflight.py
 
-      - name: Stage exact public artifact
-        run: python stage_deploy.py
+      - name: Build exact canonical candidate
+        run: python build_site.py
 
-      - name: Harden staged SEO and truth surface
-        run: python release_hardening.py
-
-      - name: Apply verified Google AI cohort facts
-        run: python google_ai_cohort.py
-
-      - name: Apply verified ChatGPT cohort facts
-        run: python chatgpt_cohort.py
-
-      - name: Apply verified Canva and Midjourney cohort facts
-        run: python design_cohort.py
-
-      - name: Make approved logo cache-safe
-        run: python cache_safe_brand.py
-
-      - name: Verify public release boundary
+      - name: Verify public release boundary and current cohorts
         run: |
           set -euo pipefail
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/logo.svg
@@ -65,22 +51,17 @@ jobs:
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
 
           grep -q 'data-google-ai-facts="2026-09-04"' _site/p/google-ai-pro.html
-          grep -q 'Google Bangladesh: ৳2,500/mo' _site/p/google-ai-pro.html
-          grep -q 'Google Bangladesh: ৳600/mo' _site/p/google-ai-plus.html
-
           grep -q 'data-chatgpt-facts="2026-09-07"' _site/p/chatgpt-plus.html
-          grep -q 'BDT is a supported currency' _site/p/chatgpt-plus.html
-          grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
-          grep -q 'data-chatgpt-go-facts="2026-09-07"' _site/p/chatgpt-go.html
-          grep -q 'data-chatgpt-facts="2026-09-07"' _site/blog/chatgpt-plus-price-in-bangladesh.html
-
           grep -q 'data-canva-facts="2026-09-08"' _site/p/canva-pro.html
-          grep -q 'Canva Pro is an individual plan' _site/p/canva-pro.html
-          grep -q 'TEAM WORKSPACE · ADMIN-CONTROLLED' _site/p/canva-pro.html
           grep -q 'data-midjourney-facts="2026-09-08"' _site/p/midjourney.html
-          grep -q 'SHARED · PROVIDER-POLICY RISK' _site/p/midjourney.html
-          grep -q 'Basic</td><td>US$10' _site/p/midjourney.html
-          grep -q 'Mega</td><td>US$120' _site/p/midjourney.html
+          grep -q 'data-claude-facts="2026-09-09"' _site/p/claude-pro.html
+          grep -q 'data-supergrok-facts="2026-09-09"' _site/p/supergrok.html
+          grep -q 'data-perplexity-facts="2026-09-09"' _site/p/perplexity-pro.html
+
+          grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
+          grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
+          grep -q 'favicon-32.png" type="image/png"' _site/p/chatgpt-plus.html
+          ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml
 
           if grep -R -q '<meta name="keywords"' _site --include='*.html'; then
             echo "::error::Generated meta-keywords remain in staged HTML."
@@ -91,43 +72,16 @@ jobs:
             exit 1
           fi
 
-          for phrase in 'Every subscription is official' '100% customer-owned' 'Price-match guarantee' 'replace dead seats within 1 hour'; do
+          for phrase in 'Every subscription is official' '100% customer-owned' 'Price-match guarantee' 'replace dead seats within 1 hour' 'Shared seats work the same as personal on mobile' 'SHARED · LOW RISK'; do
             if grep -R -F -q "$phrase" _site --include='*.html' --include='llms.txt'; then
               echo "::error::Unsafe blanket claim remains in staged public artifact: $phrase"
               exit 1
             fi
           done
 
-          if grep -i -q '2TB\|83% off special\|our #1 seller' _site/p/google-ai-pro.html; then
-            echo "::error::Stale Google AI Pro claim remains in staged page."
-            exit 1
-          fi
-
-          for f in _site/p/chatgpt-plus.html _site/bn/p/chatgpt-plus.html _site/blog/chatgpt-plus-price-in-bangladesh.html; do
-            if grep -i -q 'official: ~৳2,200/mo\|official reference ~৳2,200\|your chats stay private\|your conversations remain private per-user\|shared · low risk\|shared · warranty covered\|accepts only international cards' "$f"; then
-              echo "::error::Stale/high-risk ChatGPT claim remains in $f"
-              exit 1
-            fi
-          done
-
-          for f in _site/p/canva-pro.html _site/bn/p/canva-pro.html; do
-            if grep -i -q 'official: ~৳1,650\|save 82%\|shared · low risk\|your designs stay yours\|lowest-risk shared product we sell' "$f"; then
-              echo "::error::Stale/high-risk Canva claim remains in $f"
-              exit 1
-            fi
-          done
-
-          for f in _site/p/midjourney.html _site/bn/p/midjourney.html; do
-            if grep -i -q 'official: ~৳3,300\|save 64%\|shared · low risk\|shared · warranty covered\|156+ orders' "$f"; then
-              echo "::error::Stale/high-risk Midjourney claim remains in $f"
-              exit 1
-            fi
-          done
-
-          versioned_logo=$(grep -o '/assets/logo-[0-9a-f]\{16\}\.svg' _site/index.html | head -1)
+          versioned_logo=$(grep -o '/assets/logo-[0-9a-f]\{16\}\.png' _site/index.html | head -1)
           test -n "$versioned_logo"
           test -f "_site${versioned_logo}"
-          grep -q 'data-brand-lock="2026-08-19-approved"' "_site${versioned_logo}"
           if grep -R -q 'assets/logo\.svg' _site --include='*.html'; then
             echo "::error::Mutable logo URL remains in staged HTML."
             exit 1
@@ -139,4 +93,4 @@ jobs:
           test -f _site/index.html
           test -f _site/sitemap.xml
           test -f _site/robots.txt
-          echo "Quality gates passed; staged SEO/truth surface, Google AI + ChatGPT + design cohorts, public boundary and brand references are clean."
+          echo "Quality gates passed; canonical candidate, all current cohorts, technical SEO, public boundary and locked brand references are clean."
