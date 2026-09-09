@@ -23,10 +23,25 @@ def inject_notice(text, block):
     return text.replace(marker, block + marker, 1)
 
 
+def replace_meta(text, name, value):
+    pattern = rf'(<meta\s+name="{re.escape(name)}"\s+content=")[^"]*(">)'
+    new, count = re.subn(pattern, rf'\1{value}\2', text, count=1, flags=re.I)
+    if count != 1:
+        raise SystemExit(f"CLAUDE COHORT ERROR — meta {name} missing")
+    return new
+
+
+def replace_property(text, prop, value):
+    pattern = rf'(<meta\s+property="{re.escape(prop)}"\s+content=")[^"]*(">)'
+    new, count = re.subn(pattern, rf'\1{value}\2', text, count=1, flags=re.I)
+    if count != 1:
+        raise SystemExit(f"CLAUDE COHORT ERROR — property {prop} missing")
+    return new
+
+
 def harden(path, bn=False):
     p, t = load(path)
 
-    # Remove invented BDT conversion claims and percentage-savings claims tied to them.
     stale = [
         "official reference ~৳2,200", "Official: ~৳2,200/mo ($20)",
         "Official list converted at site anchor rate", "~৳2,200/mo",
@@ -35,6 +50,22 @@ def harden(path, bn=False):
     for s in stale:
         t = t.replace(s, "")
     t = re.sub(r'\s*<span class="savepct">SAVE\s*\d+%</span>', '', t, flags=re.I)
+
+    if not bn:
+        desc = "Claude Pro in Bangladesh from ৳1,495. Compare SaveOnSub access types, delivery timing and warranty, plus current official Claude Pro pricing and Bangladesh availability before buying."
+    else:
+        desc = "Claude Pro বাংলাদেশে ৳1,495 থেকে। কেনার আগে SaveOnSub access type, delivery time, warranty, current official Claude Pro pricing এবং Bangladesh availability দেখুন।"
+    t = replace_meta(t, "description", desc)
+    t = replace_property(t, "og:description", desc)
+
+    # Normalize Product JSON-LD description independently from stale source copy.
+    t = re.sub(
+        r'("@type":\s*"Product".*?"description":\s*")[^"]*(")',
+        lambda m: m.group(1) + desc + m.group(2),
+        t,
+        count=1,
+        flags=re.S,
+    )
 
     official = (
         '<span class="official" data-claude-facts="2026-09-09">Claude Pro official reference: US$20/month in the U.S.; Anthropic says local-currency pricing is available where supported. Bangladesh is a supported Claude location. Verify your current checkout and tax before buying.</span>'
@@ -67,24 +98,25 @@ def harden(path, bn=False):
 </section>'''
     t = inject_notice(t, block)
 
-    # Remove stale converted-price row if it survived formatting variants.
     t = re.sub(r'<tr><td>Official list converted at site anchor rate</td>.*?</tr>', '', t, flags=re.S)
     t = re.sub(r'<tr><td>অফিসিয়াল[^<]*</td>.*?</tr>', '', t, flags=re.S)
 
     low = t.lower()
-    forbidden = ["official: ~৳2,200", "official reference ~৳2,200", "save 32%"]
+    forbidden = ["official: ~৳2,200", "official reference ~৳2,200", "save 32%", "official list converted at site anchor rate"]
     for phrase in forbidden:
         if phrase in low:
             raise SystemExit(f"CLAUDE COHORT ERROR — stale phrase survived in {path}: {phrase}")
     if f'data-claude-cohort="{VERIFIED}"' not in t or f'data-claude-facts="{VERIFIED}"' not in t:
         raise SystemExit(f"CLAUDE COHORT ERROR — verified fact markers missing in {path}")
+    if desc not in t:
+        raise SystemExit(f"CLAUDE COHORT ERROR — normalized metadata description missing in {path}")
     p.write_text(t, encoding="utf-8")
 
 
 def main():
     harden("p/claude-pro.html", bn=False)
     harden("bn/p/claude-pro.html", bn=True)
-    print("Claude cohort hardening OK — current official price/support facts and shared-access risk enforced.")
+    print("Claude cohort hardening OK — metadata, official price/support facts and shared-access risk enforced.")
     return 0
 
 
