@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-"""Remove legacy commercial fragments that live outside generated <main> bodies.
-
-Legacy pages carry floating WhatsApp CTAs, footer snippets and old cohort fragments
-outside the main product body. The governed main renderer replaces commerce; this
-final cleanup ensures those peripheral fragments cannot re-advertise retired shared
-AI offers or unsupported blanket promises.
-"""
+"""Remove legacy commercial fragments that live outside governed product bodies."""
 from pathlib import Path
 import re
 
@@ -34,7 +28,6 @@ REPLACE = {
     "customer-owned": "customer-specific",
     "only BD store": "Bangladesh subscription store",
     "Bangladesh's honest subscription store": "Bangladesh subscription store",
-    "BANGLADESH'S HONEST SUBSCRIPTION STORE": "BANGLADESH SUBSCRIPTION STORE",
     "Pay-after-testing": "Order-specific payment/access confirmation",
 }
 
@@ -45,9 +38,7 @@ def main():
         text = path.read_text(encoding="utf-8", errors="replace")
         old = text
         for src, dst in REPLACE.items():
-            text = text.replace(src, dst)
-        # Floating ChatGPT Plus buttons can retain retired query-string prices even
-        # after the main body is replaced. Make those generic confirmation CTAs.
+            text = re.sub(re.escape(src), lambda _m, d=dst: d, text, flags=re.I)
         if path.name == "chatgpt-plus.html":
             text = re.sub(
                 r'https://wa\.me/8801305869242\?text=[^"\']*ChatGPT\+Plus[^"\']*',
