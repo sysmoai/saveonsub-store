@@ -43,34 +43,34 @@ jobs:
       - name: Build exact canonical candidate
         run: python build_site.py
 
-      - name: Verify public release boundary and current cohorts
+      - name: Verify governed pricing-v2 release boundary
         run: |
           set -euo pipefail
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/logo.svg
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/favicon.svg
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
-
-          grep -q 'data-google-ai-facts="2026-09-09"' _site/p/google-ai-pro.html
-          grep -q 'Google Bangladesh: ৳2,500/mo' _site/p/google-ai-pro.html
-          grep -q '5 TB' _site/p/google-ai-pro.html
-          grep -q 'data-chatgpt-facts="2026-09-07"' _site/p/chatgpt-plus.html
-          grep -q 'data-canva-facts="2026-09-08"' _site/p/canva-pro.html
-          grep -q 'data-midjourney-facts="2026-09-08"' _site/p/midjourney.html
-          grep -q 'data-claude-facts="2026-09-09"' _site/p/claude-pro.html
-          grep -q 'data-supergrok-facts="2026-09-09"' _site/p/supergrok.html
-          grep -q 'data-perplexity-facts="2026-09-09"' _site/p/perplexity-pro.html
+          grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/index.html
+          grep -q '৳3,390' _site/p/chatgpt-plus.html
+          grep -q 'Customer-specific access' _site/p/chatgpt-plus.html
+          grep -q '৳1,299' _site/p/chatgpt-go.html
+          grep -q '৳4,290 / user / month' _site/p/chatgpt-business.html
+          grep -q 'Team / Workspace access' _site/p/chatgpt-business.html
+          grep -q 'Confirm current price' _site/p/chatgpt-pro.html
+          grep -q '৳3,390' _site/p/google-ai-pro.html
+          grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
+          ! grep -q '৳499' _site/p/chatgpt-plus.html
+          ! grep -q '৳999' _site/p/chatgpt-plus.html
+          ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
+          ! grep -q 'SHARED · WARRANTY COVERED' _site/p/chatgpt-plus.html
+          ! grep -q '5–15 min' _site/p/chatgpt-plus.html
           grep -q 'data-entertainment-facts="2026-09-09"' _site/p/netflix.html
-          grep -q 'data-entertainment-facts="2026-09-09"' _site/p/spotify.html
-          grep -q 'data-entertainment-facts="2026-09-09"' _site/p/youtube-premium.html
-          grep -q 'data-entertainment-guide-facts="2026-09-09"' _site/blog/netflix-spotify-youtube-premium-price-bd.html
-          grep -q 'Netflix BD: US$2.99–US$9.99/month' _site/p/netflix.html
           grep -q 'Spotify BD: Individual ৳219/mo' _site/p/spotify.html
           grep -q 'YouTube Premium: available in Bangladesh' _site/p/youtube-premium.html
-
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
           grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
           grep -q 'favicon-32.png" type="image/png"' _site/p/chatgpt-plus.html
           ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml
+          python audit_commercial_truth_v2.py
 
           if grep -R -q '<meta name="keywords"' _site --include='*.html'; then
             echo "::error::Generated meta-keywords remain in staged HTML."
@@ -102,4 +102,4 @@ jobs:
           test -f _site/index.html
           test -f _site/sitemap.xml
           test -f _site/robots.txt
-          echo "Quality gates passed; canonical candidate, all current cohorts, technical SEO, public boundary and locked brand references are clean."
+          echo "Quality gates passed; pricing-v2, technical SEO, public boundary and locked brand references are clean."

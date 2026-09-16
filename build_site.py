@@ -12,6 +12,8 @@ STEPS = [
     "check_prices.py",
     "provider_fact_freshness.py",
     "catalog_source_hardening.py",
+    "apply_pricing_v2.py",
+    "build_public_catalog.py",
     "stage_deploy.py",
     "release_hardening.py",
     "google_ai_cohort.py",
@@ -26,6 +28,8 @@ STEPS = [
     "homepage_truth_cohort.py",
     "cache_safe_brand.py",
     "technical_seo_hardening.py",
+    "commercial_truth_v2.py",
+    "audit_commercial_truth_v2.py",
 ]
 
 
