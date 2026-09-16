@@ -29,6 +29,7 @@ STEPS = [
     "cache_safe_brand.py",
     "technical_seo_hardening.py",
     "commercial_truth_v2.py",
+    "sanitize_pricing_v2_legacy.py",
     "audit_commercial_truth_v2.py",
 ]
 
