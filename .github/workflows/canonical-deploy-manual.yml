@@ -15,7 +15,6 @@ permissions:
 
 env:
   CLOUDFLARE_ACCOUNT_ID: 4ca6269edabb6ad2906d70ec6845de22
-  COMMERCIAL_REVISION: pricing-v2-2026-09-17
 
 jobs:
   validate-and-deploy:
@@ -59,23 +58,30 @@ jobs:
           test ! -e _site/catalog.json
           test ! -e _site/build_assets.py
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
-          grep -q "saveonsub-commercial-revision\" content=\"${COMMERCIAL_REVISION}" _site/index.html
-          grep -q "data-commercial-truth=\"${COMMERCIAL_REVISION}" _site/index.html
-          grep -q '৳3,390 / month' _site/p/chatgpt-plus.html
+          grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/index.html
+          grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/p/chatgpt-plus.html
+          grep -q '৳3,390' _site/p/chatgpt-plus.html
           grep -q 'Customer-specific access' _site/p/chatgpt-plus.html
-          ! grep -q 'Starter Shared' _site/p/chatgpt-plus.html
-          grep -q '৳1,299 / month' _site/p/chatgpt-go.html
+          grep -q '৳1,299' _site/p/chatgpt-go.html
           grep -q '৳4,290 / user / month' _site/p/chatgpt-business.html
           grep -q 'Team / Workspace access' _site/p/chatgpt-business.html
-          grep -q 'PRICE REVIEW REQUIRED' _site/p/chatgpt-pro.html
-          grep -q '৳3,390 / month' _site/p/claude-pro.html
-          grep -q '৳3,390 / month' _site/p/google-ai-pro.html
-          grep -q "${COMMERCIAL_REVISION}" _site/assets/catalog.js
+          grep -q 'Confirm current price' _site/p/chatgpt-pro.html
+          grep -q '৳3,390' _site/p/google-ai-pro.html
+          grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
+          ! grep -q '৳499' _site/p/chatgpt-plus.html
+          ! grep -q '৳999' _site/p/chatgpt-plus.html
+          ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
+          ! grep -q '5–15 min' _site/p/chatgpt-plus.html
+          grep -q 'data-entertainment-facts="2026-09-09"' _site/p/netflix.html
+          grep -q 'Spotify BD: Individual ৳219/mo' _site/p/spotify.html
+          grep -q 'YouTube Premium: available in Bangladesh' _site/p/youtube-premium.html
+          grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
           grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
           grep -q 'favicon-32.png" type="image/png"' _site/p/chatgpt-plus.html
           ! grep -R -q 'Commonly searched as' _site --include='*.html'
           ! grep -R -q '<meta name="keywords"' _site --include='*.html'
           ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml
+          python audit_commercial_truth_v2.py
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -106,7 +112,7 @@ jobs:
           d=json.load(open('/tmp/cf-project.json'))
           r=d.get('result') or {}
           if not d.get('success') or r.get('name') != 'saveonsub':
-              print('::error::Token did not verify exact Pages project saveonsub.', file=sys.stderr)
+              print("::error::Token did not verify exact Pages project saveonsub.", file=sys.stderr)
               raise SystemExit(1)
           print("Verified Cloudflare Pages project 'saveonsub'.")
           PY
@@ -119,7 +125,7 @@ jobs:
       - name: Verify canonical production
         run: |
           set -euo pipefail
-          for attempt in 1 2 3 4 5; do
+          for attempt in 1 2 3 4; do
             curl -fsSL --max-time 20 https://saveonsub.com/ -o /tmp/home.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/robots.txt -o /tmp/robots.txt || true
             curl -fsSL --max-time 20 https://saveonsub.com/sitemap.xml -o /tmp/sitemap.xml || true
@@ -127,28 +133,25 @@ jobs:
             curl -fsSL --max-time 20 https://saveonsub.com/p/chatgpt-go -o /tmp/chatgpt-go.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/p/chatgpt-business -o /tmp/chatgpt-business.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/p/chatgpt-pro -o /tmp/chatgpt-pro.html || true
-            curl -fsSL --max-time 20 https://saveonsub.com/p/claude-pro -o /tmp/claude.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/p/google-ai-pro -o /tmp/google-ai.html || true
-            curl -fsSL --max-time 20 https://saveonsub.com/assets/catalog.js -o /tmp/catalog.js || true
             curl -fsSL --max-time 20 https://saveonsub.com/checkout -o /tmp/checkout.html || true
-            if grep -q "saveonsub-commercial-revision\" content=\"${COMMERCIAL_REVISION}" /tmp/home.html 2>/dev/null \
-              && grep -q 'User-agent: OAI-SearchBot' /tmp/robots.txt 2>/dev/null \
-              && grep -q '৳3,390 / month' /tmp/chatgpt-plus.html 2>/dev/null \
+            if grep -q 'User-agent: OAI-SearchBot' /tmp/robots.txt 2>/dev/null \
+              && grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' /tmp/home.html 2>/dev/null \
+              && grep -q '৳3,390' /tmp/chatgpt-plus.html 2>/dev/null \
               && grep -q 'Customer-specific access' /tmp/chatgpt-plus.html 2>/dev/null \
-              && ! grep -q 'Starter Shared' /tmp/chatgpt-plus.html 2>/dev/null \
-              && grep -q '৳1,299 / month' /tmp/chatgpt-go.html 2>/dev/null \
+              && grep -q '৳1,299' /tmp/chatgpt-go.html 2>/dev/null \
               && grep -q '৳4,290 / user / month' /tmp/chatgpt-business.html 2>/dev/null \
               && grep -q 'Team / Workspace access' /tmp/chatgpt-business.html 2>/dev/null \
-              && grep -q 'PRICE REVIEW REQUIRED' /tmp/chatgpt-pro.html 2>/dev/null \
-              && grep -q '৳3,390 / month' /tmp/claude.html 2>/dev/null \
-              && grep -q '৳3,390 / month' /tmp/google-ai.html 2>/dev/null \
-              && grep -q "${COMMERCIAL_REVISION}" /tmp/catalog.js 2>/dev/null \
+              && grep -q 'Confirm current price' /tmp/chatgpt-pro.html 2>/dev/null \
+              && grep -q '৳3,390' /tmp/google-ai.html 2>/dev/null \
+              && ! grep -q '৳499' /tmp/chatgpt-plus.html 2>/dev/null \
+              && ! grep -q 'SHARED · POLICY RISK' /tmp/chatgpt-plus.html 2>/dev/null \
               && grep -q '<meta name="robots" content="noindex,follow">' /tmp/checkout.html 2>/dev/null \
               && ! grep -q 'https://saveonsub.com/.*\.html' /tmp/sitemap.xml 2>/dev/null; then
-              echo 'Canonical production verified.'
+              echo 'Canonical production verified — pricing-v2 is live.'
               exit 0
             fi
             sleep 15
           done
-          echo '::error::Upload may have completed, but canonical saveonsub.com did not converge to pricing-v2 commercial truth.'
+          echo '::error::Upload may have completed, but canonical saveonsub.com did not converge to the pricing-v2 hardened release.'
           exit 1
