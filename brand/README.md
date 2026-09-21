@@ -94,6 +94,14 @@ The basic rule is simple:
 
 > Never recreate the SaveOnSub logo from a prompt or from memory. Reference the approved asset.
 
+## Validate before a brand/code change
+
+Run:
+
+`python validate_brand_manifest.py`
+
+The canonical `build_site.py` pipeline also runs this validator first and fails closed if locked master bytes, platform routing, blocked-source governance or derivative rules drift.
+
 ## Updating the system
 
 For a normal platform derivative change:
