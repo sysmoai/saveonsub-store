@@ -134,6 +134,16 @@ def main() -> int:
         if len(prop["og:locale"]) == 1 and prop["og:locale"][0] not in {"en_BD", "bn_BD"}:
             errors.append(f"{rel}: unsupported og:locale={prop['og:locale'][0]!r}")
 
+    sitemap = SITE / "sitemap.xml"
+    if not sitemap.is_file():
+        errors.append("sitemap.xml missing")
+    else:
+        sitemap_text = sitemap.read_text(encoding="utf-8", errors="strict")
+        if "saveonsub.com/assets/social/" in sitemap_text:
+            errors.append("sitemap.xml contains unpublished assets/social image URL")
+        if "https://saveonsub.com/assets/og-image.png" not in sitemap_text:
+            errors.append("sitemap.xml missing canonical homepage Open Graph image")
+
     image = SITE / "assets" / "og-image.png"
     if not image.is_file():
         errors.append("assets/og-image.png missing")
