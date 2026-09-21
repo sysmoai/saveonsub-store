@@ -9,6 +9,7 @@ import subprocess
 import sys
 
 STEPS = [
+    "validate_brand_manifest.py",
     "check_prices.py",
     "provider_fact_freshness.py",
     "catalog_source_hardening.py",
