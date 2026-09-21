@@ -281,7 +281,8 @@
       "09 — Usage Rules",
       "10 — Export Center",
       "11 — Platform Asset Matrix",
-      "12 — Browser & PWA Icons"
+      "12 — Browser & PWA Icons",
+      "13 — AI & Developer Handoff"
     ],
     "knownProductionComponent": "Icon/Maskable/512",
     "rule": "Figma may document and export approved assets, but must never silently redefine the locked master artwork."
