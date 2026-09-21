@@ -1,6 +1,6 @@
 {
   "$schema": "./manifest.schema.json",
-  "manifestVersion": "1.0.0",
+  "manifestVersion": "1.1.0",
   "brand": {
     "name": "SaveOnSub",
     "publicName": "SaveOnSub",
@@ -225,7 +225,11 @@
     "pwaAny512": "assets/icon-512.png",
     "pwaMaskable512": "assets/icon-maskable-512.png",
     "openGraphImage": "assets/og-image.png",
-    "schemaOrgLogo": "assets/logo.svg"
+    "schemaOrgLogo": "assets/logo.svg",
+    "twitterLargeCardImage": "assets/og-image.png",
+    "facebookShareImage": "assets/og-image.png",
+    "linkedinShareImage": "assets/og-image.png",
+    "messagingShareImage": "assets/og-image.png"
   },
   "blocked": [
     {
@@ -282,7 +286,8 @@
       "10 — Export Center",
       "11 — Platform Asset Matrix",
       "12 — Browser & PWA Icons",
-      "13 — AI & Developer Handoff"
+      "13 — AI & Developer Handoff",
+      "14 — Social & Open Graph"
     ],
     "knownProductionComponent": "Icon/Maskable/512",
     "rule": "Figma may document and export approved assets, but must never silently redefine the locked master artwork."
@@ -293,5 +298,51 @@
     "qualityGate": "SaveOnSub Quality Gates",
     "productionRule": "A PR/preview is not canonical-live. Production is complete only after canonical Cloudflare deploy and saveonsub.com smoke tests.",
     "phase6ValidatedHead": "8baa366ae73bb1b2f1fc91b02a13d127c4a0f5dd"
+  },
+  "socialMetadata": {
+    "status": "canonical-deterministic",
+    "normalizer": "stage_deploy.py::normalize_social_head",
+    "validator": "validate_social_metadata.py",
+    "siteName": "SaveOnSub",
+    "image": {
+      "asset": "openGraph1200x630",
+      "path": "assets/og-image.png",
+      "url": "https://saveonsub.com/assets/og-image.png",
+      "width": 1200,
+      "height": 630,
+      "alt": "SaveOnSub — Verified Savings. Real Human Support."
+    },
+    "contentRule": "Preserve each page's existing Open Graph title, description, type and locale when present; otherwise derive from document title, meta description and html lang. Do not invent social claims.",
+    "urlRule": "og:url must equal the page canonical URL after final clean-URL hardening.",
+    "requiredOpenGraph": [
+      "og:site_name",
+      "og:title",
+      "og:description",
+      "og:type",
+      "og:url",
+      "og:locale",
+      "og:image",
+      "og:image:width",
+      "og:image:height",
+      "og:image:alt"
+    ],
+    "requiredTwitter": [
+      "twitter:card",
+      "twitter:title",
+      "twitter:description",
+      "twitter:image",
+      "twitter:image:alt"
+    ],
+    "twitterCard": "summary_large_image",
+    "twitterHandle": null,
+    "twitterHandleRule": "No twitter:site or twitter:creator is declared until a verified SaveOnSub account/handle is explicitly approved.",
+    "supportedLocales": [
+      "en_BD",
+      "bn_BD"
+    ],
+    "historicalPathsForbidden": [
+      "https://saveonsub.com/assets/social/"
+    ],
+    "masterArtworkRule": "The social canvas may compose the exact approved lockup, but may not redraw, retype, recolor or promote the derivative to master status."
   }
 }
