@@ -27,6 +27,16 @@ Preserve existing ranking URLs, search intent, useful content, internal-link equ
 - Canonical deployment is fail-closed: the workflow must validate the exact Cloudflare Pages project, deploy only `_site/`, and then smoke-test `saveonsub.com`. If the credential is missing/invalid, deployment must stop without bypass.
 - Do not call a commit canonical-live until the canonical smoke tests pass.
 
+## Mandatory brand preflight
+
+Before any task that creates, edits, exports, deploys, reviews, or references SaveOnSub visual branding, read these in order:
+
+1. `BRAND-SYSTEM.md` — human brand policy.
+2. `brand/manifest.json` — machine-readable canonical routing and asset status.
+3. `brand/AI-BRAND-INSTRUCTIONS.md` — deterministic agent behavior.
+
+Use `brand/manifest.json > platformRouting` for filenames and surfaces. Never guess a logo path or fabricate a blocked asset. A generated derivative is not a master.
+
 ## Final brand lock
 - The CEO-approved SaveOnSub logo/icon supplied on 2026-08-19 is final and locked.
 - Preserve the exact approved `S` icon formed by the price-tag upper element, percentage symbol and lower circular arrow, plus approved SaveOnSub.com lockups.
