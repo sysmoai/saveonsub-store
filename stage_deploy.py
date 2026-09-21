@@ -180,6 +180,16 @@ def build_public_brand_derivatives():
     icon.resize((192, 192), resample).save(assets / 'icon-192.png', optimize=True)
     icon.resize((512, 512), resample).save(assets / 'icon-512.png', optimize=True)
 
+    # Dedicated maskable derivative. Keep the exact approved icon square intact,
+    # uniformly scale it to 288px and center it on a 512px white canvas.
+    # A 288px square has a corner radius of ~203.6px from center, safely inside
+    # the standard 80% maskable circle radius of 204.8px. No logo geometry,
+    # color, proportions or internal pixels are redrawn.
+    maskable = Image.new('RGBA', (512, 512), white)
+    safe_icon = icon.resize((288, 288), resample)
+    maskable.alpha_composite(safe_icon, ((512 - 288) // 2, (512 - 288) // 2))
+    maskable.convert('RGB').save(assets / 'icon-maskable-512.png', optimize=True)
+
     # Social preview: compose the exact approved lockup with approved brand lines.
     # The logo itself is not recreated or typeset.
     bg = (244, 247, 247)      # approved light neutral #F4F7F7
@@ -228,6 +238,7 @@ def build_public_brand_derivatives():
             {'src': '/assets/favicon.svg', 'sizes': 'any', 'type': 'image/svg+xml', 'purpose': 'any'},
             {'src': '/assets/icon-192.png', 'sizes': '192x192', 'type': 'image/png', 'purpose': 'any'},
             {'src': '/assets/icon-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'any'},
+            {'src': '/assets/icon-maskable-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'maskable'},
             {'src': '/assets/apple-touch-icon.png', 'sizes': '180x180', 'type': 'image/png', 'purpose': 'any'},
         ],
     })
@@ -237,6 +248,7 @@ def build_public_brand_derivatives():
         'apple-touch-icon.png': (180, 180),
         'icon-192.png': (192, 192),
         'icon-512.png': (512, 512),
+        'icon-maskable-512.png': (512, 512),
         'og-image.png': (1200, 630),
     }
     for name, dims in expected.items():
