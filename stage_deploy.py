@@ -62,6 +62,53 @@ def runtime_fetched_json():
     return keep
 
 
+def normalize_brand_head():
+    """Keep browser/search/PWA icon metadata deterministic on every staged HTML page."""
+    changed = 0
+    for page in DEST.rglob('*.html'):
+        try:
+            old = page.read_text(encoding='utf-8')
+        except OSError:
+            continue
+        new = old
+
+        # Keep the exact approved SVG as primary browser favicon, but add a PNG
+        # fallback for crawlers/clients that do not consume SVG favicons.
+        svg_tag = '<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">'
+        png_tag = '<link rel="icon" href="/assets/icon-192.png" type="image/png" sizes="192x192">'
+        apple_tag = '<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">'
+
+        # Normalize relative and absolute forms to root-relative staged URLs.
+        new = re.sub(
+            r'<link\s+rel="icon"\s+href="(?:\.{0,2}/)*assets/favicon\.svg"\s+type="image/svg\+xml"\s*/?>',
+            svg_tag,
+            new,
+            flags=re.I,
+        )
+        new = re.sub(
+            r'<link\s+rel="icon"\s+href="(?:\.{0,2}/)*assets/icon-192\.png"\s+type="image/png"\s+sizes="192x192"\s*/?>',
+            png_tag,
+            new,
+            flags=re.I,
+        )
+        new = re.sub(
+            r'<link\s+rel="apple-touch-icon"\s+href="(?:\.{0,2}/)*assets/apple-touch-icon\.png"(?:\s+sizes="180x180")?\s*/?>',
+            apple_tag,
+            new,
+            flags=re.I,
+        )
+
+        if svg_tag in new and png_tag not in new:
+            new = new.replace(svg_tag, svg_tag + '\n' + png_tag, 1)
+        if apple_tag not in new and '</head>' in new:
+            new = new.replace('</head>', apple_tag + '\n</head>', 1)
+
+        if new != old:
+            page.write_text(new, encoding='utf-8')
+            changed += 1
+    print(f"brand head normalized on {changed} HTML file(s)")
+
+
 def apply_brand_lock():
     """Enforce the approved logo/icon on every staged HTML document."""
     replacement = ('<img src="/assets/logo.svg" alt="SaveOnSub.com" '
@@ -227,6 +274,7 @@ def main():
             copied += 1
 
     apply_brand_lock()
+    normalize_brand_head()
 
     # Brand regression checks happen before derivatives are produced.
     for rel in ('assets/logo.svg', 'assets/favicon.svg'):
