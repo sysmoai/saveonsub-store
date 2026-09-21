@@ -116,6 +116,17 @@ You may design layouts around an exact approved logo/icon, including approved ba
 
 You may not modify the master mark itself.
 
+For website/social-share metadata, follow `brand/manifest.json > socialMetadata` exactly:
+
+- canonical image: `assets/og-image.png`, 1200×630;
+- `og:url` must equal the final canonical page URL;
+- preserve truthful page-specific title/description/type/locale;
+- use `twitter:card=summary_large_image`;
+- Twitter title/description/image must match the Open Graph truth;
+- do not invent `twitter:site` or `twitter:creator` without a verified approved handle;
+- do not reference historical `assets/social/<product>.png` paths unless those exact assets become approved and production-published;
+- do not call a generic brand card a unique product image.
+
 For any public claim, follow the evidence-gated rules in `BRAND-SYSTEM.md`. Never use another business unit's proof, customer data, logo or contact details as SaveOnSub proof.
 
 ## 9. Business-unit firewall
