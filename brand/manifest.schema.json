@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://saveonsub.com/brand/manifest.schema.json",
+  "title": "SaveOnSub Brand Manifest",
+  "type": "object",
+  "required": [
+    "manifestVersion",
+    "brand",
+    "authority",
+    "palette",
+    "assets",
+    "platformRouting",
+    "blocked",
+    "agentRules",
+    "figma",
+    "verification"
+  ],
+  "properties": {
+    "manifestVersion": {
+      "type": "string"
+    },
+    "brand": {
+      "type": "object",
+      "required": [
+        "name",
+        "domain",
+        "lockDate",
+        "status"
+      ],
+      "properties": {
+        "name": {
+          "const": "SaveOnSub"
+        },
+        "domain": {
+          "const": "https://saveonsub.com"
+        },
+        "lockDate": {
+          "const": "2026-08-19"
+        },
+        "status": {
+          "const": "approved-locked"
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "required": [
+        "humanPolicy",
+        "agentPolicy",
+        "productionPolicy",
+        "masterAssets",
+        "derivativeGenerator"
+      ]
+    },
+    "palette": {
+      "type": "object",
+      "required": [
+        "teal",
+        "navy",
+        "white",
+        "lightNeutral"
+      ]
+    },
+    "assets": {
+      "type": "object",
+      "minProperties": 5
+    },
+    "platformRouting": {
+      "type": "object",
+      "minProperties": 5
+    },
+    "blocked": {
+      "type": "array"
+    },
+    "agentRules": {
+      "type": "object",
+      "required": [
+        "must",
+        "mustNot"
+      ]
+    },
+    "figma": {
+      "type": "object",
+      "required": [
+        "fileKey",
+        "role"
+      ]
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "lastVerified",
+        "brandLockMarker"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
