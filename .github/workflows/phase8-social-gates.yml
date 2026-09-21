@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - brand/social-og-p8-2026-09-22
+  pull_request:
+    branches:
+      - brand/ai-manifest-p7-2026-09-22
 
 concurrency:
   group: saveonsub-phase8-social-${{ github.ref }}
