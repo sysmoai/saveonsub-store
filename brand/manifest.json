@@ -290,7 +290,18 @@
       "14 — Social & Open Graph"
     ],
     "knownProductionComponent": "Icon/Maskable/512",
-    "rule": "Figma may document and export approved assets, but must never silently redefine the locked master artwork."
+    "rule": "Figma may document and export approved assets, but must never silently redefine the locked master artwork.",
+    "knownProductionComponents": [
+      {
+        "name": "Icon/Maskable/512",
+        "role": "platform derivative"
+      },
+      {
+        "name": "Social/OpenGraph/1200x630",
+        "nodeId": "24:11",
+        "role": "social preview derivative mirror"
+      }
+    ]
   },
   "verification": {
     "lastVerified": "2026-09-22",
@@ -343,6 +354,12 @@
     "historicalPathsForbidden": [
       "https://saveonsub.com/assets/social/"
     ],
-    "masterArtworkRule": "The social canvas may compose the exact approved lockup, but may not redraw, retype, recolor or promote the derivative to master status."
+    "masterArtworkRule": "The social canvas may compose the exact approved lockup, but may not redraw, retype, recolor or promote the derivative to master status.",
+    "figma": {
+      "page": "14 — Social & Open Graph",
+      "component": "Social/OpenGraph/1200x630",
+      "nodeId": "24:11",
+      "role": "human visual/export mirror of the repository-generated canonical social derivative; not a master artwork source"
+    }
   }
 }
