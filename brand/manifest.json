@@ -1,0 +1,297 @@
+{
+  "$schema": "./manifest.schema.json",
+  "manifestVersion": "1.0.0",
+  "brand": {
+    "name": "SaveOnSub",
+    "publicName": "SaveOnSub",
+    "domain": "https://saveonsub.com",
+    "lockDate": "2026-08-19",
+    "status": "approved-locked",
+    "owner": "Emon Hossain",
+    "primaryContact": {
+      "channel": "WhatsApp",
+      "display": "+880 1305 869242",
+      "url": "https://wa.me/8801305869242"
+    },
+    "lines": {
+      "master": "Save More. Subscribe Smarter.",
+      "trust": "Verified Savings. Real Human Support.",
+      "campaign": "Before You Subscribe, Check SaveOnSub.",
+      "threeS": "Savings. Security. Support.",
+      "ai": "Premium AI. Smarter Prices. Human Support."
+    }
+  },
+  "authority": {
+    "humanPolicy": "BRAND-SYSTEM.md",
+    "agentPolicy": "brand/AI-BRAND-INSTRUCTIONS.md",
+    "productionPolicy": "AGENTS.md",
+    "quickStart": "brand/README.md",
+    "masterAssets": [
+      "assets/logo.svg",
+      "assets/favicon.svg"
+    ],
+    "derivativeGenerator": "stage_deploy.py",
+    "precedence": [
+      "CEO explicit brand-lock decision",
+      "BRAND-SYSTEM.md",
+      "locked master asset bytes and data-brand-lock marker",
+      "brand/manifest.json",
+      "AGENTS.md production constraints",
+      "stage_deploy.py deterministic derivative rules",
+      "Figma Brand Master visual documentation"
+    ],
+    "conflictRule": "If a lower-precedence source conflicts with a higher-precedence source, stop and resolve the conflict; never approximate the logo."
+  },
+  "palette": {
+    "teal": {
+      "hex": "#007E70",
+      "role": "approved brand reference; exact master artwork remains color authority"
+    },
+    "navy": {
+      "hex": "#102634",
+      "role": "approved dark navy/charcoal reference"
+    },
+    "white": {
+      "hex": "#FFFFFF",
+      "role": "white/background"
+    },
+    "lightNeutral": {
+      "hex": "#F4F7F7",
+      "role": "supporting light neutral"
+    },
+    "rule": "Do not recolor locked master artwork from tokens. Tokens guide surrounding layouts and derived canvases only."
+  },
+  "assets": {
+    "horizontalLockup": {
+      "path": "assets/logo.svg",
+      "status": "canonical-locked-master-wrapper",
+      "format": "svg-wrapper-with-embedded-approved-png",
+      "viewBox": [
+        0,
+        0,
+        280,
+        78
+      ],
+      "dimensions": {
+        "width": 280,
+        "height": 78,
+        "unit": "px"
+      },
+      "gitBlobSha": "e1279bdf965d5797a8b54a44e35c3e5d083cb9de",
+      "requiredMarker": "data-brand-lock=\"2026-08-19-approved\"",
+      "immutableArtwork": true,
+      "allowedUses": [
+        "website-header",
+        "website-footer",
+        "documents",
+        "brand-lockup placements",
+        "social layouts where a horizontal lockup is appropriate"
+      ],
+      "forbiddenOperations": [
+        "redraw",
+        "retype-wordmark",
+        "recolor",
+        "distort",
+        "non-uniform-scale",
+        "crop-icon-or-wordmark",
+        "trace-and-replace"
+      ]
+    },
+    "primaryIcon": {
+      "path": "assets/favicon.svg",
+      "status": "canonical-locked-icon-wrapper",
+      "format": "svg-wrapper-referencing-locked-logo",
+      "viewBox": [
+        0,
+        0,
+        78,
+        78
+      ],
+      "dimensions": {
+        "width": 78,
+        "height": 78,
+        "unit": "px"
+      },
+      "gitBlobSha": "46c0a444af0ca3d813d3569825f735d5e4254499",
+      "requiredMarker": "data-brand-lock=\"2026-08-19-approved\"",
+      "immutableArtwork": true,
+      "allowedUses": [
+        "browser-svg-favicon",
+        "icon-reference",
+        "source-for-approved-square-derivatives"
+      ],
+      "forbiddenOperations": [
+        "redraw",
+        "recolor",
+        "distort",
+        "trace-and-replace",
+        "replace-with-generic-tag",
+        "replace-with-letter-S"
+      ]
+    },
+    "appleTouch180": {
+      "path": "assets/apple-touch-icon.png",
+      "status": "approved-derived-raster",
+      "dimensions": {
+        "width": 180,
+        "height": 180,
+        "unit": "px"
+      },
+      "purpose": "apple-touch-icon",
+      "derivedFrom": "horizontalLockup.embeddedApprovedPng icon-square crop",
+      "generatedBy": "stage_deploy.py",
+      "generatedAtBuild": true
+    },
+    "pwa192": {
+      "path": "assets/icon-192.png",
+      "status": "approved-derived-raster",
+      "dimensions": {
+        "width": 192,
+        "height": 192,
+        "unit": "px"
+      },
+      "purpose": "any",
+      "derivedFrom": "horizontalLockup.embeddedApprovedPng icon-square crop",
+      "generatedBy": "stage_deploy.py",
+      "generatedAtBuild": true
+    },
+    "pwa512": {
+      "path": "assets/icon-512.png",
+      "status": "approved-derived-raster",
+      "dimensions": {
+        "width": 512,
+        "height": 512,
+        "unit": "px"
+      },
+      "purpose": "any",
+      "derivedFrom": "horizontalLockup.embeddedApprovedPng icon-square crop",
+      "generatedBy": "stage_deploy.py",
+      "generatedAtBuild": true
+    },
+    "pwaMaskable512": {
+      "path": "assets/icon-maskable-512.png",
+      "status": "approved-platform-derivative",
+      "dimensions": {
+        "width": 512,
+        "height": 512,
+        "unit": "px"
+      },
+      "purpose": "maskable",
+      "sourceArtwork": {
+        "asset": "primaryIcon",
+        "renderedSquare": 288,
+        "offsetX": 112,
+        "offsetY": 112,
+        "units": "px"
+      },
+      "canvas": {
+        "width": 512,
+        "height": 512,
+        "background": "#FFFFFF"
+      },
+      "safeZone": {
+        "standard": "80-percent-maskable-circle",
+        "radius": 204.8,
+        "sourceSquareCornerRadiusApprox": 203.6,
+        "units": "px"
+      },
+      "generatedBy": "stage_deploy.py",
+      "generatedAtBuild": true,
+      "immutableSourceArtwork": true
+    },
+    "openGraph1200x630": {
+      "path": "assets/og-image.png",
+      "status": "approved-generated-social-derivative",
+      "dimensions": {
+        "width": 1200,
+        "height": 630,
+        "unit": "px"
+      },
+      "purpose": "open-graph-social-preview",
+      "usesExactLockup": true,
+      "generatedBy": "stage_deploy.py",
+      "generatedAtBuild": true,
+      "layoutMayChange": "Only surrounding composition/text may change under brand policy; the embedded logo artwork may not."
+    }
+  },
+  "platformRouting": {
+    "websiteHeader": "assets/logo.svg",
+    "websiteFooter": "assets/logo.svg",
+    "browserFaviconPrimary": "assets/favicon.svg",
+    "browserFaviconPngFallback": "assets/icon-192.png",
+    "searchFaviconFallback": "assets/icon-192.png",
+    "appleTouchIcon": "assets/apple-touch-icon.png",
+    "pwaAny192": "assets/icon-192.png",
+    "pwaAny512": "assets/icon-512.png",
+    "pwaMaskable512": "assets/icon-maskable-512.png",
+    "openGraphImage": "assets/og-image.png",
+    "schemaOrgLogo": "assets/logo.svg"
+  },
+  "blocked": [
+    {
+      "id": "stacked-logo-production-master",
+      "status": "blocked-source-required",
+      "reason": "Approved stacked visual is documented, but exact connected production bytes are not currently canonicalized in the repository.",
+      "agentAction": "Do not reconstruct, re-typeset or approximate. Request/recover the exact approved original before production use."
+    },
+    {
+      "id": "transparent-full-logo-original",
+      "status": "blocked-source-required",
+      "reason": "No verified transparent full-logo original is currently connected as a canonical production master.",
+      "agentAction": "Do not remove a background and label the result an original master. Use the current approved lockup where suitable or recover the exact source."
+    },
+    {
+      "id": "editable-vector-path-master",
+      "status": "blocked-source-required",
+      "reason": "Current logo.svg is a wrapper around approved raster artwork, not a mathematical editable vector-path master.",
+      "agentAction": "Do not auto-trace or rebuild vector paths and call them approved. Recover the original editable vector source if one exists."
+    }
+  ],
+  "agentRules": {
+    "must": [
+      "Read BRAND-SYSTEM.md, brand/manifest.json and brand/AI-BRAND-INSTRUCTIONS.md before any SaveOnSub brand mutation.",
+      "Use platformRouting paths instead of guessing filenames.",
+      "Treat horizontalLockup and primaryIcon artwork as immutable.",
+      "Keep SaveOnSub separate from AIPS, AITP, AIPT, SYSmoAI and other portfolio brands.",
+      "Use reversible branch/PR workflows for repository brand changes and run quality gates before production merge.",
+      "If a requested asset is blocked, stop and recover the exact approved source instead of fabricating it."
+    ],
+    "mustNot": [
+      "Generate, redraw, restyle, trace, re-typeset or approximate the SaveOnSub master logo/icon.",
+      "Use the deprecated tilted price-tag plus ৳ identity.",
+      "Create a new monogram, generic price tag, shield, lock or substitute S mark.",
+      "Change logo geometry, internal spacing, proportions or colors.",
+      "Promote a generated derivative to master status.",
+      "Borrow another business unit's logo, proof, customers, contacts or brand assets."
+    ]
+  },
+  "figma": {
+    "fileKey": "2zkEcJbpk1NyJHBFi3o0Pw",
+    "role": "human visual source-of-truth and export/documentation workspace; must mirror higher-precedence locked source truth",
+    "requiredPages": [
+      "00 — Brand Lock",
+      "01 — Master Logo Source",
+      "02 — Logo System",
+      "03 — Icon System",
+      "04 — Lockups",
+      "05 — Favicons & App Icons",
+      "06 — Social Media",
+      "07 — Web & UI Usage",
+      "08 — Color & Typography",
+      "09 — Usage Rules",
+      "10 — Export Center",
+      "11 — Platform Asset Matrix",
+      "12 — Browser & PWA Icons",
+      "13 — AI & Developer Handoff"
+    ],
+    "knownProductionComponent": "Icon/Maskable/512",
+    "rule": "Figma may document and export approved assets, but must never silently redefine the locked master artwork."
+  },
+  "verification": {
+    "lastVerified": "2026-09-22",
+    "brandLockMarker": "data-brand-lock=\"2026-08-19-approved\"",
+    "qualityGate": "SaveOnSub Quality Gates",
+    "productionRule": "A PR/preview is not canonical-live. Production is complete only after canonical Cloudflare deploy and saveonsub.com smoke tests.",
+    "phase6ValidatedHead": "8baa366ae73bb1b2f1fc91b02a13d127c4a0f5dd"
+  }
+}
