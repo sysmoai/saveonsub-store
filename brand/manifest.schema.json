@@ -10,6 +10,7 @@
     "palette",
     "assets",
     "platformRouting",
+    "socialMetadata",
     "blocked",
     "agentRules",
     "figma",
@@ -92,6 +93,77 @@
         "lastVerified",
         "brandLockMarker"
       ]
+    },
+    "socialMetadata": {
+      "type": "object",
+      "required": [
+        "status",
+        "normalizer",
+        "validator",
+        "siteName",
+        "image",
+        "requiredOpenGraph",
+        "requiredTwitter",
+        "twitterCard",
+        "urlRule"
+      ],
+      "properties": {
+        "status": {
+          "const": "canonical-deterministic"
+        },
+        "normalizer": {
+          "type": "string"
+        },
+        "validator": {
+          "const": "validate_social_metadata.py"
+        },
+        "siteName": {
+          "const": "SaveOnSub"
+        },
+        "image": {
+          "type": "object",
+          "required": [
+            "path",
+            "url",
+            "width",
+            "height",
+            "alt"
+          ],
+          "properties": {
+            "path": {
+              "const": "assets/og-image.png"
+            },
+            "url": {
+              "const": "https://saveonsub.com/assets/og-image.png"
+            },
+            "width": {
+              "const": 1200
+            },
+            "height": {
+              "const": 630
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "requiredOpenGraph": {
+          "type": "array",
+          "minItems": 10
+        },
+        "requiredTwitter": {
+          "type": "array",
+          "minItems": 5
+        },
+        "twitterCard": {
+          "const": "summary_large_image"
+        },
+        "urlRule": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     }
   },
   "additionalProperties": true
