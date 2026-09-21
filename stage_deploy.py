@@ -185,7 +185,7 @@ def build_public_brand_derivatives():
     # A 288px square has a corner radius of ~203.6px from center, safely inside
     # the standard 80% maskable circle radius of 204.8px. No logo geometry,
     # color, proportions or internal pixels are redrawn.
-    maskable = Image.new('RGBA', (512, 512), white)
+    maskable = Image.new('RGBA', (512, 512), (255, 255, 255, 255))
     safe_icon = icon.resize((288, 288), resample)
     maskable.alpha_composite(safe_icon, ((512 - 288) // 2, (512 - 288) // 2))
     maskable.convert('RGB').save(assets / 'icon-maskable-512.png', optimize=True)
