@@ -27,6 +27,7 @@ can never reintroduce the deprecated tilted price-tag + ৳ identity.
 """
 import base64
 import glob
+import html
 import io
 import json
 import os
@@ -107,6 +108,133 @@ def normalize_brand_head():
             page.write_text(new, encoding='utf-8')
             changed += 1
     print(f"brand head normalized on {changed} HTML file(s)")
+
+
+SOCIAL_IMAGE_URL = 'https://saveonsub.com/assets/og-image.png'
+SOCIAL_IMAGE_ALT = 'SaveOnSub — Verified Savings. Real Human Support.'
+
+
+def _tag_attrs(tag):
+    attrs = {}
+    for m in re.finditer(r'''([:\w-]+)\s*=\s*(["'])(.*?)\2''', tag, flags=re.I | re.S):
+        attrs[m.group(1).lower()] = html.unescape(m.group(3).strip())
+    return attrs
+
+
+def _meta_value(text, key, attr='property'):
+    key = key.lower()
+    for tag in re.findall(r'<meta\b[^>]*>', text, flags=re.I | re.S):
+        attrs = _tag_attrs(tag)
+        if attrs.get(attr, '').lower() == key:
+            return attrs.get('content', '').strip()
+    return ''
+
+
+def _meta_values(text, key, attr='property'):
+    key = key.lower()
+    values = []
+    for tag in re.findall(r'<meta\b[^>]*>', text, flags=re.I | re.S):
+        attrs = _tag_attrs(tag)
+        if attrs.get(attr, '').lower() == key and attrs.get('content'):
+            values.append(attrs['content'].strip())
+    return values
+
+
+def _canonical_url(text):
+    for tag in re.findall(r'<link\b[^>]*>', text, flags=re.I | re.S):
+        attrs = _tag_attrs(tag)
+        if attrs.get('rel', '').lower() == 'canonical':
+            return attrs.get('href', '').strip()
+    return ''
+
+
+def _document_title(text):
+    m = re.search(r'<title\b[^>]*>(.*?)</title>', text, flags=re.I | re.S)
+    if not m:
+        return ''
+    return html.unescape(re.sub(r'<[^>]+>', '', m.group(1))).strip()
+
+
+def _document_lang(text):
+    m = re.search(r'<html\b[^>]*\blang\s*=\s*(["'])(.*?)\1', text, flags=re.I | re.S)
+    return (m.group(2).strip().lower() if m else 'en')
+
+
+def _strip_social_meta(text):
+    def repl(match):
+        tag = match.group(0)
+        attrs = _tag_attrs(tag)
+        prop = attrs.get('property', '').lower()
+        name = attrs.get('name', '').lower()
+        if prop.startswith('og:') or name.startswith('twitter:'):
+            return ''
+        return tag
+    return re.sub(r'<meta\b[^>]*>', repl, text, flags=re.I | re.S)
+
+
+def normalize_social_head():
+    """Enforce deterministic Open Graph + Twitter metadata on every staged HTML page."""
+    changed = 0
+    audited = 0
+    for page in DEST.rglob('*.html'):
+        try:
+            old = page.read_text(encoding='utf-8')
+        except OSError:
+            continue
+        audited += 1
+
+        title = _meta_value(old, 'og:title') or _document_title(old)
+        desc = _meta_value(old, 'og:description') or _meta_value(old, 'description', attr='name') or title
+        og_type = _meta_value(old, 'og:type') or 'website'
+        canonical = _canonical_url(old)
+        lang = _document_lang(old)
+        locale = _meta_value(old, 'og:locale') or ('bn_BD' if lang.startswith('bn') else 'en_BD')
+        alternates = []
+        for value in _meta_values(old, 'og:locale:alternate'):
+            if value and value != locale and value not in alternates:
+                alternates.append(value)
+
+        if not title:
+            raise RuntimeError(f'social metadata missing title source: {page.relative_to(DEST)}')
+        if not canonical:
+            raise RuntimeError(f'social metadata missing canonical source: {page.relative_to(DEST)}')
+
+        esc = lambda value: html.escape(value, quote=True)
+        block = [
+            f'<meta property="og:site_name" content="SaveOnSub">',
+            f'<meta property="og:title" content="{esc(title)}">',
+            f'<meta property="og:description" content="{esc(desc)}">',
+            f'<meta property="og:type" content="{esc(og_type)}">',
+            f'<meta property="og:url" content="{esc(canonical)}">',
+            f'<meta property="og:locale" content="{esc(locale)}">',
+        ]
+        block.extend(
+            f'<meta property="og:locale:alternate" content="{esc(value)}">'
+            for value in alternates
+        )
+        block.extend([
+            f'<meta property="og:image" content="{SOCIAL_IMAGE_URL}">',
+            '<meta property="og:image:width" content="1200">',
+            '<meta property="og:image:height" content="630">',
+            f'<meta property="og:image:alt" content="{esc(SOCIAL_IMAGE_ALT)}">',
+            '<meta name="twitter:card" content="summary_large_image">',
+            f'<meta name="twitter:title" content="{esc(title)}">',
+            f'<meta name="twitter:description" content="{esc(desc)}">',
+            f'<meta name="twitter:image" content="{SOCIAL_IMAGE_URL}">',
+            f'<meta name="twitter:image:alt" content="{esc(SOCIAL_IMAGE_ALT)}">',
+        ])
+
+        new = _strip_social_meta(old)
+        social_block = '\n'.join(block) + '\n'
+        if '</head>' not in new:
+            raise RuntimeError(f'social metadata missing </head>: {page.relative_to(DEST)}')
+        new = new.replace('</head>', social_block + '</head>', 1)
+
+        if new != old:
+            page.write_text(new, encoding='utf-8')
+            changed += 1
+
+    print(f'social metadata normalized on {changed}/{audited} HTML file(s)')
 
 
 def apply_brand_lock():
@@ -287,6 +415,7 @@ def main():
 
     apply_brand_lock()
     normalize_brand_head()
+    normalize_social_head()
 
     # Brand regression checks happen before derivatives are produced.
     for rel in ('assets/logo.svg', 'assets/favicon.svg'):
