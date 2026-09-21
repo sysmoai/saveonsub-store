@@ -156,7 +156,7 @@ def _document_title(text):
 
 
 def _document_lang(text):
-    m = re.search(r'<html\b[^>]*\blang\s*=\s*(["'])(.*?)\1', text, flags=re.I | re.S)
+    m = re.search(r'''<html\b[^>]*\blang\s*=\s*(["'])(.*?)\1''', text, flags=re.I | re.S)
     return (m.group(2).strip().lower() if m else 'en')
 
 
