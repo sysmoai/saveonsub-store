@@ -112,7 +112,7 @@ def main() -> int:
     image = social.get("image", {})
     if social.get("status") != "canonical-deterministic":
         fail("socialMetadata.status drift")
-    if social.get("normalizer") != "stage_deploy.py::normalize_social_head":
+    if social.get("normalizer") != "normalize_social_metadata.py":
         fail("socialMetadata.normalizer drift")
     if social.get("validator") != "validate_social_metadata.py":
         fail("socialMetadata.validator drift")
@@ -158,10 +158,16 @@ def main() -> int:
         "brand/AI-BRAND-INSTRUCTIONS.md",
         "brand/README.md",
         "stage_deploy.py",
+        "normalize_social_metadata.py",
         "validate_social_metadata.py",
     ):
         if not (ROOT / rel).is_file():
             fail(f"authority file missing: {rel}")
+
+    normalizer = (ROOT / "normalize_social_metadata.py").read_text(encoding="utf-8")
+    for token in ("from stage_deploy import normalize_social_head", "normalize_social_head()"):
+        if token not in normalizer:
+            fail(f"final social normalizer rule missing: {token}")
 
     deploy = (ROOT / "stage_deploy.py").read_text(encoding="utf-8")
     for token in (
