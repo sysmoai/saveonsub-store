@@ -63,6 +63,23 @@ def runtime_fetched_json():
     return keep
 
 
+def normalize_social_sitemap():
+    """Remove unpublished historical product-social image entries from staged sitemap."""
+    path = DEST / 'sitemap.xml'
+    if not path.exists():
+        return
+    old = path.read_text(encoding='utf-8', errors='strict')
+    pattern = re.compile(
+        r'<image:image>\s*<image:loc>https://saveonsub\.com/assets/social/[^<]+</image:loc>'
+        r'.*?</image:image>',
+        flags=re.I | re.S,
+    )
+    new, removed = pattern.subn('', old)
+    if new != old:
+        path.write_text(new, encoding='utf-8')
+    print(f'social sitemap normalized; removed {removed} unpublished historical image block(s)')
+
+
 def normalize_brand_head():
     """Keep browser/search/PWA icon metadata deterministic on every staged HTML page."""
     changed = 0
@@ -415,6 +432,7 @@ def main():
 
     apply_brand_lock()
     normalize_brand_head()
+    normalize_social_sitemap()
     normalize_social_head()
 
     # Brand regression checks happen before derivatives are produced.
