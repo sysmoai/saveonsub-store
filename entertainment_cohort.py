@@ -105,6 +105,7 @@ def patch(kind, rel, bn=False):
 
     t = meta(t, "description", desc)
     t = meta(t, "og:description", desc, prop=True)
+    t = meta(t, "twitter:description", desc)
     t = product_desc(t, desc)
     t, n = re.subn(r'<span class="official"[^>]*>.*?</span>', f'<span class="official" data-entertainment-official="{VERIFIED}">{official}</span>', t, count=1, flags=re.S)
     if n != 1:
@@ -133,6 +134,7 @@ p, g = read("blog/netflix-spotify-youtube-premium-price-bd.html")
 desc = "Netflix, Spotify and YouTube Premium in Bangladesh: official provider facts verified 2026-09-09, plus SaveOnSub access options and household-policy warnings."
 g = meta(g, "description", desc)
 g = meta(g, "og:description", desc, prop=True)
+g = meta(g, "twitter:description", desc)
 g = re.sub(r'("@type":\s*"Article".*?"description":\s*")[^"]*(")', lambda m: m.group(1) + desc + m.group(2), g, count=1, flags=re.S)
 g = g.replace("PRICE SHEET · UPDATED 2026-09-03", "PRICE SHEET · VERIFIED 2026-09-09")
 g = g.replace("Some have official taka prices (use them!). Some don't. Here's the honest map.", "Compare current official provider facts with the exact SaveOnSub access method before paying.")
