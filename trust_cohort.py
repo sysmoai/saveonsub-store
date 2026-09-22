@@ -48,6 +48,7 @@ def harden_transparency():
     )
     t = replace_meta(t, "name", "description", desc)
     t = replace_meta(t, "property", "og:description", desc)
+    t = replace_meta(t, "name", "twitter:description", desc)
 
     # JSON-LD FAQ answers: remove categorical legal advice and blanket warranty promises.
     t = re.sub(
@@ -107,6 +108,8 @@ def harden_warranty(rel, bn=False):
         t = replace_meta(t, "name", "description", desc)
         t = replace_meta(t, "property", "og:title", title)
         t = replace_meta(t, "property", "og:description", desc)
+        t = replace_meta(t, "name", "twitter:title", title)
+        t = replace_meta(t, "name", "twitter:description", desc)
         t = re.sub(
             r'<div class="tbl mt3"><table>.*?</table></div>',
             '<div class="notice mt3"><b>Coverage is offer-specific.</b> Warranty duration, replacement timing, refund eligibility and exclusions can differ by product and access method. The written terms shown on the selected product/order before payment control.</div>',
@@ -149,6 +152,8 @@ def harden_warranty(rel, bn=False):
         t = replace_meta(t, "name", "description", desc)
         t = replace_meta(t, "property", "og:title", title)
         t = replace_meta(t, "property", "og:description", desc)
+        t = replace_meta(t, "name", "twitter:title", title)
+        t = replace_meta(t, "name", "twitter:description", desc)
         # Use a broad deterministic replacement on the central warranty table and hard SLA phrases.
         t = re.sub(
             r'<div class="tbl mt3"><table>.*?</table></div>',
