@@ -312,7 +312,7 @@
   },
   "socialMetadata": {
     "status": "canonical-deterministic",
-    "normalizer": "stage_deploy.py::normalize_social_head",
+    "normalizer": "normalize_social_metadata.py",
     "validator": "validate_social_metadata.py",
     "siteName": "SaveOnSub",
     "image": {
@@ -360,6 +360,7 @@
       "component": "Social/OpenGraph/1200x630",
       "nodeId": "24:11",
       "role": "human visual/export mirror of the repository-generated canonical social derivative; not a master artwork source"
-    }
+    },
+    "normalizationOrder": "Run after technical_seo_hardening.py and all content/cohort mutators, immediately before validate_social_metadata.py."
   }
 }
