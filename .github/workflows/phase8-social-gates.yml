@@ -35,6 +35,7 @@ jobs:
           set -euo pipefail
           python -m py_compile stage_deploy.py
           python -m py_compile validate_brand_manifest.py
+          python -m py_compile normalize_social_metadata.py
           python -m py_compile validate_social_metadata.py
           python -m py_compile build_site.py
 
