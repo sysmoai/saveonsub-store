@@ -29,6 +29,7 @@ STEPS = [
     "homepage_truth_cohort.py",
     "cache_safe_brand.py",
     "technical_seo_hardening.py",
+    "normalize_social_metadata.py",
     "validate_social_metadata.py",
     "commercial_truth_v2.py",
     "sanitize_pricing_v2_legacy.py",
