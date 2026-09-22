@@ -24,6 +24,24 @@
   --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.5);
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Foundation tokens: surrounding UI only; never recolor locked logo artwork. */
+  --brand-teal: #007E70;
+  --brand-navy: #102634;
+  --brand-white: #FFFFFF;
+  --brand-light-neutral: #F4F7F7;
+  --wa-green: #25d366;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-8: 48px;
+  --space-10: 64px;
+  --space-12: 80px;
+  --radius-pill: 99px;
+  --duration-fast: 0.15s;
+  --duration-base: 0.2s;
 }
 
 /* ---- Reset ---- */
