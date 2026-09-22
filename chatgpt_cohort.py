@@ -12,7 +12,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
-FACTS = json.loads((ROOT / "ops" / "CHATGPT-COHORT-FACTS-2026-09-07.json").read_text(encoding="utf-8"))
+FACTS = json.loads((ROOT / "ops" / "CHATGPT-COHORT-FACTS-2026-09-22.json").read_text(encoding="utf-8"))
 VERIFIED = FACTS["verified_on"]
 SOURCES = FACTS["official_sources"]
 
