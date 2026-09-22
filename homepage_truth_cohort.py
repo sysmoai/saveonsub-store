@@ -32,6 +32,7 @@ def save(p, t):
 def en():
     p, t = load('index.html')
     t = re.sub(r'(property="og:description" content=")\d+\+ subscription options', rf'\g<1>{count} subscription options', t, count=1)
+    t = re.sub(r'(name="twitter:description" content=")\d+\+ subscription options', rf'\g<1>{count} subscription options', t, count=1)
     t = re.sub(r'ChatGPT, Claude, Netflix, Canva, Midjourney and \d+\+ more', f'ChatGPT, Claude, Netflix, Canva, Midjourney and {more} more', t, count=1)
     save(p, t)
 
@@ -39,6 +40,8 @@ def en():
 def bn():
     p, t = load('bn.html')
     t = re.sub(r'(<meta property="og:description" content=")[^"]*(">)',
+               rf'\g<1>{count}টি subscription option — access type, payment method, delivery SLA এবং applicable warranty terms অর্ডারের আগে দেখুন।\g<2>', t, count=1)
+    t = re.sub(r'(<meta name="twitter:description" content=")[^"]*(">)',
                rf'\g<1>{count}টি subscription option — access type, payment method, delivery SLA এবং applicable warranty terms অর্ডারের আগে দেখুন।\g<2>', t, count=1)
     t = t.replace('"description":"সৎ দামে আসল প্রিমিয়াম সাবস্ক্রিপশন — বিকাশ/নগদ/রকেটে।"',
                   '"description":"বাংলাদেশে clearly labeled subscription options with local BDT payment support."')
