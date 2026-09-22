@@ -1,7 +1,7 @@
 {
   "name": "saveonsub",
   "version": 2,
-  "buildCommand": "python3 phase8_diagnostic_build.py",
+  "buildCommand": "python3 build_site.py",
   "outputDirectory": "_site",
   "cleanUrls": true,
   "redirects": [
