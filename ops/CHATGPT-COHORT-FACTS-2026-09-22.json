@@ -1,0 +1,116 @@
+{
+  "verified_on": "2026-09-22",
+  "market": "Bangladesh",
+  "verification_scope": "Official OpenAI provider facts re-verified on 2026-09-22. The Bangladesh reseller/SERP snapshot below remains a historical 2026-09-07 market observation and was not refreshed by this provider-fact pass.",
+  "official_sources": {
+    "pricing": "https://chatgpt.com/pricing/",
+    "plus_help": "https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus",
+    "go_launch": "https://openai.com/index/introducing-chatgpt-go/",
+    "pro_help": "https://help.openai.com/en/articles/9793128-what-is-chatgpt-pro",
+    "multi_currency": "https://help.openai.com/en/articles/10421635-multi-currency-billing",
+    "account_sharing": "https://help.openai.com/en/articles/10471989-openai-account-sharing-policy",
+    "terms": "https://openai.com/policies/terms-of-use/"
+  },
+  "official_consumer_reference": {
+    "free": {
+      "positioning": "trying ChatGPT"
+    },
+    "go": {
+      "published_usd_month": 8,
+      "price_note": "OpenAI's worldwide Go launch displays $8/month as the US price and says Go pricing is localized in some markets; exact checkout is the source of truth."
+    },
+    "plus": {
+      "published_usd_month": 20,
+      "billing": "monthly",
+      "api_included": false,
+      "feature_note": "Current Plus Help describes broader model/tool access than Free, advanced reasoning access, faster responses, voice, image generation, file uploads/analysis and Deep Research where available. Model availability and limits can change."
+    },
+    "pro": {
+      "published_tiers_usd_month": [
+        100,
+        200
+      ],
+      "price_note": "Current Pro Help documents $100 and $200 tiers with different usage allowances. Availability and upgrade eligibility can change; verify the current account plan picker before quoting a purchasable tier."
+    }
+  },
+  "bangladesh_billing": {
+    "bdt_supported_on_web": true,
+    "all_country_web_methods": [
+      "credit card",
+      "debit card"
+    ],
+    "bkash_directly_listed_by_openai": false,
+    "guidance": "Do not convert $20 with a fixed internal FX rate and call that the official Bangladesh price. BDT is a supported ChatGPT web-billing currency; the user's own checkout is authoritative for the exact localized amount."
+  },
+  "account_policy": {
+    "individual_account": true,
+    "credential_sharing_allowed": false,
+    "summary": "OpenAI says an account is for the individual who created it; another person who needs OpenAI products should create their own account. Sharing login credentials creates security and misuse risks.",
+    "site_rule": "Any SaveOnSub shared-access listing must explicitly state that it conflicts with OpenAI individual-account policy and carries privacy, continuity and suspension/restriction risk. Never call it provider-authorized, safe, private, official, or equivalent to a personal Plus subscription."
+  },
+  "saveonsub_offer_snapshot": {
+    "chatgpt-plus": [
+      {
+        "label": "Starter Shared (6–8 users)",
+        "bdt": 499,
+        "access": "shared"
+      },
+      {
+        "label": "Premium Shared (2–3 users)",
+        "bdt": 999,
+        "access": "shared"
+      },
+      {
+        "label": "Personal (your email)",
+        "bdt": 2990,
+        "access": "personal/customer-specific"
+      }
+    ]
+  },
+  "bd_serp_snapshot": {
+    "verified_on": "2026-09-07",
+    "status": "historic snapshot retained; not reverified in the 2026-09-22 official-provider refresh",
+    "observed": [
+      {
+        "site": "Soft Office BD",
+        "visible_price_bdt": 399,
+        "note": "commercial guide/product positioning"
+      },
+      {
+        "site": "Digi Subscriber",
+        "visible_price_bdt": "399-1499",
+        "note": "multiple variants"
+      },
+      {
+        "site": "Bengali IT",
+        "visible_price_bdt": "799-999",
+        "note": "product page; mixed Go/Plus language"
+      }
+    ]
+  },
+  "portfolio_intent_ownership": {
+    "saveonsub": {
+      "role": "consumer comparison and savings authority",
+      "owns": [
+        "chatgpt plus price in bangladesh",
+        "chatgpt plus bangladesh",
+        "chatgpt plus bkash",
+        "chatgpt go vs plus bangladesh",
+        "shared vs personal chatgpt bangladesh",
+        "how to buy chatgpt in bangladesh"
+      ]
+    },
+    "aips": {
+      "overlap": "high",
+      "recommended_future_role": "brand/navigational and store-offer demand rather than duplicating SaveOnSub's exact neutral comparison intent"
+    },
+    "aitp": {
+      "overlap": "medium",
+      "recommended_future_role": "personal-seat/service intent and its own brand demand"
+    },
+    "aipt": {
+      "overlap": "low-to-medium",
+      "recommended_future_role": "bundles/student/store-specific intent"
+    }
+  }
+}

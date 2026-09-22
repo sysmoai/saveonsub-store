@@ -16,7 +16,7 @@ MANIFEST_PATH = ROOT / "brand" / "manifest.json"
 SCHEMA_PATH = ROOT / "brand" / "manifest.schema.json"
 REQUIRED_TOP = {
     "manifestVersion", "brand", "authority", "palette", "assets",
-    "platformRouting", "blocked", "agentRules", "figma", "verification",
+    "platformRouting", "socialMetadata", "blocked", "agentRules", "figma", "verification",
 }
 REQUIRED_BLOCKED = {
     "stacked-logo-production-master",
@@ -108,6 +108,37 @@ def main() -> int:
         elif not (ROOT / rel).exists():
             fail(f"non-generated asset path missing: {rel}")
 
+    social = manifest["socialMetadata"]
+    image = social.get("image", {})
+    if social.get("status") != "canonical-deterministic":
+        fail("socialMetadata.status drift")
+    if social.get("normalizer") != "normalize_social_metadata.py":
+        fail("socialMetadata.normalizer drift")
+    if social.get("validator") != "validate_social_metadata.py":
+        fail("socialMetadata.validator drift")
+    if social.get("siteName") != "SaveOnSub":
+        fail("socialMetadata.siteName drift")
+    if image.get("path") != "assets/og-image.png":
+        fail("socialMetadata.image.path drift")
+    if image.get("url") != "https://saveonsub.com/assets/og-image.png":
+        fail("socialMetadata.image.url drift")
+    if (image.get("width"), image.get("height")) != (1200, 630):
+        fail("socialMetadata image dimensions drift")
+    if not image.get("alt"):
+        fail("socialMetadata.image.alt missing")
+    if social.get("twitterCard") != "summary_large_image":
+        fail("socialMetadata.twitterCard drift")
+    for surface in (
+        "openGraphImage", "twitterLargeCardImage", "facebookShareImage",
+        "linkedinShareImage", "messagingShareImage",
+    ):
+        if manifest["platformRouting"].get(surface) != "assets/og-image.png":
+            fail(f"platformRouting.{surface} must use assets/og-image.png")
+    if len(social.get("requiredOpenGraph", [])) < 10:
+        fail("socialMetadata.requiredOpenGraph incomplete")
+    if len(social.get("requiredTwitter", [])) < 5:
+        fail("socialMetadata.requiredTwitter incomplete")
+
     blocked_ids = {
         item.get("id")
         for item in manifest["blocked"]
@@ -127,15 +158,26 @@ def main() -> int:
         "brand/AI-BRAND-INSTRUCTIONS.md",
         "brand/README.md",
         "stage_deploy.py",
+        "normalize_social_metadata.py",
+        "validate_social_metadata.py",
     ):
         if not (ROOT / rel).is_file():
             fail(f"authority file missing: {rel}")
+
+    normalizer = (ROOT / "normalize_social_metadata.py").read_text(encoding="utf-8")
+    for token in ("from stage_deploy import normalize_social_head", "normalize_social_head()"):
+        if token not in normalizer:
+            fail(f"final social normalizer rule missing: {token}")
 
     deploy = (ROOT / "stage_deploy.py").read_text(encoding="utf-8")
     for token in (
         "icon-maskable-512.png",
         "safe_icon = icon.resize((288, 288)",
         "((512 - 288) // 2, (512 - 288) // 2)",
+        "def normalize_social_head():",
+        "SOCIAL_IMAGE_URL = 'https://saveonsub.com/assets/og-image.png'",
+        "twitter:card",
+        "twitter:image:alt",
     ):
         if token not in deploy:
             fail(f"maskable derivative rule missing from stage_deploy.py: {token}")

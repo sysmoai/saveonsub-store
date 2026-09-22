@@ -31,11 +31,9 @@ BLOG_SLUGS = ["chatgpt-plus-price-in-bangladesh","midjourney-vs-leonardo-banglad
               "how-to-pay-for-ai-tools-with-bkash","shared-vs-personal-ai-subscriptions-honest-guide","netflix-spotify-youtube-premium-price-bd",
               "google-ai-pro-500-taka-explained","free-ai-tools-that-beat-paid-bangladesh","capcut-vs-invideo-vs-opus-clip","coursera-vs-youtube-learning-bd","ai-video-tools-price-comparison-bd-2026","how-we-source-subscriptions-transparency"]
 urls += [(f"blog/{s}.html", 0.7, "monthly") for s in BLOG_SLUGS]
-# image sitemap: map each product URL to its social card so Google Images/Discover can index it
-IMG = {f"p/{p['id']}.html": (f"{BASE}/assets/social/{p['id']}.png",
-        f"{esc(p['name'].replace('🎁 ',''))} — Bangladesh price on SAVEONSUB") for p in cat['products']}
-IMG.update({f"bn/p/{p['id']}.html": (f"{BASE}/assets/social/{p['id']}.png",
-        f"{esc(p['name'].replace('🎁 ',''))} — বাংলাদেশে দাম, SAVEONSUB") for p in cat['products']})
+# Image sitemap: only advertise images that are actually published and canonical.
+# Per-product social cards are intentionally omitted until exact production assets exist.
+IMG = {}
 # hreflang pairs (EN↔BN) for sitemap-level annotation
 ALT = {}
 def _pair(en, bn):

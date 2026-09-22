@@ -32,6 +32,8 @@ STEPS = [
     "commercial_truth_v2.py",
     "sanitize_pricing_v2_legacy.py",
     "audit_commercial_truth_v2.py",
+    "normalize_social_metadata.py",
+    "validate_social_metadata.py",
 ]
 
 

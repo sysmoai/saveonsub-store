@@ -1,0 +1,59 @@
+name: Phase 8 Social Gates
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - brand/social-og-p8-2026-09-22
+  pull_request:
+    branches:
+      - brand/ai-manifest-p7-2026-09-22
+
+concurrency:
+  group: saveonsub-phase8-social-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  social-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile Phase 8 Python
+        run: |
+          set -euo pipefail
+          python -m py_compile stage_deploy.py
+          python -m py_compile validate_brand_manifest.py
+          python -m py_compile normalize_social_metadata.py
+          python -m py_compile validate_social_metadata.py
+          python -m py_compile build_site.py
+
+      - name: Install build dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
+
+      - name: Build exact canonical candidate
+        run: python build_site.py
+
+      - name: Verify Phase 8 social contract
+        run: |
+          set -euo pipefail
+          python validate_social_metadata.py
+          ! grep -R -q 'saveonsub.com/assets/social/' _site --include='*.html' --include='*.xml'
+          grep -q '<meta property="og:image" content="https://saveonsub.com/assets/og-image.png">' _site/index.html
+          grep -q '<meta property="og:image:width" content="1200">' _site/index.html
+          grep -q '<meta property="og:image:height" content="630">' _site/index.html
+          grep -q '<meta name="twitter:card" content="summary_large_image">' _site/index.html
+          grep -q '<meta name="twitter:image" content="https://saveonsub.com/assets/og-image.png">' _site/index.html
+          test -f _site/assets/og-image.png
+          echo "Phase 8 social gates passed."

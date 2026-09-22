@@ -55,7 +55,7 @@ def page(p):
                "availability": "https://schema.org/InStock", "url": f"https://saveonsub.com/p/{p['id']}.html"} for pl in p['plans']]
     product_ld = {"@context": "https://schema.org", "@type": "Product", "sku": f"BD-{p['id'].upper()}", "name": name,
                   "description": desc, "brand": {"@type": "Brand", "name": name.split()[0]},
-                  "image": [f"https://saveonsub.com/assets/social/{p['id']}.png"],
+                  "image": [f"https://saveonsub.com/assets/og-image.png"],
                   "category": p['category'],
                   "offers": {"@type": "AggregateOffer", "lowPrice": cheapest['bdt'], "itemCondition": "https://schema.org/NewCondition",
                              "highPrice": max(pl['bdt'] for pl in p['plans']), "priceCurrency": "BDT",
@@ -161,9 +161,9 @@ def page(p):
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="manifest" href="../assets/site.webmanifest">
-<meta property="og:image" content="https://saveonsub.com/assets/social/{p['id']}.png">
+<meta property="og:image" content="https://saveonsub.com/assets/og-image.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://saveonsub.com/assets/social/{p['id']}.png">
+<meta name="twitter:image" content="https://saveonsub.com/assets/og-image.png">
 <link rel="stylesheet" href="../assets/style.css">
 <script type="application/ld+json">{json.dumps(product_ld, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>
@@ -262,7 +262,7 @@ def bn_page(p):
                "availability": "https://schema.org/InStock", "url": f"https://saveonsub.com/bn/p/{p['id']}.html"} for pl in p['plans']]
     product_ld = {"@context": "https://schema.org", "@type": "Product", "sku": f"BD-{p['id'].upper()}", "name": name,
                   "description": desc, "brand": {"@type": "Brand", "name": name.split()[0]},
-                  "image": [f"https://saveonsub.com/assets/social/{p['id']}.png"],
+                  "image": [f"https://saveonsub.com/assets/og-image.png"],
                   "category": p['category'],
                   "offers": {"@type": "AggregateOffer", "lowPrice": frm, "itemCondition": "https://schema.org/NewCondition",
                              "highPrice": max(pl['bdt'] for pl in p['plans']), "priceCurrency": "BDT",
@@ -339,9 +339,9 @@ def bn_page(p):
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
 <link rel="manifest" href="../../assets/site.webmanifest">
-<meta property="og:image" content="https://saveonsub.com/assets/social/{p['id']}.png">
+<meta property="og:image" content="https://saveonsub.com/assets/og-image.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://saveonsub.com/assets/social/{p['id']}.png">
+<meta name="twitter:image" content="https://saveonsub.com/assets/og-image.png">
 <link rel="stylesheet" href="../../assets/style.css">
 <script type="application/ld+json">{json.dumps(product_ld, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>

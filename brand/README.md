@@ -58,6 +58,30 @@ Public raster derivatives are rebuilt by `stage_deploy.py` from the locked maste
 
 The dedicated maskable icon uses the exact approved icon square at 288×288, centered at (112,112) on a 512×512 white canvas. The logo artwork itself is not redrawn.
 
+## Social / Open Graph metadata
+
+Canonical social preview image:
+
+`assets/og-image.png` — 1200×630, generated at build from the exact approved lockup.
+
+Every staged HTML page is normalized to the same metadata contract:
+
+- `og:site_name`
+- page-specific `og:title`, `og:description`, `og:type`, `og:url`, `og:locale`
+- canonical `og:image` + explicit 1200×630 dimensions + alt text
+- `twitter:card=summary_large_image`
+- matching Twitter title, description, image and image alt
+
+`og:url` must equal the final canonical URL after clean-URL hardening.
+
+No `twitter:site` or `twitter:creator` is emitted until an exact SaveOnSub social handle is explicitly verified and approved.
+
+Historical `assets/social/<product>.png` URLs are forbidden in deployed HTML and sitemap output because those assets are not part of the production allowlist.
+
+Run after a canonical build:
+
+`python validate_social_metadata.py`
+
 ## Currently blocked exact originals
 
 These are intentionally not fabricated:
@@ -99,6 +123,10 @@ The basic rule is simple:
 Run:
 
 `python validate_brand_manifest.py`
+
+For final staged social metadata QA:
+
+`python validate_social_metadata.py`
 
 The canonical `build_site.py` pipeline also runs this validator first and fails closed if locked master bytes, platform routing, blocked-source governance or derivative rules drift.
 
