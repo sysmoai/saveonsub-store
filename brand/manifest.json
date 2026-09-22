@@ -361,6 +361,6 @@
       "nodeId": "24:11",
       "role": "human visual/export mirror of the repository-generated canonical social derivative; not a master artwork source"
     },
-    "normalizationOrder": "Run after technical_seo_hardening.py and all content/cohort mutators, immediately before validate_social_metadata.py."
+    "normalizationOrder": "Run after every staged content, cohort, SEO and commercial-truth mutator. normalize_social_metadata.py and then validate_social_metadata.py must be the final two canonical build steps."
   }
 }
