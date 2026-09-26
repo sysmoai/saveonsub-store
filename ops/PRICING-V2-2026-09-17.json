@@ -23,19 +23,40 @@
     "chatgpt-go": {
       "official_usd": 8,
       "plans": [
-        {"label": "Go — 1 Month", "access_type": "personal", "bdt": 1299, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "go-1m",
+          "label": "Go — 1 Month",
+          "access_type": "personal",
+          "bdt": 1299,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "chatgpt-plus": {
       "official_usd": 20,
       "plans": [
-        {"label": "Plus — 1 Month", "access_type": "personal", "bdt": 3390, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "plus-1m",
+          "label": "Plus — 1 Month",
+          "access_type": "personal",
+          "bdt": 3390,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "chatgpt-business": {
       "official_usd": 25,
       "plans": [
-        {"label": "Business Standard Seat", "access_type": "team", "bdt": 4290, "duration": "1 month", "billing_unit": "user/month"}
+        {
+          "plan_id": "business-standard-seat",
+          "label": "Business Standard Seat",
+          "access_type": "team",
+          "bdt": 4290,
+          "duration": "1 month",
+          "billing_unit": "user/month"
+        }
       ]
     },
     "chatgpt-pro": {
@@ -45,19 +66,47 @@
     "claude-pro": {
       "official_usd": 20,
       "plans": [
-        {"label": "Claude Pro — 1 Month", "access_type": "personal", "bdt": 3390, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "claude-pro-1m",
+          "label": "Claude Pro — 1 Month",
+          "access_type": "personal",
+          "bdt": 3390,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "claude-max": {
       "plans": [
-        {"label": "Claude Max 5x — 1 Month", "access_type": "personal", "bdt": 16790, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Claude Max 20x — 1 Month", "access_type": "personal", "bdt": 33590, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "claude-max-5x-1m",
+          "label": "Claude Max 5x — 1 Month",
+          "access_type": "personal",
+          "bdt": 16790,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "claude-max-20x-1m",
+          "label": "Claude Max 20x — 1 Month",
+          "access_type": "personal",
+          "bdt": 33590,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "google-ai-pro": {
       "official_usd": 19.99,
       "plans": [
-        {"label": "Google AI Pro — 1 Month", "access_type": "personal", "bdt": 3390, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "google-ai-pro-1m",
+          "label": "Google AI Pro — 1 Month",
+          "access_type": "personal",
+          "bdt": 3390,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "google-ai-plus": {
@@ -66,106 +115,320 @@
     },
     "perplexity-pro": {
       "plans": [
-        {"label": "Perplexity Pro — 1 Month", "access_type": "personal", "bdt": 3390, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Perplexity Max — 1 Month", "access_type": "personal", "bdt": 33590, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "perplexity-pro-1m",
+          "label": "Perplexity Pro — 1 Month",
+          "access_type": "personal",
+          "bdt": 3390,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "perplexity-max-1m",
+          "label": "Perplexity Max — 1 Month",
+          "access_type": "personal",
+          "bdt": 33590,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "supergrok": {
       "plans": [
-        {"label": "SuperGrok — 1 Month", "access_type": "personal", "bdt": 5090, "duration": "1 month", "billing_unit": "month"},
-        {"label": "SuperGrok Premium — 1 Month", "access_type": "personal", "bdt": 16790, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "supergrok-1m",
+          "label": "SuperGrok — 1 Month",
+          "access_type": "personal",
+          "bdt": 5090,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "supergrok-premium-1m",
+          "label": "SuperGrok Premium — 1 Month",
+          "access_type": "personal",
+          "bdt": 16790,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "midjourney": {
       "plans": [
-        {"label": "Basic — 1 Month", "access_type": "personal", "bdt": 1990, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Standard — 1 Month", "access_type": "personal", "bdt": 5090, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Pro — 1 Month", "access_type": "personal", "bdt": 10090, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Mega — 1 Month", "access_type": "personal", "bdt": 20190, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "basic-1m",
+          "label": "Basic — 1 Month",
+          "access_type": "personal",
+          "bdt": 1990,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "standard-1m",
+          "label": "Standard — 1 Month",
+          "access_type": "personal",
+          "bdt": 5090,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "pro-1m",
+          "label": "Pro — 1 Month",
+          "access_type": "personal",
+          "bdt": 10090,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "mega-1m",
+          "label": "Mega — 1 Month",
+          "access_type": "personal",
+          "bdt": 20190,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "leonardo": {
       "official_usd": 12,
       "plans": [
-        {"label": "Entry Paid Tier — 1 Month", "access_type": "personal", "bdt": 2290, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "entry-paid-tier-1m",
+          "label": "Entry Paid Tier — 1 Month",
+          "access_type": "personal",
+          "bdt": 2290,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "runway": {
       "plans": [
-        {"label": "Standard — 1 Month", "access_type": "personal", "bdt": 2690, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Pro — 1 Month", "access_type": "personal", "bdt": 5890, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Unlimited — 1 Month", "access_type": "personal", "bdt": 15990, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "standard-1m",
+          "label": "Standard — 1 Month",
+          "access_type": "personal",
+          "bdt": 2690,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "pro-1m",
+          "label": "Pro — 1 Month",
+          "access_type": "personal",
+          "bdt": 5890,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "unlimited-1m",
+          "label": "Unlimited — 1 Month",
+          "access_type": "personal",
+          "bdt": 15990,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "heygen": {
       "official_usd": 29,
       "plans": [
-        {"label": "Creator — 1 Month", "access_type": "personal", "bdt": 4890, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "creator-1m",
+          "label": "Creator — 1 Month",
+          "access_type": "personal",
+          "bdt": 4890,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "synthesia": {
       "plans": [
-        {"label": "Starter — 1 Month", "access_type": "personal", "bdt": 4890, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Creator — 1 Month", "access_type": "personal", "bdt": 14990, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "starter-1m",
+          "label": "Starter — 1 Month",
+          "access_type": "personal",
+          "bdt": 4890,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "creator-1m",
+          "label": "Creator — 1 Month",
+          "access_type": "personal",
+          "bdt": 14990,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "elevenlabs": {
       "plans": [
-        {"label": "Starter — 1 Month", "access_type": "personal", "bdt": 1390, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Creator — 1 Month", "access_type": "personal", "bdt": 3690, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Pro — 1 Month", "access_type": "personal", "bdt": 16690, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "starter-1m",
+          "label": "Starter — 1 Month",
+          "access_type": "personal",
+          "bdt": 1390,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "creator-1m",
+          "label": "Creator — 1 Month",
+          "access_type": "personal",
+          "bdt": 3690,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "pro-1m",
+          "label": "Pro — 1 Month",
+          "access_type": "personal",
+          "bdt": 16690,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "suno": {
       "plans": [
-        {"label": "Pro — 1 Month", "access_type": "personal", "bdt": 1990, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Premier — 1 Month", "access_type": "personal", "bdt": 5090, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "pro-1m",
+          "label": "Pro — 1 Month",
+          "access_type": "personal",
+          "bdt": 1990,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "premier-1m",
+          "label": "Premier — 1 Month",
+          "access_type": "personal",
+          "bdt": 5090,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "udio": {
       "plans": [
-        {"label": "Standard — 1 Month", "access_type": "personal", "bdt": 1990, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Pro — 1 Month", "access_type": "personal", "bdt": 5090, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "standard-1m",
+          "label": "Standard — 1 Month",
+          "access_type": "personal",
+          "bdt": 1990,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "pro-1m",
+          "label": "Pro — 1 Month",
+          "access_type": "personal",
+          "bdt": 5090,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "github-copilot": {
       "plans": [
-        {"label": "Copilot Pro — 1 Month", "access_type": "personal", "bdt": 1990, "duration": "1 month", "billing_unit": "month"},
-        {"label": "Copilot Pro+ — 1 Month", "access_type": "personal", "bdt": 6590, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "copilot-pro-1m",
+          "label": "Copilot Pro — 1 Month",
+          "access_type": "personal",
+          "bdt": 1990,
+          "duration": "1 month",
+          "billing_unit": "month"
+        },
+        {
+          "plan_id": "copilot-pro-1m-2",
+          "label": "Copilot Pro+ — 1 Month",
+          "access_type": "personal",
+          "bdt": 6590,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "cursor": {
       "official_usd": 20,
       "plans": [
-        {"label": "Cursor Pro — 1 Month", "access_type": "personal", "bdt": 3390, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "cursor-pro-1m",
+          "label": "Cursor Pro — 1 Month",
+          "access_type": "personal",
+          "bdt": 3390,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "replit": {
       "official_usd": 20,
       "plans": [
-        {"label": "Replit Core — 1 Month", "access_type": "personal", "bdt": 3390, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "replit-core-1m",
+          "label": "Replit Core — 1 Month",
+          "access_type": "personal",
+          "bdt": 3390,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "notion-ai": {
       "official_usd": 20,
       "plans": [
-        {"label": "Notion Paid AI/Business — 1 Month", "access_type": "personal", "bdt": 3390, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "notion-paid-ai-business-1m",
+          "label": "Notion Paid AI/Business — 1 Month",
+          "access_type": "personal",
+          "bdt": 3390,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
     "grammarly": {
       "official_usd": 30,
       "plans": [
-        {"label": "Grammarly Paid Plan — 1 Month", "access_type": "personal", "bdt": 5090, "duration": "1 month", "billing_unit": "month"}
+        {
+          "plan_id": "grammarly-paid-plan-1m",
+          "label": "Grammarly Paid Plan — 1 Month",
+          "access_type": "personal",
+          "bdt": 5090,
+          "duration": "1 month",
+          "billing_unit": "month"
+        }
       ]
     },
-    "canva-pro": {"mode": "inquiry"},
-    "kling-ai": {"mode": "inquiry"},
-    "pika-labs": {"mode": "inquiry"},
-    "mistral": {"mode": "inquiry"},
-    "gamma-pro": {"mode": "inquiry"},
-    "v0": {"mode": "inquiry"},
-    "freepik": {"mode": "inquiry"},
-    "ideogram": {"mode": "inquiry"},
-    "descript": {"mode": "inquiry"}
+    "canva-pro": {
+      "mode": "inquiry"
+    },
+    "kling-ai": {
+      "mode": "inquiry"
+    },
+    "pika-labs": {
+      "mode": "inquiry"
+    },
+    "mistral": {
+      "mode": "inquiry"
+    },
+    "gamma-pro": {
+      "mode": "inquiry"
+    },
+    "v0": {
+      "mode": "inquiry"
+    },
+    "freepik": {
+      "mode": "inquiry"
+    },
+    "ideogram": {
+      "mode": "inquiry"
+    },
+    "descript": {
+      "mode": "inquiry"
+    }
   }
 }
