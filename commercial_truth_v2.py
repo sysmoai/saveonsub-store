@@ -190,7 +190,10 @@ def product_main(product: dict, bn: bool) -> str:
             price = int(plan["bdt"])
             access = access_label(plan, bn)
             billing = price_label(plan, bn)
-            onclick = js_args(pid, label, price, name)
+            plan_id = str(plan.get("plan_id") or "")
+            if not plan_id:
+                raise RuntimeError(f"Missing governed plan_id for {pid}: {label}")
+            onclick = js_args(pid, label, price, name, plan_id)
             cards.append(
                 f'''<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b>{esc(label)}</b><br><span class="tos personal">{esc(access)}</span><span style="font-size:12px;color:var(--muted)"> · {esc(plan.get("duration", "1 month"))}</span></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px;font-weight:900;color:var(--green2)">{esc(billing)}</span><button class="btn btn-primary btn-sm" onclick="cartAdd({onclick})">{'কার্টে যোগ করুন' if bn else 'Add to cart'}</button></div></div>'''
             )

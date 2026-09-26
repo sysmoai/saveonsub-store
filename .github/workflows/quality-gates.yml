@@ -39,6 +39,7 @@ jobs:
           python check_prices.py
           python audit_all.py
           python deploy_preflight.py
+          python audit_order_os.py
 
       - name: Build exact canonical candidate
         run: python build_site.py
@@ -68,6 +69,10 @@ jobs:
           grep -q 'YouTube Premium: available in Bangladesh' _site/p/youtube-premium.html
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
           grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
+          grep -q 'assets/order-config.js' _site/checkout.html
+          grep -q 'assets/order-v2.js' _site/checkout.html
+          test -f _site/assets/order-config.js
+          test -f _site/assets/order-v2.js
           grep -q 'favicon-32.png" type="image/png"' _site/p/chatgpt-plus.html
           ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml
           python audit_commercial_truth_v2.py
