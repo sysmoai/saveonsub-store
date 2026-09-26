@@ -78,7 +78,7 @@
     const c=contact();
     const cart=cartGet();
     const lines=cart.map(i=>`• ${i.name} — ${i.plan} ×${i.qty} = ৳${i.bdt*i.qty}`).join('\n');
-    const msg=`🛒 MANUAL ORDER REQUEST\n${lines}\nTOTAL DISPLAYED: ৳${cartTotal()}\nPayment: ${window.PAY||'not selected'}\nCustomer: ${c.name||'-'} · ${c.phone||'-'}\nReason: ${reason}\nPlease confirm price/access/payment before fulfillment.`;
+    const msg=`🛒 MANUAL ORDER REQUEST\n${lines}\nTOTAL DISPLAYED: ৳${cartTotal()}\nPayment: ${typeof PAY!=='undefined'?PAY:'not selected'}\nCustomer: ${c.name||'-'} · ${c.phone||'-'}\nReason: ${reason}\nPlease confirm price/access/payment before fulfillment.`;
     toast('Secure server order was not created. Opening manual WhatsApp handoff.');
     window.open(waLink(msg),'_blank');
   }
@@ -108,7 +108,7 @@
     const body={
       idempotency_key:idempotencyKey,
       turnstile_token:turnstileToken,
-      payment_method:window.PAY||'bKash',
+      payment_method:(typeof PAY!=='undefined'?PAY:'bKash'),
       payment_reference:txn,
       customer:c,
       items:cart.map(i=>({product_id:i.id,plan_id:i.plan_id,quantity:i.qty}))
@@ -138,7 +138,7 @@
     saveOrder({
       oid:data.order_id,
       kind:'order',
-      method:window.PAY||'bKash',
+      method:(typeof PAY!=='undefined'?PAY:'bKash'),
       txn:txn,
       total:Number(data.total_bdt||0),
       items:current.map(i=>({name:i.name,plan:i.plan,plan_id:i.plan_id,qty:i.qty,bdt:i.bdt})),
