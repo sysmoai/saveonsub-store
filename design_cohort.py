@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 
 ROOT = Path("_site")
-VERIFIED = "2026-09-08"
+VERIFIED = "2026-09-27"
 
 
 def load(path):
@@ -60,16 +60,16 @@ def harden_canva(path, bn=False):
         t = t.replace(phrase, "workspace access and design ownership depend on the exact team/workspace setup")
 
     official = (
-        '<span class="official" data-design-facts="2026-09-08">Canva official reference: Pro is for one person; Canva lists Pro at US$180/year. New team sign-ups use Canva Business. Verify local checkout before buying.</span>'
+        '<span class="official" data-design-facts="2026-09-27">Canva official reference: Pro is for one person. Canva pricing can vary by locale/session; verify the current pricing page and checkout before buying. New team sign-ups use Canva Business.</span>'
         if not bn else
-        '<span class="official" data-design-facts="2026-09-08">Canva অফিসিয়াল রেফারেন্স: Pro এক ব্যক্তির জন্য; Canva Pro-এর প্রকাশিত বার্ষিক মূল্য US$180। নতুন team signup Canva Business-এ যায়। কিনার আগে local checkout যাচাই করুন।</span>'
+        '<span class="official" data-design-facts="2026-09-27">Canva অফিসিয়াল রেফারেন্স: Pro এক ব্যক্তির জন্য। Canva pricing locale/session অনুযায়ী ভিন্ন হতে পারে; কেনার আগে current pricing page ও checkout যাচাই করুন। নতুন team signup Canva Business-এ যায়।</span>'
     )
     t = re.sub(r'<span class="official">.*?</span>', official, t, count=1, flags=re.S)
 
     if not bn:
         block = f'''<section class="notice mt2" data-canva-facts="{VERIFIED}">
 <h2 style="font-size:20px;margin:0 0 8px">Canva Pro vs team access — what you are actually buying</h2>
-<p style="font-size:14px"><b>Canva Pro is an individual plan.</b> Canva currently lists Pro at <b>US$180/year for one person</b>. New team sign-ups use <b>Canva Business</b>; existing legacy Teams subscribers can continue on their existing plan.</p>
+<p style="font-size:14px"><b>Canva Pro is an individual plan.</b> Canva pricing can vary by locale/session, so the current pricing page and checkout are the authority. New team sign-ups use <b>Canva Business</b>; existing legacy Teams subscribers can continue on their existing plan.</p>
 <p style="font-size:14px;margin-top:8px"><b>Team-seat warning:</b> if this SaveOnSub option is delivered through a Canva team/workspace, the team owner/admin controls membership. Designs created inside that workspace stay with the team workspace, and you can lose access if the admin removes you. Confirm the exact source plan, owner/admin control, expected duration and workspace-data implications before payment.</p>
 <p style="font-size:14px;margin-top:8px"><b>Do not share Canva login credentials.</b> Canva requires each person to have a unique account. A team invitation is different from sharing one login.</p>
 <p style="font-size:13px;color:var(--muted);margin-top:8px">Official references verified {VERIFIED}: Canva pricing, Canva Business announcement, Canva Terms and Canva team/workspace guidance.</p>
@@ -77,7 +77,7 @@ def harden_canva(path, bn=False):
     else:
         block = f'''<section class="notice mt2" data-canva-facts="{VERIFIED}">
 <h2 style="font-size:20px;margin:0 0 8px">Canva Pro বনাম team access — আসলে কী কিনছেন</h2>
-<p style="font-size:14px"><b>Canva Pro ব্যক্তিগত প্ল্যান।</b> Canva বর্তমানে এক ব্যক্তির Pro প্ল্যানের প্রকাশিত মূল্য <b>US$180/বছর</b> দেখায়। নতুন team signup Canva Business-এ যায়; পুরনো Teams subscriber existing plan চালিয়ে যেতে পারে।</p>
+<p style="font-size:14px"><b>Canva Pro ব্যক্তিগত প্ল্যান।</b> Canva pricing locale/session অনুযায়ী বদলাতে পারে, তাই current pricing page ও checkout-কে authority ধরুন। নতুন team signup Canva Business-এ যায়; পুরনো Teams subscriber existing plan চালিয়ে যেতে পারে।</p>
 <p style="font-size:14px;margin-top:8px"><b>Team-seat সতর্কতা:</b> SaveOnSub option যদি Canva team/workspace invite দিয়ে দেওয়া হয়, membership team owner/admin নিয়ন্ত্রণ করে। Team workspace-এর ভিতরে তৈরি design workspace-এই থাকে; admin remove করলে access হারাতে পারেন। Payment-এর আগে source plan, owner/admin control, duration এবং workspace-data implication পরিষ্কার করে নিন।</p>
 <p style="font-size:14px;margin-top:8px"><b>Canva login credential share করবেন না।</b> প্রত্যেক ব্যক্তির আলাদা account থাকা উচিত; team invitation এক login share করার সমান নয়।</p>
 <p style="font-size:13px;color:var(--muted);margin-top:8px">Official references verified {VERIFIED}: Canva pricing, Canva Business announcement, Canva Terms এবং team/workspace guidance.</p>
@@ -104,9 +104,9 @@ def harden_midjourney(path, bn=False):
     t = t.replace("শেয়ার্ড · কম ঝুঁকি", "শেয়ার্ড · প্রোভাইডার-পলিসি ঝুঁকি")
 
     official = (
-        '<span class="official" data-design-facts="2026-09-08">Midjourney official plans: Basic US$10, Standard US$30, Pro US$60, Mega US$120 per month. Annual billing is 20% lower.</span>'
+        '<span class="official" data-design-facts="2026-09-27">Midjourney official plans: Basic US$10, Standard US$30, Pro US$60, Mega US$120 per month. Annual billing is 20% lower.</span>'
         if not bn else
-        '<span class="official" data-design-facts="2026-09-08">Midjourney অফিসিয়াল মাসিক প্ল্যান: Basic US$10, Standard US$30, Pro US$60, Mega US$120। Annual billing 20% কম।</span>'
+        '<span class="official" data-design-facts="2026-09-27">Midjourney অফিসিয়াল মাসিক প্ল্যান: Basic US$10, Standard US$30, Pro US$60, Mega US$120। Annual billing 20% কম।</span>'
     )
     t = re.sub(r'<span class="official">.*?</span>', official, t, count=1, flags=re.S)
 
