@@ -1,5 +1,16 @@
 PRAGMA foreign_keys = ON;
 
+CREATE TABLE IF NOT EXISTS operators (
+  id TEXT PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  display_name TEXT NOT NULL,
+  role TEXT NOT NULL CHECK (role IN ('owner','manager','fulfillment','support','viewer')),
+  active INTEGER NOT NULL DEFAULT 1,
+  last_seen_at TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS orders (
   id TEXT PRIMARY KEY,
   public_order_id TEXT NOT NULL UNIQUE,
@@ -19,7 +30,12 @@ CREATE TABLE IF NOT EXISTS orders (
   customer_email TEXT,
   customer_locale TEXT,
   source TEXT NOT NULL DEFAULT 'website',
-  assigned_operator_id TEXT,
+  assigned_operator_id TEXT REFERENCES operators(id) ON DELETE SET NULL,
+  sla_due_at TEXT,
+  claimed_at TEXT,
+  payment_confirmed_at TEXT,
+  delivered_at TEXT,
+  completed_at TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
@@ -28,6 +44,8 @@ CREATE INDEX IF NOT EXISTS idx_orders_status_priority_created
   ON orders(status, priority, created_at);
 CREATE INDEX IF NOT EXISTS idx_orders_operator_status
   ON orders(assigned_operator_id, status);
+CREATE INDEX IF NOT EXISTS idx_orders_sla
+  ON orders(status, priority, sla_due_at);
 
 CREATE TABLE IF NOT EXISTS order_items (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,6 +87,7 @@ CREATE TABLE IF NOT EXISTS notification_outbox (
   attempt_count INTEGER NOT NULL DEFAULT 0,
   next_attempt_at TEXT NOT NULL,
   last_error TEXT,
+  sent_at TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
@@ -76,21 +95,12 @@ CREATE TABLE IF NOT EXISTS notification_outbox (
 CREATE INDEX IF NOT EXISTS idx_outbox_due
   ON notification_outbox(status, priority, next_attempt_at);
 
-CREATE TABLE IF NOT EXISTS operators (
-  id TEXT PRIMARY KEY,
-  display_name TEXT NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('owner','manager','fulfillment','support','viewer')),
-  active INTEGER NOT NULL DEFAULT 1,
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS support_threads (
   id TEXT PRIMARY KEY,
   order_id TEXT REFERENCES orders(id) ON DELETE SET NULL,
   status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open','waiting_customer','waiting_staff','resolved','closed')),
   priority INTEGER NOT NULL DEFAULT 2 CHECK (priority BETWEEN 0 AND 3),
-  assigned_operator_id TEXT,
+  assigned_operator_id TEXT REFERENCES operators(id) ON DELETE SET NULL,
   subject TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
