@@ -1,3 +1,5 @@
+import pricing from "../../../ops/PRICING-V2-2026-09-17.json";
+
 export type GovernedPlan = {
   product_id: string;
   plan_id: string;
@@ -8,31 +10,65 @@ export type GovernedPlan = {
   support_terms?: string;
 };
 
-// TEMPORARY SCAFFOLD ONLY.
-// Production must replace this object during the build from the governed
-// pricing policy/catalog. It intentionally contains only a small safe subset
-// so this branch cannot silently become a second pricing source of truth.
-const PLANS: Record<string, GovernedPlan> = {
-  "chatgpt-plus:personal": {
-    product_id: "chatgpt-plus",
-    plan_id: "personal",
-    product_name: "ChatGPT Plus",
-    plan_name: "Customer-specific access",
-    price_bdt: 3390,
-    access_type: "customer-specific",
-    support_terms: "Confirm order-specific support terms before payment",
-  },
-  "chatgpt-go:personal": {
-    product_id: "chatgpt-go",
-    plan_id: "personal",
-    product_name: "ChatGPT Go",
-    plan_name: "Customer-specific access",
-    price_bdt: 1299,
-    access_type: "customer-specific",
-    support_terms: "Confirm order-specific support terms before payment",
-  },
+type PolicyPlan = {
+  plan_id?: string;
+  label?: string;
+  access_type?: string;
+  bdt?: number;
 };
 
+type ProductPolicy = {
+  mode?: string;
+  plans?: PolicyPlan[];
+};
+
+const PRODUCTS = pricing.approved_products as Record<string, ProductPolicy>;
+
+function titleFromProductId(productId: string) {
+  return productId
+    .split("-")
+    .map(part => part ? part[0].toUpperCase() + part.slice(1) : part)
+    .join(" ")
+    .replace("Chatgpt", "ChatGPT")
+    .replace("Github", "GitHub")
+    .replace("Ai", "AI");
+}
+
 export function resolveGovernedPlan(productId: string, planId: string): GovernedPlan | null {
-  return PLANS[`${productId}:${planId}`] ?? null;
+  const product = PRODUCTS[productId];
+  if (!product || product.mode === "inquiry" || !Array.isArray(product.plans)) return null;
+
+  const plan = product.plans.find(p => p.plan_id === planId);
+  if (!plan || !plan.plan_id || !plan.label || !plan.access_type || !Number.isFinite(plan.bdt)) return null;
+
+  const positioning = (pricing.positioning as Record<string, string>)[plan.access_type];
+  return {
+    product_id: productId,
+    plan_id: plan.plan_id,
+    product_name: titleFromProductId(productId),
+    plan_name: plan.label,
+    price_bdt: Number(plan.bdt),
+    access_type: plan.access_type,
+    support_terms: positioning || "Confirm access and support terms before payment.",
+  };
+}
+
+export function listGovernedPlans() {
+  const rows: GovernedPlan[] = [];
+  for (const [productId, product] of Object.entries(PRODUCTS)) {
+    if (product.mode === "inquiry" || !Array.isArray(product.plans)) continue;
+    for (const plan of product.plans) {
+      if (!plan.plan_id || !plan.label || !plan.access_type || !Number.isFinite(plan.bdt)) continue;
+      rows.push({
+        product_id: productId,
+        plan_id: plan.plan_id,
+        product_name: titleFromProductId(productId),
+        plan_name: plan.label,
+        price_bdt: Number(plan.bdt),
+        access_type: plan.access_type,
+        support_terms: (pricing.positioning as Record<string, string>)[plan.access_type] || "Confirm access and support terms before payment.",
+      });
+    }
+  }
+  return rows;
 }
