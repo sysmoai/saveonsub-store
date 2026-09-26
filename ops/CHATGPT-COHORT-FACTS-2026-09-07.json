@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-09-07",
+  "verified_on": "2026-09-27",
   "market": "Bangladesh",
   "official_sources": {
     "pricing": "https://chatgpt.com/pricing/",
@@ -10,16 +10,18 @@
     "terms": "https://openai.com/policies/terms-of-use/"
   },
   "official_consumer_reference": {
-    "free": {"positioning": "trying ChatGPT"},
+    "free": {
+      "positioning": "trying ChatGPT"
+    },
     "go": {
       "published_usd_month": 8,
-      "price_note": "OpenAI says some markets may use localized pricing; exact checkout price is the source of truth."
+      "price_note": "US reference price; OpenAI localizes Go pricing in some markets, so account checkout is authoritative."
     },
     "plus": {
       "published_usd_month": 20,
       "billing": "monthly",
       "api_included": false,
-      "feature_note": "Current Plus includes expanded access to advanced reasoning, deep research, Codex, memory/context, ChatGPT Work, scheduled tasks and early features, subject to limits and change."
+      "feature_note": "OpenAI's current Help Center describes broader model/tool access, advanced reasoning, faster responses, voice, image generation, file analysis and Deep Research where available; model names and limits change over time."
     },
     "pro": {
       "published_usd_month": 200,
@@ -28,7 +30,10 @@
   },
   "bangladesh_billing": {
     "bdt_supported_on_web": true,
-    "all_country_web_methods": ["credit card", "debit card"],
+    "all_country_web_methods": [
+      "credit card",
+      "debit card"
+    ],
     "bkash_directly_listed_by_openai": false,
     "guidance": "Do not convert $20 with a fixed internal FX rate and call that the official Bangladesh price. Show the published $20/month reference, note that BDT is a supported web-billing currency, and tell users to verify the exact amount in their own ChatGPT checkout."
   },
@@ -39,19 +44,25 @@
     "site_rule": "Any SaveOnSub shared-access listing must explicitly state that it conflicts with OpenAI individual-account policy and carries privacy, continuity and suspension risk. Never call it provider-authorized, safe, private, official, or equivalent to a personal Plus subscription."
   },
   "saveonsub_offer_snapshot": {
+    "chatgpt-go": [
+      {
+        "label": "Go — 1 Month",
+        "bdt": 1299,
+        "access": "personal/customer-specific"
+      }
+    ],
     "chatgpt-plus": [
-      {"label": "Starter Shared (6–8 users)", "bdt": 499, "access": "shared"},
-      {"label": "Premium Shared (2–3 users)", "bdt": 999, "access": "shared"},
-      {"label": "Personal (your email)", "bdt": 2990, "access": "personal/customer-specific"}
+      {
+        "label": "Plus — 1 Month",
+        "bdt": 3390,
+        "access": "personal/customer-specific"
+      }
     ]
   },
   "bd_serp_snapshot": {
     "verified_on": "2026-09-07",
-    "observed": [
-      {"site": "Soft Office BD", "visible_price_bdt": 399, "note": "commercial guide/product positioning"},
-      {"site": "Digi Subscriber", "visible_price_bdt": "399-1499", "note": "multiple variants"},
-      {"site": "Bengali IT", "visible_price_bdt": "799-999", "note": "product page; mixed Go/Plus language"}
-    ]
+    "status": "historical_only",
+    "note": "Historical competitor snapshot retained for research; not re-verified for this release and must not be presented as current."
   },
   "portfolio_intent_ownership": {
     "saveonsub": {
@@ -65,8 +76,17 @@
         "how to buy chatgpt in bangladesh"
       ]
     },
-    "aips": {"overlap": "high", "recommended_future_role": "brand/navigational and store-offer demand rather than duplicating SaveOnSub's exact neutral comparison intent"},
-    "aitp": {"overlap": "medium", "recommended_future_role": "personal-seat/service intent and its own brand demand"},
-    "aipt": {"overlap": "low-to-medium", "recommended_future_role": "bundles/student/store-specific intent"}
+    "aips": {
+      "overlap": "high",
+      "recommended_future_role": "brand/navigational and store-offer demand rather than duplicating SaveOnSub's exact neutral comparison intent"
+    },
+    "aitp": {
+      "overlap": "medium",
+      "recommended_future_role": "personal-seat/service intent and its own brand demand"
+    },
+    "aipt": {
+      "overlap": "low-to-medium",
+      "recommended_future_role": "bundles/student/store-specific intent"
+    }
   }
 }
