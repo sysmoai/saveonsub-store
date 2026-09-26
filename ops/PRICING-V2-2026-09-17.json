@@ -342,7 +342,7 @@
           "billing_unit": "month"
         },
         {
-          "plan_id": "copilot-pro-1m-2",
+          "plan_id": "copilot-pro-plus-1m",
           "label": "Copilot Pro+ — 1 Month",
           "access_type": "personal",
           "bdt": 6590,
