@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-09-09",
+  "verified_on": "2026-09-27",
   "official_sources": {
     "pricing": "https://runway.com/pricing",
     "credits": "https://help.runwayml.com/hc/en-us/articles/15124877443219-How-do-credits-work",
@@ -7,10 +7,29 @@
     "account_sharing": "https://help.runwayml.com/hc/en-us/articles/18053095835795-Unlimited-plan-details"
   },
   "plans": {
-    "Free": {"monthly_usd": 0, "credits": 125, "credit_type": "one-time"},
-    "Standard": {"monthly_usd": 15, "annual_effective_usd_month": 12, "credits_month": 625, "rollover": false},
-    "Pro": {"monthly_usd": 35, "annual_effective_usd_month": 28, "credits_month": 2250, "rollover": false},
-    "Max": {"monthly_usd": 95, "annual_effective_usd_month": 76, "credits_month": 9500, "rollover": "up to one month"}
+    "Free": {
+      "monthly_usd": 0,
+      "credits": 125,
+      "credit_type": "one-time"
+    },
+    "Standard": {
+      "monthly_usd": 15,
+      "annual_effective_usd_month": 12,
+      "credits_month": 625,
+      "rollover": false
+    },
+    "Pro": {
+      "monthly_usd": 35,
+      "annual_effective_usd_month": 28,
+      "credits_month": 2250,
+      "rollover": false
+    },
+    "Max": {
+      "monthly_usd": 95,
+      "annual_effective_usd_month": 76,
+      "credits_month": 9500,
+      "rollover": "up to one month"
+    }
   },
   "unlimited": {
     "new_sales_ended": "2026-06-01",
@@ -21,5 +40,9 @@
   "policy": {
     "individual_plan_sharing": "Runway says sharing account credentials violates its Terms of Use and may result in termination.",
     "new_individual_plans": "Standard, Pro and Max are single-user plans; collaboration should use Team/Enterprise where applicable."
-  }
+  },
+  "verification_notes": [
+    "Runway pricing currently lists Free 125 one-time credits; Standard $15 monthly / $12 annual-effective with 625 credits; Pro $35 / $28 with 2,250 credits; Max $95 / $76 with 9,500 credits.",
+    "Runway's August 27, 2026 transition notice says Unlimited stopped new sales June 1, legacy access extends through November 30, 2026, then transitions to Max for eligible users."
+  ]
 }

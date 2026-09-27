@@ -1,0 +1,12 @@
+name = "saveonsub-order-os"
+compatibility_date = "2026-09-27"
+pages_build_output_dir = "_site"
+
+# Production IDs are intentionally absent from this implementation branch.
+# Create/bind the dedicated SaveOnSub D1 database only after schema and cost/security review.
+#
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "saveonsub-order-os"
+# database_id = "<PRODUCTION_ID>"
+# migrations_dir = "ops/order-os/migrations"

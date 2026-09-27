@@ -39,6 +39,7 @@ jobs:
           python check_prices.py
           python audit_all.py
           python deploy_preflight.py
+          python audit_order_os.py
 
       - name: Build exact canonical candidate
         run: python build_site.py
@@ -63,11 +64,16 @@ jobs:
           ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
           ! grep -q 'SHARED · WARRANTY COVERED' _site/p/chatgpt-plus.html
           ! grep -q '5–15 min' _site/p/chatgpt-plus.html
-          grep -q 'data-entertainment-facts="2026-09-09"' _site/p/netflix.html
+          ENTERTAINMENT_VERIFIED=$(python -c "import json; print(json.load(open('ops/ENTERTAINMENT-COHORT-FACTS-2026-09-09.json', encoding='utf-8'))['verified_on'])")
+          grep -q "data-entertainment-facts=\"${ENTERTAINMENT_VERIFIED}\"" _site/p/netflix.html
           grep -q 'Spotify BD: Individual ৳219/mo' _site/p/spotify.html
           grep -q 'YouTube Premium: available in Bangladesh' _site/p/youtube-premium.html
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
           grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
+          grep -q 'assets/order-config.js' _site/checkout.html
+          grep -q 'assets/order-v2.js' _site/checkout.html
+          test -f _site/assets/order-config.js
+          test -f _site/assets/order-v2.js
           grep -q 'favicon-32.png" type="image/png"' _site/p/chatgpt-plus.html
           ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml
           python audit_commercial_truth_v2.py

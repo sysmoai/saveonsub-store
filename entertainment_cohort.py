@@ -130,11 +130,11 @@ for slug in ("netflix", "spotify", "youtube-premium"):
     patch(kind, f"bn/p/{slug}.html", True)
 
 p, g = read("blog/netflix-spotify-youtube-premium-price-bd.html")
-desc = "Netflix, Spotify and YouTube Premium in Bangladesh: official provider facts verified 2026-09-09, plus SaveOnSub access options and household-policy warnings."
+desc = "Netflix, Spotify and YouTube Premium in Bangladesh: official provider facts verified 2026-09-27, plus SaveOnSub access options and household-policy warnings."
 g = meta(g, "description", desc)
 g = meta(g, "og:description", desc, prop=True)
 g = re.sub(r'("@type":\s*"Article".*?"description":\s*")[^"]*(")', lambda m: m.group(1) + desc + m.group(2), g, count=1, flags=re.S)
-g = g.replace("PRICE SHEET · UPDATED 2026-09-03", "PRICE SHEET · VERIFIED 2026-09-09")
+g = g.replace("PRICE SHEET · VERIFIED 2026-09-27", "PRICE SHEET · VERIFIED 2026-09-27")
 g = g.replace("Some have official taka prices (use them!). Some don't. Here's the honest map.", "Compare current official provider facts with the exact SaveOnSub access method before paying.")
 pat = re.compile(r'<div class="tbl mt3"><table>.*?</table></div>\s*<h2 class="mt3" style="font-size:22px">The rule of thumb</h2>\s*<p class="sub" style="font-size:15px">.*?</p>', re.S)
 replacement = f'''<section data-entertainment-guide-facts="{VERIFIED}"><div class="tbl mt3"><table><tr><th>Service</th><th>Official provider fact</th><th>SaveOnSub</th><th>Decision point</th></tr><tr><td>Spotify</td><td>Individual ৳219 · Student ৳109 · Duo ৳299 · Family ৳379</td><td><a href="../p/spotify.html">From ৳129</a></td><td>Family requires same address; seller slot ≠ Individual.</td></tr><tr><td>YouTube Premium</td><td>Available in Bangladesh; verify live checkout</td><td><a href="../p/youtube-premium.html">From ৳149</a></td><td>Family requires same residential address; periodic checks may apply.</td></tr><tr><td>Netflix</td><td>US$2.99–US$9.99/month on Netflix BD</td><td><a href="../p/netflix.html">From ৳349</a></td><td>Confirm underlying Netflix tier; seller access label ≠ official tier.</td></tr></table></div><h2 class="mt3" style="font-size:22px">The rule of thumb</h2><p class="sub" style="font-size:15px">Prefer the provider's own plan when it fits your payment method and eligibility. For a SaveOnSub shared/family/profile option, compare household rules, account control, privacy/continuity risk and exact warranty before payment.</p></section>'''

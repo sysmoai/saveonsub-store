@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SaveOnSub Operations</title>
+<meta name="description" content="Protected SaveOnSub staff operations queue for order fulfillment and support.">
+<link rel="canonical" href="https://saveonsub.com/ops/">
+<meta name="robots" content="noindex,nofollow">
+<style>
+body{font:14px system-ui;margin:0;background:#0b1718;color:#eaf7f5}.wrap{max-width:1200px;margin:auto;padding:24px}
+h1{margin:0 0 6px}.muted{color:#9bc1bc}.bar{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+button{background:#133337;color:#eaf7f5;border:1px solid #285f62;border-radius:8px;padding:9px 12px;cursor:pointer}
+table{width:100%;border-collapse:collapse;background:#102426;border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:10px;border-bottom:1px solid #204043;vertical-align:top}th{color:#9bded5}
+.p0{color:#ff7777}.p1{color:#ffd27a}.ok{color:#75e7b7}.err{color:#ff7777}
+@media(max-width:800px){table{font-size:12px}.hide-sm{display:none}.wrap{padding:12px}}
+</style>
+</head>
+<body><a class="skip" href="#main">Skip to content</a><main id="main" class="wrap">
+<h1>SaveOnSub Operations</h1>
+<p class="muted">Protected staff queue. Cloudflare Access + server-side operator authorization required.</p>
+<div class="bar">
+<button onclick="load()">Refresh</button>
+<button onclick="filter='payment_review';load()">Payment review</button>
+<button onclick="filter='payment_confirmed';load()">Confirmed</button>
+<button onclick="filter='assigned';load()">Assigned</button>
+<button onclick="filter='fulfilling';load()">Fulfilling</button>
+<button onclick="filter='';load()">All</button>
+</div>
+<p id="msg" class="muted">Loading…</p>
+<table><thead><tr><th>Priority</th><th>Order</th><th>Status</th><th>Total</th><th>Customer</th><th class="hide-sm">SLA</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table>
+</main>
+<script>
+let filter='';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function api(url,opt){const r=await fetch(url,opt);const j=await r.json();if(!r.ok)throw new Error(j.error||r.status);return j}
+async function load(){
+  msg.textContent='Loading…';
+  try{
+    const q=filter?'?status='+encodeURIComponent(filter):'';
+    const d=await api('/api/ops/orders'+q);
+    msg.textContent='Signed in as '+d.operator.name+' ('+d.operator.role+') · '+d.orders.length+' orders';
+    rows.innerHTML=d.orders.map(o=>`<tr>
+      <td class="${o.priority===0?'p0':o.priority===1?'p1':''}">P${o.priority}</td>
+      <td><b>${esc(o.public_order_id)}</b><br><span class="muted">${esc(o.payment_method||'')}</span></td>
+      <td>${esc(o.status)}</td><td>৳${(o.total_minor/100).toLocaleString()}</td>
+      <td>${esc(o.customer_name||'')}<br><span class="muted">${esc(o.customer_phone||o.customer_email||'')}</span></td>
+      <td class="hide-sm">${esc(o.sla_due_at||'—')}</td>
+      <td><button onclick="claim('${esc(o.public_order_id)}')">Claim</button></td></tr>`).join('');
+  }catch(e){msg.className='err';msg.textContent='Error: '+e.message;rows.innerHTML='';}
+}
+async function claim(id){try{await api('/api/ops/orders/'+encodeURIComponent(id)+'/claim',{method:'POST'});await load()}catch(e){alert(e.message)}}
+load();
+</script></body></html>
