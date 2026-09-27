@@ -14,6 +14,7 @@ import json
 import os
 import sys
 from datetime import date, datetime
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 from pathlib import Path
 
 WARN_AFTER_DAYS = int(os.environ.get("PROVIDER_FACT_WARN_DAYS", "7"))
@@ -35,7 +36,12 @@ def main() -> int:
         print("::error::Invalid provider freshness policy thresholds.", file=sys.stderr)
         return 2
 
-    today = date.today()
+    timezone_name = os.environ.get("PROVIDER_FACT_TIMEZONE", "Asia/Dhaka")
+    try:
+        today = datetime.now(ZoneInfo(timezone_name)).date()
+    except ZoneInfoNotFoundError:
+        print(f"::error::Unknown PROVIDER_FACT_TIMEZONE={timezone_name!r}.", file=sys.stderr)
+        return 2
     paths = sorted(Path("ops").glob(FACT_GLOB))
     if not paths:
         print("::error::No governed provider fact files found.", file=sys.stderr)
