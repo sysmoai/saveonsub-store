@@ -99,6 +99,14 @@ jobs:
           test ! -e _site/catalog.json
           test ! -e _site/build_assets.py
           test ! -e _site/.env
+          test ! -d _site/ops
+          test ! -d _site/functions
+          test ! -d _site/workers
+          test ! -d _site/tests
+          if find _site -type f \( -name '*.ts' -o -name '*.tsx' -o -name '*.sql' -o -name '.env*' -o -name '.dev.vars*' \) | grep -q .; then
+            echo "::error::Private source file detected inside staged public artifact."
+            exit 1
+          fi
           test -f _site/index.html
           test -f _site/sitemap.xml
           test -f _site/robots.txt
