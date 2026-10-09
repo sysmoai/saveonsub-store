@@ -80,7 +80,7 @@ class CommerceFoundationTests(unittest.TestCase):
                 self.assertIn('INTERNAL REVIEW - NOT FOR PUBLICATION',svg)
                 self.assertIn('AI IMAGE &amp; DESIGN',svg)
                 self.assertIn('data:image/svg+xml;base64,',svg)
-                self.assertNotIn('499',svg)
+                self.assertNotIn(chr(0x09F3),svg)  # No Taka prices in review-only creatives
 
     def test_poster_generator_refuses_unlocked_logo(self):
         poster_file = ROOT / 'ops/commerce/tools/generate_review_posters.py'
