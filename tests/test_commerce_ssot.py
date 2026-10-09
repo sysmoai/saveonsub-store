@@ -61,5 +61,39 @@ class CommerceFoundationTests(unittest.TestCase):
             self.assertNotIn('bdt',json.dumps(actual))
 
 
+    def test_all_three_poster_formats_are_review_only(self):
+        poster_file = ROOT / 'ops/commerce/tools/generate_review_posters.py'
+        spec = importlib.util.spec_from_file_location('commerce_draft_posters', poster_file)
+        poster_mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(poster_mod)
+        with tempfile.TemporaryDirectory() as tmp:
+            base=Path(tmp)
+            (base/'assets').mkdir()
+            (base/'assets/logo.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" data-brand-lock="2026-08-19-approved"><text>LOCKED</text></svg>')
+            (base/'catalog.json').write_text(json.dumps({'products':[{'id':'chatgpt-plus','name':'ChatGPT Plus','category':'AI Assistants','plans':[{'bdt':499}]}]}))
+            output=base/'poster_review'
+            report=poster_mod.generate(base,output)
+            self.assertEqual(report['posters'],3)
+            self.assertTrue(all(not item['publish_allowed'] for item in report['items']))
+            for item in report['items']:
+                svg=(output/item['asset']).read_text()
+                self.assertIn('INTERNAL REVIEW - NOT FOR PUBLICATION',svg)
+                self.assertIn('data:image/svg+xml;base64,',svg)
+                self.assertNotIn('499',svg)
+
+    def test_poster_generator_refuses_unlocked_logo(self):
+        poster_file = ROOT / 'ops/commerce/tools/generate_review_posters.py'
+        spec = importlib.util.spec_from_file_location('commerce_draft_posters_reject', poster_file)
+        poster_mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(poster_mod)
+        with tempfile.TemporaryDirectory() as tmp:
+            base=Path(tmp)
+            (base/'assets').mkdir()
+            (base/'assets/logo.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg"/>')
+            (base/'catalog.json').write_text(json.dumps({'products':[]}))
+            with self.assertRaises(ValueError):
+                poster_mod.generate(base,base/'out')
+
+
 if __name__ == '__main__':
     unittest.main()
