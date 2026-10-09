@@ -21,8 +21,8 @@ Customer passwords, OTP, supplier secrets, API keys and complete payment credent
 
 1. ops/commerce/001_catalog_content_foundation.sql: 11 additive business tables after the existing order-os/schema.sql.
 2. Staff GET/POST /api/ops/catalog: authenticated D1 draft listing and creation; body strict validation; all products start unverified and unpublishable; event logged.
-3. Staff GET/POST /api/ops/media: private R2 draft image upload with 8MB limit, MIME signature check, SHA-256 digest, rights metadata, compensating cleanup and audit. Authenticated image preview at /api/ops/media/:assetId.
-4. staff-ui/catalog.html, catalog.css, catalog.js: mobile-first working source UI for draft product descriptions and private images. NOT YET DEPLOYED; staff-ui directory is excluded from public static staging.
+3. Staff GET/POST /api/ops/media: private R2 draft image upload with 8MB limit, MIME signature check, SHA-256 digest, rights metadata, compensating cleanup and audit. Authenticated media preview at /api/ops/media/:assetId. Short video POST /api/ops/media/videos supports private 12MiB draft MP4/WebM/MOV files only, no transcoding or automatic publication; larger videos require resumable multipart upload in Phase 2.
+4. staff-ui/catalog.html, catalog.css, catalog.js: mobile-first working source UI for draft product descriptions, private image and short-video upload, and authenticated media listing. NOT YET DEPLOYED; staff-ui directory is excluded from public static staging.
 5. Review-only legacy product/poster importer: does not copy unverified historical BDT prices, and marks every product HOLD.
 6. Brand-locked poster batch generator: three SVG draft variants (4:5, 1:1, 9:16) per product. It embeds unchanged approved assets/logo.svg bytes, excludes prices and displays INTERNAL REVIEW - NOT FOR PUBLICATION.
 7. Independent GitHub Actions check: SQLite constraints, catalog hold gate, all 72 poster presence checks, JavaScript syntax, Cloudflare Pages Functions bundling and short-lived draft poster ZIP-like workflow artifact.
@@ -35,7 +35,7 @@ Customer passwords, OTP, supplier secrets, API keys and complete payment credent
 - Work out a secure allowlisted way to stage the staff UI only AFTER the Access rule exists. Exclusion is intentional and safety preserving.
 - PR #45 SOP, PR #50 Order OS, PR #51 static boundary, and this stacked PR must be reviewed together. Provider fact freshness currently blocks the general build. Refresh from official source, never only bump timestamps.
 - Only publish products whose provider use/resale rights, pricing, inventory, refund/warranty and image rights have been approved with evidence.
-- Video uploads require a separate secure resumable/multipart R2 flow and processing. Phase 1 upload accepts ONLY images up to 8 MB.
+- Video processing and larger/4K video uploads require secure resumable/multipart R2 flow plus media validation/transcoding. Phase 1 accepts private small draft MP4/WebM/MOV up to 12 MiB; other media are held until a verified pipeline exists.
 - Full product-media association, image transformations, human review and CEO-controlled publishing automation remain next implementation milestones.
 - Real customer paid-order/payment/COGS/refund data has not been reconciled; 200,000 BDT monthly net and Google #1 are unachieved business targets, not guarantees.
 
