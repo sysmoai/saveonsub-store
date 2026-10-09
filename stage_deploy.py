@@ -40,8 +40,11 @@ DEST = ROOT / '_site'
 BRAND_LOCK = 'data-brand-lock="2026-08-19-approved"'
 
 EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
-                '__pycache__', 'node_modules', 'marketing', 'reports', '_site'}
-EXCLUDE_EXT = {'.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml'}
+                '__pycache__', 'node_modules', 'marketing', 'reports', 'ops',
+                'functions', 'workers', 'tests', 'staff-ui', '_site'}
+EXCLUDE_EXT = {'.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml',
+               '.ts', '.tsx', '.sql', '.yml', '.yaml', '.jsonc', '.mjs', '.cjs', '.map',
+               '.pem', '.key', '.p12', '.sqlite', '.db', '.ipynb'}
 EXCLUDE_FILES = {'.replit', '.gitignore', '.env.example', 'catalog.json',
                  'package.json', 'package-lock.json', 'vercel.json', 'AGENTS.md'}
 EXCLUDE_PREFIXES = ('assets/social/',)
@@ -217,6 +220,8 @@ def main():
             rel = (rel_base / fn).as_posix().lstrip('./')
             if rel.startswith(EXCLUDE_PREFIXES):
                 continue
+            if fn.startswith(('.env', '.dev.vars', 'wrangler.')):
+                continue
             if rel in keep:
                 pass
             elif fn in EXCLUDE_FILES or pathlib.Path(fn).suffix.lower() in EXCLUDE_EXT:
@@ -256,7 +261,8 @@ def main():
         rel = f.relative_to(DEST).as_posix()
         if rel in keep:
             continue
-        if f.suffix.lower() in EXCLUDE_EXT or f.name in EXCLUDE_FILES:
+        if (f.suffix.lower() in EXCLUDE_EXT or f.name in EXCLUDE_FILES
+                or f.name.startswith(('.env', '.dev.vars', 'wrangler.'))):
             leaks.append(rel)
         if any(part in EXCLUDE_DIRS for part in f.relative_to(DEST).parts):
             leaks.append(rel)
