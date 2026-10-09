@@ -39,10 +39,11 @@ export const onRequestPost:PagesFunction<Env>=async ({request,env})=>{
   if(!["image/png","image/jpeg","image/webp"].includes(mime))return json({error:"IMAGE_TYPE_REQUIRED"},415);
   const length=Number(request.headers.get("content-length")||0);
   if(length>MAX_IMAGE_BYTES)return json({error:"IMAGE_TOO_LARGE"},413);
-  const title=(request.headers.get("x-sos-title")||"").trim();
-  const alt=(request.headers.get("x-sos-alt-text")||"").trim();
-  const rights=(request.headers.get("x-sos-rights-type")||"unknown").trim();
-  const evidence=(request.headers.get("x-sos-rights-evidence")||"").trim();
+  const textHeader=(key:string)=>{try{return decodeURIComponent(request.headers.get(key)||"").trim();}catch{return "";}};
+  const title=textHeader("x-sos-title");
+  const alt=textHeader("x-sos-alt-text");
+  const rights=textHeader("x-sos-rights-type")||"unknown";
+  const evidence=textHeader("x-sos-rights-evidence");
   if(title.length<2||title.length>150||alt.length>400||evidence.length>700||
     !["created_by_business","licensed","provider_supplied","unknown"].includes(rights))
     return json({error:"INVALID_ASSET_METADATA"},400);
