@@ -24,7 +24,7 @@ def render_poster(product, logo_base64, shape, source_sha):
         '<tspan x="88" dy="%s">%s</tspan>' % ('0' if i == 0 else '92', html.escape(line))
         for i, line in enumerate(lines)
     )
-    cat = html.escape(category[:60])
+    cat = html.escape(category[:60].upper())
     safe_id = html.escape(pid)
     height_margin = int(height * .1)
     text_y = title_y + 92 * (len(lines) - 1) + 88
@@ -39,7 +39,7 @@ def render_poster(product, logo_base64, shape, source_sha):
 <circle cx="{width+120}" cy="{int(height*.33)}" r="338" fill="none" stroke="#8bead8" stroke-width="2" opacity=".13"/>
 <rect x="70" y="66" width="940" height="138" rx="22" fill="#ffffff"/>
 <image href="data:image/svg+xml;base64,{logo_base64}" x="95" y="76" width="420" height="112" preserveAspectRatio="xMinYMid meet"/>
-<text x="90" y="{height_margin+153}" font-family="Arial, sans-serif" font-weight="700" font-size="30" fill="#91ecdc">{cat.upper()}</text>
+<text x="90" y="{height_margin+153}" font-family="Arial, sans-serif" font-weight="700" font-size="30" fill="#91ecdc">{cat}</text>
 <text x="88" y="{title_y}" font-family="Arial, sans-serif" font-weight="800" font-size="78" fill="#fff">{chunks}</text>
 <text x="90" y="{text_y}" font-family="Arial, sans-serif" font-size="36" fill="#c9eee8">Compare plans, access methods and current terms.</text>
 <line x1="88" x2="992" y1="{height-310}" y2="{height-310}" stroke="#79e3cb" stroke-opacity=".35" stroke-width="2"/>
