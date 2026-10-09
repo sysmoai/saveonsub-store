@@ -15,7 +15,7 @@ export const onRequestGet:PagesFunction<Env>=async ({request,env,params})=>{
       .bind(assetId).first();
   }catch{return json({error:"MEDIA_SCHEMA_UNAVAILABLE"},503);}
   if(!item || !item.storage_key.startsWith("sos/private/drafts/"))return json({error:"MEDIA_NOT_FOUND"},404);
-  if(!["image/png","image/jpeg","image/webp"].includes(item.mime_type))return json({error:"MEDIA_TYPE_UNAVAILABLE"},415);
+  if(!["image/png","image/jpeg","image/webp","video/mp4","video/webm","video/quicktime"].includes(item.mime_type))return json({error:"MEDIA_TYPE_UNAVAILABLE"},415);
   const stored=await env.MEDIA_BUCKET.get(item.storage_key);
   if(!stored)return json({error:"OBJECT_NOT_FOUND"},404);
   return new Response(stored.body,{
@@ -25,7 +25,8 @@ export const onRequestGet:PagesFunction<Env>=async ({request,env,params})=>{
       "cache-control":"private, no-store, max-age=0",
       "x-content-type-options":"nosniff",
       "content-security-policy":"default-src 'none'; sandbox",
-      "x-robots-tag":"noindex, nofollow"
+      "x-robots-tag":"noindex, nofollow",
+      "content-disposition":item.mime_type.startsWith("video/") ? `attachment; filename="${assetId}.${item.mime_type==="video/mp4"?"mp4":item.mime_type==="video/webm"?"webm":"mov"}"` : "inline"
     }
   });
 };
