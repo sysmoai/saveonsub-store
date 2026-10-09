@@ -1,0 +1,50 @@
+name: SOS Commerce SSOT - Preview Safety
+
+on:
+  pull_request:
+    paths:
+      - 'ops/commerce/**'
+      - 'tests/test_commerce_ssot.py'
+      - '.github/workflows/sos-commerce-ssot.yml'
+  push:
+    branches:
+      - 'feat/sos-commerce-*'
+    paths:
+      - 'ops/commerce/**'
+      - 'tests/test_commerce_ssot.py'
+      - '.github/workflows/sos-commerce-ssot.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sqlite-review-contract:
+    name: D1 Schema and Catalog Truth Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run fail-closed commerce schema tests
+        run: python -m unittest discover -s tests -p test_commerce_ssot.py -v
+      - name: Audit every legacy product and poster without approving sales
+        run: |
+          python ops/commerce/tools/build_review_manifest.py --out ops/commerce/exports/review_manifest.json
+          python - <<'PY'
+          import json
+          p='ops/commerce/exports/review_manifest.json'
+          x=json.load(open(p,encoding='utf-8'))
+          assert x['status']=='REVIEW_ONLY_NOT_LIVE'
+          assert x['counts']['legacy_products']>0
+          assert x['counts']['missing_poster_files']==0, 'Missing product poster assets'
+          assert not any(row['publish_allowed'] or row['sales_approval']!='HOLD' for row in x['items'])
+          print('LEGACY_ASSET_COVERAGE_OK',x['counts'])
+          PY
+      - name: Confirm governance artifacts are not in public output
+        run: |
+          test ! -e _site/ops/commerce
+          test ! -e _site/tests/test_commerce_ssot.py
+          echo "SSOT foundation contract passed; no deployment performed."
