@@ -46,14 +46,30 @@
           <label>Accessible description / alt text<input name="alt_text" maxlength="400" placeholder="Describe the visible image for accessibility."></label>
           <label>Rights status<select name="rights_type"><option value="unknown">Unknown / needs review</option><option value="created_by_business">Created by SaveOnSub</option><option value="licensed">Licensed for use</option><option value="provider_supplied">Supplied by provider</option></select></label>
           <label>Rights or source reference<input name="rights_evidence" maxlength="700" placeholder="Evidence link / permission record (not a password)"></label>
-          <p class="hint">Videos and larger files will use a separate resumable upload route. Do not email raw customer files or credentials.</p>
+          <p class="hint">Small draft photos only. No original or draft is public. Do not email customer files or credentials.</p>
           <button type="submit" class="primary">Upload private draft</button>
+        </form>
+      </article>
+      <article class="panel">
+        <div class="panel-head"><span class="step">03</span><div><h2>Upload a short video</h2><p>Private source-only MP4, MOV or WebM. Large 4K files require the upcoming resumable upload service.</p></div></div>
+        <form id="videoForm">
+          <label>Short video (max 12 MiB)<input type="file" name="file" accept="video/mp4,video/webm,video/quicktime,.mov" required></label>
+          <label>Video title<input name="title" maxlength="150" required placeholder="Short demo: safe product activation"></label>
+          <label>Video description<input name="alt_text" maxlength="400" placeholder="Describe scenes and customer benefit"></label>
+          <label>Footage rights<select name="rights_type"><option value="unknown">Needs permission review</option><option value="created_by_business">Filmed by SaveOnSub</option><option value="licensed">Licensed video footage</option><option value="provider_supplied">Provider supplied</option></select></label>
+          <label>Rights evidence<input name="rights_evidence" maxlength="700" placeholder="Link to your license or approval record"></label>
+          <p class="hint">Private ORIGINAL only. No public stream, video editing, transcoding or auto-publish is part of this first milestone.</p>
+          <button class="primary" type="submit">Upload private video draft</button>
         </form>
       </article>
     </section>
     <section class="panel results">
       <div class="results-header"><div><h2>Current draft inventory</h2><p>Only database records shown here; old 72-site products are not silently imported or made sellable.</p></div><span class="pill" id="count">0 items</span></div>
       <div class="scroll"><table><thead><tr><th>Product</th><th>Category</th><th>Access evidence</th><th>Status</th><th>Last updated</th></tr></thead><tbody id="productRows"><tr><td colspan="5">Waiting for backend...</td></tr></tbody></table></div>
+    </section>
+    <section class="panel results">
+      <div class="results-header"><div><h2>Private media library</h2><p>Restricted originals and draft files. Download and preview require your authenticated role.</p></div><span id="mediaCount" class="pill">0 assets</span></div>
+      <div class="scroll"><table><thead><tr><th>Asset</th><th>Type</th><th>Bytes</th><th>Rights evidence</th><th>Status</th><th>Private file</th></tr></thead><tbody id="mediaRows"><tr><td colspan="6">Waiting for backend...</td></tr></tbody></table></div>
     </section>
     <footer>Never enter customer passwords, OTPs, API tokens or full card information in this workspace. Approved products are published through a separate review-and-release process.</footer>
   </main>
