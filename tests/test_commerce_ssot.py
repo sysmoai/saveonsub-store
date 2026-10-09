@@ -70,7 +70,7 @@ class CommerceFoundationTests(unittest.TestCase):
             base=Path(tmp)
             (base/'assets').mkdir()
             (base/'assets/logo.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" data-brand-lock="2026-08-19-approved"><text>LOCKED</text></svg>')
-            (base/'catalog.json').write_text(json.dumps({'products':[{'id':'chatgpt-plus','name':'ChatGPT Plus','category':'AI Assistants','plans':[{'bdt':499}]}]}))
+            (base/'catalog.json').write_text(json.dumps({'products':[{'id':'chatgpt-plus','name':'ChatGPT Plus','category':'AI Image & Design','plans':[{'bdt':499}]}]}))
             output=base/'poster_review'
             report=poster_mod.generate(base,output)
             self.assertEqual(report['posters'],3)
@@ -78,6 +78,7 @@ class CommerceFoundationTests(unittest.TestCase):
             for item in report['items']:
                 svg=(output/item['asset']).read_text()
                 self.assertIn('INTERNAL REVIEW - NOT FOR PUBLICATION',svg)
+                self.assertIn('AI IMAGE &amp; DESIGN',svg)
                 self.assertIn('data:image/svg+xml;base64,',svg)
                 self.assertNotIn('499',svg)
 
