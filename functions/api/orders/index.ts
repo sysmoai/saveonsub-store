@@ -27,7 +27,7 @@ type CreateOrderBody = {
 // This branch intentionally uses a tiny governed snapshot.
 // Production must generate this file from the canonical catalog/policy build,
 // never maintain prices by hand in the API.
-import { resolveGovernedPlan } from "../../../lib/order-os/catalog-policy";
+import { resolveGovernedPlan } from "../../lib/order-os/catalog-policy";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
