@@ -5,6 +5,9 @@ on:
     paths:
       - 'ops/commerce/**'
       - 'tests/test_commerce_ssot.py'
+      - 'staff-ui/**'
+      - 'functions/api/ops/catalog/**'
+      - 'functions/api/ops/media/**'
       - '.github/workflows/sos-commerce-ssot.yml'
   push:
     branches:
@@ -12,6 +15,9 @@ on:
     paths:
       - 'ops/commerce/**'
       - 'tests/test_commerce_ssot.py'
+      - 'staff-ui/**'
+      - 'functions/api/ops/catalog/**'
+      - 'functions/api/ops/media/**'
       - '.github/workflows/sos-commerce-ssot.yml'
   workflow_dispatch:
 
@@ -43,8 +49,28 @@ jobs:
           assert not any(row['publish_allowed'] or row['sales_approval']!='HOLD' for row in x['items'])
           print('LEGACY_ASSET_COVERAGE_OK',x['counts'])
           PY
+      - name: Validate operator UI JavaScript
+        run: node --check staff-ui/catalog.js
+      - name: Bundle private Pages Functions without production credentials
+        run: npx --yes wrangler@4 pages functions build functions --outfile /tmp/sos-pages-functions.mjs
+      - name: Produce all review-only product posters
+        run: |
+          python ops/commerce/tools/generate_review_posters.py --out ops/commerce/exports/poster_review
+          python - <<'PY'
+          import json
+          p=json.load(open('ops/commerce/exports/poster_review/manifest.json'))
+          assert p['posters']==p['products']*3
+          assert not any(row['publish_allowed'] for row in p['items'])
+          print('POSTER_DRAFT_GENERATION_OK',p['products'],p['posters'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sos-poster-review-${{ github.sha }}
+          path: ops/commerce/exports/poster_review/
+          retention-days: 7
       - name: Confirm governance artifacts are not in public output
         run: |
           test ! -e _site/ops/commerce
           test ! -e _site/tests/test_commerce_ssot.py
+          test ! -e _site/staff-ui/catalog.html
           echo "SSOT foundation contract passed; no deployment performed."
