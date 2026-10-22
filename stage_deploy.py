@@ -41,7 +41,7 @@ BRAND_LOCK = 'data-brand-lock="2026-08-19-approved"'
 
 EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
                 '__pycache__', 'node_modules', 'marketing', 'reports', 'ops',
-                'functions', 'workers', 'tests', '_site'}
+                'functions', 'workers', 'tests', 'staff-ui', '_site'}
 EXCLUDE_EXT = {'.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml',
                '.ts', '.tsx', '.sql', '.yml', '.yaml', '.jsonc', '.mjs', '.cjs', '.map',
                '.pem', '.key', '.p12', '.sqlite', '.db', '.ipynb'}

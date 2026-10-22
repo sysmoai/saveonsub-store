@@ -103,6 +103,7 @@ jobs:
           test ! -d _site/functions
           test ! -d _site/workers
           test ! -d _site/tests
+          test ! -d _site/staff-ui
           if find _site -type f \( -name '*.ts' -o -name '*.tsx' -o -name '*.sql' -o -name '.env*' -o -name '.dev.vars*' \) | grep -q .; then
             echo "::error::Private source file detected inside staged public artifact."
             exit 1
