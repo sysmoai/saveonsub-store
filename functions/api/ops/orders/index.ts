@@ -21,5 +21,7 @@ export const onRequestGet: PagesFunction<OpsEnv> = async ({request,env}) => {
   binds.push(limit);
 
   const rows=await env.DB.prepare(sql).bind(...binds).all();
-  return json({ok:true,operator:{id:operator.id,name:operator.display_name,role:operator.role},orders:rows.results||[]});
+  // Viewers get the queue shape only; customer contact details stay with roles that act on orders.
+  const orders=(rows.results||[]).map((o:any)=>operator.role==="viewer"?{...o,customer_phone:null,customer_email:null}:o);
+  return json({ok:true,operator:{id:operator.id,name:operator.display_name,role:operator.role},orders});
 };
