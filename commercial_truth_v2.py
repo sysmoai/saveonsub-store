@@ -246,7 +246,11 @@ def product_main(product: dict, bn: bool) -> str:
         provider_ref = f'<a href="{esc(official_url)}" target="_blank" rel="noopener nofollow" style="font-size:13px;color:var(--muted);text-decoration:underline">{esc(ref)}</a>{esc(usd)}'
 
     if request_price:
-        plan_html = f'''<div class="pcard"><div><b>{esc(confirm)}</b><br><span class="tos">{esc("PRICE REVIEW REQUIRED" if not bn else "মূল্য যাচাই প্রয়োজন")}</span></div><div class="ctas"><a class="btn btn-primary btn-sm" href="https://wa.me/{WA}?text={esc('Hi, please confirm the current ' + name + ' price, exact tier and access method.')}" target="_blank" rel="noopener">{esc(confirm)}</a></div></div>'''
+        # The query value needs percent-encoding (it's a URL, not HTML body
+        # text) — esc() alone leaves literal spaces/commas/parens and mangles
+        # non-ASCII product names. Same defect class fixed in the floating CTA.
+        confirm_msg = urlquote(f"Hi, please confirm the current {name} price, exact tier and access method.", safe="")
+        plan_html = f'''<div class="pcard"><div><b>{esc(confirm)}</b><br><span class="tos">{esc("PRICE REVIEW REQUIRED" if not bn else "মূল্য যাচাই প্রয়োজন")}</span></div><div class="ctas"><a class="btn btn-primary btn-sm" href="https://wa.me/{WA}?text={confirm_msg}" target="_blank" rel="noopener">{esc(confirm)}</a></div></div>'''
         anchor = esc(confirm)
     else:
         cards = []

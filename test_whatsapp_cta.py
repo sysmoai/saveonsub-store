@@ -88,6 +88,25 @@ def test_positive_rewrite_inquiry_product():
         assert "৳" not in decoded, f"inquiry product must not quote any fixed price: {decoded!r}"
 
 
+def test_product_main_inquiry_cta_is_also_percent_encoded():
+    # Separate code path from the floating FAB: the in-body "Confirm current
+    # price" button for inquiry-only products (e.g. google-ai-pro after its
+    # 2026-10-23 move to HOLD) had the exact same unescaped-query defect.
+    product = {
+        "id": "google-ai-pro", "name": "Google AI Pro (Gemini) & Jerry's",
+        "category": "ai-assistants", "plans": [], "request_price": True,
+    }
+    body = ct.product_main(product, bn=False)
+    m = re.search(r'href="(https://wa\.me/8801305869242\?text=[^"]*)"', body)
+    assert m, f"expected a wa.me CTA in the inquiry product body: {body[:300]}"
+    href = m.group(1)
+    query_value = href.split("text=", 1)[1]
+    assert " " not in query_value and "'" not in query_value and "(" not in query_value, \
+        f"inquiry CTA query value must be percent-encoded, not raw: {query_value}"
+    decoded = decoded_text_param(href)
+    assert "Google AI Pro (Gemini) & Jerry's" in decoded, f"round-trip lost content: {decoded!r}"
+
+
 def test_negative_missing_cta_fails_closed():
     with tempfile.TemporaryDirectory() as d:
         path = make_page(Path(d), "<!-- no fab button on this page -->")
@@ -193,6 +212,7 @@ def test_negative_stale_price_in_cta_rejected_by_build_audit():
 TESTS = [
     ("rewrite_product_page produces a safe, correctly-priced anchor (fixed price)", test_positive_rewrite_fixed_price),
     ("rewrite_product_page produces a confirm-price CTA for inquiry-only products", test_positive_rewrite_inquiry_product),
+    ("product_main()'s inquiry CTA (separate code path) is also percent-encoded", test_product_main_inquiry_cta_is_also_percent_encoded),
     ("missing floating CTA fails closed (SystemExit), not a silent pass", test_negative_missing_cta_fails_closed),
     ("CTA pointing at the wrong WhatsApp number fails closed", test_negative_unrecognized_cta_markup_fails_closed),
     ("apostrophes / ampersands / Bengali / emoji are safely percent-encoded", test_encoding_apostrophe_ampersand_bengali_emoji),

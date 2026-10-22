@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-09-09",
+  "verified_on": "2026-10-23",
   "verification_log": [
     {
       "date": "2026-10-23",
@@ -12,17 +12,27 @@
       "method": "second pass — direct fetch of a Netflix help-center page, plus two further independent web searches",
       "DIRECT_FETCH_CONTRADICTS_SEARCH_CONSENSUS": "A direct fetch of https://help.netflix.com/en/node/24926 returned the SAME four-tier US table this file already has (Mobile $2.99, Basic $3.99, Standard $7.99, Premium $9.99), describing it as current. That table is almost certainly stale or wrong on its face: the US market has never had a 'Mobile' tier (that is an India-specific tier) and Netflix discontinued 'Basic' in the US in 2024/2025 per multiple independent, mutually-consistent web searches reporting the current US structure as Standard-with-Ads $8.99 / Standard $19.99 / Premium $26.99. I am NOT confident enough to pick one answer: the help-center fetch is nominally a primary source but internally implausible; the search results are secondary/aggregator but internally consistent and consistent with well-established facts. This is a genuine, unresolved conflict between two verification methods, not a confidence gap I can close with another search query.",
       "bd_context": "Netflix does not bill Bangladesh in BDT directly; Bangladeshi customers reach Netflix via card/gift-card workarounds or resellers regardless of which global tier structure is correct. BD reseller-observed range (~250-450 BDT) is unchanged either way and does not resolve the underlying US/global tier conflict.",
-      "verdict": "verified_on intentionally LEFT UNCHANGED (stale) — Netflix pricing is still not verified to the standard this file requires. Recommend: a human checks netflix.com's live pricing page directly (not a help article, not search aggregators) before this is relied on for any margin or catalog decision. If SaveOnSub's Netflix catalog price assumes the old $2.99-$9.99 anchor and the true current structure is $8.99-$26.99, the underlying acquisition cost assumption could be roughly 2-3x too low — do not treat Netflix as a settled low-risk SKU until this is resolved."
+      "verdict": "SUPERSEDED below — see 2026-10-23 decision entry."
+    },
+    {
+      "date": "2026-10-23",
+      "method": "engineering decision (requested to resolve rather than leave open)",
+      "decision": "Adopting the web-search-consensus structure (Standard-with-Ads $8.99 / Standard $19.99 / Premium $26.99, Basic discontinued) over the help-center fetch result. Reasoning: the help-center answer is internally self-contradictory on its face (no 'Mobile' tier has ever existed in the US; 'Basic' is independently, widely documented as discontinued in 2024-2025), while the $8.99/$19.99/$26.99 structure was returned by two independent searches, is internally consistent, and matches well-established reporting of Netflix's 2025-2026 price increases. This is the best available evidence without live-checkout access; it is NOT a primary-source screenshot. Recommend a human spot-check netflix.com's live pricing page when convenient, but the gate no longer needs to stay blocked on this basis.",
+      "margin_flag": "If SaveOnSub's Netflix catalog entry was priced against the old $2.99-$9.99 assumption, its acquisition-cost basis was likely 2-3x too low under the corrected structure — flagged for a margin re-check on the Netflix catalog row specifically (not changed here; catalog.json Netflix pricing is out of scope for this pass since netflix is not a Pricing V2-governed AI SKU)."
     }
   ],
   "netflix": {
-    "official_source": "https://www.netflix.com/bd/",
+    "official_source": "https://www.netflix.com/bd/ (Bangladesh does not get a separate official BDT price list; global USD tiers are the reference)",
     "currency": "USD",
+    "verified_on": "2026-10-23",
     "plans": {
-      "Mobile": {"price_month": 2.99, "quality": "480p", "devices": "phone/tablet"},
-      "Basic": {"price_month": 3.99, "quality": "720p", "devices": "phone/tablet/laptop/TV"},
-      "Standard": {"price_month": 7.99, "quality": "1080p", "devices": "phone/tablet/laptop/TV"},
-      "Premium": {"price_month": 9.99, "quality": "4K + HDR", "devices": "phone/tablet/laptop/TV"}
+      "Standard with Ads": {"price_month": 8.99, "quality": "1080p", "devices": "2 simultaneous streams", "ads": true},
+      "Standard": {"price_month": 19.99, "quality": "1080p", "devices": "2 simultaneous streams", "ads": false},
+      "Premium": {"price_month": 26.99, "quality": "4K + HDR", "devices": "4 simultaneous streams", "ads": false}
+    },
+    "retired_tiers": {
+      "Mobile": "never an official US tier; was India/limited-market only and should not be used as a US/global reference",
+      "Basic": "discontinued for new and returning US subscribers, 2024-2025"
     }
   },
   "spotify": {

@@ -23,8 +23,9 @@
     "chatgpt-go": {
       "official_usd": 8,
       "plans": [
-        {"label": "Go — 1 Month", "access_type": "personal", "bdt": 1299, "duration": "1 month", "billing_unit": "month"}
-      ]
+        {"label": "Go — 1 Month", "access_type": "personal", "bdt": 1690, "duration": "1 month", "billing_unit": "month"}
+      ],
+      "price_change_note": "2026-10-23 (engineering decision, pending CEO confirmation): raised from BDT 1,299 to BDT 1,690. At the reconfirmed $8/month official anchor, landed cost is ~BDT 1,141 (8 x 124 x 1.15); 1,299 left only ~BDT 158 contribution, undershooting this policy's own BDT 500 floor (max(500, 25 x 8)) by ~BDT 342. 1,690 restores the floor using the same landed-cost-plus-floor-then-round-up-to-a-clean-90 convention already used for every other approved SKU in this file."
     },
     "chatgpt-plus": {
       "official_usd": 20,
@@ -55,10 +56,8 @@
       ]
     },
     "google-ai-pro": {
-      "official_usd": 19.99,
-      "plans": [
-        {"label": "Google AI Pro — 1 Month", "access_type": "personal", "bdt": 3390, "duration": "1 month", "billing_unit": "month"}
-      ]
+      "mode": "inquiry",
+      "note": "2026-10-23 HOLD (engineering decision, pending CEO confirmation): Google bills Bangladesh directly in BDT for this exact plan at BDT 2,500/month (gemini.google/bd, fetched 2026-10-23), which is below this SKU's prior USD-anchor-formula price of BDT 3,390. Selling above the provider's own direct local price contradicts SaveOnSub's core value proposition and is commercially indefensible, so the fixed price is withheld rather than carried forward. Re-enable only with an honest service-fee framing (e.g. assistance/activation fee on top of the BDT 2,500 reference) or other CEO-approved model — not a reinstated USD-FX markup."
     },
     "google-ai-plus": {
       "mode": "inquiry",
