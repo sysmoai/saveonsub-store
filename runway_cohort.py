@@ -87,9 +87,9 @@ def patch_product(rel, bn=False):
     text = re.sub(r'("@type":\s*"Product".*?"description":\s*")[^"]*(")', lambda m: m.group(1) + desc + m.group(2), text, count=1, flags=re.S)
     text = re.sub(r'\s*<span class="savepct">[^<]*</span>', '', text, count=1)
     official = (
-        '<span class="official" data-runway-official="2026-09-09">Runway: Standard US$15 · Pro US$35 · Max US$95/মাস</span>'
+        '<span class="official" data-runway-official="2026-09-27">Runway: Standard US$15 · Pro US$35 · Max US$95/মাস</span>'
         if bn else
-        '<span class="official" data-runway-official="2026-09-09">Runway: Standard US$15 · Pro US$35 · Max US$95/month</span>'
+        '<span class="official" data-runway-official="2026-09-27">Runway: Standard US$15 · Pro US$35 · Max US$95/month</span>'
     )
     text, n = re.subn(r'<span class="official"[^>]*>.*?</span>', official, text, count=1, flags=re.S)
     if n != 1:
@@ -111,13 +111,13 @@ patch_product("p/runway.html")
 patch_product("bn/p/runway.html", True)
 
 path, guide = load("blog/ai-video-tools-price-comparison-bd-2026.html")
-guide_desc = "AI video tools in Bangladesh: current SaveOnSub prices plus provider-plan caveats. Runway facts verified 2026-09-09; compare access type, credits and current provider pricing before buying."
+guide_desc = "AI video tools in Bangladesh: current SaveOnSub prices plus provider-plan caveats. Runway facts verified 2026-09-27; compare access type, credits and current provider pricing before buying."
 guide = replace_meta(guide, "name", "description", guide_desc)
 guide = replace_meta(guide, "property", "og:description", guide_desc)
 guide = re.sub(r'("@type":\s*"Article".*?"description":\s*")[^"]*(")', lambda m: m.group(1) + guide_desc + m.group(2), guide, count=1, flags=re.S)
-guide = guide.replace("PRICE SHEET · UPDATED 2026-09-03", "PRICE SHEET · RUNWAY VERIFIED 2026-09-09")
+guide = guide.replace("PRICE SHEET · UPDATED 2026-09-03", "PRICE SHEET · RUNWAY VERIFIED 2026-09-27")
 guide = guide.replace("Every AI video tool we carry, cheapest plan, versus the wider BD market where we surveyed it. Receipts on each product page.", "Compare current SaveOnSub offers with each provider's live plan structure, credits and access method. Historical BD market ranges are secondary and should not be treated as live quotes.")
-guide = re.sub(r'<tr><td><a href="\.\./p/runway\.html".*?</tr>', '<tr data-runway-guide-facts="2026-09-09"><td><a href="../p/runway.html" style="color:var(--green2)">Runway</a></td><td>From ৳499</td><td>Official: Standard US$15 · Pro US$35 · Max US$95 monthly</td><td>Generative video + creative workflow; check credits and tier</td></tr>', guide, count=1, flags=re.S)
+guide = re.sub(r'<tr><td><a href="\.\./p/runway\.html".*?</tr>', '<tr data-runway-guide-facts="2026-09-27"><td><a href="../p/runway.html" style="color:var(--green2)">Runway</a></td><td>From ৳499</td><td>Official: Standard US$15 · Pro US$35 · Max US$95 monthly</td><td>Generative video + creative workflow; check credits and tier</td></tr>', guide, count=1, flags=re.S)
 guide = guide.replace("Kling at ৳270 vs a ৳1,299+ market is not a typo.", "Historical market ranges can become stale quickly. Use the current SaveOnSub product price plus the provider's live plan page for the decision.")
 guide = guide.replace("Kling AI at ৳270/month via SAVEONSUB — dramatically below the ৳1,299–13,000 BD market range, with warranty.", "The lowest listed SaveOnSub AI-video offer can change. Compare current product pages, access type, credits and applicable warranty instead of relying on a historical market-range claim.")
 path.write_text(guide, encoding="utf-8")
@@ -131,7 +131,7 @@ for rel in ["p/runway.html", "bn/p/runway.html"]:
         if stale in text:
             raise SystemExit(f"RUNWAY COHORT ERROR — stale signal survived in {rel}: {stale}")
 
-if 'data-runway-guide-facts="2026-09-09"' not in (SITE / "blog/ai-video-tools-price-comparison-bd-2026.html").read_text(encoding="utf-8"):
+if 'data-runway-guide-facts="2026-09-27"' not in (SITE / "blog/ai-video-tools-price-comparison-bd-2026.html").read_text(encoding="utf-8"):
     raise SystemExit("RUNWAY COHORT ERROR — guide marker missing")
 
 print("Runway cohort hardening OK — current tiers/credits enforced; legacy Unlimited removed from new-sale flow.")

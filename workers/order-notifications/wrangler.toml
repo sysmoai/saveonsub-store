@@ -1,0 +1,14 @@
+name = "saveonsub-order-notifications"
+main = "src/index.ts"
+compatibility_date = "2026-09-27"
+
+[triggers]
+crons = ["*/2 * * * *"]
+
+# Bind the same dedicated SaveOnSub operational D1 database before deployment.
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "saveonsub-order-os"
+# database_id = "<PRODUCTION_ID>"
+
+# ORDER_NOTIFICATION_WEBHOOK must be configured as a secret, never committed.

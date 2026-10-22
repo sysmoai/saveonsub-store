@@ -5,10 +5,11 @@ const BKASH = "+8801305869242";
 /* ---------- Cart (localStorage) ---------- */
 function cartGet(){ try{return JSON.parse(localStorage.getItem('sos_cart')||'[]')}catch(e){return []} }
 function cartSet(c){ localStorage.setItem('sos_cart', JSON.stringify(c)); cartBadge(); }
-function cartAdd(id, planLabel, bdt, name){
+function cartAdd(id, planLabel, bdt, name, planId){
   const c = cartGet();
-  const ex = c.find(i=>i.id===id && i.plan===planLabel);
-  if(ex){ ex.qty++; } else { c.push({id, plan:planLabel, bdt:Number(bdt), name, qty:1}); }
+  const stablePlanId = planId || '';
+  const ex = c.find(i=>i.id===id && i.plan===planLabel && (i.plan_id||'')===stablePlanId);
+  if(ex){ ex.qty++; } else { c.push({id, plan:planLabel, plan_id:stablePlanId, bdt:Number(bdt), name, qty:1}); }
   cartSet(c); toast(`✅ ${name} added — ৳${bdt}`);
 }
 function cartRemove(idx){ const c=cartGet(); c.splice(idx,1); cartSet(c); if(window.renderCart)renderCart(); }
