@@ -87,9 +87,9 @@ def patch_product(rel, bn=False):
     text = re.sub(r'("@type":\s*"Product".*?"description":\s*")[^"]*(")', lambda m: m.group(1) + desc + m.group(2), text, count=1, flags=re.S)
     text = re.sub(r'\s*<span class="savepct">[^<]*</span>', '', text, count=1)
     official = (
-        '<span class="official" data-runway-official="2026-09-09">Runway: Standard US$15 · Pro US$35 · Max US$95/মাস</span>'
+        f'<span class="official" data-runway-official="{VERIFIED}">Runway: Standard US$15 · Pro US$35 · Max US$95/মাস</span>'
         if bn else
-        '<span class="official" data-runway-official="2026-09-09">Runway: Standard US$15 · Pro US$35 · Max US$95/month</span>'
+        f'<span class="official" data-runway-official="{VERIFIED}">Runway: Standard US$15 · Pro US$35 · Max US$95/month</span>'
     )
     text, n = re.subn(r'<span class="official"[^>]*>.*?</span>', official, text, count=1, flags=re.S)
     if n != 1:
@@ -111,11 +111,11 @@ patch_product("p/runway.html")
 patch_product("bn/p/runway.html", True)
 
 path, guide = load("blog/ai-video-tools-price-comparison-bd-2026.html")
-guide_desc = "AI video tools in Bangladesh: current SaveOnSub prices plus provider-plan caveats. Runway facts verified 2026-09-09; compare access type, credits and current provider pricing before buying."
+guide_desc = f"AI video tools in Bangladesh: current SaveOnSub prices plus provider-plan caveats. Runway facts verified {VERIFIED}; compare access type, credits and current provider pricing before buying."
 guide = replace_meta(guide, "name", "description", guide_desc)
 guide = replace_meta(guide, "property", "og:description", guide_desc)
 guide = re.sub(r'("@type":\s*"Article".*?"description":\s*")[^"]*(")', lambda m: m.group(1) + guide_desc + m.group(2), guide, count=1, flags=re.S)
-guide = guide.replace("PRICE SHEET · UPDATED 2026-09-03", "PRICE SHEET · RUNWAY VERIFIED 2026-09-09")
+guide = re.sub(r'PRICE SHEET · (?:UPDATED|RUNWAY VERIFIED) \d{4}-\d{2}-\d{2}', f'PRICE SHEET · RUNWAY VERIFIED {VERIFIED}', guide, count=1)
 guide = guide.replace("Every AI video tool we carry, cheapest plan, versus the wider BD market where we surveyed it. Receipts on each product page.", "Compare current SaveOnSub offers with each provider's live plan structure, credits and access method. Historical BD market ranges are secondary and should not be treated as live quotes.")
 guide = re.sub(r'<tr><td><a href="\.\./p/runway\.html".*?</tr>', '<tr data-runway-guide-facts="2026-09-09"><td><a href="../p/runway.html" style="color:var(--green2)">Runway</a></td><td>From ৳499</td><td>Official: Standard US$15 · Pro US$35 · Max US$95 monthly</td><td>Generative video + creative workflow; check credits and tier</td></tr>', guide, count=1, flags=re.S)
 guide = guide.replace("Kling at ৳270 vs a ৳1,299+ market is not a typo.", "Historical market ranges can become stale quickly. Use the current SaveOnSub product price plus the provider's live plan page for the decision.")

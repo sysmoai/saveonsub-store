@@ -12,6 +12,7 @@ import html
 import json
 import re
 from pathlib import Path
+from urllib.parse import quote as urlquote
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
@@ -111,6 +112,24 @@ def sanitize_common(text: str) -> str:
         "আমাদের পাবলিক ব্র্যান্ড (SYSmoAI)": "আমাদের পাবলিক ব্র্যান্ড",
         "the SYSmoAI-family store": "an independent Bangladesh subscription store",
         "আমাদের পাবলিক ব্র্যান্ড (SYSmoAI), লিখিত": "আমাদের পাবলিক ব্র্যান্ড, লিখিত",
+        # Pay-After-Testing is a per-order exception, not a standard feature — the
+        # default policy is payment verified before activation. These specific
+        # sentences claimed or implied blanket/first-order entitlement.
+        "A trust feature pioneered for first orders: the reseller sends access before you pay, you verify it works, then pay within an hour. SAVEONSUB offers it on most instant products.":
+            "Pay-After-Testing is not a standard feature. If support explicitly confirms it for your specific order, the exact sequence is agreed before any payment; otherwise use the standard checkout flow.",
+        "5) Ideally: <b>pay-after-testing</b> for first orders.": "5) Ask whether Pay-After-Testing applies to your specific order — it is confirmed case by case, not guaranteed.",
+        "Haven't sent payment yet? Send it via <b id=\"method2\">bKash</b> — or use <b>Pay-After-Testing</b> on your first order.":
+            "Haven't sent payment yet? Send it via <b id=\"method2\">bKash</b> — or ask support whether Pay-After-Testing applies to your order.",
+        "Send money via <b id=\"method2\">bKash</b> (or use <b>Pay-After-Testing</b> on your first order).":
+            "Send money via <b id=\"method2\">bKash</b> (অথবা আপনার অর্ডারে Pay-After-Testing প্রযোজ্য কিনা সাপোর্টকে জিজ্ঞাসা করুন)।",
+        # Remaining blanket replacement/guarantee-duration promises the generic
+        # "(?:7|30)[- ]day (warranty|support terms)" regex below does not catch
+        # because these specific sentences use the word "guarantee" rather than
+        # "warranty"/"support terms", or combine both numbers in one sentence.
+        "the lowest-risk product type, covered by a 30-day guarantee.": "the lowest-risk product type; order-specific support terms apply.",
+        "That is why it earns a 30-day guarantee.": "That is why order-specific support terms apply.",
+        "covered by our support terms (replacement in 1 hour, 7-day guarantee).": "covered by order-specific support terms shown before payment.",
+        "SAVEONSUB replaces dead seats within 1 hour (7-day guarantee).": "SaveOnSub's order-specific support terms apply if a seat stops working.",
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
@@ -141,6 +160,27 @@ def sanitize_common(text: str) -> str:
     text = re.sub(r"\b(?:our\s+)?#1\s+(?:seller|product)\b", "listed product", text, flags=re.I)
     text = text.replace("Pay-after-testing", "Order-specific payment/access confirmation")
     text = text.replace("pay-after-testing", "order-specific payment/access confirmation")
+
+    # Every floating WhatsApp button sitewide (not just governed AI product
+    # pages) used a raw, unescaped message spliced into a single-quoted JS
+    # string literal inside an onclick attribute. That breaks or mis-renders on
+    # apostrophes, ampersands and non-ASCII text, and makes HTML/JS escaping a
+    # second manual step the generator could forget. Replace with a plain
+    # percent-encoded anchor — no inline JS, no escaping required at the call
+    # site. Governed product pages get their price-correct message from
+    # rewrite_product_page() afterwards; this just makes every other instance
+    # (checkout, non-AI product pages, blog posts, etc.) safe in the meantime.
+    def _fab_to_anchor(m: "re.Match") -> str:
+        raw_message = html.unescape(m.group(1))
+        href = f"https://wa.me/8801305869242?text={urlquote(raw_message, safe='')}"
+        return f'<a class="fab fab-wa" href="{esc(href)}" target="_blank" rel="noopener" aria-label="WhatsApp">💬 WhatsApp</a>'
+
+    text = re.sub(
+        r'<button class="fab fab-wa" onclick="location\.href=\'https://wa\.me/8801305869242\?text=([^\']*)\'"[^>]*>.*?</button>',
+        _fab_to_anchor,
+        text,
+        flags=re.S,
+    )
     return text
 
 
@@ -283,12 +323,36 @@ def rewrite_product_page(path: Path, product: dict, bn: bool) -> None:
         first = plans[0]
         fab_msg = f"Hi! I want to order {name} ({first.get('label', 'Plan')}, {money(int(first['bdt']))})" if not bn \
             else f"হাই! আমি {name} অর্ডার করতে চাই ({first.get('label', 'Plan')}, {money(int(first['bdt']))})"
-    text = re.sub(
-        r'(<button class="fab fab-wa" onclick="location\.href=\'https://wa\.me/8801305869242\?text=)[^\']*(\'"[^>]*>)',
-        lambda m: m.group(1) + fab_msg.replace("\\", "\\\\") + m.group(2),
-        text,
-        count=1,
+
+    # Generate a plain percent-encoded anchor instead of inline onclick/location.href
+    # JS with a raw, unescaped message spliced into a single-quoted JS string
+    # literal inside an HTML attribute. That pattern breaks (or worse, silently
+    # mis-renders) on apostrophes, ampersands, and non-ASCII/emoji content, and
+    # is fragile to maintain. A href-only anchor needs only one encoding step
+    # (percent-encoding the query value) and no JS-string escaping at all.
+    fab_href = f"https://wa.me/8801305869242?text={urlquote(fab_msg, safe='')}"
+    new_fab = f'<a class="fab fab-wa" href="{esc(fab_href)}" target="_blank" rel="noopener" aria-label="WhatsApp">💬 WhatsApp</a>'
+    # sanitize_common() (run on every page before this governed-only rewrite)
+    # already converts the legacy button/onclick form into the anchor form, so
+    # in the real pipeline this will normally match the anchor. The button
+    # pattern is kept too so this function is correct standalone (as exercised
+    # by test_whatsapp_cta.py) regardless of call order.
+    fab_pattern = re.compile(
+        r'<button class="fab fab-wa" onclick="location\.href=\'https://wa\.me/8801305869242\?text=[^\']*\'"[^>]*>.*?</button>'
+        r'|<a class="fab fab-wa" href="https://wa\.me/8801305869242\?text=[^"]*"[^>]*>.*?</a>',
+        re.S,
     )
+    new_text, replaced = fab_pattern.subn(new_fab, text, count=1)
+    if replaced == 0:
+        # Fail closed: a missing or unrecognized floating WhatsApp CTA must not
+        # silently pass. Either the template changed (update the pattern above)
+        # or this page genuinely lost its CTA (that's a real regression).
+        try:
+            shown_path = path.relative_to(SITE)
+        except ValueError:
+            shown_path = path
+        raise SystemExit(f"[commercial-truth] expected floating WhatsApp CTA not found on governed page: {shown_path}")
+    text = new_text
     path.write_text(sanitize_common(text), encoding="utf-8")
 
 
@@ -445,10 +509,14 @@ def main() -> int:
             + ", ".join(sorted(boundary_violations))
         )
 
-    # The floating WhatsApp FAB lives outside <main> on every product page and is
-    # hand-patched above. Confirm it never still quotes a price the page's own
-    # governed plan list does not contain — the exact drift that let a buyer
-    # request a stale cheaper/shared seat the main body no longer offers.
+    # The floating WhatsApp CTA lives outside <main> on every product page and is
+    # hand-patched above. Confirm (a) every governed page actually has the CTA —
+    # a missing/unrecognized CTA must FAIL the build, not be silently skipped —
+    # and (b) it never quotes a price the page's own governed plan list does not
+    # contain, the exact drift that let a buyer request a stale cheaper/shared
+    # seat the main body no longer offers.
+    from urllib.parse import urlsplit, parse_qs
+
     fab_violations = []
     for pid, product in governed.items():
         plans = product.get("plans") or []
@@ -457,15 +525,17 @@ def main() -> int:
             if not path.exists():
                 continue
             text = path.read_text(encoding="utf-8", errors="replace")
-            m = re.search(r'<button class="fab fab-wa" onclick="location\.href=\'https://wa\.me/8801305869242\?text=([^\']*)\'"', text)
+            m = re.search(r'<a class="fab fab-wa" href="(https://wa\.me/8801305869242\?text=[^"]*)"', text)
             if not m:
+                fab_violations.append(f"{path.relative_to(SITE)}: no floating WhatsApp CTA found (missing CTA is a failure, not a pass)")
                 continue
-            fab_text = m.group(1)
-            fab_prices = {int(n.replace(",", "")) for n in re.findall(r"৳([\d,]+)", fab_text)}
+            href = html.unescape(m.group(1))
+            query_text = parse_qs(urlsplit(href).query).get("text", [""])[0]
+            fab_prices = {int(n.replace(",", "")) for n in re.findall(r"৳([\d,]+)", query_text)}
             if fab_prices and not fab_prices.issubset(approved_prices):
-                fab_violations.append(f"{path.relative_to(SITE)}: FAB quotes {sorted(fab_prices)}, approved={sorted(approved_prices)}")
+                fab_violations.append(f"{path.relative_to(SITE)}: CTA quotes {sorted(fab_prices)}, approved={sorted(approved_prices)}")
     if fab_violations:
-        raise SystemExit("[commercial-truth] floating WhatsApp CTA quotes an unapproved price — " + "; ".join(fab_violations))
+        raise SystemExit("[commercial-truth] floating WhatsApp CTA audit failed — " + "; ".join(fab_violations))
 
     print(f"[commercial-truth] revision={REVISION}; sanitized_html={len(html_files)}; rewritten_product_pages={rewritten}; governed_products={len(governed)}")
     return 0

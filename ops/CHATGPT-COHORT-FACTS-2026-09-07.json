@@ -1,5 +1,13 @@
 {
   "verified_on": "2026-09-07",
+  "verification_log": [
+    {
+      "date": "2026-10-23",
+      "method": "web search (chatgpt.com and help.openai.com returned HTTP 403 to automated fetch)",
+      "reverified": "ChatGPT Go $8/month and ChatGPT Plus $20/month both reconfirmed unchanged via multiple independent sources dated October 2026. OpenAI's Services Agreement reconfirmed: accounts are single-user; credential/login sharing between multiple users is prohibited; the compliant multi-user path is Team/Enterprise seats. This supports Pricing V2 treating chatgpt-go/chatgpt-plus/chatgpt-business as personal/team SKUs rather than shared seats.",
+      "NOT_reverified": "ChatGPT Pro ($200/mo reference) and ChatGPT Business ($25/mo reference) were not independently re-confirmed this pass. verified_on is intentionally left unchanged (stale) because chatgpt-business is a governed approved-fixed SKU (BDT 4,290/seat) whose $25 anchor has not been rechecked in >14 days — do not treat this file as fresh until Business/Pro are specifically re-verified."
+    }
+  ],
   "market": "Bangladesh",
   "official_sources": {
     "pricing": "https://chatgpt.com/pricing/",
