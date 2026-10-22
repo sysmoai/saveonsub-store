@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "built": "2026-07-11",
     "currency": "BDT",
-    "usd_anchor_rate": 110,
+    "usd_anchor_rate": 124,
     "price_precedence": [
       "aips-live-jul26",
       "verified-jul26",
@@ -18,12 +18,8 @@
       "shared-low": "Shared access with a separate profile/workspace where the product supports it. Privacy, continuity and provider-policy risk still depend on the service.",
       "shared-med": "Shared or multi-user access. Higher privacy/continuity risk; provider rules vary by service. SaveOnSub warranty terms apply as stated before payment."
     },
-    "delivery_slas": {
-      "instant": "5–15 min",
-      "fast": "1–2 hours",
-      "managed": "1–2 days"
-    },
-    "warranty": "SaveOnSub policy: replacement within 1 hour during support hours where the stated warranty applies; shared plans carry 7-day coverage and personal plans 30-day coverage unless a product page states otherwise."
+    "commercial_revision": "pricing-v2-2026-09-17",
+    "pricing_review_rule": "Confirm exact provider tier, checkout amount, access method and availability before payment when a fixed price is not approved."
   },
   "categories": [
     "AI Assistants",
@@ -51,28 +47,12 @@
       "price_source": "ceo-approved-2026-07-27",
       "plans": [
         {
-          "type": "shared",
-          "label": "Starter Shared (6–8 users)",
-          "bdt": 499,
+          "label": "Plus — 1 Month",
+          "bdt": 3390,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        },
-        {
-          "type": "shared",
-          "label": "Premium Shared (2–3 users)",
-          "bdt": 999,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-low"
-        },
-        {
           "type": "personal",
-          "label": "Personal (your email)",
-          "bdt": 2990,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -98,7 +78,7 @@
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
@@ -200,7 +180,11 @@
           "chatgpt plus kivabe kinbo",
           "chatgpt plus bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "chatgpt-go",
@@ -212,12 +196,12 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "personal",
-          "label": "Personal (your email)",
-          "bdt": 450,
+          "label": "Go — 1 Month",
+          "bdt": 1299,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -239,15 +223,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         },
         {
           "q": "Who is ChatGPT Go for?",
@@ -335,7 +319,11 @@
           "chatgpt go kivabe kinbo",
           "chatgpt go bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "chatgpt-business",
@@ -347,28 +335,12 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "shared",
-          "label": "Starter Shared (7 seats)",
-          "bdt": 699,
+          "label": "Business Standard Seat",
+          "bdt": 4290,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        },
-        {
-          "type": "shared",
-          "label": "Premium Shared (2–3)",
-          "bdt": 1299,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-low"
-        },
-        {
-          "type": "personal",
-          "label": "Personal seat",
-          "bdt": 3990,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "team",
+          "access_label": "Team / Workspace access",
+          "billing_unit": "user/month"
         }
       ],
       "keywords": [
@@ -390,15 +362,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         },
         {
           "q": "How does ChatGPT Business differ from Plus?",
@@ -486,7 +458,11 @@
           "chatgpt business kivabe kinbo",
           "chatgpt business bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "chatgpt-pro",
@@ -496,24 +472,7 @@
       "official_usd": 200,
       "official_url": "https://openai.com/chatgpt/pricing/",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Premium Shared (5–6)",
-          "bdt": 4500,
-          "duration": "1 month",
-          "sla": "managed",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 29900,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "chatgpt pro price in bangladesh",
         "chatgpt pro bangladesh",
@@ -533,15 +492,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         },
         {
           "q": "Who actually needs ChatGPT Pro?",
@@ -629,7 +588,11 @@
           "chatgpt pro kivabe kinbo",
           "chatgpt pro bd taka"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "New $200 Pro subscriptions/upgrades are not published as fixed-price commerce in this release. Reconfirm the currently available provider tier before payment."
     },
     {
       "id": "claude-pro",
@@ -641,28 +604,12 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "shared",
-          "label": "Premium Shared (2–3)",
-          "bdt": 1495,
+          "label": "Claude Pro — 1 Month",
+          "bdt": 3390,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        },
-        {
           "type": "personal",
-          "label": "Personal (your email)",
-          "bdt": 2990,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
-        },
-        {
-          "type": "personal",
-          "label": "Team Seat — Personal",
-          "bdt": 3990,
-          "duration": "1 month",
-          "sla": "managed",
-          "tos": "personal"
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -684,15 +631,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         }
       ],
       "bundles": [
@@ -778,7 +725,11 @@
           "claude pro kivabe kinbo",
           "claude pro bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "claude-max",
@@ -790,20 +741,20 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "personal",
-          "label": "Max 5x Personal",
-          "bdt": 14950,
+          "label": "Claude Max 5x — 1 Month",
+          "bdt": 16790,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "personal",
-          "label": "Max 20x Personal",
-          "bdt": 29900,
+          "label": "Claude Max 20x — 1 Month",
+          "bdt": 33590,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -825,15 +776,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         },
         {
           "q": "When should I choose Claude Max over Claude Pro?",
@@ -921,7 +872,11 @@
           "claude max kivabe kinbo",
           "claude max bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "google-ai-pro",
@@ -933,12 +888,12 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "personal",
-          "label": "Personal (your Gmail) — 83% off special",
-          "bdt": 500,
+          "label": "Google AI Pro — 1 Month",
+          "bdt": 3390,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -960,15 +915,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         },
         {
           "q": "Why is Google AI Pro our #1 seller at ৳500?",
@@ -1067,7 +1022,11 @@
           "google ai pro kivabe kinbo",
           "google ai pro bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "google-ai-plus",
@@ -1077,24 +1036,7 @@
       "official_usd": 7.99,
       "official_url": "https://one.google.com/about/google-ai-plans/",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Shared",
-          "bdt": 299,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-low"
-        },
-        {
-          "type": "personal",
-          "label": "Personal (your Gmail)",
-          "bdt": 799,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "google ai plus price in bangladesh",
         "google ai plus bangladesh",
@@ -1114,15 +1056,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         },
         {
           "q": "Google AI Plus vs Pro — which budget tier to pick?",
@@ -1210,7 +1152,11 @@
           "google ai plus kivabe kinbo",
           "google ai plus bd taka"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "The legacy catalog provider-price reference does not match the current approved pricing baseline; reconfirm the exact provider tier before publishing a fixed price."
     },
     {
       "id": "supergrok",
@@ -1222,20 +1168,20 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "personal",
-          "label": "Lite — Personal",
-          "bdt": 1495,
+          "label": "SuperGrok — 1 Month",
+          "bdt": 5090,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "personal",
-          "label": "Standard — Personal",
-          "bdt": 3990,
+          "label": "SuperGrok Premium — 1 Month",
+          "bdt": 16790,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -1257,15 +1203,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         }
       ],
       "bundles": [
@@ -1362,7 +1308,11 @@
           "supergrok kivabe kinbo",
           "supergrok bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "perplexity-pro",
@@ -1374,28 +1324,20 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "shared",
-          "label": "Shared",
-          "bdt": 350,
+          "label": "Perplexity Pro — 1 Month",
+          "bdt": 3390,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-low"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 2990,
+          "label": "Perplexity Max — 1 Month",
+          "bdt": 33590,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
-        },
-        {
           "type": "personal",
-          "label": "Max — Personal",
-          "bdt": 29900,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -1417,15 +1359,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         }
       ],
       "bundles": [
@@ -1511,7 +1453,11 @@
           "perplexity pro kivabe kinbo",
           "perplexity pro bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "mistral-pro",
@@ -1527,7 +1473,6 @@
           "label": "Personal",
           "bdt": 1299,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -1550,15 +1495,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         },
         {
           "q": "Why Mistral when ChatGPT and Claude dominate?",
@@ -1646,7 +1591,9 @@
           "mistral le chat pro kivabe kinbo",
           "mistral le chat pro bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "manus",
@@ -1662,7 +1609,6 @@
           "label": "Standard Personal",
           "bdt": 2500,
           "duration": "1 month",
-          "sla": "managed",
           "tos": "personal"
         }
       ],
@@ -1685,15 +1631,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         },
         {
           "q": "What can Manus actually do autonomously?",
@@ -1781,7 +1727,9 @@
           "manus ai agent kivabe kinbo",
           "manus ai agent bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "midjourney",
@@ -1793,52 +1741,36 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "shared",
-          "label": "Standard Shared",
-          "bdt": 1199,
+          "label": "Basic — 1 Month",
+          "bdt": 1990,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        },
-        {
-          "type": "shared",
-          "label": "Standard Premium Shared (3 max)",
-          "bdt": 2399,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-low"
-        },
-        {
           "type": "personal",
-          "label": "Standard Personal",
-          "bdt": 3990,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "shared",
-          "label": "Pro Shared",
-          "bdt": 4788,
+          "label": "Standard — 1 Month",
+          "bdt": 5090,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        },
-        {
           "type": "personal",
-          "label": "Pro Personal",
-          "bdt": 8970,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "personal",
-          "label": "Mega Personal",
-          "bdt": 17940,
+          "label": "Pro — 1 Month",
+          "bdt": 10090,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
+        },
+        {
+          "label": "Mega — 1 Month",
+          "bdt": 20190,
+          "duration": "1 month",
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -1971,7 +1903,11 @@
           "buy midjourney bd",
           "midjourney for freelancers bangladesh"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "leonardo",
@@ -1983,20 +1919,12 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "shared",
-          "label": "Apprentice Shared",
-          "bdt": 599,
+          "label": "Entry Paid Tier — 1 Month",
+          "bdt": 2290,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-low"
-        },
-        {
-          "label": "Standard Personal (own account)",
-          "bdt": 1499,
           "type": "personal",
-          "sla": "fast",
-          "tos": "personal",
-          "duration": "1 month"
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -2110,7 +2038,11 @@
           "leonardo ai kivabe kinbo",
           "leonardo ai bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "ideogram",
@@ -2120,24 +2052,7 @@
       "official_usd": 8,
       "official_url": "https://ideogram.ai",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "personal",
-          "label": "Plus Personal",
-          "bdt": 499,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
-        },
-        {
-          "type": "personal",
-          "label": "Pro Personal",
-          "bdt": 8970,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "ideogram price in bangladesh",
         "ideogram bangladesh",
@@ -2253,7 +2168,11 @@
           "ideogram kivabe kinbo",
           "ideogram bd taka"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "canva-pro",
@@ -2263,24 +2182,7 @@
       "official_usd": 15,
       "official_url": "https://www.canva.com/pricing/",
       "price_source": "may26-catalog",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Team seat (your login)",
-          "bdt": 299,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-low"
-        },
-        {
-          "type": "personal",
-          "label": "Personal Pro",
-          "bdt": 1499,
-          "duration": "1 year",
-          "sla": "fast",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "canva pro price in bangladesh",
         "canva pro bangladesh",
@@ -2394,7 +2296,11 @@
           "canva pro kivabe kinbo",
           "canva pro bd taka"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "envato-elements",
@@ -2410,7 +2316,6 @@
           "label": "Shared",
           "bdt": 499,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         },
         {
@@ -2418,7 +2323,6 @@
           "label": "Personal",
           "bdt": 2499,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -2533,7 +2437,9 @@
           "envato elements kivabe kinbo",
           "envato elements bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "invideo",
@@ -2549,7 +2455,6 @@
           "label": "Plus Shared",
           "bdt": 699,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         },
         {
@@ -2557,7 +2462,6 @@
           "label": "Personal",
           "bdt": 2499,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -2674,7 +2578,9 @@
           "invideo ai kivabe kinbo",
           "invideo ai bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "kling",
@@ -2690,14 +2596,12 @@
           "label": "Starter Shared",
           "bdt": 270,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         },
         {
           "label": "Pro Personal (own account)",
           "bdt": 1299,
           "type": "personal",
-          "sla": "fast",
           "tos": "personal",
           "duration": "1 month"
         }
@@ -2813,7 +2717,9 @@
           "kling ai kivabe kinbo",
           "kling ai bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "runway",
@@ -2825,28 +2731,28 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "personal",
-          "label": "Standard Personal (625 credits)",
-          "bdt": 499,
+          "label": "Standard — 1 Month",
+          "bdt": 2690,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "personal",
-          "label": "Pro Personal (2250 credits)",
-          "bdt": 4186,
+          "label": "Pro — 1 Month",
+          "bdt": 5890,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "personal",
-          "label": "Unlimited Personal",
-          "bdt": 11362,
+          "label": "Unlimited — 1 Month",
+          "bdt": 15990,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -2977,7 +2883,11 @@
           "runway gen-4 price bd",
           "runway vs kling bangladesh"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "heygen",
@@ -2989,20 +2899,12 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "label": "Starter Shared (budget)",
-          "bdt": 899,
-          "type": "shared",
-          "sla": "instant",
-          "tos": "shared-med",
-          "duration": "1 month"
-        },
-        {
-          "type": "shared",
-          "label": "Creator Shared",
-          "bdt": 1499,
+          "label": "Creator — 1 Month",
+          "bdt": 4890,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -3127,7 +3029,11 @@
           "heygen kivabe kinbo",
           "heygen bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "capcut-pro",
@@ -3142,7 +3048,6 @@
           "label": "Family Shared (2-3 users)",
           "bdt": 249,
           "type": "shared",
-          "sla": "instant",
           "tos": "shared-low",
           "duration": "1 month"
         },
@@ -3151,7 +3056,6 @@
           "label": "Starter Shared",
           "bdt": 399,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-low"
         }
       ],
@@ -3268,7 +3172,9 @@
           "capcut pro kivabe kinbo",
           "capcut pro bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "elevenlabs",
@@ -3280,28 +3186,28 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "personal",
-          "label": "Starter Personal (30K chars)",
-          "bdt": 499,
+          "label": "Starter — 1 Month",
+          "bdt": 1390,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "personal",
-          "label": "Creator Personal (100K chars)",
-          "bdt": 3289,
+          "label": "Creator — 1 Month",
+          "bdt": 3690,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "personal",
-          "label": "Pro Personal (500K chars)",
-          "bdt": 14802,
+          "label": "Pro — 1 Month",
+          "bdt": 16690,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -3426,7 +3332,11 @@
           "elevenlabs kivabe kinbo",
           "elevenlabs bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "suno",
@@ -3438,20 +3348,20 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "personal",
-          "label": "Pro Personal (~500 songs)",
-          "bdt": 499,
+          "label": "Pro — 1 Month",
+          "bdt": 1990,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "personal",
-          "label": "Premier Personal (~2000 songs)",
-          "bdt": 3990,
+          "label": "Premier — 1 Month",
+          "bdt": 5090,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -3565,7 +3475,11 @@
           "suno ai kivabe kinbo",
           "suno ai bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "udio",
@@ -3577,20 +3491,20 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "label": "Starter Shared (budget)",
-          "bdt": 249,
-          "type": "shared",
-          "sla": "instant",
-          "tos": "shared-med",
-          "duration": "1 month"
+          "label": "Standard — 1 Month",
+          "bdt": 1990,
+          "duration": "1 month",
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "shared",
-          "label": "Pro Shared",
-          "bdt": 499,
+          "label": "Pro — 1 Month",
+          "bdt": 5090,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -3704,7 +3618,11 @@
           "udio kivabe kinbo",
           "udio bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "otter",
@@ -3719,7 +3637,6 @@
           "label": "Starter Shared (budget)",
           "bdt": 399,
           "type": "shared",
-          "sla": "instant",
           "tos": "shared-low",
           "duration": "1 month"
         },
@@ -3728,7 +3645,6 @@
           "label": "Pro Shared (6000 min)",
           "bdt": 799,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-low"
         }
       ],
@@ -3843,7 +3759,9 @@
           "otter.ai pro kivabe kinbo",
           "otter.ai pro bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "github-copilot",
@@ -3855,20 +3773,20 @@
       "price_source": "verified-jul26",
       "plans": [
         {
-          "type": "personal",
-          "label": "Pro Personal (your GitHub)",
-          "bdt": 590,
+          "label": "Copilot Pro — 1 Month",
+          "bdt": 1990,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "personal",
-          "label": "Pro+ Personal (1500 reqs)",
-          "bdt": 5831,
+          "label": "Copilot Pro+ — 1 Month",
+          "bdt": 6590,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -3990,7 +3908,11 @@
           "copilot free student bd",
           "copilot bd subscription"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "cursor",
@@ -4002,20 +3924,12 @@
       "price_source": "verified-jul26",
       "plans": [
         {
-          "type": "personal",
-          "label": "Pro Personal",
-          "bdt": 590,
+          "label": "Cursor Pro — 1 Month",
+          "bdt": 3390,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
-        },
-        {
           "type": "personal",
-          "label": "Pro+ Personal (3x credits)",
-          "bdt": 8970,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -4138,7 +4052,11 @@
           "cursor ai bd",
           "best ai code editor bangladesh"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "v0",
@@ -4148,24 +4066,7 @@
       "official_usd": 20,
       "official_url": "https://v0.dev",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Starter Shared (budget)",
-          "bdt": 399,
-          "type": "shared",
-          "sla": "instant",
-          "tos": "shared-med",
-          "duration": "1 month"
-        },
-        {
-          "type": "shared",
-          "label": "Pro Shared",
-          "bdt": 999,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "v0.dev premium price in bangladesh",
         "v0.dev premium bangladesh",
@@ -4277,7 +4178,11 @@
           "v0.dev premium kivabe kinbo",
           "v0.dev premium bd taka"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "replit-core",
@@ -4293,7 +4198,6 @@
           "label": "Core Personal — AIPS special",
           "bdt": 500,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -4408,7 +4312,9 @@
           "replit core kivabe kinbo",
           "replit core bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "windsurf",
@@ -4423,7 +4329,6 @@
           "label": "Starter Shared (budget)",
           "bdt": 299,
           "type": "shared",
-          "sla": "instant",
           "tos": "shared-med",
           "duration": "1 month"
         },
@@ -4432,7 +4337,6 @@
           "label": "Pro Shared",
           "bdt": 590,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         }
       ],
@@ -4547,32 +4451,26 @@
           "windsurf pro kivabe kinbo",
           "windsurf pro bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "grammarly",
       "name": "Grammarly Premium",
       "category": "AI Writing",
       "icon": "✍️",
-      "official_usd": 12,
+      "official_usd": 30,
       "official_url": "https://www.grammarly.com/plans",
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "shared",
-          "label": "Starter Shared",
-          "bdt": 470,
+          "label": "Grammarly Paid Plan — 1 Month",
+          "bdt": 5090,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-low"
-        },
-        {
           "type": "personal",
-          "label": "Personal",
-          "bdt": 1790,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -4686,7 +4584,11 @@
           "grammarly premium kivabe kinbo",
           "grammarly premium bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "quillbot",
@@ -4702,7 +4604,6 @@
           "label": "Starter Shared",
           "bdt": 390,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-low"
         },
         {
@@ -4710,7 +4611,6 @@
           "label": "Personal",
           "bdt": 1490,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -4829,7 +4729,9 @@
           "quillbot for thesis",
           "quillbot vs grammarly bd"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "jasper",
@@ -4845,7 +4747,6 @@
           "label": "Creator Starter Shared",
           "bdt": 1520,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         },
         {
@@ -4853,7 +4754,6 @@
           "label": "Creator Personal",
           "bdt": 5830,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -4972,7 +4872,9 @@
           "jasper vs chatgpt writing",
           "ai copywriting tool bd"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "writesonic",
@@ -4987,7 +4889,6 @@
           "label": "Starter Shared (budget)",
           "bdt": 499,
           "type": "shared",
-          "sla": "instant",
           "tos": "shared-med",
           "duration": "1 month"
         },
@@ -4996,7 +4897,6 @@
           "label": "Individual Shared",
           "bdt": 799,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         }
       ],
@@ -5111,7 +5011,9 @@
           "writesonic kivabe kinbo",
           "writesonic bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "notion-ai",
@@ -5123,20 +5025,12 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "type": "personal",
-          "label": "Business Monthly (official, Notion AI incl.)",
-          "bdt": 800,
+          "label": "Notion Paid AI/Business — 1 Month",
+          "bdt": 3390,
           "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
-        },
-        {
           "type": "personal",
-          "label": "Business 6-Month (one-time ৳4,800)",
-          "bdt": 4800,
-          "duration": "6 months",
-          "sla": "fast",
-          "tos": "personal"
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -5246,7 +5140,11 @@
           "notion business + ai kivabe kinbo",
           "notion business + ai bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "gamma",
@@ -5261,7 +5159,6 @@
           "label": "Starter Shared (budget)",
           "bdt": 249,
           "type": "shared",
-          "sla": "instant",
           "tos": "shared-low",
           "duration": "1 month"
         },
@@ -5270,7 +5167,6 @@
           "label": "Plus Shared",
           "bdt": 399,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-low"
         }
       ],
@@ -5381,7 +5277,9 @@
           "gamma pro kivabe kinbo",
           "gamma pro bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "netflix",
@@ -5397,7 +5295,6 @@
           "label": "1 Screen (private profile)",
           "bdt": 349,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         },
         {
@@ -5405,7 +5302,6 @@
           "label": "Personal (your email)",
           "bdt": 799,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -5531,7 +5427,9 @@
           "netflix kivabe kinbo",
           "netflix bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "spotify",
@@ -5547,7 +5445,6 @@
           "label": "Family slot (your account)",
           "bdt": 129,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-low"
         },
         {
@@ -5555,7 +5452,6 @@
           "label": "Official BD Individual (guide)",
           "bdt": 219,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "official"
         }
       ],
@@ -5670,7 +5566,9 @@
           "spotify premium kivabe kinbo",
           "spotify premium bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "youtube-premium",
@@ -5686,7 +5584,6 @@
           "label": "Family slot (your Gmail)",
           "bdt": 149,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-low"
         },
         {
@@ -5694,7 +5591,6 @@
           "label": "Official BD Individual (guide)",
           "bdt": 239,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "official"
         }
       ],
@@ -5820,7 +5716,9 @@
           "youtube premium kivabe kinbo",
           "youtube premium bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "prime-video",
@@ -5836,7 +5734,6 @@
           "label": "1 Screen",
           "bdt": 249,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         },
         {
@@ -5844,7 +5741,6 @@
           "label": "Personal",
           "bdt": 899,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -5970,7 +5866,9 @@
           "prime video kivabe kinbo",
           "prime video bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "hoichoi",
@@ -5985,7 +5883,6 @@
           "label": "Starter Shared (budget)",
           "bdt": 299,
           "type": "shared",
-          "sla": "instant",
           "tos": "shared-low",
           "duration": "1 month"
         },
@@ -5994,7 +5891,6 @@
           "label": "Official Yearly (guide/gift)",
           "bdt": 599,
           "duration": "1 year",
-          "sla": "instant",
           "tos": "official"
         }
       ],
@@ -6120,7 +6016,9 @@
           "hoichoi kivabe kinbo",
           "hoichoi bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "coursera-plus",
@@ -6136,7 +6034,6 @@
           "label": "Shared",
           "bdt": 1199,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "shared-med"
         },
         {
@@ -6144,7 +6041,6 @@
           "label": "Personal",
           "bdt": 4999,
           "duration": "1 month",
-          "sla": "managed",
           "tos": "personal"
         }
       ],
@@ -6255,7 +6151,9 @@
           "coursera plus kivabe kinbo",
           "coursera plus bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "linkedin-premium",
@@ -6271,7 +6169,6 @@
           "label": "Personal (your profile)",
           "bdt": 1999,
           "duration": "1 month",
-          "sla": "managed",
           "tos": "personal"
         }
       ],
@@ -6382,7 +6279,9 @@
           "linkedin premium career kivabe kinbo",
           "linkedin premium career bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "nordvpn",
@@ -6398,7 +6297,6 @@
           "label": "Shared",
           "bdt": 299,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-low"
         },
         {
@@ -6406,7 +6304,6 @@
           "label": "Personal (1 year)",
           "bdt": 3499,
           "duration": "1 year",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -6528,7 +6425,9 @@
           "nordvpn kivabe kinbo",
           "nordvpn bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "surfshark",
@@ -6543,7 +6442,6 @@
           "label": "Starter Shared (budget)",
           "bdt": 149,
           "type": "shared",
-          "sla": "instant",
           "tos": "shared-low",
           "duration": "1 month"
         },
@@ -6552,7 +6450,6 @@
           "label": "Shared",
           "bdt": 249,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-low"
         }
       ],
@@ -6663,7 +6560,9 @@
           "surfshark kivabe kinbo",
           "surfshark bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "bundle-starter",
@@ -6673,16 +6572,7 @@
       "official_usd": 35,
       "official_url": "https://saveonsub.com/#bundles",
       "price_source": "may26-catalog",
-      "plans": [
-        {
-          "type": "bundle",
-          "label": "ChatGPT Shared + Canva Team",
-          "bdt": 799,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "starter bundle price in bangladesh",
         "starter bundle bangladesh",
@@ -6787,7 +6677,11 @@
           "starter bundle kivabe kinbo",
           "starter bundle bd taka"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "bundle-creator",
@@ -6797,16 +6691,7 @@
       "official_usd": 40,
       "official_url": "https://saveonsub.com/#bundles",
       "price_source": "may26-catalog",
-      "plans": [
-        {
-          "type": "bundle",
-          "label": "SuperGrok + Midjourney Shared",
-          "bdt": 999,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "creator bundle price in bangladesh",
         "creator bundle bangladesh",
@@ -6911,7 +6796,11 @@
           "creator bundle kivabe kinbo",
           "creator bundle bd taka"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "bundle-research",
@@ -6921,16 +6810,7 @@
       "official_usd": 40,
       "official_url": "https://saveonsub.com/#bundles",
       "price_source": "may26-catalog",
-      "plans": [
-        {
-          "type": "bundle",
-          "label": "ChatGPT + Perplexity Shared",
-          "bdt": 600,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "research bundle price in bangladesh",
         "research bundle bangladesh",
@@ -7035,7 +6915,11 @@
           "research bundle kivabe kinbo",
           "research bundle bd taka"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "bundle-video",
@@ -7045,16 +6929,7 @@
       "official_usd": 35,
       "official_url": "https://saveonsub.com/#bundles",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "bundle",
-          "label": "Invideo Plus + CapCut Pro Shared",
-          "bdt": 999,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "video creator bundle price in bangladesh",
         "video creator bundle bangladesh",
@@ -7159,7 +7034,11 @@
           "video creator bundle kivabe kinbo",
           "video creator bundle bd taka"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "bundle-dev",
@@ -7169,16 +7048,7 @@
       "official_usd": 30,
       "official_url": "https://saveonsub.com/#bundles",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "bundle",
-          "label": "Cursor Shared + Copilot Personal",
-          "bdt": 1799,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "shared-med"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "dev bundle price in bangladesh",
         "dev bundle bangladesh",
@@ -7283,7 +7153,11 @@
           "dev bundle kivabe kinbo",
           "dev bundle bd taka"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "copilot-pro",
@@ -7299,7 +7173,6 @@
           "label": "Starter Shared",
           "bdt": 780,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         },
         {
@@ -7307,7 +7180,6 @@
           "label": "Personal",
           "bdt": 2990,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -7330,15 +7202,15 @@
         },
         {
           "q": "Which AI assistant is best for my use case?",
-          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Gemini (Google AI Pro) gives you 2TB storage on top of AI — our #1 seller at ৳500. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
+          "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
         {
           "q": "Can I use these AI tools on my phone in Bangladesh?",
-          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Shared seats work the same as personal on mobile — the seat type doesn't affect functionality."
+          "a": "Yes — all major AI assistants have mobile apps or web interfaces that work on any smartphone with internet. ChatGPT, Claude, Gemini, and Perplexity all have Android/iOS apps. Mobile availability depends on the provider and exact access method. Shared access can differ from personal access in privacy, continuity, sign-in method and provider-policy risk."
         },
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
-          "a": "You get whatever the provider ships — same as an official subscriber. Model upgrades (like GPT-4 to GPT-5) are automatically included. If a provider retires a model or changes pricing, we update the product page and notify active subscribers within 24 hours."
+          "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
         },
         {
           "q": "Microsoft Copilot Pro vs ChatGPT Plus — which for BD office work?",
@@ -7426,7 +7298,9 @@
           "microsoft copilot pro kivabe kinbo",
           "microsoft copilot pro bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "adobe-firefly",
@@ -7442,14 +7316,12 @@
           "label": "Starter Shared",
           "bdt": 190,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         },
         {
           "label": "Pro Personal (own account)",
           "bdt": 499,
           "type": "personal",
-          "sla": "fast",
           "tos": "personal",
           "duration": "1 month"
         }
@@ -7580,7 +7452,9 @@
           "adobe firefly kivabe kinbo",
           "adobe firefly bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "freepik",
@@ -7590,24 +7464,7 @@
       "official_usd": 11.59,
       "official_url": "https://www.freepik.com/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Starter Shared (budget)",
-          "bdt": 249,
-          "type": "shared",
-          "sla": "instant",
-          "tos": "shared-low",
-          "duration": "1 month"
-        },
-        {
-          "type": "shared",
-          "label": "Premium Shared",
-          "bdt": 450,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "freepik premium price in bangladesh",
         "freepik premium bangladesh",
@@ -7719,7 +7576,11 @@
           "freepik premium kivabe kinbo",
           "freepik premium bd taka"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "pika",
@@ -7735,7 +7596,6 @@
           "label": "Starter Shared",
           "bdt": 310,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         },
         {
@@ -7743,7 +7603,6 @@
           "label": "Personal",
           "bdt": 1200,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -7862,7 +7721,9 @@
           "pika ai bangladesh",
           "pika 2.5 subscription bd"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "descript",
@@ -7872,24 +7733,7 @@
       "official_usd": 12,
       "official_url": "https://www.descript.com/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Starter Shared",
-          "bdt": 470,
-          "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 1790,
-          "duration": "1 month",
-          "sla": "fast",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "descript pro price in bangladesh",
         "descript pro bangladesh",
@@ -8005,7 +7849,11 @@
           "descript bangladesh",
           "ai video editor bangladesh"
         ]
-      }
+      },
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "opus-clip",
@@ -8021,7 +7869,6 @@
           "label": "Starter Shared",
           "bdt": 590,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         },
         {
@@ -8029,7 +7876,6 @@
           "label": "Personal",
           "bdt": 2240,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -8146,7 +7992,9 @@
           "opus clip bd taka",
           "long video to shorts tool bd"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "synthesia",
@@ -8158,20 +8006,20 @@
       "price_source": "aips-live-jul26",
       "plans": [
         {
-          "label": "Starter Shared (budget)",
-          "bdt": 399,
-          "type": "shared",
-          "sla": "instant",
-          "tos": "shared-med",
-          "duration": "1 month"
+          "label": "Starter — 1 Month",
+          "bdt": 4890,
+          "duration": "1 month",
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         },
         {
-          "type": "shared",
-          "label": "Starter Shared",
-          "bdt": 700,
+          "label": "Creator — 1 Month",
+          "bdt": 14990,
           "duration": "1 month",
-          "sla": "instant",
-          "tos": "shared-med"
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
         }
       ],
       "keywords": [
@@ -8285,7 +8133,11 @@
           "synthesia kivabe kinbo",
           "synthesia bd taka"
         ]
-      }
+      },
+      "request_price": false,
+      "pricing_status": "approved-fixed",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "murf",
@@ -8301,7 +8153,6 @@
           "label": "Starter Shared",
           "bdt": 740,
           "duration": "1 month",
-          "sla": "instant",
           "tos": "shared-med"
         },
         {
@@ -8309,7 +8160,6 @@
           "label": "Personal",
           "bdt": 2840,
           "duration": "1 month",
-          "sla": "fast",
           "tos": "personal"
         }
       ],
@@ -8424,7 +8274,9 @@
           "murf ai kivabe kinbo",
           "murf ai bd taka"
         ]
-      }
+      },
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "aips-student-essentials",
@@ -8434,16 +8286,7 @@
       "official_usd": 15,
       "official_url": "https://saveonsub.com/all.html",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "bundle",
-          "label": "ChatGPT Shared + AI setup guide (managed setup)",
-          "bdt": 449,
-          "duration": "1 month",
-          "sla": "managed",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "student essentials price in bangladesh",
         "student essentials bangladesh",
@@ -8549,7 +8392,11 @@
         "canva-pro",
         "spotify"
       ],
-      "save_bdt": 0
+      "save_bdt": 0,
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "aips-university-pro",
@@ -8559,16 +8406,7 @@
       "official_usd": 20,
       "official_url": "https://saveonsub.com/all.html",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "bundle",
-          "label": "ChatGPT Premium Shared + Perplexity (managed setup)",
-          "bdt": 899,
-          "duration": "1 month",
-          "sla": "managed",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "university pro bundle price in bangladesh",
         "university pro bundle bangladesh",
@@ -8675,7 +8513,11 @@
         "grammarly",
         "notion-ai"
       ],
-      "save_bdt": 0
+      "save_bdt": 0,
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "aips-freelancer-bundle",
@@ -8685,16 +8527,7 @@
       "official_usd": 60,
       "official_url": "https://saveonsub.com/all.html",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "bundle",
-          "label": "Full freelancer toolkit (managed setup)",
-          "bdt": 3999,
-          "duration": "1 month",
-          "sla": "managed",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "freelancer bundle price in bangladesh",
         "freelancer bundle bangladesh",
@@ -8800,7 +8633,11 @@
         "canva-pro",
         "google-ai-pro"
       ],
-      "save_bdt": 0
+      "save_bdt": 0,
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "aips-business-package",
@@ -8810,16 +8647,7 @@
       "official_usd": 250,
       "official_url": "https://saveonsub.com/all.html",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "bundle",
-          "label": "ChatGPT Biz + Google AI + Notion + Midjourney + Claude + 2hr setup (managed setup)",
-          "bdt": 15000,
-          "duration": "1 month",
-          "sla": "managed",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "business ai package price in bangladesh",
         "business ai package bangladesh",
@@ -8925,7 +8753,11 @@
         "linkedin-premium",
         "envato-elements"
       ],
-      "save_bdt": 0
+      "save_bdt": 0,
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "aips-b2b-implementation",
@@ -8935,16 +8767,7 @@
       "official_usd": 450,
       "official_url": "https://saveonsub.com/all.html",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "bundle",
-          "label": "Custom setup + 5hr training + automation + 30-day support (managed setup)",
-          "bdt": 25000,
-          "duration": "1 month",
-          "sla": "managed",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "b2b ai implementation service price in bangladesh",
         "b2b ai implementation service bangladesh",
@@ -9051,7 +8874,11 @@
         "synthesia",
         "notion-ai"
       ],
-      "save_bdt": 0
+      "save_bdt": 0,
+      "request_price": true,
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
     },
     {
       "id": "chorki",
@@ -9063,15 +8890,13 @@
           "label": "Yearly (official)",
           "bdt": 599,
           "duration": "year",
-          "tos": "official",
-          "sla": "instant"
+          "tos": "official"
         },
         {
           "label": "Monthly activation",
           "bdt": 99,
           "duration": "month",
-          "tos": "official",
-          "sla": "instant"
+          "tos": "official"
         }
       ],
       "official_usd": 5,
@@ -9124,7 +8949,9 @@
         "who": "Official Chorki pricing (no reseller market — buy direct or we activate for card-less users)",
         "src": "chorki.com/subscribe"
       },
-      "status": "gap-fill"
+      "status": "gap-fill",
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "bongo-bd",
@@ -9136,15 +8963,13 @@
           "label": "Monthly Premium",
           "bdt": 149,
           "duration": "month",
-          "tos": "official",
-          "sla": "instant"
+          "tos": "official"
         },
         {
           "label": "Yearly Premium",
           "bdt": 999,
           "duration": "year",
-          "tos": "official",
-          "sla": "instant"
+          "tos": "official"
         }
       ],
       "official_usd": 3,
@@ -9196,7 +9021,9 @@
         "who": "Official Bongo pricing",
         "src": "bongobd.com"
       },
-      "status": "gap-fill"
+      "status": "gap-fill",
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "truecaller-premium",
@@ -9208,15 +9035,13 @@
           "label": "Premium Monthly",
           "bdt": 350,
           "duration": "month",
-          "tos": "shared-low",
-          "sla": "instant"
+          "tos": "shared-low"
         },
         {
           "label": "Premium Personal",
           "bdt": 790,
           "duration": "month",
-          "tos": "personal",
-          "sla": "fast"
+          "tos": "personal"
         }
       ],
       "official_usd": 9.99,
@@ -9269,7 +9094,9 @@
         "who": "BD Facebook/Telegram resellers",
         "src": "BD market survey july 2026"
       },
-      "status": "gap-fill"
+      "status": "gap-fill",
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "deepseek",
@@ -9281,15 +9108,13 @@
           "label": "API Access — Starter",
           "bdt": 199,
           "duration": "month",
-          "tos": "shared-low",
-          "sla": "instant"
+          "tos": "shared-low"
         },
         {
           "label": "API Access — Pro",
           "bdt": 599,
           "duration": "month",
-          "tos": "shared-low",
-          "sla": "instant"
+          "tos": "shared-low"
         }
       ],
       "official_usd": 2,
@@ -9342,7 +9167,9 @@
         "who": "",
         "src": ""
       },
-      "status": "new"
+      "status": "new",
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "adobe-creative-cloud",
@@ -9354,15 +9181,13 @@
           "label": "Photography Plan (20GB)",
           "bdt": 990,
           "duration": "month",
-          "tos": "shared-low",
-          "sla": "fast"
+          "tos": "shared-low"
         },
         {
           "label": "All Apps Plan",
           "bdt": 4990,
           "duration": "month",
-          "tos": "shared-med",
-          "sla": "fast"
+          "tos": "shared-med"
         }
       ],
       "official_usd": 54.99,
@@ -9415,7 +9240,9 @@
         "who": "BD Facebook/Telegram Adobe sellers",
         "src": "BD market survey july 2026"
       },
-      "status": "gap-fill"
+      "status": "gap-fill",
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "tinder-plus",
@@ -9427,15 +9254,13 @@
           "label": "Plus Monthly",
           "bdt": 399,
           "duration": "month",
-          "tos": "personal",
-          "sla": "instant"
+          "tos": "personal"
         },
         {
           "label": "Gold Monthly",
           "bdt": 690,
           "duration": "month",
-          "tos": "personal",
-          "sla": "instant"
+          "tos": "personal"
         }
       ],
       "official_usd": 7.99,
@@ -9487,7 +9312,9 @@
         "who": "",
         "src": ""
       },
-      "status": "new"
+      "status": "new",
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "pandapro",
@@ -9499,15 +9326,13 @@
           "label": "Monthly",
           "bdt": 299,
           "duration": "month",
-          "tos": "personal",
-          "sla": "instant"
+          "tos": "personal"
         },
         {
           "label": "6 Months",
           "bdt": 1299,
           "duration": "6months",
-          "tos": "personal",
-          "sla": "instant"
+          "tos": "personal"
         }
       ],
       "official_usd": 3.49,
@@ -9559,7 +9384,9 @@
         "who": "Official Foodpanda BD pricing",
         "src": "foodpanda.com.bd app"
       },
-      "status": "gap-fill"
+      "status": "gap-fill",
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     },
     {
       "id": "pubg-royale-pass",
@@ -9571,15 +9398,13 @@
           "label": "Elite Pass (monthly)",
           "bdt": 550,
           "duration": "month",
-          "tos": "personal",
-          "sla": "instant"
+          "tos": "personal"
         },
         {
           "label": "Elite Pass Plus",
           "bdt": 990,
           "duration": "month",
-          "tos": "personal",
-          "sla": "instant"
+          "tos": "personal"
         }
       ],
       "official_usd": 5.99,
@@ -9632,7 +9457,9 @@
         "who": "BD Facebook/Telegram game top-up sellers",
         "src": "BD gaming community survey july 2026"
       },
-      "status": "gap-fill"
+      "status": "gap-fill",
+      "pricing_status": "existing-local-catalog",
+      "pricing_revision": "pricing-v2-2026-09-17"
     }
   ]
 }

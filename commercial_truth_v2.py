@@ -100,10 +100,35 @@ def sanitize_common(text: str) -> str:
         "Warranty": "Support terms",
         "bestseller": "listed product",
         "Bestseller": "Listed product",
+        # Business-boundary separation (CEO directive 2026-09-18): SaveOnSub is
+        # presented as independently operated, not as a SYSmoAI venture/family/group.
+        "A SYSmoAI venture — Dhaka, Bangladesh.": "Independently run — Dhaka, Bangladesh.",
+        "A SYSmoAI venture from Dhaka.": "Independently run from Dhaka.",
+        "operated by the SYSmoAI group, Dhaka, Bangladesh": "an independently operated service, Dhaka, Bangladesh",
+        "SYSmoAI গ্রুপ দ্বারা পরিচালিত, ঢাকা, বাংলাদেশ": "স্বাধীনভাবে পরিচালিত, ঢাকা, বাংলাদেশ",
+        "the SYSmoAI-family store": "an independent Bangladesh subscription store",
+        "public brand (SYSmoAI family)": "public brand",
+        "আমাদের পাবলিক ব্র্যান্ড (SYSmoAI)": "আমাদের পাবলিক ব্র্যান্ড",
+        "the SYSmoAI-family store": "an independent Bangladesh subscription store",
+        "আমাদের পাবলিক ব্র্যান্ড (SYSmoAI), লিখিত": "আমাদের পাবলিক ব্র্যান্ড, লিখিত",
     }
     for old, new in replacements.items():
         text = text.replace(old, new)
 
+    text = re.sub(r"(?:·|&middot;)\s*A SYSmoAI venture\.\s*", "· ", text)
+    text = re.sub(r"একটি\s*SYSmoAI\s*উদ্যোগ[^।]*।\s*", "", text)
+    text = re.sub(
+        r'<tr><td><a href="https://sysmoai\.com"[^>]*>SYSmoAI</a></td><td>[^<]*</td></tr>',
+        "",
+        text,
+        flags=re.I,
+    )
+    text = re.sub(r'<a href="https://sysmoai\.com"[^>]*>\s*SYSmoAI\s*</a>', "", text, flags=re.I)
+    text = re.sub(
+        r'"parentOrganization":\s*\{[^{}]*"name":\s*"SYSmoAI"[^{}]*\},?',
+        "",
+        text,
+    )
     text = re.sub(r"5\s*[–-]\s*15\s*(?:minutes?|mins?|min)\b", "timing confirmed before payment", text, flags=re.I)
     text = re.sub(r"৫\s*[–-]\s*১৫\s*মিনিট", "ডেলিভারি সময় অর্ডারের আগে নিশ্চিত করা হয়", text)
     text = re.sub(r"\b1\s*[–-]\s*2\s*(?:days?|দিন)\b", "timing confirmed before payment", text, flags=re.I)
@@ -246,6 +271,24 @@ def rewrite_product_page(path: Path, product: dict, bn: bool) -> None:
         text = re.sub(r'<main\b[^>]*>.*?</main>', new_main, text, count=1, flags=re.I | re.S)
     else:
         text = text.replace("</body>", new_main + "\n</body>", 1)
+
+    # The floating WhatsApp FAB sits outside <main> and is not covered by the
+    # product-body rewrite above. It was previously left carrying the raw
+    # catalog's first plan (often a stale/cheaper credential-shared offer),
+    # letting a buyer request a price the governed page no longer sells.
+    if request_price:
+        fab_msg = f"Hi, please confirm the current {name} price, exact tier and access method." if not bn \
+            else f"হাই, {name}-এর বর্তমান মূল্য, exact tier ও access method নিশ্চিত করুন।"
+    else:
+        first = plans[0]
+        fab_msg = f"Hi! I want to order {name} ({first.get('label', 'Plan')}, {money(int(first['bdt']))})" if not bn \
+            else f"হাই! আমি {name} অর্ডার করতে চাই ({first.get('label', 'Plan')}, {money(int(first['bdt']))})"
+    text = re.sub(
+        r'(<button class="fab fab-wa" onclick="location\.href=\'https://wa\.me/8801305869242\?text=)[^\']*(\'"[^>]*>)',
+        lambda m: m.group(1) + fab_msg.replace("\\", "\\\\") + m.group(2),
+        text,
+        count=1,
+    )
     path.write_text(sanitize_common(text), encoding="utf-8")
 
 
@@ -369,6 +412,10 @@ def main() -> int:
         text = patch_listing_cards(text, governed, bn="/bn/" in path.as_posix() or path.name == "bn.html")
         path.write_text(text, encoding="utf-8")
 
+    llms_txt = SITE / "llms.txt"
+    if llms_txt.exists():
+        llms_txt.write_text(sanitize_common(llms_txt.read_text(encoding="utf-8", errors="replace")), encoding="utf-8")
+
     rewrite_home(SITE / "index.html", governed, False)
     rewrite_home(SITE / "bn.html", governed, True)
 
@@ -383,6 +430,42 @@ def main() -> int:
     public_catalog = SITE / "assets" / "catalog.js"
     if not public_catalog.exists() or REVISION not in public_catalog.read_text(encoding="utf-8", errors="replace"):
         raise SystemExit("[commercial-truth] staged assets/catalog.js is not pricing-v2 governed")
+
+    # Business-boundary separation gate: no staged page may describe SaveOnSub
+    # as a SYSmoAI venture/family/group. Fail closed rather than let it reappear.
+    boundary_violations = []
+    boundary_scan_files = html_files + ([llms_txt] if llms_txt.exists() else [])
+    for path in boundary_scan_files:
+        text = path.read_text(encoding="utf-8", errors="replace")
+        if re.search(r"SYSmoAI\s*(venture|family|group)|একটি\s*SYSmoAI\s*উদ্যোগ|SYSmoAI গ্রুপ", text, re.I):
+            boundary_violations.append(str(path.relative_to(SITE)))
+    if boundary_violations:
+        raise SystemExit(
+            "[commercial-truth] business-boundary violation — SYSmoAI venture/family/group language survived in: "
+            + ", ".join(sorted(boundary_violations))
+        )
+
+    # The floating WhatsApp FAB lives outside <main> on every product page and is
+    # hand-patched above. Confirm it never still quotes a price the page's own
+    # governed plan list does not contain — the exact drift that let a buyer
+    # request a stale cheaper/shared seat the main body no longer offers.
+    fab_violations = []
+    for pid, product in governed.items():
+        plans = product.get("plans") or []
+        approved_prices = {int(p["bdt"]) for p in plans}
+        for path, bn in ((SITE / "p" / f"{pid}.html", False), (SITE / "bn" / "p" / f"{pid}.html", True)):
+            if not path.exists():
+                continue
+            text = path.read_text(encoding="utf-8", errors="replace")
+            m = re.search(r'<button class="fab fab-wa" onclick="location\.href=\'https://wa\.me/8801305869242\?text=([^\']*)\'"', text)
+            if not m:
+                continue
+            fab_text = m.group(1)
+            fab_prices = {int(n.replace(",", "")) for n in re.findall(r"৳([\d,]+)", fab_text)}
+            if fab_prices and not fab_prices.issubset(approved_prices):
+                fab_violations.append(f"{path.relative_to(SITE)}: FAB quotes {sorted(fab_prices)}, approved={sorted(approved_prices)}")
+    if fab_violations:
+        raise SystemExit("[commercial-truth] floating WhatsApp CTA quotes an unapproved price — " + "; ".join(fab_violations))
 
     print(f"[commercial-truth] revision={REVISION}; sanitized_html={len(html_files)}; rewritten_product_pages={rewritten}; governed_products={len(governed)}")
     return 0
