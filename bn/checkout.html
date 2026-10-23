@@ -80,10 +80,10 @@
         <div id="cartlist"></div>
         <div class="total" id="totalrow" style="display:none"><span>Total</span><span id="total" style="color:var(--green2)">৳0</span></div>
         <div id="empty" style="display:none">
-          <p class="sub" style="font-size:15px">কার্ট খালি। বেস্টসেলার নিন:</p>
+          <p class="sub" style="font-size:15px">কার্ট খালি। প্রোডাক্ট দেখুন:</p>
           <div class="heroctas mt2">
-            <a class="btn btn-primary btn-sm" href="../p/google-ai-pro.html">💎 Google AI Pro ৳500</a>
-            <a class="btn btn-ghost btn-sm" href="../p/chatgpt-plus.html">🤖 ChatGPT ৳499</a>
+            <a class="btn btn-primary btn-sm" href="../p/google-ai-pro.html">💎 Google AI Pro</a>
+            <a class="btn btn-ghost btn-sm" href="../p/chatgpt-plus.html">🤖 ChatGPT</a>
             <a class="btn btn-ghost btn-sm" href="../all.html">সব দেখুন →</a>
           </div>
         </div>
@@ -105,22 +105,16 @@
         <label for="txn">বিকাশ/নগদ TxnID (ঐচ্ছিক)</label>
         <input id="txn" placeholder="e.g. 9H7X2K1LMN" autocomplete="off">
         <button class="btn btn-wa mt2" style="width:100%;font-size:16px" onclick="confirmWA()">💬 হোয়াটসঅ্যাপে অর্ডার কনফার্ম করুন →</button>
-        <p style="font-size:12.5px;color:var(--muted);margin-top:10px">Delivery in <b style="color:var(--green2)">5–15 min</b> for instant products (SLA shown per product). Warranty from minute one.</p>
+        <p style="font-size:12.5px;color:var(--muted);margin-top:10px">Delivery timing and coverage are confirmed in writing before payment.</p>
       </div>
     </div>
 
     <!-- RIGHT: trust -->
     <div>
       <div class="box">
-        <h2 style="font-size:19px">😟 প্রথমবার? নার্ভাস? স্মার্ট।</h2>
-        <p class="sub" style="font-size:14.5px;margin-top:8px">If <b style="color:var(--green2)">Pay After Testing</b> is explicitly offered for the selected product, the exact process will be confirmed before payment. Availability varies by product; otherwise follow the standard checkout instructions.</p>
-        <button class="btn btn-ghost mt2" style="width:100%" onclick="payAfterTesting()">🤝 Pay-After-Testing রিকোয়েস্ট</button>
-      </div>
-      <div class="box mt2">
         <h2 style="font-size:19px">🛡️ What you're protected by</h2>
         <div class="steps-mini">
-          ✅ <b>১ ঘণ্টায়</b> রিপ্লেসমেন্ট (support hours)<br>
-          ✅ <b>7-day</b> guarantee on shared · <b>30-day</b> on personal<br>
+          ✅ সময় ও কভারেজ পেমেন্টের আগে লিখিতভাবে নিশ্চিত করা হয়<br>
           ✅ Human support in Bangla — <a href="https://wa.me/8801305869242" style="color:var(--green2)">WhatsApp</a><br>
           ✅ Plan type and access method shown before payment<br>
           ✅ <a href="refund.html" style="color:var(--green2)">Refund policy</a> · <a href="warranty.html" style="color:var(--green2)">Warranty terms</a>
@@ -209,8 +203,8 @@ function recordOrder(kind, txn){
   // The order is now persisted in sos_orders, so the cart has served its
   // purpose. Leaving it populated let a buyer return from the receipt, add one
   // item, and be re-quoted a total that included goods they had already paid
-  // for. Cleared here because this is the single path both confirmWA() and
-  // payAfterTesting() funnel through.
+  // for. Cleared here because this is the single path confirmWA() and
+  // any other order path funnels through.
   cartSet([]);
 }
 function confirmWA(){
@@ -218,14 +212,6 @@ function confirmWA(){
   const txn=document.getElementById('txn').value.trim();
   recordOrder('order', txn);
   window.open(waOrder({oid:OID,method:PAY,txn:txn}), '_blank');
-  location.href='order.html';
-}
-function payAfterTesting(){
-  const c=cartGet();
-  if(!c.length){toast('Cart is empty');return;}
-  const item=c.length?`${c[0].name} (${c[0].plan})`:'a product';
-  recordOrder('pay-after-testing', '');
-  window.open(waLink(`🤝 PAY-AFTER-TESTING request ${OID}\nI'd like to test ${item} before paying. Please send access first — I'll pay via ${PAY} within 1 hour of verifying it works.`), '_blank');
   location.href='order.html';
 }
 function upsell(){
