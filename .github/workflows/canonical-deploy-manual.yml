@@ -42,6 +42,7 @@ jobs:
       - name: Run repository truth and regression gates
         run: |
           set -euo pipefail
+          python -m unittest discover -s tests -p 'test_*.py'
           python check_prices.py
           python audit_all.py
           python deploy_preflight.py
@@ -60,21 +61,24 @@ jobs:
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
           grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/index.html
           grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/p/chatgpt-plus.html
-          grep -q '৳3,390' _site/p/chatgpt-plus.html
-          grep -q 'Customer-specific access' _site/p/chatgpt-plus.html
-          grep -q '৳1,299' _site/p/chatgpt-go.html
-          grep -q '৳4,290 / user / month' _site/p/chatgpt-business.html
-          grep -q 'Team / Workspace access' _site/p/chatgpt-business.html
+          ! grep -q '৳3,390' _site/p/chatgpt-plus.html
+          ! grep -q '৳3,390' _site/p/google-ai-pro.html
+          ! grep -q '৳1,299' _site/p/chatgpt-go.html
+          ! grep -q '৳4,290' _site/p/chatgpt-business.html
+          ! grep -q 'cartAdd' _site/p/chatgpt-plus.html
+          ! grep -q 'cartAdd' _site/p/google-ai-pro.html
+          grep -q 'commercial HOLD' _site/p/chatgpt-plus.html
+          grep -q 'Price on Request' _site/p/google-ai-pro.html
+          grep -q 'Confirm current price' _site/p/chatgpt-plus.html
+          grep -q 'Confirm current price' _site/p/google-ai-pro.html
           grep -q 'Confirm current price' _site/p/chatgpt-pro.html
-          grep -q '৳3,390' _site/p/google-ai-pro.html
+          ! grep -R -l 'cartAdd' _site/p _site/bn/p --include='*.html' | grep -q .
+          ! grep -q '"bdt"' _site/assets/catalog.js
           grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
           ! grep -q '৳499' _site/p/chatgpt-plus.html
           ! grep -q '৳999' _site/p/chatgpt-plus.html
           ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
           ! grep -q '5–15 min' _site/p/chatgpt-plus.html
-          grep -q 'data-entertainment-facts="2026-09-09"' _site/p/netflix.html
-          grep -q 'Spotify BD: Individual ৳219/mo' _site/p/spotify.html
-          grep -q 'YouTube Premium: available in Bangladesh' _site/p/youtube-premium.html
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
           grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
           grep -q 'favicon-32.png" type="image/png"' _site/p/chatgpt-plus.html
@@ -91,111 +95,39 @@ jobs:
       - name: Install Wrangler
         run: npm install -g wrangler
 
-      - name: Resolve authorized Cloudflare path and publish
+      - name: Preflight scoped Cloudflare token and publish _site only
         env:
-          TOKEN_CURRENT: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          TOKEN_CF_API: ${{ secrets.CF_API_TOKEN }}
-          TOKEN_PAGES: ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}
-          TOKEN_GENERIC: ${{ secrets.CLOUDFLARE_TOKEN }}
-          TOKEN_CF_PAGES: ${{ secrets.CF_PAGES_TOKEN }}
-          TOKEN_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_API_TOKEN }}
-          TOKEN_CF_ACCOUNT: ${{ secrets.CF_ACCOUNT_API_TOKEN }}
-          GLOBAL_KEY_1: ${{ secrets.CLOUDFLARE_API_KEY }}
-          GLOBAL_EMAIL_1: ${{ secrets.CLOUDFLARE_EMAIL }}
-          GLOBAL_KEY_2: ${{ secrets.CF_API_KEY }}
-          GLOBAL_EMAIL_2: ${{ secrets.CF_EMAIL }}
-          GLOBAL_KEY_3: ${{ secrets.CLOUDFLARE_GLOBAL_API_KEY }}
-          GLOBAL_EMAIL_3: ${{ secrets.CLOUDFLARE_ACCOUNT_EMAIL }}
-          GLOBAL_KEY_4: ${{ secrets.CF_GLOBAL_API_KEY }}
-          GLOBAL_EMAIL_4: ${{ secrets.CF_ACCOUNT_EMAIL }}
-          HOOK_CF: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
-          HOOK_PAGES: ${{ secrets.CLOUDFLARE_PAGES_DEPLOY_HOOK }}
-          HOOK_CF_PAGES: ${{ secrets.CF_PAGES_DEPLOY_HOOK }}
-          HOOK_GENERIC: ${{ secrets.PAGES_DEPLOY_HOOK }}
-          HOOK_URL: ${{ secrets.DEPLOY_HOOK_URL }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           set -euo pipefail
+          # Fail closed: exactly one scoped Pages token, verified against the exact
+          # project before anything is uploaded. No Global API key, no deploy hook,
+          # no fallback credential names. Repair the credential; never bypass.
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN is not configured in the production environment."
+            exit 1
+          fi
           PROJECT_URL="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/saveonsub"
-
-          exact_project_ok() {
-            python - "$1" <<'PY'
+          code=$(curl -sS -o /tmp/cf-project.json -w "%{http_code}" "$PROJECT_URL" \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" || true)
+          python - /tmp/cf-project.json "$code" <<'PY'
           import json, sys
+          path, code = sys.argv[1], sys.argv[2]
           try:
-              data=json.load(open(sys.argv[1]))
+              data = json.load(open(path))
           except Exception:
+              data = {}
+          ok = code == "200" and data.get("success") and (data.get("result") or {}).get("name") == "saveonsub"
+          if not ok:
+              print(f"::error::CLOUDFLARE_API_TOKEN cannot read Pages project 'saveonsub' (HTTP {code}). Repair the scoped token; do not bypass.")
               raise SystemExit(1)
-          result=data.get('result') or {}
-          raise SystemExit(0 if data.get('success') and result.get('name') == 'saveonsub' else 1)
           PY
-          }
-
-          try_bearer() {
-            label="$1"; token="$2"
-            [ -n "$token" ] || return 1
-            out="/tmp/cf-${label}.json"
-            code=$(curl -sS -o "$out" -w "%{http_code}" "$PROJECT_URL" \
-              -H "Authorization: Bearer ${token}" || true)
-            if [ "$code" = "200" ] && exact_project_ok "$out"; then
-              echo "Authorized Cloudflare bearer path: ${label}"
-              CLOUDFLARE_API_TOKEN="$token" wrangler pages deploy _site \
-                --project-name=saveonsub --branch=main --commit-hash="$DEPLOY_SHA"
-              echo "PUBLISH_METHOD=wrangler-bearer:${label}" >> "$GITHUB_ENV"
-              return 0
-            fi
-            echo "Credential path ${label} unavailable (HTTP ${code})."
-            return 1
-          }
-
-          try_global_key() {
-            label="$1"; key="$2"; email="$3"
-            [ -n "$key" ] && [ -n "$email" ] || return 1
-            out="/tmp/cf-${label}.json"
-            code=$(curl -sS -o "$out" -w "%{http_code}" "$PROJECT_URL" \
-              -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${key}" || true)
-            if [ "$code" = "200" ] && exact_project_ok "$out"; then
-              echo "Authorized Cloudflare global-key path: ${label}"
-              CLOUDFLARE_API_KEY="$key" CLOUDFLARE_EMAIL="$email" wrangler pages deploy _site \
-                --project-name=saveonsub --branch=main --commit-hash="$DEPLOY_SHA"
-              echo "PUBLISH_METHOD=wrangler-global-key:${label}" >> "$GITHUB_ENV"
-              return 0
-            fi
-            echo "Credential path ${label} unavailable (HTTP ${code})."
-            return 1
-          }
-
-          try_hook() {
-            label="$1"; hook="$2"
-            [ -n "$hook" ] || return 1
-            echo "Triggering configured Cloudflare Pages deploy hook: ${label}"
-            if curl -fsS -X POST --max-time 30 "$hook" -o /tmp/cf-hook-response.json; then
-              echo "PUBLISH_METHOD=deploy-hook:${label}" >> "$GITHUB_ENV"
-              return 0
-            fi
-            echo "Deploy hook ${label} failed."
-            return 1
-          }
-
-          try_bearer CLOUDFLARE_API_TOKEN "$TOKEN_CURRENT" && exit 0
-          try_bearer CF_API_TOKEN "$TOKEN_CF_API" && exit 0
-          try_bearer CLOUDFLARE_PAGES_TOKEN "$TOKEN_PAGES" && exit 0
-          try_bearer CLOUDFLARE_TOKEN "$TOKEN_GENERIC" && exit 0
-          try_bearer CF_PAGES_TOKEN "$TOKEN_CF_PAGES" && exit 0
-          try_bearer CLOUDFLARE_ACCOUNT_API_TOKEN "$TOKEN_ACCOUNT" && exit 0
-          try_bearer CF_ACCOUNT_API_TOKEN "$TOKEN_CF_ACCOUNT" && exit 0
-
-          try_global_key CLOUDFLARE_API_KEY "$GLOBAL_KEY_1" "$GLOBAL_EMAIL_1" && exit 0
-          try_global_key CF_API_KEY "$GLOBAL_KEY_2" "$GLOBAL_EMAIL_2" && exit 0
-          try_global_key CLOUDFLARE_GLOBAL_API_KEY "$GLOBAL_KEY_3" "$GLOBAL_EMAIL_3" && exit 0
-          try_global_key CF_GLOBAL_API_KEY "$GLOBAL_KEY_4" "$GLOBAL_EMAIL_4" && exit 0
-
-          try_hook CLOUDFLARE_DEPLOY_HOOK "$HOOK_CF" && exit 0
-          try_hook CLOUDFLARE_PAGES_DEPLOY_HOOK "$HOOK_PAGES" && exit 0
-          try_hook CF_PAGES_DEPLOY_HOOK "$HOOK_CF_PAGES" && exit 0
-          try_hook PAGES_DEPLOY_HOOK "$HOOK_GENERIC" && exit 0
-          try_hook DEPLOY_HOOK_URL "$HOOK_URL" && exit 0
-
-          echo "::error::No authorized Cloudflare Pages publish path is currently available in the production environment. The hardened release remains safe on main and Vercel production, but canonical Cloudflare publication requires a valid credential or deploy hook."
-          exit 1
+          # Deploy from inside _site so Pages never bundles the repository's
+          # ./functions (staff/order API) into the canonical storefront project.
+          test ! -e _site/functions
+          (cd _site && wrangler pages deploy . \
+            --project-name=saveonsub --branch=main --commit-hash="$DEPLOY_SHA")
+          echo "PUBLISH_METHOD=wrangler-scoped-token" >> "$GITHUB_ENV"
 
       - name: Verify canonical production
         run: |
@@ -213,18 +145,20 @@ jobs:
             curl -fsSL --max-time 20 https://saveonsub.com/checkout -o /tmp/checkout.html || true
             if grep -q 'User-agent: OAI-SearchBot' /tmp/robots.txt 2>/dev/null \
               && grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' /tmp/home.html 2>/dev/null \
-              && grep -q '৳3,390' /tmp/chatgpt-plus.html 2>/dev/null \
-              && grep -q 'Customer-specific access' /tmp/chatgpt-plus.html 2>/dev/null \
-              && grep -q '৳1,299' /tmp/chatgpt-go.html 2>/dev/null \
-              && grep -q '৳4,290 / user / month' /tmp/chatgpt-business.html 2>/dev/null \
-              && grep -q 'Team / Workspace access' /tmp/chatgpt-business.html 2>/dev/null \
+              && grep -q 'commercial HOLD' /tmp/chatgpt-plus.html 2>/dev/null \
+              && ! grep -q '৳3,390' /tmp/chatgpt-plus.html 2>/dev/null \
+              && ! grep -q 'cartAdd' /tmp/chatgpt-plus.html 2>/dev/null \
+              && ! grep -q '৳1,299' /tmp/chatgpt-go.html 2>/dev/null \
+              && ! grep -q '৳4,290' /tmp/chatgpt-business.html 2>/dev/null \
               && grep -q 'Confirm current price' /tmp/chatgpt-pro.html 2>/dev/null \
-              && grep -q '৳3,390' /tmp/google-ai.html 2>/dev/null \
+              && grep -q 'Price on Request' /tmp/google-ai.html 2>/dev/null \
+              && ! grep -q '৳3,390' /tmp/google-ai.html 2>/dev/null \
+              && ! grep -q 'cartAdd' /tmp/google-ai.html 2>/dev/null \
               && ! grep -q '৳499' /tmp/chatgpt-plus.html 2>/dev/null \
               && ! grep -q 'SHARED · POLICY RISK' /tmp/chatgpt-plus.html 2>/dev/null \
               && grep -q '<meta name="robots" content="noindex,follow">' /tmp/checkout.html 2>/dev/null \
               && ! grep -q 'https://saveonsub.com/.*\.html' /tmp/sitemap.xml 2>/dev/null; then
-              echo 'Canonical production verified — pricing-v2 is live.'
+              echo 'Canonical production verified — EXEC-010 HOLD (Price on Request) is live.'
               exit 0
             fi
             sleep 15
