@@ -91,6 +91,23 @@ def main() -> int:
         for m in re.findall(r'wa\.me/\d+\?text=([^"\'<>]+)', text):
             if re.search(r"৳\s?[1-9১-৯]", unquote(m)):
                 raise SystemExit(f"[commercial-audit] {rel} WhatsApp prefill carries a price during HOLD")
+    # Every other staged page: no listing/bundle/Mode sell price, "from ৳N",
+    # discount or static cart action while the HOLD is active.
+    surface = [
+        (re.compile(r'<div class="price"[^>]*>\s*৳\s?[1-9১-৯]'), "listing card price"),
+        (re.compile(r"onclick=\"cartAdd\('(?!\$\{)"), "static cart action"),
+        (re.compile(r'\b[Ff]rom ৳\s?[1-9]'), "'from ৳N' sell price"),
+        (re.compile(r'Mode price: ৳'), "Mode price"),
+        (re.compile(r'৳\s?[\d,]+ off\b|৳[০-৯\d,]+ ছাড়'), "discount offer"),
+        (re.compile(r'Saves? (?:up to )?৳'), "savings figure"),
+    ]
+    for path in sorted(SITE.rglob("*.html")):
+        rel = path.relative_to(SITE).as_posix()
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for pattern, what in surface:
+            if pattern.search(text):
+                raise SystemExit(f"[commercial-audit] {rel} shows a {what} during HOLD")
+
     for where, text in {"ChatGPT Plus": plus, "Google AI Pro": google, "ChatGPT Pro": pro, "ChatGPT Go": go, "ChatGPT Business": business}.items():
         need(text, "Confirm current price", where)
     need(plus, "commercial HOLD", "ChatGPT Plus")

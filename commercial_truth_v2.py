@@ -401,21 +401,50 @@ def card_price(product: dict, bn: bool) -> tuple[str, str]:
     return label, access
 
 
+CARD_START = re.compile(r'(?=<(?:a|div)\b[^>]*class="pcard\b)')
+CARD_PID = re.compile(r'href="[^"]*?\bp/([a-z0-9-]+?)(?:\.html)?(?=["?#])')
+
+
 def patch_listing_cards(text: str, governed: dict, bn: bool) -> str:
+    # Internal links are clean URLs by now (technical_seo_hardening strips
+    # ".html"), so identify each card's product from either href form, and
+    # patch every card on a line, not just the first.
     lines = text.splitlines()
     for i, line in enumerate(lines):
         if "pcard" not in line:
             continue
-        for pid, product in governed.items():
-            if f"{pid}.html" not in line:
+        chunks = CARD_START.split(line)
+        for j, chunk in enumerate(chunks):
+            m = CARD_PID.search(chunk) if 'class="pcard' in chunk[:200] else None
+            product = governed.get(m.group(1)) if m else None
+            if not product:
                 continue
             price, access = card_price(product, bn)
-            line = re.sub(r'<div class="price">.*?</div>', f'<div class="price">{esc(price)}</div>', line, flags=re.I)
-            line = re.sub(r'<span class="tos[^"]*">.*?</span>', f'<span class="tos personal">{esc(access)}</span>', line, flags=re.I)
-            line = re.sub(r'<s>.*?</s>', '', line, flags=re.I)
-            lines[i] = line
-            break
+            chunk = re.sub(r'<div class="price">.*?</div>', f'<div class="price">{esc(price)}</div>', chunk, flags=re.I)
+            chunk = re.sub(r'<span class="tos[^"]*">.*?</span>', f'<span class="tos personal">{esc(access)}</span>', chunk, flags=re.I)
+            chunk = re.sub(r'<s>.*?</s>', '', chunk, flags=re.I)
+            chunks[j] = chunk
+        lines[i] = "".join(chunks)
     return "\n".join(lines)
+
+
+def hold_projection(text: str, bn: bool) -> str:
+    """EXEC-010 HOLD on non-product surfaces: no SaveOnSub sell price, bundle/Mode
+    price, discount or savings figure. Official provider facts are untouched.
+    Build-time only, so lifting the HOLD restores the source content."""
+    on_request = "মূল্য অনুরোধসাপেক্ষ" if bn else "Price on request"
+    text = re.sub(r'(<div class="price"[^>]*>)\s*৳\s?[\d,]+(?:\s*<s>[^<]*</s>)?\s*(</div>)', rf"\1{on_request}\2", text)
+    text = re.sub(r'(<a class="btn[^"]*"[^>]*>)\s*(?:From\s+|থেকে\s+)?৳\s?[\d,]+\s*(</a>)', rf"\1{'দেখুন' if bn else 'View'}\2", text)
+    text = re.sub(r'<span class="ours">Mode price: ৳[\d,]+</span>', f'<span class="ours">Mode price: {"অনুরোধসাপেক্ষ" if bn else "on request"}</span>', text)
+    text = re.sub(r'<span class="official">Official total if activated separately: ~?৳[\d,]+</span>', "", text)
+    text = re.sub(r"\s*Saves? ৳[\d,]+ vs…", "", text)
+    text = re.sub(r"Save up to ৳[\d,]+ vs buying separately\.", "Bundle pricing is on request.", text)
+    text = re.sub(r"(?:You both get )?<b>৳[\d,]+ off</b>[^<.।]*[.।]?", "Ask support for current written terms." if not bn else "বর্তমান লিখিত শর্তের জন্য সাপোর্টকে জিজ্ঞাসা করুন।", text)
+    text = re.sub(r"get <b>৳[\d,]+ off</b>", "ask about", text)
+    text = re.sub(r"<b>৳[০-৯\d,]+ ছাড়</b>", "লিখিত শর্তের জন্য সাপোর্টকে জিজ্ঞাসা করুন", text)
+    text = re.sub(r"\b[Ff]rom ৳\s?[\d,]+(?:\.\d+)?", "price on request", text)
+    text = re.sub(r"৳\s?[\d,]+\s*থেকে(?: শুরু)?", "মূল্য অনুরোধসাপেক্ষ", text)
+    return text
 
 
 def home_body(governed: dict, bn: bool) -> str:
@@ -502,10 +531,14 @@ def main() -> int:
     # First sanitize every public HTML surface, then replace the high-risk AI and
     # bundle product bodies with deterministic governed content.
     html_files = list(SITE.rglob("*.html"))
+    hold = (policy.get("commercial_hold") or {}).get("status") == "HOLD"
     for path in html_files:
         text = path.read_text(encoding="utf-8", errors="replace")
         text = sanitize_common(text)
-        text = patch_listing_cards(text, governed, bn="/bn/" in path.as_posix() or path.name == "bn.html")
+        bn_page = "/bn/" in path.as_posix() or path.name == "bn.html"
+        text = patch_listing_cards(text, governed, bn=bn_page)
+        if hold:
+            text = hold_projection(text, bn_page)
         path.write_text(text, encoding="utf-8")
 
     llms_txt = SITE / "llms.txt"
