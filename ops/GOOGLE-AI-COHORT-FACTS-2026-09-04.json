@@ -1,5 +1,14 @@
 {
-  "verified_on": "2026-09-09",
+  "verified_on": "2026-10-23",
+  "verification_log": [
+    {
+      "date": "2026-10-23",
+      "method": "direct fetch",
+      "source": "https://gemini.google/bd/subscriptions/?hl=en",
+      "findings": "Google AI Plus BDT 600/month and Google AI Pro BDT 2,500/month, unchanged from 2026-09-09. Also newly observed: Google AI Ultra BDT 8,100/month (lower tier) and BDT 25,000/month (higher tier) — not previously recorded in this file.",
+      "P0_COMMERCIAL_CONFLICT": "ops/PRICING-V2-2026-09-17.json approves google-ai-pro at BDT 3,390/month (derived from a $19.99 x 124 x 1.15 landed-cost formula). Google's own Bangladesh-billed direct price for the identical plan is BDT 2,500/month — i.e. SaveOnSub's approved resale price is ~35.6% MORE EXPENSIVE than buying Google AI Pro directly from Google in BDT. The USD-anchor formula appears to be the wrong reference for this SKU because Google already bills Bangladesh in local currency below the formula's landed-cost assumption. This is a pre-existing Pricing V2 defect, not something introduced by this build pass. Recommend: CEO decides between (a) HOLD google-ai-pro as price-on-request pending a service-fee-only model, or (b) a new CEO-approved BDT price that is honestly positioned as a service/assistance fee rather than implying a discount versus Google's own price. Not changed in this pass — flagged for explicit CEO decision only."
+    }
+  ],
   "market": "Bangladesh",
   "official_source": "https://gemini.google/bd/subscriptions/?hl=bn",
   "verified_sources": [

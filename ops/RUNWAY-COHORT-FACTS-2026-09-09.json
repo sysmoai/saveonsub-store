@@ -1,5 +1,14 @@
 {
-  "verified_on": "2026-09-09",
+  "verified_on": "2026-10-23",
+  "verification_log": [
+    {
+      "date": "2026-10-23",
+      "method": "direct fetch",
+      "source": "https://runway.com/pricing",
+      "findings": "Standard $15/mo ($12/mo annual-effective), Pro $35/mo ($28/mo annual-effective), Max $76/mo (annual-effective tier shown as headline price; page labels the top tier 'Max', not 'Unlimited'). All four figures match this file's existing plan table exactly — no price change since 2026-09-09.",
+      "not_reverified": "Unlimited new-sales-ended/legacy-extension dates (2026-06-01 / 2026-11-30) and the account-sharing policy page were not re-fetched this pass; carried forward from the 2026-09-09 check."
+    }
+  ],
   "official_sources": {
     "pricing": "https://runway.com/pricing",
     "credits": "https://help.runwayml.com/hc/en-us/articles/15124877443219-How-do-credits-work",
