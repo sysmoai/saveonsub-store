@@ -94,7 +94,7 @@
 
       <ol class="steps">
         <li>We verify your payment and reply on WhatsApp to confirm your <b>order ID</b>.</li>
-        <li>Haven't sent payment yet? Send it via <b id="method2">bKash</b> — or use <b>Pay-After-Testing</b> on your first order.</li>
+        <li>Haven't sent payment yet? Send it via <b id="method2">bKash</b> after support confirms the price and access method.</li>
         <li>Get your <b>access + setup</b> — usually in 5–15 minutes.</li>
         <li>Something off? <b>1-hour replacement warranty</b> from minute one.</li>
       </ol>
@@ -164,7 +164,7 @@ function fmtDate(iso){try{const d=new Date(iso);return d.toLocaleString('en-GB',
   const o=lastOrder();
   if(!o){document.getElementById('receipt').style.display='none';document.getElementById('empty').style.display='block';return;}
   document.getElementById('oid').textContent=o.oid;
-  document.getElementById('kind').textContent=o.kind==='pay-after-testing'?'Pay-After-Testing':'Order';
+  document.getElementById('kind').textContent='Order';
   document.getElementById('method').textContent=o.method;
   document.getElementById('method2').textContent=o.method;
   document.getElementById('when').textContent=fmtDate(o.at);

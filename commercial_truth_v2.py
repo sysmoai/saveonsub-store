@@ -12,6 +12,7 @@ import html
 import json
 import re
 from pathlib import Path
+from urllib.parse import quote as urlquote
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
@@ -100,10 +101,65 @@ def sanitize_common(text: str) -> str:
         "Warranty": "Support terms",
         "bestseller": "listed product",
         "Bestseller": "Listed product",
+        # Business-boundary separation (CEO directive 2026-09-18): SaveOnSub is
+        # presented as independently operated, not as a SYSmoAI venture/family/group.
+        "A SYSmoAI venture — Dhaka, Bangladesh.": "Independently run — Dhaka, Bangladesh.",
+        "A SYSmoAI venture from Dhaka.": "Independently run from Dhaka.",
+        "operated by the SYSmoAI group, Dhaka, Bangladesh": "an independently operated service, Dhaka, Bangladesh",
+        "SYSmoAI গ্রুপ দ্বারা পরিচালিত, ঢাকা, বাংলাদেশ": "স্বাধীনভাবে পরিচালিত, ঢাকা, বাংলাদেশ",
+        "the SYSmoAI-family store": "an independent Bangladesh subscription store",
+        "public brand (SYSmoAI family)": "public brand",
+        "আমাদের পাবলিক ব্র্যান্ড (SYSmoAI)": "আমাদের পাবলিক ব্র্যান্ড",
+        "the SYSmoAI-family store": "an independent Bangladesh subscription store",
+        "আমাদের পাবলিক ব্র্যান্ড (SYSmoAI), লিখিত": "আমাদের পাবলিক ব্র্যান্ড, লিখিত",
+        # Pay-After-Testing is a per-order exception, not a standard feature — the
+        # default policy is payment verified before activation. These specific
+        # sentences claimed or implied blanket/first-order entitlement.
+        "A trust feature pioneered for first orders: the reseller sends access before you pay, you verify it works, then pay within an hour. SAVEONSUB offers it on most instant products.":
+            "Payment is made only after support confirms the price, access method and timing in writing; use the standard checkout flow.",
+        "5) Ideally: <b>pay-after-testing</b> for first orders.": "5) Get the price, access method and terms confirmed in writing before paying.",
+        "Haven't sent payment yet? Send it via <b id=\"method2\">bKash</b> — or use <b>Pay-After-Testing</b> on your first order.":
+            "Haven't sent payment yet? Send it via <b id=\"method2\">bKash</b> after support confirms the price and access method.",
+        "Send money via <b id=\"method2\">bKash</b> (or use <b>Pay-After-Testing</b> on your first order).":
+            "সাপোর্ট মূল্য ও অ্যাক্সেস পদ্ধতি নিশ্চিত করার পর <b id=\"method2\">bKash</b>-এ টাকা পাঠান।",
+        # Remaining blanket replacement/guarantee-duration promises the generic
+        # "(?:7|30)[- ]day (warranty|support terms)" regex below does not catch
+        # because these specific sentences use the word "guarantee" rather than
+        # "warranty"/"support terms", or combine both numbers in one sentence.
+        "the lowest-risk product type, covered by a 30-day guarantee.": "the lowest-risk product type; order-specific support terms apply.",
+        "That is why it earns a 30-day guarantee.": "That is why order-specific support terms apply.",
+        "covered by our support terms (replacement in 1 hour, 7-day guarantee).": "covered by order-specific support terms shown before payment.",
+        "SAVEONSUB replaces dead seats within 1 hour (7-day guarantee).": "SaveOnSub's order-specific support terms apply if a seat stops working.",
     }
+    # Prose rewrites must never touch link targets: "warranty" -> "support
+    # terms" previously turned href="warranty.html" into a broken
+    # href="support terms.html" on every page. Mask href/src/action values and
+    # bare URLs, rewrite the prose, then restore the originals exactly.
+    masked: list[str] = []
+
+    def _mask(m: "re.Match") -> str:
+        masked.append(m.group(0))
+        return f"\x00URL{len(masked) - 1}\x00"
+
+    text = re.sub(r'\b(?:href|src|action)\s*=\s*(?:"[^"]*"|\'[^\']*\')|https?://[^\s"\'<>]+', _mask, text, flags=re.I)
     for old, new in replacements.items():
         text = text.replace(old, new)
+    text = re.sub(r"\x00URL(\d+)\x00", lambda m: masked[int(m.group(1))], text)
 
+    text = re.sub(r"(?:·|&middot;)\s*A SYSmoAI venture\.\s*", "· ", text)
+    text = re.sub(r"একটি\s*SYSmoAI\s*উদ্যোগ[^।]*।\s*", "", text)
+    text = re.sub(
+        r'<tr><td><a href="https://sysmoai\.com"[^>]*>SYSmoAI</a></td><td>[^<]*</td></tr>',
+        "",
+        text,
+        flags=re.I,
+    )
+    text = re.sub(r'<a href="https://sysmoai\.com"[^>]*>\s*SYSmoAI\s*</a>', "", text, flags=re.I)
+    text = re.sub(
+        r'"parentOrganization":\s*\{[^{}]*"name":\s*"SYSmoAI"[^{}]*\},?',
+        "",
+        text,
+    )
     text = re.sub(r"5\s*[–-]\s*15\s*(?:minutes?|mins?|min)\b", "timing confirmed before payment", text, flags=re.I)
     text = re.sub(r"৫\s*[–-]\s*১৫\s*মিনিট", "ডেলিভারি সময় অর্ডারের আগে নিশ্চিত করা হয়", text)
     text = re.sub(r"\b1\s*[–-]\s*2\s*(?:days?|দিন)\b", "timing confirmed before payment", text, flags=re.I)
@@ -114,8 +170,31 @@ def sanitize_common(text: str) -> str:
     text = re.sub(r"\b\d[\d,]*\+?\s+customers\b", "customers", text, flags=re.I)
     text = re.sub(r"<s>\s*৳[\d,]+(?:\.\d+)?\s*</s>", "", text, flags=re.I)
     text = re.sub(r"\b(?:our\s+)?#1\s+(?:seller|product)\b", "listed product", text, flags=re.I)
-    text = text.replace("Pay-after-testing", "Order-specific payment/access confirmation")
-    text = text.replace("pay-after-testing", "order-specific payment/access confirmation")
+    # Pay-After-Testing is not a general offer (EXEC-010 D6). Backstop for any
+    # residual wording on pages not rewritten above; exec003_claims_guard.py
+    # fails the build if any form survives.
+    text = re.sub(r"\bPay[- ]?After[- ]?Testing\b", "order-specific payment/access confirmation", text, flags=re.I)
+
+    # Every floating WhatsApp button sitewide (not just governed AI product
+    # pages) used a raw, unescaped message spliced into a single-quoted JS
+    # string literal inside an onclick attribute. That breaks or mis-renders on
+    # apostrophes, ampersands and non-ASCII text, and makes HTML/JS escaping a
+    # second manual step the generator could forget. Replace with a plain
+    # percent-encoded anchor — no inline JS, no escaping required at the call
+    # site. Governed product pages get their price-correct message from
+    # rewrite_product_page() afterwards; this just makes every other instance
+    # (checkout, non-AI product pages, blog posts, etc.) safe in the meantime.
+    def _fab_to_anchor(m: "re.Match") -> str:
+        raw_message = html.unescape(m.group(1))
+        href = f"https://wa.me/8801305869242?text={urlquote(raw_message, safe='')}"
+        return f'<a class="fab fab-wa" href="{esc(href)}" target="_blank" rel="noopener" aria-label="WhatsApp">💬 WhatsApp</a>'
+
+    text = re.sub(
+        r'<button class="fab fab-wa" onclick="location\.href=\'https://wa\.me/8801305869242\?text=([^\']*)\'"[^>]*>.*?</button>',
+        _fab_to_anchor,
+        text,
+        flags=re.S,
+    )
     return text
 
 
@@ -157,7 +236,7 @@ def product_main(product: dict, bn: bool) -> str:
         heading = f"{name} — বাংলাদেশে মূল্য ও অ্যাক্সেস"
         intro = "SaveOnSub-এর বর্তমান পাবলিক অফারটি নিচে দেখুন। পেমেন্টের আগে exact provider tier, access method, availability এবং order-specific support terms নিশ্চিত করুন।"
         access_heading = "অ্যাক্সেস আগে নিশ্চিত করুন"
-        access_copy = "Credential-shared AI access-কে provider-supported personal বা team access হিসেবে দেখানো হয় না। এই পেজে fixed price থাকলে সেটি SaveOnSub-এর approved local catalog price; provider checkout price আলাদা হতে পারে।"
+        access_copy = "SaveOnSub credential-sharing ব্যবস্থাকে provider-supported personal বা team access হিসেবে দেখায় না। Exact access method পেমেন্টের আগে লিখিতভাবে জানানো হয়; provider checkout price আলাদা হতে পারে।"
         how_heading = "অর্ডার করার আগে"
         how_items = ["Exact plan/tier নিশ্চিত করুন", "অ্যাক্সেস পদ্ধতি ও account/workspace ownership নিশ্চিত করুন", "বর্তমান availability ও delivery timing নিশ্চিত করুন", "তারপর দেখানো local payment method ব্যবহার করুন"]
         independent = "SaveOnSub একটি স্বাধীন local subscription/payment assistance store; provider-এর সাথে affiliation কেবল স্পষ্টভাবে প্রমাণিত হলে বলা হবে। Provider plan, limits ও terms পরিবর্তিত হতে পারে।"
@@ -167,12 +246,16 @@ def product_main(product: dict, bn: bool) -> str:
         heading = f"{name} Price in Bangladesh"
         intro = "Review the current SaveOnSub public offer below. Before payment, confirm the exact provider tier, access method, availability and order-specific support terms."
         access_heading = "Confirm the access model before payment"
-        access_copy = "Credential-shared AI access is not presented as provider-supported personal or team access. When this page shows a fixed price, it is SaveOnSub's approved local catalog price; the provider checkout price can be different."
+        access_copy = "SaveOnSub does not present credential-sharing arrangements as provider-supported personal or team access. The exact access method is disclosed in writing before payment; the provider checkout price can be different."
         how_heading = "Before you order"
         how_items = ["Confirm the exact plan or tier", "Confirm the account/workspace access method and ownership", "Confirm current availability and delivery timing", "Then use the local payment method shown at checkout"]
         independent = "SaveOnSub is an independent local subscription/payment assistance store. Provider affiliation is stated only when it is explicitly evidenced. Provider plans, limits and terms can change."
         confirm = "Confirm current price on WhatsApp"
         provider_text = "Verify provider pricing/terms"
+
+    if request_price:
+        how_items = how_items[:3] + (["কোনো পেমেন্ট নয় যতক্ষণ না SaveOnSub লিখিতভাবে মূল্য ও অ্যাক্সেস পদ্ধতি নিশ্চিত করে"] if bn else
+                                     ["No payment until SaveOnSub confirms the price and access method in writing"])
 
     provider_ref = ""
     if official_url:
@@ -181,7 +264,11 @@ def product_main(product: dict, bn: bool) -> str:
         provider_ref = f'<a href="{esc(official_url)}" target="_blank" rel="noopener nofollow" style="font-size:13px;color:var(--muted);text-decoration:underline">{esc(ref)}</a>{esc(usd)}'
 
     if request_price:
-        plan_html = f'''<div class="pcard"><div><b>{esc(confirm)}</b><br><span class="tos">{esc("PRICE REVIEW REQUIRED" if not bn else "মূল্য যাচাই প্রয়োজন")}</span></div><div class="ctas"><a class="btn btn-primary btn-sm" href="https://wa.me/{WA}?text={esc('Hi, please confirm the current ' + name + ' price, exact tier and access method.')}" target="_blank" rel="noopener">{esc(confirm)}</a></div></div>'''
+        # The query value needs percent-encoding (it's a URL, not HTML body
+        # text) — esc() alone leaves literal spaces/commas/parens and mangles
+        # non-ASCII product names. Same defect class fixed in the floating CTA.
+        confirm_msg = urlquote(f"Hi, please confirm the current {name} price, exact tier and access method.", safe="")
+        plan_html = f'''<div class="pcard"><div><b>{esc(confirm)}</b><br><span class="tos">{esc("PRICE ON REQUEST" if not bn else "মূল্য অনুরোধসাপেক্ষ")}</span></div><div class="ctas"><a class="btn btn-primary btn-sm" href="https://wa.me/{WA}?text={confirm_msg}" target="_blank" rel="noopener">{esc(confirm)}</a></div></div>'''
         anchor = esc(confirm)
     else:
         cards = []
@@ -201,7 +288,15 @@ def product_main(product: dict, bn: bool) -> str:
         anchor = ("From " if len(plans) > 1 and not bn else "") + money(min(int(p["bdt"]) for p in plans))
 
     caveat = ""
-    if pid == "chatgpt-business":
+    if pid == "chatgpt-plus" and request_price:
+        caveat = ("<div class=\"notice mt2\">ChatGPT Plus বর্তমানে commercial HOLD-এ আছে: এই পেজ থেকে অর্ডার বা পেমেন্ট নেওয়া হচ্ছে না। কোনো মূল্য প্রকাশিত নেই।</div>" if bn else
+                  "<div class=\"notice mt2\">ChatGPT Plus is currently on commercial HOLD: it is not available to order or pay for from this page, and no price is published.</div>")
+    elif pid == "google-ai-pro" and request_price:
+        caveat = ("<div class=\"notice mt2\">Google AI Pro: মূল্য অনুরোধসাপেক্ষ। এই পেজে কোনো মূল্য বা চেকআউট নেই।</div>" if bn else
+                  "<div class=\"notice mt2\">Google AI Pro is Price on Request. This page has no published price and no checkout.</div>")
+    elif request_price:
+        caveat = ""
+    elif pid == "chatgpt-business":
         caveat = "<div class=\"notice mt2\">ChatGPT Business is a workspace product and provider minimum-seat/billing rules can apply. Confirm the current seat requirement and workspace role before payment.</div>"
     elif pid in {"chatgpt-go", "chatgpt-plus", "claude-pro"}:
         caveat = "<div class=\"notice mt2\">This listing is not a credential-sharing offer. Confirm the exact customer-specific activation method before payment.</div>"
@@ -209,6 +304,8 @@ def product_main(product: dict, bn: bool) -> str:
         caveat = "<div class=\"notice mt2\">Fixed-price sale is paused on this page until the currently available provider tier and checkout amount are reconfirmed.</div>"
 
     items = "".join(f"<li>{esc(x)}</li>" for x in how_items)
+    # Price-on-request (HOLD) pages carry no checkout path at all.
+    checkout_link = "" if request_price else f'<p><a class="btn btn-ghost btn-sm" href="{checkout}">{"চেকআউট দেখুন" if bn else "View checkout"}</a></p>'
     return f'''<main id="main" data-commercial-truth="{REVISION}"><div class="wrap" style="max-width:880px">
 <div class="crumbs"><a href="{home}">{'হোম' if bn else 'Home'}</a> › <a href="{all_link}">{'সব সাবস্ক্রিপশন' if bn else 'All subscriptions'}</a> › {esc(name)}</div>
 <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><span style="font-size:46px">{icon}</span><div><h1 style="font-size:clamp(26px,4vw,38px)">{esc(heading)}</h1><span class="cat">{cat}</span></div></div>
@@ -218,7 +315,7 @@ def product_main(product: dict, bn: bool) -> str:
 <div class="grid mt2" style="grid-template-columns:1fr;gap:10px">{plan_html}</div>
 {caveat}
 <section class="mt3"><h2 style="font-size:22px">{esc(access_heading)}</h2><p>{esc(access_copy)}</p></section>
-<section class="mt3"><h2 style="font-size:22px">{esc(how_heading)}</h2><ul>{items}</ul><p><a class="btn btn-ghost btn-sm" href="{checkout}">{'চেকআউট দেখুন' if bn else 'View checkout'}</a></p></section>
+<section class="mt3"><h2 style="font-size:22px">{esc(how_heading)}</h2><ul>{items}</ul>{checkout_link}</section>
 <div class="notice mt3">{esc(independent)}</div>
 </div></main>'''
 
@@ -249,6 +346,48 @@ def rewrite_product_page(path: Path, product: dict, bn: bool) -> None:
         text = re.sub(r'<main\b[^>]*>.*?</main>', new_main, text, count=1, flags=re.I | re.S)
     else:
         text = text.replace("</body>", new_main + "\n</body>", 1)
+
+    # The floating WhatsApp FAB sits outside <main> and is not covered by the
+    # product-body rewrite above. It was previously left carrying the raw
+    # catalog's first plan (often a stale/cheaper credential-shared offer),
+    # letting a buyer request a price the governed page no longer sells.
+    if request_price:
+        fab_msg = f"Hi, please confirm the current {name} price, exact tier and access method." if not bn \
+            else f"হাই, {name}-এর বর্তমান মূল্য, exact tier ও access method নিশ্চিত করুন।"
+    else:
+        first = plans[0]
+        fab_msg = f"Hi! I want to order {name} ({first.get('label', 'Plan')}, {money(int(first['bdt']))})" if not bn \
+            else f"হাই! আমি {name} অর্ডার করতে চাই ({first.get('label', 'Plan')}, {money(int(first['bdt']))})"
+
+    # Generate a plain percent-encoded anchor instead of inline onclick/location.href
+    # JS with a raw, unescaped message spliced into a single-quoted JS string
+    # literal inside an HTML attribute. That pattern breaks (or worse, silently
+    # mis-renders) on apostrophes, ampersands, and non-ASCII/emoji content, and
+    # is fragile to maintain. A href-only anchor needs only one encoding step
+    # (percent-encoding the query value) and no JS-string escaping at all.
+    fab_href = f"https://wa.me/8801305869242?text={urlquote(fab_msg, safe='')}"
+    new_fab = f'<a class="fab fab-wa" href="{esc(fab_href)}" target="_blank" rel="noopener" aria-label="WhatsApp">💬 WhatsApp</a>'
+    # sanitize_common() (run on every page before this governed-only rewrite)
+    # already converts the legacy button/onclick form into the anchor form, so
+    # in the real pipeline this will normally match the anchor. The button
+    # pattern is kept too so this function is correct standalone (as exercised
+    # by test_whatsapp_cta.py) regardless of call order.
+    fab_pattern = re.compile(
+        r'<button class="fab fab-wa" onclick="location\.href=\'https://wa\.me/8801305869242\?text=[^\']*\'"[^>]*>.*?</button>'
+        r'|<a class="fab fab-wa" href="https://wa\.me/8801305869242\?text=[^"]*"[^>]*>.*?</a>',
+        re.S,
+    )
+    new_text, replaced = fab_pattern.subn(new_fab, text, count=1)
+    if replaced == 0:
+        # Fail closed: a missing or unrecognized floating WhatsApp CTA must not
+        # silently pass. Either the template changed (update the pattern above)
+        # or this page genuinely lost its CTA (that's a real regression).
+        try:
+            shown_path = path.relative_to(SITE)
+        except ValueError:
+            shown_path = path
+        raise SystemExit(f"[commercial-truth] expected floating WhatsApp CTA not found on governed page: {shown_path}")
+    text = new_text
     path.write_text(sanitize_common(text), encoding="utf-8")
 
 
@@ -265,21 +404,50 @@ def card_price(product: dict, bn: bool) -> tuple[str, str]:
     return label, access
 
 
+CARD_START = re.compile(r'(?=<(?:a|div)\b[^>]*class="pcard\b)')
+CARD_PID = re.compile(r'href="[^"]*?\bp/([a-z0-9-]+?)(?:\.html)?(?=["?#])')
+
+
 def patch_listing_cards(text: str, governed: dict, bn: bool) -> str:
+    # Internal links are clean URLs by now (technical_seo_hardening strips
+    # ".html"), so identify each card's product from either href form, and
+    # patch every card on a line, not just the first.
     lines = text.splitlines()
     for i, line in enumerate(lines):
         if "pcard" not in line:
             continue
-        for pid, product in governed.items():
-            if f"{pid}.html" not in line:
+        chunks = CARD_START.split(line)
+        for j, chunk in enumerate(chunks):
+            m = CARD_PID.search(chunk) if 'class="pcard' in chunk[:200] else None
+            product = governed.get(m.group(1)) if m else None
+            if not product:
                 continue
             price, access = card_price(product, bn)
-            line = re.sub(r'<div class="price">.*?</div>', f'<div class="price">{esc(price)}</div>', line, flags=re.I)
-            line = re.sub(r'<span class="tos[^"]*">.*?</span>', f'<span class="tos personal">{esc(access)}</span>', line, flags=re.I)
-            line = re.sub(r'<s>.*?</s>', '', line, flags=re.I)
-            lines[i] = line
-            break
+            chunk = re.sub(r'<div class="price">.*?</div>', f'<div class="price">{esc(price)}</div>', chunk, flags=re.I)
+            chunk = re.sub(r'<span class="tos[^"]*">.*?</span>', f'<span class="tos personal">{esc(access)}</span>', chunk, flags=re.I)
+            chunk = re.sub(r'<s>.*?</s>', '', chunk, flags=re.I)
+            chunks[j] = chunk
+        lines[i] = "".join(chunks)
     return "\n".join(lines)
+
+
+def hold_projection(text: str, bn: bool) -> str:
+    """EXEC-010 HOLD on non-product surfaces: no SaveOnSub sell price, bundle/Mode
+    price, discount or savings figure. Official provider facts are untouched.
+    Build-time only, so lifting the HOLD restores the source content."""
+    on_request = "মূল্য অনুরোধসাপেক্ষ" if bn else "Price on request"
+    text = re.sub(r'(<div class="price"[^>]*>)\s*৳\s?[\d,]+(?:\s*<s>[^<]*</s>)?\s*(</div>)', rf"\1{on_request}\2", text)
+    text = re.sub(r'(<a class="btn[^"]*"[^>]*>)\s*(?:From\s+|থেকে\s+)?৳\s?[\d,]+\s*(</a>)', rf"\1{'দেখুন' if bn else 'View'}\2", text)
+    text = re.sub(r'<span class="ours">Mode price: ৳[\d,]+</span>', f'<span class="ours">Mode price: {"অনুরোধসাপেক্ষ" if bn else "on request"}</span>', text)
+    text = re.sub(r'<span class="official">Official total if activated separately: ~?৳[\d,]+</span>', "", text)
+    text = re.sub(r"\s*Saves? ৳[\d,]+ vs…", "", text)
+    text = re.sub(r"Save up to ৳[\d,]+ vs buying separately\.", "Bundle pricing is on request.", text)
+    text = re.sub(r"(?:You both get )?<b>৳[\d,]+ off</b>[^<.।]*[.।]?", "Ask support for current written terms." if not bn else "বর্তমান লিখিত শর্তের জন্য সাপোর্টকে জিজ্ঞাসা করুন।", text)
+    text = re.sub(r"get <b>৳[\d,]+ off</b>", "ask about", text)
+    text = re.sub(r"<b>৳[০-৯\d,]+ ছাড়</b>", "লিখিত শর্তের জন্য সাপোর্টকে জিজ্ঞাসা করুন", text)
+    text = re.sub(r"\b[Ff]rom ৳\s?[\d,]+(?:\.\d+)?", "price on request", text)
+    text = re.sub(r"৳\s?[\d,]+\s*থেকে(?: শুরু)?", "মূল্য অনুরোধসাপেক্ষ", text)
+    return text
 
 
 def home_body(governed: dict, bn: bool) -> str:
@@ -310,7 +478,7 @@ def home_body(governed: dict, bn: bool) -> str:
         h1 = "সঠিক সাবস্ক্রিপশন বেছে নিন। BDT-তে পেমেন্ট করুন। অ্যাক্সেস আগে বুঝে নিন।"
         sub = "AI, productivity, streaming ও অন্যান্য subscription তুলনা করুন। Fixed price কেবল approved plan-এ দেখানো হয়; dynamic plan-এ payment-এর আগে exact tier, access method এবং বর্তমান price নিশ্চিত করা হয়।"
         how = [("১. প্রোডাক্ট বাছুন", "আপনার কাজ অনুযায়ী tool/plan নির্বাচন করুন।"), ("২. অ্যাক্সেস নিশ্চিত করুন", "Personal/customer-specific, provider-supported Team/Workspace, Bundle বা Setup/Service—exact method আগে জানুন।"), ("৩. মূল্য নিশ্চিত করুন", "Fixed approved price থাকলে page-এ দেখবেন; অন্যথায় WhatsApp-এ current checkout reconfirm করা হবে।"), ("৪. তারপর পেমেন্ট", "Availability, delivery timing ও support terms নিশ্চিত হওয়ার পর দেখানো local method ব্যবহার করুন।")]
-        note = "Credential-shared AI access-কে provider-supported personal/team plan হিসেবে দেখানো হয় না। SaveOnSub স্বাধীন local subscription/payment assistance store; provider plans ও terms পরিবর্তিত হতে পারে।"
+        note = "SaveOnSub credential-sharing ব্যবস্থাকে provider-supported personal/team plan হিসেবে দেখায় না। SaveOnSub স্বাধীন local subscription/payment assistance store; provider plans ও terms পরিবর্তিত হতে পারে।"
         browse = "সব সাবস্ক্রিপশন দেখুন"
         ask = "WhatsApp-এ সাহায্য নিন"
     else:
@@ -318,7 +486,7 @@ def home_body(governed: dict, bn: bool) -> str:
         h1 = "Choose the right subscription. Pay in BDT. Know the access model first."
         sub = "Compare AI, productivity, streaming and other subscriptions. Fixed prices are published only for approved plans; dynamic plans require confirmation of the exact tier, access method and current checkout before payment."
         how = [("1. Pick the product", "Choose the tool or plan that matches the work you need to do."), ("2. Confirm access", "Know whether it is customer-specific, a provider-supported Team/Workspace seat, a Bundle, or a Setup/Service arrangement."), ("3. Confirm the price", "Approved fixed prices appear on the page; dynamic plans are reconfirmed against the current provider tier before payment."), ("4. Pay after confirmation", "Use the displayed local payment method after availability, delivery timing and support terms are confirmed.")]
-        note = "Credential-shared AI access is not presented as provider-supported personal/team commerce. SaveOnSub is an independent local subscription/payment assistance store; provider plans and terms can change."
+        note = "SaveOnSub does not present credential-sharing arrangements as provider-supported personal/team commerce. SaveOnSub is an independent local subscription/payment assistance store; provider plans and terms can change."
         browse = "Browse subscriptions"
         ask = "Ask on WhatsApp"
     steps = "".join(f'<div class="step"><h3>{esc(a)}</h3><p>{esc(b)}</p></div>' for a, b in how)
@@ -366,11 +534,19 @@ def main() -> int:
     # First sanitize every public HTML surface, then replace the high-risk AI and
     # bundle product bodies with deterministic governed content.
     html_files = list(SITE.rglob("*.html"))
+    hold = (policy.get("commercial_hold") or {}).get("status") == "HOLD"
     for path in html_files:
         text = path.read_text(encoding="utf-8", errors="replace")
         text = sanitize_common(text)
-        text = patch_listing_cards(text, governed, bn="/bn/" in path.as_posix() or path.name == "bn.html")
+        bn_page = "/bn/" in path.as_posix() or path.name == "bn.html"
+        text = patch_listing_cards(text, governed, bn=bn_page)
+        if hold:
+            text = hold_projection(text, bn_page)
         path.write_text(text, encoding="utf-8")
+
+    llms_txt = SITE / "llms.txt"
+    if llms_txt.exists():
+        llms_txt.write_text(sanitize_common(llms_txt.read_text(encoding="utf-8", errors="replace")), encoding="utf-8")
 
     rewrite_home(SITE / "index.html", governed, False)
     rewrite_home(SITE / "bn.html", governed, True)
@@ -386,6 +562,48 @@ def main() -> int:
     public_catalog = SITE / "assets" / "catalog.js"
     if not public_catalog.exists() or REVISION not in public_catalog.read_text(encoding="utf-8", errors="replace"):
         raise SystemExit("[commercial-truth] staged assets/catalog.js is not pricing-v2 governed")
+
+    # Business-boundary separation gate: no staged page may describe SaveOnSub
+    # as a SYSmoAI venture/family/group. Fail closed rather than let it reappear.
+    boundary_violations = []
+    boundary_scan_files = html_files + ([llms_txt] if llms_txt.exists() else [])
+    for path in boundary_scan_files:
+        text = path.read_text(encoding="utf-8", errors="replace")
+        if re.search(r"SYSmoAI\s*(venture|family|group)|একটি\s*SYSmoAI\s*উদ্যোগ|SYSmoAI গ্রুপ", text, re.I):
+            boundary_violations.append(str(path.relative_to(SITE)))
+    if boundary_violations:
+        raise SystemExit(
+            "[commercial-truth] business-boundary violation — SYSmoAI venture/family/group language survived in: "
+            + ", ".join(sorted(boundary_violations))
+        )
+
+    # The floating WhatsApp CTA lives outside <main> on every product page and is
+    # hand-patched above. Confirm (a) every governed page actually has the CTA —
+    # a missing/unrecognized CTA must FAIL the build, not be silently skipped —
+    # and (b) it never quotes a price the page's own governed plan list does not
+    # contain, the exact drift that let a buyer request a stale cheaper/shared
+    # seat the main body no longer offers.
+    from urllib.parse import urlsplit, parse_qs
+
+    fab_violations = []
+    for pid, product in governed.items():
+        plans = product.get("plans") or []
+        approved_prices = {int(p["bdt"]) for p in plans}
+        for path, bn in ((SITE / "p" / f"{pid}.html", False), (SITE / "bn" / "p" / f"{pid}.html", True)):
+            if not path.exists():
+                continue
+            text = path.read_text(encoding="utf-8", errors="replace")
+            m = re.search(r'<a class="fab fab-wa" href="(https://wa\.me/8801305869242\?text=[^"]*)"', text)
+            if not m:
+                fab_violations.append(f"{path.relative_to(SITE)}: no floating WhatsApp CTA found (missing CTA is a failure, not a pass)")
+                continue
+            href = html.unescape(m.group(1))
+            query_text = parse_qs(urlsplit(href).query).get("text", [""])[0]
+            fab_prices = {int(n.replace(",", "")) for n in re.findall(r"৳([\d,]+)", query_text)}
+            if fab_prices and not fab_prices.issubset(approved_prices):
+                fab_violations.append(f"{path.relative_to(SITE)}: CTA quotes {sorted(fab_prices)}, approved={sorted(approved_prices)}")
+    if fab_violations:
+        raise SystemExit("[commercial-truth] floating WhatsApp CTA audit failed — " + "; ".join(fab_violations))
 
     print(f"[commercial-truth] revision={REVISION}; sanitized_html={len(html_files)}; rewritten_product_pages={rewritten}; governed_products={len(governed)}")
     return 0

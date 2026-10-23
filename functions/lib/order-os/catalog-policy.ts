@@ -1,4 +1,9 @@
-import pricing from "../../../ops/PRICING-V2-2026-09-17.json";
+// Server-side plan resolution for public orders. The ONLY source of a sellable
+// plan is the governed public catalog (catalog.json, the same projection that
+// renders the storefront). A product that is request_price — every product
+// while the EXEC-010 commercial HOLD is active — resolves to null, and the order
+// API answers 409. Pricing notes in ops/ are never read here.
+import catalog from "../../../catalog.json";
 
 export type GovernedPlan = {
   product_id: string;
@@ -10,64 +15,59 @@ export type GovernedPlan = {
   support_terms?: string;
 };
 
-type PolicyPlan = {
+type CatalogPlan = {
   plan_id?: string;
   label?: string;
+  type?: string;
   access_type?: string;
   bdt?: number;
 };
 
-type ProductPolicy = {
-  mode?: string;
-  plans?: PolicyPlan[];
+type CatalogProduct = {
+  id?: string;
+  name?: string;
+  request_price?: boolean;
+  plans?: CatalogPlan[];
 };
 
-const PRODUCTS = pricing.approved_products as Record<string, ProductPolicy>;
+const PRODUCTS = new Map<string, CatalogProduct>(
+  ((catalog as { products?: CatalogProduct[] }).products || [])
+    .filter(p => typeof p.id === "string")
+    .map(p => [p.id as string, p]),
+);
 
-function titleFromProductId(productId: string) {
-  return productId
-    .split("-")
-    .map(part => part ? part[0].toUpperCase() + part.slice(1) : part)
-    .join(" ")
-    .replace("Chatgpt", "ChatGPT")
-    .replace("Github", "GitHub")
-    .replace("Ai", "AI");
+const SUPPORT_TERMS = "Access method, timing and support terms are confirmed in writing before payment.";
+
+function governed(product: CatalogProduct, plan: CatalogPlan): GovernedPlan | null {
+  const accessType = plan.access_type || plan.type;
+  if (!plan.plan_id || !plan.label || !accessType || /^shared/i.test(accessType)) return null;
+  const price = Number(plan.bdt);
+  if (!Number.isInteger(price) || price <= 0) return null;
+  return {
+    product_id: product.id as string,
+    plan_id: plan.plan_id,
+    product_name: product.name || (product.id as string),
+    plan_name: plan.label,
+    price_bdt: price,
+    access_type: accessType,
+    support_terms: SUPPORT_TERMS,
+  };
 }
 
 export function resolveGovernedPlan(productId: string, planId: string): GovernedPlan | null {
-  const product = PRODUCTS[productId];
-  if (!product || product.mode === "inquiry" || !Array.isArray(product.plans)) return null;
-
+  const product = PRODUCTS.get(productId);
+  if (!product || product.request_price !== false || !Array.isArray(product.plans)) return null;
   const plan = product.plans.find(p => p.plan_id === planId);
-  if (!plan || !plan.plan_id || !plan.label || !plan.access_type || !Number.isFinite(plan.bdt)) return null;
-
-  const positioning = (pricing.positioning as Record<string, string>)[plan.access_type];
-  return {
-    product_id: productId,
-    plan_id: plan.plan_id,
-    product_name: titleFromProductId(productId),
-    plan_name: plan.label,
-    price_bdt: Number(plan.bdt),
-    access_type: plan.access_type,
-    support_terms: positioning || "Confirm access and support terms before payment.",
-  };
+  return plan ? governed(product, plan) : null;
 }
 
 export function listGovernedPlans() {
   const rows: GovernedPlan[] = [];
-  for (const [productId, product] of Object.entries(PRODUCTS)) {
-    if (product.mode === "inquiry" || !Array.isArray(product.plans)) continue;
+  for (const product of PRODUCTS.values()) {
+    if (product.request_price !== false || !Array.isArray(product.plans)) continue;
     for (const plan of product.plans) {
-      if (!plan.plan_id || !plan.label || !plan.access_type || !Number.isFinite(plan.bdt)) continue;
-      rows.push({
-        product_id: productId,
-        plan_id: plan.plan_id,
-        product_name: titleFromProductId(productId),
-        plan_name: plan.label,
-        price_bdt: Number(plan.bdt),
-        access_type: plan.access_type,
-        support_terms: (pricing.positioning as Record<string, string>)[plan.access_type] || "Confirm access and support terms before payment.",
-      });
+      const row = governed(product, plan);
+      if (row) rows.push(row);
     }
   }
   return rows;

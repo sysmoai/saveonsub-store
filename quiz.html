@@ -140,21 +140,21 @@ function resolve(a){
   let pick, alt, why;
   if(a.goal==="content"){
     if(a.budget==="low") {pick="chatgpt-plus"; alt="bundle-starter"; why="ChatGPT writes scripts/captions; add Canva later via the Starter Bundle.";}
-    else if(a.budget==="mid"){pick="bundle-creator"; alt="bundle-video"; why="Grok for ideas + Midjourney for visuals — the full content pipeline at bundle price.";}
+    else if(a.budget==="mid"){pick="bundle-creator"; alt="bundle-video"; why="Grok for ideas + Midjourney for visuals — a full content pipeline.";}
     else {pick="bundle-video"; alt="heygen"; why="Invideo generates the video, CapCut Pro polishes it — the Reels machine BD channels use.";}
   } else if(a.goal==="study"){
-    if(a.budget==="low"){pick="bundle-research"; alt="perplexity-pro"; why="Perplexity finds cited sources, ChatGPT drafts — thesis mode at bundle price.";}
-    else {pick="claude-pro"; alt="bundle-research"; why="Claude handles long PDFs and careful academic writing better than anything.";}
+    if(a.budget==="low"){pick="bundle-research"; alt="perplexity-pro"; why="Perplexity finds cited sources, ChatGPT drafts — a solid research pairing.";}
+    else {pick="claude-pro"; alt="bundle-research"; why="Claude is strong at long PDFs and careful academic writing.";}
   } else if(a.goal==="business"){
-    if(a.budget==="low"){pick="google-ai-pro"; alt="canva-pro"; why="Our #1 seller: Gemini Pro + 2TB storage at ৳500 — the best business value in AI.";}
+    if(a.budget==="low"){pick="google-ai-pro"; alt="canva-pro"; why="Gemini in Google AI Pro plus Google storage — Google lists it at ৳2,500/month in Bangladesh.";}
     else if(a.budget==="mid"){pick="supergrok"; alt="bundle-creator"; why="Real-time market data + strong reasoning for business decisions.";}
     else {pick="chatgpt-business"; alt="jasper"; why="Admin workspace + team seats — built for client work.";}
   } else if(a.goal==="code"){
     if(a.budget==="low"){pick="github-copilot"; alt="windsurf"; why="Copilot Personal on YOUR own GitHub. Students get it FREE via Student Pack.";}
-    else {pick="bundle-dev"; alt="cursor"; why="Cursor agent-mode + Copilot autocomplete — the 2026 dev stack at bundle price.";}
+    else {pick="bundle-dev"; alt="cursor"; why="Cursor agent-mode + Copilot autocomplete — a common dev pairing.";}
   } else { // fun
-    if(a.budget==="low"){pick="spotify"; alt="youtube-premium"; why="Spotify Family slot ৳129 on your own account — or official BD ৳219, we'll tell you both.";}
-    else {pick="netflix"; alt="prime-video"; why="Private-profile Netflix from ৳349 with warranty.";}
+    if(a.budget==="low"){pick="spotify"; alt="youtube-premium"; why="Spotify Premium is sold officially in Bangladesh (Individual ৳219/month, verified 2026-10-23).";}
+    else {pick="netflix"; alt="prime-video"; why="Netflix — confirm the access method and current price in writing before paying.";}
   }
   // risk override: own-account → force personal-capable pick
   if(a.risk==="own"){
@@ -163,8 +163,8 @@ function resolve(a){
     if(!hasPersonal){
       const map={"bundle-research":"claude-pro","bundle-creator":"midjourney","bundle-video":"invideo","bundle-starter":"chatgpt-plus","bundle-dev":"github-copilot","spotify":"spotify"};
       pick=map[pick]||pick;
-      why+=" You chose own-account-only, so we picked the personal plan — zero sharing risk.";
-    } else { why+=" Take the Personal plan for zero sharing risk."; }
+      why+=" You chose own-account-only — ask support to confirm a customer-specific access method in writing.";
+    } else { why+=" Prefer a customer-specific access method to avoid sharing risk."; }
   }
   // heavy usage upsell note
   if(a.usage==="heavy") why+=" Heavy daily use? Personal plans avoid shared usage limits.";
@@ -182,21 +182,18 @@ function draw(){
       (step>0?`<button class="btn btn-ghost btn-sm mt2" onclick="step--;draw()">← Back</button>`:'');
   } else {
     const r=resolve(ans), p=byId(r.pick), alt=byId(r.alt);
-    const cheap=p.plans.reduce((a,b)=>a.bdt<b.bdt?a:b);
-    const personal=p.plans.find(pl=>pl.tos==="personal"||pl.tos==="official");
-    const chosen=(ans.risk==="own"&&personal)?personal:cheap;
+    // EXEC-010 HOLD: the quiz recommends a product but never quotes a price or adds to cart.
     document.getElementById('pbar').style.width="100%";
     area.innerHTML=`<div class="rec">
       <span class="icon">${p.icon}</span>
       <h2 style="margin:8px 0">${p.name.replace('🎁 ','')}</h2>
-      <div style="font-size:26px;font-weight:900;color:var(--green2)">৳${chosen.bdt.toLocaleString()} <span style="font-size:13px;color:var(--muted);font-weight:600">${chosen.label}</span></div>
-      <span class="tos ${chosen.tos}">${chosen.tos.replace('-','·')}</span>
+      <div style="font-size:20px;font-weight:800;color:var(--green2)">Price on request</div>
       <div class="why">💡 ${r.why}</div>
       <div class="heroctas" style="justify-content:center">
-        <button class="btn btn-primary" onclick="cartAdd('${p.id}','${chosen.label.replace(/'/g,"\\'")}',${chosen.bdt},'${p.name.replace(/'/g,"\\'").replace('🎁 ','')}');location.href='checkout.html'">Order now — ৳${chosen.bdt.toLocaleString()}</button>
+        <a class="btn btn-primary" href="${waLink('Quiz suggested '+p.name+' — please confirm the current price, exact tier and access method.')}" target="_blank" rel="noopener">Ask for the price on WhatsApp</a>
         <a class="btn btn-ghost" href="p/${p.id}.html">Full details</a>
       </div>
-      ${alt?`<p style="font-size:13.5px;color:var(--muted);margin-top:14px">Also consider: <a href="p/${alt.id}.html" style="color:var(--green2);font-weight:700">${alt.name.replace('🎁 ','')}</a> (৳${Math.min(...alt.plans.map(x=>x.bdt)).toLocaleString()})</p>`:''}
+      ${alt?`<p style="font-size:13.5px;color:var(--muted);margin-top:14px">Also consider: <a href="p/${alt.id}.html" style="color:var(--green2);font-weight:700">${alt.name.replace('🎁 ','')}</a></p>`:''}
       <p style="font-size:13px;color:var(--muted);margin-top:10px">Still unsure? <a href="${waLink('Quiz said '+p.name+' — can we talk it through?')}" style="color:var(--green2)">Ask a human →</a></p>
       <button class="btn btn-ghost btn-sm mt2" onclick="step=0;ans={};draw()">↻ Restart quiz</button>
     </div>`;

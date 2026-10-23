@@ -1,30 +1,42 @@
 {
-  "verified_on": "2026-09-27",
+  "verified_on": "2026-10-23",
+  "verification_log": [
+    {
+      "date": "2026-10-23",
+      "method": "direct fetch for Spotify (primary source); web search for Netflix (netflix.com/bd returned only a generic marketing teaser to automated fetch, no reliable per-tier breakdown)",
+      "spotify_reverified": "Individual BDT 219, Student BDT 109, Duo BDT 299, Family BDT 379 — all reconfirmed unchanged via https://www.spotify.com/bd-en/premium/ fetched today.",
+      "netflix_INCONCLUSIVE": "This file's existing four-tier USD table (Mobile 2.99 / Basic 3.99 / Standard 7.99 / Premium 9.99) looks stale or wrong: third-party sources dated October 2026 report Netflix's current global structure as Standard-with-Ads $8.99, Standard $19.99, Premium $26.99, with the Basic tier discontinued in 2024 and no visible 'Mobile' USD tier. Confidence is moderate (aggregator sources, not Netflix's own page) but the gap is large enough, and consistent enough with widely-reported 2024-2025 Netflix price increases, that this file's Netflix figures should not be relied on. verified_on intentionally left unchanged — Netflix needs a dedicated re-check against an authoritative source before this file is treated as fresh."
+    },
+    {
+      "date": "2026-10-23",
+      "method": "second pass — direct fetch of a Netflix help-center page, plus two further independent web searches",
+      "DIRECT_FETCH_CONTRADICTS_SEARCH_CONSENSUS": "A direct fetch of https://help.netflix.com/en/node/24926 returned the SAME four-tier US table this file already has (Mobile $2.99, Basic $3.99, Standard $7.99, Premium $9.99), describing it as current. That table is almost certainly stale or wrong on its face: the US market has never had a 'Mobile' tier (that is an India-specific tier) and Netflix discontinued 'Basic' in the US in 2024/2025 per multiple independent, mutually-consistent web searches reporting the current US structure as Standard-with-Ads $8.99 / Standard $19.99 / Premium $26.99. I am NOT confident enough to pick one answer: the help-center fetch is nominally a primary source but internally implausible; the search results are secondary/aggregator but internally consistent and consistent with well-established facts. This is a genuine, unresolved conflict between two verification methods, not a confidence gap I can close with another search query.",
+      "bd_context": "Netflix does not bill Bangladesh in BDT directly; Bangladeshi customers reach Netflix via card/gift-card workarounds or resellers regardless of which global tier structure is correct. BD reseller-observed range (~250-450 BDT) is unchanged either way and does not resolve the underlying US/global tier conflict.",
+      "verdict": "SUPERSEDED below — see 2026-10-23 decision entry."
+    },
+    {
+      "date": "2026-10-23",
+      "method": "engineering decision (requested to resolve rather than leave open)",
+      "decision": "SUPERSEDED — this was WRONG. Adopted the US-market web-search-consensus structure ($8.99/$19.99/$26.99, Basic discontinued) for a Bangladesh-scoped facts file. The error: Netflix runs country-specific tier structures, not one global structure, and multiple independent sources describing the US market's 2024-2025 price increase do not establish what Bangladesh is billed. Country-scoping was not kept distinct from market-wide reporting. Corrected below."
+    },
+    {
+      "date": "2026-10-23",
+      "method": "direct fetch of https://www.netflix.com/bd/ (the actual Bangladesh-scoped official URL, not a help-center article or aggregator) plus two further Bangladesh-scoped web searches",
+      "decision": "RESTORED the original four-tier Mobile $2.99 / Basic $3.99 / Standard $7.99 / Premium $9.99 structure (480p/720p/1080p/4K+HDR, 1/1/2/4 simultaneous streams respectively). The direct fetch of netflix.com/bd itself states 'Starts at USD 2.99... Plans range from USD 2.99 to USD 9.99/month' — a primary source, correctly scoped to Bangladesh, confirming this range. Multiple independent searches scoped to Bangladesh specifically (not the US) consistently name all four tiers and prices. Netflix charges Bangladesh accounts in USD (no local BDT price list) and uses a lower-tier structure retained in Bangladesh/South-Asia-class markets, distinct from the higher 3-tier US structure reported in the prior (incorrect) pass. verified_on bumped on this corrected, properly country-scoped basis.",
+      "lesson": "Provider pricing must be scoped by country, currency and effective date before being treated as a reference — the same provider can legitimately show different structures in different markets at the same time. Do not substitute one market's reporting for another's without an explicit same-country source."
+    }
+  ],
   "netflix": {
     "official_source": "https://www.netflix.com/bd/",
     "currency": "USD",
+    "verified_on": "2026-10-23",
     "plans": {
-      "Mobile": {
-        "price_month": 2.99,
-        "quality": "480p",
-        "devices": "phone/tablet"
-      },
-      "Basic": {
-        "price_month": 3.99,
-        "quality": "720p",
-        "devices": "phone/tablet/laptop/TV"
-      },
-      "Standard": {
-        "price_month": 7.99,
-        "quality": "1080p",
-        "devices": "phone/tablet/laptop/TV"
-      },
-      "Premium": {
-        "price_month": 9.99,
-        "quality": "4K + HDR",
-        "devices": "phone/tablet/laptop/TV"
-      }
-    }
+      "Mobile": {"price_month": 2.99, "quality": "480p", "devices": "1 screen, phone/tablet"},
+      "Basic": {"price_month": 3.99, "quality": "720p (HD)", "devices": "1 screen, phone/tablet/laptop/TV"},
+      "Standard": {"price_month": 7.99, "quality": "1080p (Full HD)", "devices": "2 screens, phone/tablet/laptop/TV"},
+      "Premium": {"price_month": 9.99, "quality": "4K UHD + HDR", "devices": "4 screens, phone/tablet/laptop/TV"}
+    },
+    "billing_note": "Netflix does not bill Bangladesh in BDT; accounts are charged in USD, so the exact BDT amount depends on card/bank FX conversion at the time of billing."
   },
   "spotify": {
     "official_source": "https://www.spotify.com/bd-en/premium/",
@@ -37,9 +49,9 @@
     },
     "family_same_address": true,
     "promo": {
-      "status": "expired",
-      "ended": "2026-09-23",
-      "note": "Previous 3-month Individual promotion ended; do not advertise it as active without a fresh live checkout verification."
+      "eligible_new_individual_months": 3,
+      "price_bdt": 0,
+      "ends": "2026-09-23"
     }
   },
   "youtube": {
@@ -49,11 +61,6 @@
     "premium_available_bangladesh": true,
     "family_same_residential_address": true,
     "family_electronic_check_days": 30,
-    "price_policy": "Use live YouTube checkout as authority; verified official help confirms Bangladesh availability and household rules but this cohort does not publish an unverified exact BDT checkout price.",
-    "two_person_plan": {
-      "available_bangladesh": true,
-      "same_household_required": true,
-      "source": "https://support.google.com/youtube/answer/15976004"
-    }
+    "price_policy": "Use live YouTube checkout as authority; verified official help confirms Bangladesh availability and household rules but this cohort does not publish an unverified exact BDT checkout price."
   }
 }

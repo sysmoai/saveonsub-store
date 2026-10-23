@@ -2,12 +2,22 @@
 """Fail-closed audit for the 2026-09-17 SaveOnSub commercial projection."""
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
-REV = "pricing-v2-2026-09-17"
+POLICY = json.loads((ROOT / "ops" / "PRICING-V2-2026-09-17.json").read_text(encoding="utf-8"))
+REV = POLICY["revision"]
+
+
+def money(bdt: int) -> str:
+    return f"৳{int(bdt):,}"
+
+
+def hold_active() -> bool:
+    return (POLICY.get("commercial_hold") or {}).get("status") == "HOLD"
 
 
 def read(rel: str) -> str:
@@ -46,16 +56,64 @@ def main() -> int:
     }.items():
         need(text, REV, where)
 
-    need(plus, "৳3,390", "ChatGPT Plus")
-    need(plus, "Customer-specific access", "ChatGPT Plus")
-    need(go, "৳1,299", "ChatGPT Go")
-    need(business, "৳4,290 / user / month", "ChatGPT Business")
-    need(business, "Team / Workspace access", "ChatGPT Business")
-    need(pro, "Confirm current price", "ChatGPT Pro")
-    need(google, "৳3,390", "Google AI Pro")
+    if not hold_active():
+        raise SystemExit("[commercial-audit] EXEC-010 commercial HOLD is not active in the pricing policy; "
+                         "fixed prices require explicit founder approval and an updated audit")
+    for rule_id, rule in POLICY["approved_products"].items():
+        if rule.get("mode") != "inquiry" or rule.get("plans"):
+            raise SystemExit(f"[commercial-audit] policy rule {rule_id} publishes a fixed price during HOLD")
+    catalog = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
+    for product in catalog["products"]:
+        if not product.get("request_price") or product.get("plans"):
+            raise SystemExit(f"[commercial-audit] {product.get('id')} is not Price on Request during HOLD")
+    if re.search(r'"bdt"\s*:', public_catalog):
+        raise SystemExit("[commercial-audit] public catalog exposes a sell price during HOLD")
+
+    # Every product page, EN and BN: no sell price in <main>, no cart action,
+    # no priced Offer, no price in the WhatsApp prefill, no checkout CTA.
+    from urllib.parse import unquote
+    pages = sorted((SITE / "p").glob("*.html")) + sorted((SITE / "bn" / "p").glob("*.html"))
+    if len(pages) != 2 * len(catalog["products"]):
+        raise SystemExit(f"[commercial-audit] expected {2 * len(catalog['products'])} product pages, found {len(pages)}")
+    for path in pages:
+        rel = path.relative_to(SITE).as_posix()
+        text = path.read_text(encoding="utf-8", errors="replace")
+        need(text, REV, rel)
+        main = re.search(r"<main\b.*?</main>", text, re.S | re.I)
+        if not main:
+            raise SystemExit(f"[commercial-audit] {rel} has no <main>")
+        if re.search(r"৳\s?[1-9১-৯]", main.group(0)):
+            raise SystemExit(f"[commercial-audit] {rel} shows a ৳ figure in <main> during HOLD")
+        if "cartAdd" in text or "checkout.html" in main.group(0):
+            raise SystemExit(f"[commercial-audit] {rel} has a cart/checkout action during HOLD")
+        if re.search(r'"price"\s*:\s*"?[1-9]', text):
+            raise SystemExit(f"[commercial-audit] {rel} has a priced structured-data Offer during HOLD")
+        for m in re.findall(r'wa\.me/\d+\?text=([^"\'<>]+)', text):
+            if re.search(r"৳\s?[1-9১-৯]", unquote(m)):
+                raise SystemExit(f"[commercial-audit] {rel} WhatsApp prefill carries a price during HOLD")
+    # Every other staged page: no listing/bundle/Mode sell price, "from ৳N",
+    # discount or static cart action while the HOLD is active.
+    surface = [
+        (re.compile(r'<div class="price"[^>]*>\s*৳\s?[1-9১-৯]'), "listing card price"),
+        (re.compile(r"onclick=\"cartAdd\('(?!\$\{)"), "static cart action"),
+        (re.compile(r'\b[Ff]rom ৳\s?[1-9]'), "'from ৳N' sell price"),
+        (re.compile(r'Mode price: ৳'), "Mode price"),
+        (re.compile(r'৳\s?[\d,]+ off\b|৳[০-৯\d,]+ ছাড়'), "discount offer"),
+        (re.compile(r'Saves? (?:up to )?৳'), "savings figure"),
+    ]
+    for path in sorted(SITE.rglob("*.html")):
+        rel = path.relative_to(SITE).as_posix()
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for pattern, what in surface:
+            if pattern.search(text):
+                raise SystemExit(f"[commercial-audit] {rel} shows a {what} during HOLD")
+
+    for where, text in {"ChatGPT Plus": plus, "Google AI Pro": google, "ChatGPT Pro": pro, "ChatGPT Go": go, "ChatGPT Business": business}.items():
+        need(text, "Confirm current price", where)
+    need(plus, "commercial HOLD", "ChatGPT Plus")
+    need(google, "Price on Request", "Google AI Pro")
     need(public_catalog, REV, "public catalog")
     need(public_catalog, '"id":"chatgpt-plus"', "public catalog")
-    need(public_catalog, '"bdt":3390', "public catalog")
 
     for where, text in {
         "home": home,
@@ -85,7 +143,7 @@ def main() -> int:
     if m and '"type":"shared"' in m.group(0):
         raise SystemExit("[commercial-audit] public ChatGPT Plus catalog still contains shared access")
 
-    print("[commercial-audit] PASS — approved prices, access semantics and legacy-claim blocks verified")
+    print("[commercial-audit] PASS — EXEC-010 HOLD (Price on Request) verified on every product page; legacy-claim blocks verified")
     return 0
 
 

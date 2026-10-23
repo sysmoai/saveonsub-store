@@ -33,6 +33,31 @@ jobs:
       - name: Install build dependencies
         run: python -m pip install --disable-pip-version-check -r requirements.txt
 
+      - name: Audit price and WhatsApp regression tests
+        run: |
+          python -m unittest -v test_audit_home_prices
+          python test_whatsapp_cta.py
+          python -m unittest discover -v -s tests -p 'test_*.py'
+
+      - name: Block cost / margin fields in tracked files
+        run: |
+          set -euo pipefail
+          if git grep -nIiE 'landed[_ ]cost|margin[_]bdt|contribution[_]bdt|supplier[_]cost[_]bdt' -- . ':!*.md'; then
+            echo "::error::Cost/margin fields must not be committed to this public repository."
+            exit 1
+          fi
+
+      - name: Setup Node (Order OS security tests use built-in TypeScript + SQLite)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Order OS security tests (Access JWT, state machine, payment provenance, concurrency, PII)
+        run: |
+          set -euo pipefail
+          python audit_order_os.py
+          node --import ./tests/order-os/register.mjs --test tests/order-os/*.test.mjs
+
       - name: Full repository regression audit
         run: |
           set -euo pipefail
@@ -50,22 +75,25 @@ jobs:
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/favicon.svg
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
           grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/index.html
-          grep -q '৳3,390' _site/p/chatgpt-plus.html
-          grep -q 'Customer-specific access' _site/p/chatgpt-plus.html
-          grep -q '৳1,299' _site/p/chatgpt-go.html
-          grep -q '৳4,290 / user / month' _site/p/chatgpt-business.html
-          grep -q 'Team / Workspace access' _site/p/chatgpt-business.html
+          ! grep -q '৳3,390' _site/p/chatgpt-plus.html
+          ! grep -q '৳3,390' _site/p/google-ai-pro.html
+          ! grep -q '৳1,299' _site/p/chatgpt-go.html
+          ! grep -q '৳4,290' _site/p/chatgpt-business.html
+          ! grep -q 'cartAdd' _site/p/chatgpt-plus.html
+          ! grep -q 'cartAdd' _site/p/google-ai-pro.html
+          grep -q 'commercial HOLD' _site/p/chatgpt-plus.html
+          grep -q 'Price on Request' _site/p/google-ai-pro.html
+          grep -q 'Confirm current price' _site/p/chatgpt-plus.html
+          grep -q 'Confirm current price' _site/p/google-ai-pro.html
           grep -q 'Confirm current price' _site/p/chatgpt-pro.html
-          grep -q '৳3,390' _site/p/google-ai-pro.html
+          ! grep -R -l 'cartAdd' _site/p _site/bn/p --include='*.html' | grep -q .
+          ! grep -q '"bdt"' _site/assets/catalog.js
           grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
           ! grep -q '৳499' _site/p/chatgpt-plus.html
           ! grep -q '৳999' _site/p/chatgpt-plus.html
           ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
           ! grep -q 'SHARED · WARRANTY COVERED' _site/p/chatgpt-plus.html
           ! grep -q '5–15 min' _site/p/chatgpt-plus.html
-          grep -q 'data-entertainment-facts="2026-09-09"' _site/p/netflix.html
-          grep -q 'Spotify BD: Individual ৳219/mo' _site/p/spotify.html
-          grep -q 'YouTube Premium: available in Bangladesh' _site/p/youtube-premium.html
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
           grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
           grep -q 'favicon-32.png" type="image/png"' _site/p/chatgpt-plus.html

@@ -45,7 +45,8 @@ EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
 EXCLUDE_EXT = {'.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml',
                '.ts', '.tsx', '.sql', '.yml', '.yaml', '.jsonc', '.mjs', '.cjs', '.map',
                '.pem', '.key', '.p12', '.sqlite', '.db', '.ipynb'}
-EXCLUDE_FILES = {'.replit', '.gitignore', '.env.example', 'catalog.json',
+# '.git' is a *file* (gitdir pointer) in worktrees/submodules; EXCLUDE_DIRS only covers the directory form.
+EXCLUDE_FILES = {'.git', '.replit', '.gitignore', '.env.example', 'catalog.json',
                  'package.json', 'package-lock.json', 'vercel.json', 'AGENTS.md'}
 EXCLUDE_PREFIXES = ('assets/social/',)
 

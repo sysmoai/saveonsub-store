@@ -90,3 +90,74 @@ Human approval required:
 - modify payment destination
 - DNS/domain/security changes
 - production promotion while P0 gaps remain
+
+## Staff security model (2026-10-23 hardening)
+
+Source of truth: `functions/lib/order-os/order-workflow.ts` (rules), `redaction.ts` (PII), `ops/order-os/schema.sql`
+(storage-level triggers). Behaviour is proven by `tests/order-os/*.test.mjs`, run in the required CI gate.
+
+### Order state machine (server-enforced)
+
+| From | To (ordinary) |
+|---|---|
+| submitted | payment_review, cancelled |
+| payment_review | payment_confirmed (**only** via payment verification), cancelled |
+| payment_confirmed | assigned (**only** via claim), refunded |
+| assigned | fulfilling, refunded |
+| fulfilling | delivered, refunded |
+| delivered | completed, support_open, refunded |
+| support_open | completed, fulfilling, refunded |
+| completed | support_open, refunded |
+| cancelled, refunded | none (terminal) |
+
+Three layers: the pure rule table; compare-and-set SQL (`WHERE status = <validated state>`, with the audit event
+inserted under the same guard in the same batch, so a lost race writes nothing); and SQLite triggers that make
+terminal states immutable and forbid any paid-or-later state without an active matching payment verification.
+
+### Roles
+
+| Capability | owner | manager | fulfillment | support | viewer |
+|---|---|---|---|---|---|
+| Verify payment | yes | only if `PAYMENT_VERIFIER_ROLES` includes `manager` | no | no | no |
+| Cancel / refund | yes | yes | no | no | no |
+| Claim order | yes | yes | yes | no | no |
+| Fulfil (fulfilling/delivered/completed) | yes | yes | own claimed orders | no | no |
+| Open/close support case | yes | yes | delivered->support_open | yes | no |
+| Reverse a cancelled/refunded order | **yes** | no | no | no | no |
+| See customer phone | yes | yes | no | related orders only | no |
+| See customer email / name | yes | yes | yes | related orders only (else masked) | no |
+| See event notes and actor ids | yes | yes | no | no | no |
+
+"Related" for support = delivered / support_open / completed, or assigned to that operator. Nobody can change a
+price or discount through any ops endpoint (no endpoint accepts price fields).
+Ripon is assumed to hold the `support` role. The role record is not in the repository; confirm in D1.
+
+### Payment provenance
+
+`POST /api/ops/orders/:id/payment-verification` (owner = CEO only by default; `PAYMENT_VERIFIER_ROLES="owner,manager"` is the only
+widening). A customer-submitted reference is a claim, never proof. A required `evidence_ref` cites settlement evidence
+(`r2:sos/private/...` object or `stmt:...` merchant-statement id); a screenshot or any URL is refused.
+The verifier supplies provider, the provider reference and the exact amount seen in the merchant statement. The amount and
+currency must equal the order total (the expected total is not revealed on mismatch). Stored: provider, SHA-256 of
+`provider:reference`, last four characters, amount, currency, evidence_ref, verifier, time. Not stored: the full reference.
+A partial unique index rejects the same reference on a second order and a second active verification on one order.
+
+### Terminal-state reversal
+
+`POST /api/ops/orders/:id/reversal` (owner only, written reason 20-500 chars). Moves a cancelled/refunded order to
+`payment_review` only, voids the earlier payment verification, and writes a `terminal_reversal` event. Money must be
+verified again before fulfilment can restart.
+
+### Errors
+
+Clients receive stable codes only (`UNAUTHENTICATED`, `FORBIDDEN`, `STAFF_BACKEND_NOT_CONFIGURED`, `STALE_STATE`, ...).
+Token, JWKS and database error text is logged server-side and never returned.
+
+## Access JWT and deployment boundary (SOS-T018)
+
+- `TEAM_DOMAIN` must match `^https://[a-z0-9-]+\.cloudflareaccess\.com$`, otherwise every staff request is 503.
+- The token `type` claim must be exactly `app`; a missing `type` is 401.
+- `operators.last_seen_at` is written at most once per operator per 5 minutes (SQL-side throttle).
+- The staff API deploys only to its own Pages project (`wrangler.order-os.toml`, `saveonsub-staff-staging`). The storefront
+  workflow deploys from inside `_site/`, so `./functions` is never bundled into project `saveonsub`. Both are enforced by
+  `audit_order_os.py`. A Cloudflare dry run is still an owner action.
