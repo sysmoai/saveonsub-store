@@ -126,11 +126,10 @@ if 'prefers-reduced-motion' not in _css: issues.append("style.css missing reduce
 if ':focus' not in _css: issues.append("style.css missing focus states (keyboard a11y)")
 
 idx=open('index.html').read()
-for p in cat['products']:
-    if p.get('bestseller_rank',0)>0:
-        f=min(pl['bdt'] for pl in p['plans'])
-        if f"৳{f:,}" not in idx and f"৳{f}" not in idx:
-            issues.append(f"HOMEPAGE DRIFT: {p['id']} from-price ৳{f} not on index")
+from audit_home_prices import homepage_price_issues
+with open('ops/PRICING-V2-2026-09-17.json', encoding='utf-8') as policy_file:
+    pricing_policy = json.load(policy_file)
+issues.extend(homepage_price_issues(cat['products'], idx, pricing_policy))
 for f in ['blog/index.html','_headers','_redirects','build_all.sh','README.md','build_home.py','contact.html','track.html','students.html','offers.html','sitemap.html','bn.html',
           'sw.js','offline.html','assets/icon-192.png','assets/icon-512.png','order.html','bn/faq.html','bn/how-to-order.html']:
     if not os.path.exists(f): issues.append(f"missing {f}")
@@ -184,7 +183,13 @@ if 'বাংলা প্রশ্নোত্তর' not in ll2: issues.append
 for _hp in ['index.html','bn.html']:
     _h = open(_hp).read()
     if '"OnlineStore"' not in _h and '"Organization"' not in _h: issues.append(f"{_hp}: no Organization schema")
-    if 'github.com/sysmoai' not in _h: issues.append(f"{_hp}: Organization missing sameAs family links")
+    # 2026-10-23: dropped the requirement for a github.com/sysmoai sameAs link.
+    # That link only existed via the "parentOrganization":{"name":"SYSmoAI",...}
+    # schema block, which was removed sitewide per the CEO's business-boundary
+    # separation directive (SaveOnSub must not be described as a SYSmoAI
+    # venture/family/group). Requiring it back here would silently re-demand
+    # exactly the claim that directive retired.
+    if 'SYSmoAI' in _h: issues.append(f"{_hp}: Organization schema still references SYSmoAI (business-boundary violation)")
     if '"founder"' not in _h: issues.append(f"{_hp}: Organization missing founder entity")
 
 print(f"AUDITED: {len(pages)} pages, {len(ids)} products, sitemap, robots, llms, assets")

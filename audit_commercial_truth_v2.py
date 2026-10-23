@@ -2,12 +2,27 @@
 """Fail-closed audit for the 2026-09-17 SaveOnSub commercial projection."""
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
-REV = "pricing-v2-2026-09-17"
+POLICY = json.loads((ROOT / "ops" / "PRICING-V2-2026-09-17.json").read_text(encoding="utf-8"))
+REV = POLICY["revision"]
+
+
+def money(bdt: int) -> str:
+    return f"৳{int(bdt):,}"
+
+
+def approved_price(sku: str) -> str:
+    # Previously hardcoded literal prices here went stale the moment Pricing V2
+    # changed (exactly what happened to chatgpt-go after the 2026-10-23 reprice
+    # and to google-ai-pro after it moved to inquiry-only) — read the current
+    # approval instead of duplicating it.
+    rule = POLICY["approved_products"][sku]
+    return money(rule["plans"][0]["bdt"])
 
 
 def read(rel: str) -> str:
@@ -46,16 +61,16 @@ def main() -> int:
     }.items():
         need(text, REV, where)
 
-    need(plus, "৳3,390", "ChatGPT Plus")
+    need(plus, approved_price("chatgpt-plus"), "ChatGPT Plus")
     need(plus, "Customer-specific access", "ChatGPT Plus")
-    need(go, "৳1,299", "ChatGPT Go")
-    need(business, "৳4,290 / user / month", "ChatGPT Business")
+    need(go, approved_price("chatgpt-go"), "ChatGPT Go")
+    need(business, f'{approved_price("chatgpt-business")} / user / month', "ChatGPT Business")
     need(business, "Team / Workspace access", "ChatGPT Business")
     need(pro, "Confirm current price", "ChatGPT Pro")
-    need(google, "৳3,390", "Google AI Pro")
+    need(google, approved_price("google-ai-pro"), "Google AI Pro")
     need(public_catalog, REV, "public catalog")
     need(public_catalog, '"id":"chatgpt-plus"', "public catalog")
-    need(public_catalog, '"bdt":3390', "public catalog")
+    need(public_catalog, f'"bdt":{POLICY["approved_products"]["chatgpt-plus"]["plans"][0]["bdt"]}', "public catalog")
 
     for where, text in {
         "home": home,

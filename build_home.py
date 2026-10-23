@@ -10,13 +10,32 @@ P = cat['products']
 def esc(s): return html.escape(str(s), quote=True)
 def frm(p): return min(pl['bdt'] for pl in p['plans'])
 def offbdt(p): return round(p['official_usd']*rate)
-def cheapest_tos(p): return min(p['plans'], key=lambda x: x['bdt'])['tos']
+def cheapest_tos(p):
+    # Pricing-V2-governed plans (apply_pricing_v2.py's public_plan()) use
+    # "type" (personal/team/bundle/service), not the legacy "tos" CSS-class
+    # field raw/ungoverned catalog plans still carry — fall back accordingly.
+    plan = min(p['plans'], key=lambda x: x['bdt'])
+    return plan.get('tos') or plan.get('type') or 'personal'
 
 nonb = [p for p in P if p['category'] != 'Bundles']
-best = sorted([p for p in P if p.get('bestseller_rank',0)>0], key=lambda x:x['bestseller_rank'])[:5]
+# A bestseller-ranked SKU can be moved to inquiry-only/HOLD (empty plans) when
+# its fixed price is withheld — e.g. it no longer clears the margin floor, or
+# the provider's own price undercuts it. There is no price to feature on a
+# homepage bestseller card in that case, and none should be invented, so it
+# is excluded from this carousel rather than crashing frm()/offbdt() below.
+best = sorted([p for p in P if p.get('bestseller_rank',0)>0 and p.get('plans')], key=lambda x:x['bestseller_rank'])[:5]
 chat = next(p for p in P if p['id']=='chatgpt-plus')
 chat_from = frm(chat); chat_off = offbdt(chat)
 save_pct = round(100 - chat_from/chat_off*100)
+
+def price_phrase(pid, label):
+    # google-ai-pro went inquiry-only on 2026-10-23 (its formula price undercut
+    # the wrong way vs the provider's own direct Bangladesh price). Never
+    # invent/republish a figure for a HOLD SKU in metadata either.
+    prod = next((p for p in P if p['id']==pid), None)
+    if prod and prod.get('plans'):
+        return f"{label} ৳{frm(prod)}"
+    return f"{label} price on request"
 
 cards = ""
 for p in best:
@@ -36,14 +55,22 @@ for c,n in ccount.most_common():
     import re as _re
     _cs=_re.sub(r"[^a-z0-9]+","-",c.lower()).strip("-")
     tiles+=f'''<a class="cattile" href="c/{_cs}.html"><span class="icon">{ICONS.get(c,'⭐')}</span>{esc(c)}<span class="n">{esc(samples)}… · {n} products</span></a>\n    '''
-tiles+='<a class="cattile" href="c/bundles.html"><span class="icon">🎁</span>Bundles<span class="n">Student ৳449 → Business ৳25K · '+str(ccount_b:=len([p for p in P if p["category"]=="Bundles"]))+' packs</span></a>'
+# apply_pricing_v2.py fail-closes every bundle to inquiry-only until each
+# component's access method is individually re-verified (legacy bundles mixed
+# in credential-shared AI seats). There is currently no approved bundle price
+# to feature or claim a range for.
+ccount_b = len([p for p in P if p["category"]=="Bundles"])
+tiles+=f'<a class="cattile" href="c/bundles.html"><span class="icon">🎁</span>Bundles<span class="n">{ccount_b} packs · confirm current pricing</span></a>'
 
-# bundles (4 cheapest with variety)
-bnd=sorted([p for p in P if p['category']=='Bundles'],key=frm)[:4]
+# bundles (any 4 — no approved price exists to sort by while inquiry-only)
+bnd=[p for p in P if p['category']=='Bundles'][:4]
 bcards=""
 for p in bnd:
-    save=f'<span class="save">Save ৳{p["save_bdt"]}</span>' if p.get('save_bdt') else '<span class="save">Package deal</span>'
-    bcards+=f'''<div class="bcard"><h3>{esc(p['name'])}</h3><p class="sub" style="font-size:13.5px">{esc(p['faq'][0]['a'].split('.')[0])}.</p><div class="price" style="font-size:22px;font-weight:900;color:var(--green2)">৳{frm(p):,}</div>{save}<a class="btn btn-primary btn-sm" href="p/{p['id']}.html">View bundle</a></div>\n    '''
+    has_price = bool(p.get('plans'))
+    price_html = f'''<div class="price" style="font-size:22px;font-weight:900;color:var(--green2)">৳{frm(p):,}</div>''' if has_price else \
+        '''<div class="price" style="font-size:16px;font-weight:800;color:var(--muted)">Confirm current price</div>'''
+    save = f'<span class="save">Save ৳{p["save_bdt"]}</span>' if (has_price and p.get('save_bdt')) else ''
+    bcards+=f'''<div class="bcard"><h3>{esc(p['name'])}</h3><p class="sub" style="font-size:13.5px">{esc(p['faq'][0]['a'].split('.')[0])}.</p>{price_html}{save}<a class="btn btn-primary btn-sm" href="p/{p['id']}.html">View bundle</a></div>\n    '''
 
 page=f'''<!DOCTYPE html>
 <html lang="en">
@@ -51,7 +78,7 @@ page=f'''<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAVEONSUB — Premium Subscriptions at BD Prices with bKash</title>
-<meta name="description" content="ChatGPT ৳{chat_from}, Google AI Pro ৳{frm(next(p for p in P if p['id']=='google-ai-pro'))}, Netflix ৳{frm(next(p for p in P if p['id']=='netflix'))} — BDT subscription options with access type, delivery SLA and warranty shown before checkout.">
+<meta name="description" content="{price_phrase('chatgpt-plus','ChatGPT')}, {price_phrase('google-ai-pro','Google AI Pro')}, {price_phrase('netflix','Netflix')} — BDT subscription options with access type, delivery SLA and warranty shown before checkout.">
 <link rel="canonical" href="https://saveonsub.com/">
 <link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/">
 <link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn.html">
@@ -70,7 +97,7 @@ page=f'''<!DOCTYPE html>
 <meta property="og:image" content="https://saveonsub.com/assets/og-image.png">
 <link rel="stylesheet" href="assets/style.css">
 <script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"OnlineStore","name":"SAVEONSUB","url":"https://saveonsub.com","logo":"https://saveonsub.com/assets/logo.svg","image":"https://saveonsub.com/assets/og-image.png","description":"Bangladesh's subscription store — clearly labeled subscription options with local BDT payment support.","slogan":"সাবস্ক্রিপশনের সৎ দোকান","foundingDate":"2026","founder":{{"@type":"Person","name":"Emon Hossain","url":"https://emonhossain.pro"}},"parentOrganization":{{"@type":"Organization","name":"SYSmoAI","url":"https://sysmoai.com","sameAs":["https://aipremiumshop.com","https://github.com/sysmoai"]}},"areaServed":{{"@type":"Country","name":"Bangladesh"}},"currenciesAccepted":"BDT","paymentAccepted":"bKash, Nagad, Rocket","knowsLanguage":["bn","en"],"address":{{"@type":"PostalAddress","addressCountry":"BD","addressLocality":"Dhaka"}},"contactPoint":{{"@type":"ContactPoint","telephone":"+8801305869242","contactType":"customer service","availableLanguage":["en","bn"]}}}}
+{{"@context":"https://schema.org","@type":"OnlineStore","name":"SAVEONSUB","url":"https://saveonsub.com","logo":"https://saveonsub.com/assets/logo.svg","image":"https://saveonsub.com/assets/og-image.png","description":"Bangladesh's subscription store — clearly labeled subscription options with local BDT payment support.","slogan":"সাবস্ক্রিপশনের সৎ দোকান","foundingDate":"2026","founder":{{"@type":"Person","name":"Emon Hossain","url":"https://emonhossain.pro"}},"areaServed":{{"@type":"Country","name":"Bangladesh"}},"currenciesAccepted":"BDT","paymentAccepted":"bKash, Nagad, Rocket","knowsLanguage":["bn","en"],"address":{{"@type":"PostalAddress","addressCountry":"BD","addressLocality":"Dhaka"}},"contactPoint":{{"@type":"ContactPoint","telephone":"+8801305869242","contactType":"customer service","availableLanguage":["en","bn"]}}}}
 </script>
 <script type="application/ld+json">
 {{"@context":"https://schema.org","@type":"WebSite","name":"SAVEONSUB","url":"https://saveonsub.com","potentialAction":{{"@type":"SearchAction","target":{{"@type":"EntryPoint","urlTemplate":"https://saveonsub.com/all.html?q={{search_term_string}}"}},"query-input":"required name=search_term_string"}}}}
@@ -201,14 +228,14 @@ page=f'''<!DOCTYPE html>
   <div class="fcols">
     <div>
       <span class="logo">SAVE<em>ON</em>SUB</span>
-      <p style="margin-top:10px;max-width:280px">Premium subscriptions at honest BD prices. A SYSmoAI venture — Dhaka, Bangladesh.</p>
+      <p style="margin-top:10px;max-width:280px">Premium subscriptions at honest BD prices. Dhaka, Bangladesh.</p>
     </div>
     <div><b>Store</b><a href="all.html">All products</a><a href="all.html#bundles">Bundles</a><a href="quiz.html">Find My AI</a><a href="how-to-order.html">How to order</a><a href="blog/index.html">Guides</a></div>
     <div><b>Help</b><a href="contact.html">Contact</a><a href="track.html">Track order</a><a href="students.html">Student Zone</a><a href="offers.html">Offers</a></div>
     <div><b>Trust</b><a href="warranty.html">Warranty</a><a href="refund.html">Refund policy</a><a href="faq.html">FAQ</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="sitemap.html">Sitemap</a></div>
-    <div><b>Company</b><a href="about.html">About us</a><a href="https://wa.me/8801305869242">WhatsApp support</a><a href="mailto:support@saveonsub.com">Email</a><a href="https://sysmoai.com" rel="noopener">SYSmoAI</a></div>
+    <div><b>Company</b><a href="about.html">About us</a><a href="https://wa.me/8801305869242">WhatsApp support</a><a href="mailto:support@saveonsub.com">Email</a></div>
   </div>
-  <p class="fine">© 2026 SAVEONSUB · A SYSmoAI venture. All product names and prices belong to their owners; official prices shown for comparison and verified where marked. We are an independent reseller/activation service — honest labels on every plan.</p>
+  <p class="fine">© 2026 SAVEONSUB. All product names and prices belong to their owners; official prices shown for comparison and verified where marked. We are an independent reseller/activation service — honest labels on every plan.</p>
 </div></footer>
 
 <script src="assets/catalog.js"></script>
@@ -230,7 +257,6 @@ ORG_LD_BN = ('{"@context":"https://schema.org","@type":"OnlineStore","name":"SAV
  '"description":"সৎ দামে আসল প্রিমিয়াম সাবস্ক্রিপশন — বিকাশ/নগদ/রকেটে।",'
  '"slogan":"সাবস্ক্রিপশনের সৎ দোকান","foundingDate":"2026",'
  '"founder":{"@type":"Person","name":"Emon Hossain","url":"https://emonhossain.pro"},'
- '"parentOrganization":{"@type":"Organization","name":"SYSmoAI","url":"https://sysmoai.com","sameAs":["https://aipremiumshop.com","https://github.com/sysmoai"]},'
  '"areaServed":{"@type":"Country","name":"Bangladesh"},"currenciesAccepted":"BDT",'
  '"paymentAccepted":"bKash, Nagad, Rocket","knowsLanguage":["bn","en"],'
  '"address":{"@type":"PostalAddress","addressCountry":"BD","addressLocality":"Dhaka"},'
@@ -254,7 +280,7 @@ bn = f'''<!DOCTYPE html>
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAVEONSUB — বাংলাদেশি দামে প্রিমিয়াম সাবস্ক্রিপশন, বিকাশে</title>
-<meta name="description" content="ChatGPT ৳{chat_from}, Google AI Pro ৳{frm(gap)}, Netflix ৳{frm(next(p for p in P if p['id']=='netflix'))} — BDT subscription options; access type, delivery SLA এবং warranty অর্ডারের আগে দেখুন।">
+<meta name="description" content="{price_phrase('chatgpt-plus','ChatGPT')}, {price_phrase('google-ai-pro','Google AI Pro')}, {price_phrase('netflix','Netflix')} — BDT subscription options; access type, delivery SLA এবং warranty অর্ডারের আগে দেখুন।">
 <link rel="canonical" href="https://saveonsub.com/bn.html">
 <link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn.html">
 <link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/">

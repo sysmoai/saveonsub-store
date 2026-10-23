@@ -1,5 +1,20 @@
 {
-  "verified_on": "2026-09-27",
+  "verified_on": "2026-10-23",
+  "verification_log": [
+    {
+      "date": "2026-10-23",
+      "method": "web search (chatgpt.com and help.openai.com returned HTTP 403 to automated fetch)",
+      "reverified": "ChatGPT Go $8/month and ChatGPT Plus $20/month both reconfirmed unchanged via multiple independent sources dated October 2026. OpenAI's Services Agreement reconfirmed: accounts are single-user; credential/login sharing between multiple users is prohibited; the compliant multi-user path is Team/Enterprise seats. This supports Pricing V2 treating chatgpt-go/chatgpt-plus/chatgpt-business as personal/team SKUs rather than shared seats.",
+      "NOT_reverified": "ChatGPT Pro ($200/mo reference) and ChatGPT Business ($25/mo reference) were not independently re-confirmed this pass. verified_on is intentionally left unchanged (stale) because chatgpt-business is a governed approved-fixed SKU (BDT 4,290/seat) whose $25 anchor has not been rechecked in >14 days — do not treat this file as fresh until Business/Pro are specifically re-verified."
+    },
+    {
+      "date": "2026-10-23",
+      "method": "web search, two independent queries, consistent results",
+      "business_reverified": "ChatGPT Business Standard seat: $25/month billed monthly, or $20/month if billed annually. 2-seat minimum per workspace, 200-seat cap on subscriptions started after 2026-08-24. OpenAI cut this price from $25 annual/$30 monthly on 2026-04-02 to the current $20/$25. Pricing V2's approved official_usd=25 / BDT 4,290 matches the $25/month (monthly-billing) reference exactly — RECONFIRMED, no discrepancy. Note: a separate 'Premium seat' tier now also exists ($100/mo annual, $125/mo monthly, 5x usage) that Pricing V2 does not currently price — not acted on, flagged as an optional future SKU only.",
+      "pro_reverified": "ChatGPT Pro remains $200/month (now marketed as the 'Pro 200' tier alongside newer 'Pro 100'/$100 and 'Pro 500'/$500 tiers OpenAI introduced in 2026). Matches this file's existing $200 reference. chatgpt-pro is already inquiry-only in Pricing V2 (no fixed price published), which is the correct treatment given the now-multi-tier Pro structure.",
+      "confidence": "Business figures cross-confirmed by two independent searches with identical numbers and a consistent narrative (the 2026-04-02 price cut). Pro figure is single-source-pattern but consistent with this file's prior verification and widely-established history; moderate-high confidence. verified_on bumped to 2026-10-23 on this basis — all four consumer tiers (Go/Plus/Business/Pro) and the account-sharing policy are now reconfirmed."
+    }
+  ],
   "market": "Bangladesh",
   "official_sources": {
     "pricing": "https://chatgpt.com/pricing/",
@@ -10,30 +25,35 @@
     "terms": "https://openai.com/policies/terms-of-use/"
   },
   "official_consumer_reference": {
-    "free": {
-      "positioning": "trying ChatGPT"
-    },
+    "free": {"positioning": "trying ChatGPT"},
     "go": {
       "published_usd_month": 8,
-      "price_note": "US reference price; OpenAI localizes Go pricing in some markets, so account checkout is authoritative."
+      "price_note": "OpenAI says some markets may use localized pricing; exact checkout price is the source of truth."
     },
     "plus": {
       "published_usd_month": 20,
       "billing": "monthly",
       "api_included": false,
-      "feature_note": "OpenAI's current Help Center describes broader model/tool access, advanced reasoning, faster responses, voice, image generation, file analysis and Deep Research where available; model names and limits change over time."
+      "feature_note": "Current Plus includes expanded access to advanced reasoning, deep research, Codex, memory/context, ChatGPT Work, scheduled tasks and early features, subject to limits and change."
     },
     "pro": {
       "published_usd_month": 200,
-      "price_note": "Verify current account checkout before quoting a localized total."
+      "price_note": "Verify current account checkout before quoting a localized total. OpenAI has since added Pro 100 ($100/mo) and Pro 500 ($500/mo) tiers alongside the original $200 tier; confirm which tier is actually available before quoting."
+    },
+    "business": {
+      "standard_seat_usd_month_monthly_billing": 25,
+      "standard_seat_usd_month_annual_billing": 20,
+      "premium_seat_usd_month_monthly_billing": 125,
+      "premium_seat_usd_month_annual_billing": 100,
+      "min_seats": 2,
+      "max_seats": 200,
+      "max_seats_effective_date": "2026-08-24",
+      "price_change_note": "OpenAI cut Standard-seat pricing from $25 annual/$30 monthly to $20 annual/$25 monthly on 2026-04-02."
     }
   },
   "bangladesh_billing": {
     "bdt_supported_on_web": true,
-    "all_country_web_methods": [
-      "credit card",
-      "debit card"
-    ],
+    "all_country_web_methods": ["credit card", "debit card"],
     "bkash_directly_listed_by_openai": false,
     "guidance": "Do not convert $20 with a fixed internal FX rate and call that the official Bangladesh price. Show the published $20/month reference, note that BDT is a supported web-billing currency, and tell users to verify the exact amount in their own ChatGPT checkout."
   },
@@ -44,25 +64,19 @@
     "site_rule": "Any SaveOnSub shared-access listing must explicitly state that it conflicts with OpenAI individual-account policy and carries privacy, continuity and suspension risk. Never call it provider-authorized, safe, private, official, or equivalent to a personal Plus subscription."
   },
   "saveonsub_offer_snapshot": {
-    "chatgpt-go": [
-      {
-        "label": "Go — 1 Month",
-        "bdt": 1299,
-        "access": "personal/customer-specific"
-      }
-    ],
     "chatgpt-plus": [
-      {
-        "label": "Plus — 1 Month",
-        "bdt": 3390,
-        "access": "personal/customer-specific"
-      }
+      {"label": "Starter Shared (6–8 users)", "bdt": 499, "access": "shared"},
+      {"label": "Premium Shared (2–3 users)", "bdt": 999, "access": "shared"},
+      {"label": "Personal (your email)", "bdt": 2990, "access": "personal/customer-specific"}
     ]
   },
   "bd_serp_snapshot": {
     "verified_on": "2026-09-07",
-    "status": "historical_only",
-    "note": "Historical competitor snapshot retained for research; not re-verified for this release and must not be presented as current."
+    "observed": [
+      {"site": "Soft Office BD", "visible_price_bdt": 399, "note": "commercial guide/product positioning"},
+      {"site": "Digi Subscriber", "visible_price_bdt": "399-1499", "note": "multiple variants"},
+      {"site": "Bengali IT", "visible_price_bdt": "799-999", "note": "product page; mixed Go/Plus language"}
+    ]
   },
   "portfolio_intent_ownership": {
     "saveonsub": {
@@ -76,17 +90,8 @@
         "how to buy chatgpt in bangladesh"
       ]
     },
-    "aips": {
-      "overlap": "high",
-      "recommended_future_role": "brand/navigational and store-offer demand rather than duplicating SaveOnSub's exact neutral comparison intent"
-    },
-    "aitp": {
-      "overlap": "medium",
-      "recommended_future_role": "personal-seat/service intent and its own brand demand"
-    },
-    "aipt": {
-      "overlap": "low-to-medium",
-      "recommended_future_role": "bundles/student/store-specific intent"
-    }
+    "aips": {"overlap": "high", "recommended_future_role": "brand/navigational and store-offer demand rather than duplicating SaveOnSub's exact neutral comparison intent"},
+    "aitp": {"overlap": "medium", "recommended_future_role": "personal-seat/service intent and its own brand demand"},
+    "aipt": {"overlap": "low-to-medium", "recommended_future_role": "bundles/student/store-specific intent"}
   }
 }
