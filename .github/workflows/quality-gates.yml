@@ -38,6 +38,17 @@ jobs:
           python -m unittest -v test_audit_home_prices
           python test_whatsapp_cta.py
 
+      - name: Setup Node (Order OS security tests use built-in TypeScript + SQLite)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Order OS security tests (Access JWT, state machine, payment provenance, concurrency, PII)
+        run: |
+          set -euo pipefail
+          python audit_order_os.py
+          node --import ./tests/order-os/register.mjs --test tests/order-os/*.test.mjs
+
       - name: Full repository regression audit
         run: |
           set -euo pipefail
