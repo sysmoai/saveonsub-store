@@ -54,7 +54,8 @@ def homepage_price_issues(products, html, policy):
         rule = policy.get('approved_products', {}).get(pid, {})
         inquiry = (product.get('request_price') is True
                    and product.get('pricing_status') == 'price-review-required'
-                   and rule.get('mode') == 'inquiry' and not rule.get('plans'))
+                   and ((rule.get('mode') == 'inquiry' and not rule.get('plans'))
+                        or (policy.get('commercial_hold') or {}).get('status') == 'HOLD'))
         cards = [card for card in parser.cards if any(
             link in (f'p/{pid}.html', f'/p/{pid}.html', f'p/{pid}', f'/p/{pid}')
             for link in card['links'])]

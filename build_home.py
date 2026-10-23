@@ -19,7 +19,7 @@ def cheapest_tos(p):
 
 nonb = [p for p in P if p['category'] != 'Bundles']
 # A bestseller-ranked SKU can be moved to inquiry-only/HOLD (empty plans) when
-# its fixed price is withheld — e.g. it no longer clears the margin floor, or
+# its fixed price is withheld — e.g. it is on commercial HOLD, or
 # the provider's own price undercuts it. There is no price to feature on a
 # homepage bestseller card in that case, and none should be invented, so it
 # is excluded from this carousel rather than crashing frm()/offbdt() below.

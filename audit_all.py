@@ -116,7 +116,10 @@ for _sec in ['Content-Security-Policy','Strict-Transport-Security','X-Content-Ty
     if _sec not in _hdr: issues.append(f"_headers missing {_sec}")
 if "script-src 'self'" not in _hdr: issues.append("_headers CSP missing script-src self restriction")
 cj = open('assets/catalog.js').read()
-if str(cat['products'][0]['plans'][0]['bdt']) not in cj: issues.append("catalog.js stale — rerun build_catalog.py")
+_priced = [pl for p in cat['products'] for pl in (p.get('plans') or [])]
+if cat.get('meta', {}).get('commercial_revision', '') not in cj: issues.append("catalog.js stale — rerun build_public_catalog.py")
+elif _priced and str(_priced[0]['bdt']) not in cj: issues.append("catalog.js stale — rerun build_public_catalog.py")
+elif not _priced and re.search(r'"bdt"\s*:', cj): issues.append("catalog.js exposes a price while catalog.json is HOLD — rerun build_public_catalog.py")
 _css = open('assets/style.css').read()
 if 'color-scheme' not in _css: issues.append("style.css missing color-scheme (dark form controls / no flash)")
 if 'prefers-reduced-motion' not in _css: issues.append("style.css missing reduced-motion support")

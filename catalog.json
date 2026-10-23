@@ -45,16 +45,7 @@
       "official_usd": 20,
       "official_url": "https://openai.com/chatgpt/pricing/",
       "price_source": "ceo-approved-2026-07-27",
-      "plans": [
-        {
-          "label": "Plus — 1 Month",
-          "bdt": 3390,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "chatgpt plus price in bangladesh",
         "chatgpt plus bangladesh",
@@ -181,10 +172,11 @@
           "chatgpt plus bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "chatgpt-go",
@@ -194,16 +186,7 @@
       "official_usd": 8,
       "official_url": "https://chatgpt.com/pricing/",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Go — 1 Month",
-          "bdt": 1299,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "chatgpt go price in bangladesh",
         "chatgpt go bangladesh",
@@ -320,10 +303,11 @@
           "chatgpt go bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "chatgpt-business",
@@ -333,16 +317,7 @@
       "official_usd": 25,
       "official_url": "https://openai.com/chatgpt/pricing/",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Business Standard Seat",
-          "bdt": 4290,
-          "duration": "1 month",
-          "type": "team",
-          "access_label": "Team / Workspace access",
-          "billing_unit": "user/month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "chatgpt business price in bangladesh",
         "chatgpt business bangladesh",
@@ -459,10 +434,11 @@
           "chatgpt business bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "chatgpt-pro",
@@ -592,7 +568,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "New $200 Pro subscriptions/upgrades are not published as fixed-price commerce in this release. Reconfirm the currently available provider tier before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "claude-pro",
@@ -602,16 +579,7 @@
       "official_usd": 20,
       "official_url": "https://claude.com/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Claude Pro — 1 Month",
-          "bdt": 3390,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "claude pro price in bangladesh",
         "claude pro bangladesh",
@@ -726,10 +694,11 @@
           "claude pro bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "claude-max",
@@ -739,24 +708,7 @@
       "official_usd": 200,
       "official_url": "https://claude.com/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Claude Max 5x — 1 Month",
-          "bdt": 16790,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Claude Max 20x — 1 Month",
-          "bdt": 33590,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "claude max price in bangladesh",
         "claude max bangladesh",
@@ -873,10 +825,11 @@
           "claude max bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "google-ai-pro",
@@ -886,16 +839,7 @@
       "official_usd": 19.99,
       "official_url": "https://one.google.com/about/google-ai-plans/",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Google AI Pro — 1 Month",
-          "bdt": 3390,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "google ai pro price in bangladesh",
         "google ai pro bangladesh",
@@ -1023,10 +967,11 @@
           "google ai pro bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "google-ai-plus",
@@ -1156,7 +1101,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "The legacy catalog provider-price reference does not match the current approved pricing baseline; reconfirm the exact provider tier before publishing a fixed price."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "supergrok",
@@ -1166,24 +1112,7 @@
       "official_usd": 30,
       "official_url": "https://x.ai",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "SuperGrok — 1 Month",
-          "bdt": 5090,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "SuperGrok Premium — 1 Month",
-          "bdt": 16790,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "supergrok price in bangladesh",
         "supergrok bangladesh",
@@ -1309,10 +1238,11 @@
           "supergrok bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "perplexity-pro",
@@ -1322,24 +1252,7 @@
       "official_usd": 20,
       "official_url": "https://www.perplexity.ai/pro",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Perplexity Pro — 1 Month",
-          "bdt": 3390,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Perplexity Max — 1 Month",
-          "bdt": 33590,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "perplexity pro price in bangladesh",
         "perplexity pro bangladesh",
@@ -1454,10 +1367,11 @@
           "perplexity pro bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "mistral-pro",
@@ -1467,15 +1381,7 @@
       "official_usd": 14.99,
       "official_url": "https://mistral.ai",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 1299,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "mistral le chat pro price in bangladesh",
         "mistral le chat pro bangladesh",
@@ -1592,8 +1498,11 @@
           "mistral le chat pro bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "manus",
@@ -1603,15 +1512,7 @@
       "official_usd": 39,
       "official_url": "https://manus.im",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "personal",
-          "label": "Standard Personal",
-          "bdt": 2500,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "manus ai agent price in bangladesh",
         "manus ai agent bangladesh",
@@ -1728,8 +1629,11 @@
           "manus ai agent bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "midjourney",
@@ -1739,40 +1643,7 @@
       "official_usd": 30,
       "official_url": "https://www.midjourney.com/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Basic — 1 Month",
-          "bdt": 1990,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Standard — 1 Month",
-          "bdt": 5090,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Pro — 1 Month",
-          "bdt": 10090,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Mega — 1 Month",
-          "bdt": 20190,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "midjourney price in bangladesh",
         "midjourney bangladesh",
@@ -1904,10 +1775,11 @@
           "midjourney for freelancers bangladesh"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "leonardo",
@@ -1917,16 +1789,7 @@
       "official_usd": 12,
       "official_url": "https://leonardo.ai/pricing/",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Entry Paid Tier — 1 Month",
-          "bdt": 2290,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "leonardo ai price in bangladesh",
         "leonardo ai bangladesh",
@@ -2039,10 +1902,11 @@
           "leonardo ai bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "ideogram",
@@ -2172,7 +2036,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "canva-pro",
@@ -2300,7 +2165,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "envato-elements",
@@ -2310,22 +2176,7 @@
       "official_usd": 16.5,
       "official_url": "https://elements.envato.com/pricing",
       "price_source": "may26-catalog",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Shared",
-          "bdt": 499,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 2499,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "envato elements price in bangladesh",
         "envato elements bangladesh",
@@ -2438,8 +2289,11 @@
           "envato elements bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "invideo",
@@ -2449,22 +2303,7 @@
       "official_usd": 25,
       "official_url": "https://invideo.io/pricing/",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Plus Shared",
-          "bdt": 699,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 2499,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "invideo ai price in bangladesh",
         "invideo ai bangladesh",
@@ -2579,8 +2418,11 @@
           "invideo ai bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "kling",
@@ -2590,22 +2432,7 @@
       "official_usd": 10,
       "official_url": "https://klingai.com",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Starter Shared",
-          "bdt": 270,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "label": "Pro Personal (own account)",
-          "bdt": 1299,
-          "type": "personal",
-          "tos": "personal",
-          "duration": "1 month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "kling ai price in bangladesh",
         "kling ai bangladesh",
@@ -2718,8 +2545,11 @@
           "kling ai bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "runway",
@@ -2729,32 +2559,7 @@
       "official_usd": 12,
       "official_url": "https://runwayml.com/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Standard — 1 Month",
-          "bdt": 2690,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Pro — 1 Month",
-          "bdt": 5890,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Unlimited — 1 Month",
-          "bdt": 15990,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "runway price in bangladesh",
         "runway bangladesh",
@@ -2884,10 +2689,11 @@
           "runway vs kling bangladesh"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "heygen",
@@ -2897,16 +2703,7 @@
       "official_usd": 29,
       "official_url": "https://www.heygen.com/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Creator — 1 Month",
-          "bdt": 4890,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "heygen price in bangladesh",
         "heygen bangladesh",
@@ -3030,10 +2827,11 @@
           "heygen bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "capcut-pro",
@@ -3043,22 +2841,7 @@
       "official_usd": 9.99,
       "official_url": "https://www.capcut.com",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Family Shared (2-3 users)",
-          "bdt": 249,
-          "type": "shared",
-          "tos": "shared-low",
-          "duration": "1 month"
-        },
-        {
-          "type": "shared",
-          "label": "Starter Shared",
-          "bdt": 399,
-          "duration": "1 month",
-          "tos": "shared-low"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "capcut pro price in bangladesh",
         "capcut pro bangladesh",
@@ -3173,8 +2956,11 @@
           "capcut pro bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "elevenlabs",
@@ -3184,32 +2970,7 @@
       "official_usd": 5,
       "official_url": "https://elevenlabs.io/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Starter — 1 Month",
-          "bdt": 1390,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Creator — 1 Month",
-          "bdt": 3690,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Pro — 1 Month",
-          "bdt": 16690,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "elevenlabs price in bangladesh",
         "elevenlabs bangladesh",
@@ -3333,10 +3094,11 @@
           "elevenlabs bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "suno",
@@ -3346,24 +3108,7 @@
       "official_usd": 10,
       "official_url": "https://suno.com",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Pro — 1 Month",
-          "bdt": 1990,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Premier — 1 Month",
-          "bdt": 5090,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "suno ai price in bangladesh",
         "suno ai bangladesh",
@@ -3476,10 +3221,11 @@
           "suno ai bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "udio",
@@ -3489,24 +3235,7 @@
       "official_usd": 10,
       "official_url": "https://www.udio.com",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Standard — 1 Month",
-          "bdt": 1990,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Pro — 1 Month",
-          "bdt": 5090,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "udio price in bangladesh",
         "udio bangladesh",
@@ -3619,10 +3348,11 @@
           "udio bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "otter",
@@ -3632,22 +3362,7 @@
       "official_usd": 16.99,
       "official_url": "https://otter.ai/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Starter Shared (budget)",
-          "bdt": 399,
-          "type": "shared",
-          "tos": "shared-low",
-          "duration": "1 month"
-        },
-        {
-          "type": "shared",
-          "label": "Pro Shared (6000 min)",
-          "bdt": 799,
-          "duration": "1 month",
-          "tos": "shared-low"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "otter.ai pro price in bangladesh",
         "otter.ai pro bangladesh",
@@ -3760,8 +3475,11 @@
           "otter.ai pro bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "github-copilot",
@@ -3771,24 +3489,7 @@
       "official_usd": 10,
       "official_url": "https://github.com/features/copilot/plans",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "label": "Copilot Pro — 1 Month",
-          "bdt": 1990,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Copilot Pro+ — 1 Month",
-          "bdt": 6590,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "github copilot pro price in bangladesh",
         "github copilot pro bangladesh",
@@ -3909,10 +3610,11 @@
           "copilot bd subscription"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "cursor",
@@ -3922,16 +3624,7 @@
       "official_usd": 20,
       "official_url": "https://cursor.com/pricing",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "label": "Cursor Pro — 1 Month",
-          "bdt": 3390,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "cursor pro price in bangladesh",
         "cursor pro bangladesh",
@@ -4053,10 +3746,11 @@
           "best ai code editor bangladesh"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "v0",
@@ -4182,7 +3876,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "replit-core",
@@ -4192,15 +3887,7 @@
       "official_usd": 20,
       "official_url": "https://replit.com/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "personal",
-          "label": "Core Personal — AIPS special",
-          "bdt": 500,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "replit core price in bangladesh",
         "replit core bangladesh",
@@ -4313,8 +4000,11 @@
           "replit core bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "windsurf",
@@ -4324,22 +4014,7 @@
       "official_usd": 15,
       "official_url": "https://windsurf.com/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Starter Shared (budget)",
-          "bdt": 299,
-          "type": "shared",
-          "tos": "shared-med",
-          "duration": "1 month"
-        },
-        {
-          "type": "shared",
-          "label": "Pro Shared",
-          "bdt": 590,
-          "duration": "1 month",
-          "tos": "shared-med"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "windsurf pro price in bangladesh",
         "windsurf pro bangladesh",
@@ -4452,8 +4127,11 @@
           "windsurf pro bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "grammarly",
@@ -4463,16 +4141,7 @@
       "official_usd": 30,
       "official_url": "https://www.grammarly.com/plans",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Grammarly Paid Plan — 1 Month",
-          "bdt": 5090,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "grammarly premium price in bangladesh",
         "grammarly premium bangladesh",
@@ -4585,10 +4254,11 @@
           "grammarly premium bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "quillbot",
@@ -4598,22 +4268,7 @@
       "official_usd": 9.95,
       "official_url": "https://quillbot.com/premium",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Starter Shared",
-          "bdt": 390,
-          "duration": "1 month",
-          "tos": "shared-low"
-        },
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 1490,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "quillbot premium price in bangladesh",
         "quillbot premium bangladesh",
@@ -4730,8 +4385,11 @@
           "quillbot vs grammarly bd"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "jasper",
@@ -4741,22 +4399,7 @@
       "official_usd": 39,
       "official_url": "https://www.jasper.ai/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Creator Starter Shared",
-          "bdt": 1520,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Creator Personal",
-          "bdt": 5830,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "jasper ai price in bangladesh",
         "jasper ai bangladesh",
@@ -4873,8 +4516,11 @@
           "ai copywriting tool bd"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "writesonic",
@@ -4884,22 +4530,7 @@
       "official_usd": 20,
       "official_url": "https://writesonic.com",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Starter Shared (budget)",
-          "bdt": 499,
-          "type": "shared",
-          "tos": "shared-med",
-          "duration": "1 month"
-        },
-        {
-          "type": "shared",
-          "label": "Individual Shared",
-          "bdt": 799,
-          "duration": "1 month",
-          "tos": "shared-med"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "writesonic price in bangladesh",
         "writesonic bangladesh",
@@ -5012,8 +4643,11 @@
           "writesonic bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "notion-ai",
@@ -5023,16 +4657,7 @@
       "official_usd": 20,
       "official_url": "https://www.notion.com/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Notion Paid AI/Business — 1 Month",
-          "bdt": 3390,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "notion business + ai price in bangladesh",
         "notion business + ai bangladesh",
@@ -5141,10 +4766,11 @@
           "notion business + ai bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "gamma",
@@ -5154,22 +4780,7 @@
       "official_usd": 8,
       "official_url": "https://gamma.app/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Starter Shared (budget)",
-          "bdt": 249,
-          "type": "shared",
-          "tos": "shared-low",
-          "duration": "1 month"
-        },
-        {
-          "type": "shared",
-          "label": "Plus Shared",
-          "bdt": 399,
-          "duration": "1 month",
-          "tos": "shared-low"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "gamma pro price in bangladesh",
         "gamma pro bangladesh",
@@ -5278,8 +4889,11 @@
           "gamma pro bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "netflix",
@@ -5289,22 +4903,7 @@
       "official_usd": 7.99,
       "official_url": "https://www.netflix.com",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "1 Screen (private profile)",
-          "bdt": 349,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Personal (your email)",
-          "bdt": 799,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "netflix price in bangladesh",
         "netflix bangladesh",
@@ -5428,8 +5027,11 @@
           "netflix bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "spotify",
@@ -5439,22 +5041,7 @@
       "official_usd": 2,
       "official_url": "https://www.spotify.com/bd-en/premium/",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Family slot (your account)",
-          "bdt": 129,
-          "duration": "1 month",
-          "tos": "shared-low"
-        },
-        {
-          "type": "official",
-          "label": "Official BD Individual (guide)",
-          "bdt": 219,
-          "duration": "1 month",
-          "tos": "official"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "spotify premium price in bangladesh",
         "spotify premium bangladesh",
@@ -5567,8 +5154,11 @@
           "spotify premium bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "youtube-premium",
@@ -5578,22 +5168,7 @@
       "official_usd": 2.2,
       "official_url": "https://www.youtube.com/premium",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Family slot (your Gmail)",
-          "bdt": 149,
-          "duration": "1 month",
-          "tos": "shared-low"
-        },
-        {
-          "type": "official",
-          "label": "Official BD Individual (guide)",
-          "bdt": 239,
-          "duration": "1 month",
-          "tos": "official"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "youtube premium price in bangladesh",
         "youtube premium bangladesh",
@@ -5717,8 +5292,11 @@
           "youtube premium bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "prime-video",
@@ -5728,22 +5306,7 @@
       "official_usd": 8.99,
       "official_url": "https://www.primevideo.com",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "1 Screen",
-          "bdt": 249,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 899,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "prime video price in bangladesh",
         "prime video bangladesh",
@@ -5867,8 +5430,11 @@
           "prime video bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "hoichoi",
@@ -5878,22 +5444,7 @@
       "official_usd": 5.45,
       "official_url": "https://www.hoichoi.tv",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "label": "Starter Shared (budget)",
-          "bdt": 299,
-          "type": "shared",
-          "tos": "shared-low",
-          "duration": "1 month"
-        },
-        {
-          "type": "official",
-          "label": "Official Yearly (guide/gift)",
-          "bdt": 599,
-          "duration": "1 year",
-          "tos": "official"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "hoichoi price in bangladesh",
         "hoichoi bangladesh",
@@ -6017,8 +5568,11 @@
           "hoichoi bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "coursera-plus",
@@ -6028,22 +5582,7 @@
       "official_usd": 59,
       "official_url": "https://www.coursera.org/courseraplus",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Shared",
-          "bdt": 1199,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 4999,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "coursera plus price in bangladesh",
         "coursera plus bangladesh",
@@ -6152,8 +5691,11 @@
           "coursera plus bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "linkedin-premium",
@@ -6163,15 +5705,7 @@
       "official_usd": 29.99,
       "official_url": "https://premium.linkedin.com",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "personal",
-          "label": "Personal (your profile)",
-          "bdt": 1999,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "linkedin premium career price in bangladesh",
         "linkedin premium career bangladesh",
@@ -6280,8 +5814,11 @@
           "linkedin premium career bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "nordvpn",
@@ -6291,22 +5828,7 @@
       "official_usd": 12.99,
       "official_url": "https://nordvpn.com/pricing/",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Shared",
-          "bdt": 299,
-          "duration": "1 month",
-          "tos": "shared-low"
-        },
-        {
-          "type": "personal",
-          "label": "Personal (1 year)",
-          "bdt": 3499,
-          "duration": "1 year",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "nordvpn price in bangladesh",
         "nordvpn bangladesh",
@@ -6426,8 +5948,11 @@
           "nordvpn bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "surfshark",
@@ -6437,22 +5962,7 @@
       "official_usd": 15.45,
       "official_url": "https://surfshark.com/pricing",
       "price_source": "verified-jul26",
-      "plans": [
-        {
-          "label": "Starter Shared (budget)",
-          "bdt": 149,
-          "type": "shared",
-          "tos": "shared-low",
-          "duration": "1 month"
-        },
-        {
-          "type": "shared",
-          "label": "Shared",
-          "bdt": 249,
-          "duration": "1 month",
-          "tos": "shared-low"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "surfshark price in bangladesh",
         "surfshark bangladesh",
@@ -6561,8 +6071,11 @@
           "surfshark bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "bundle-starter",
@@ -6681,7 +6194,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "bundle-creator",
@@ -6800,7 +6314,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "bundle-research",
@@ -6919,7 +6434,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "bundle-video",
@@ -7038,7 +6554,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "bundle-dev",
@@ -7157,7 +6674,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "copilot-pro",
@@ -7167,22 +6685,7 @@
       "official_usd": 20,
       "official_url": "https://www.microsoft.com/en-us/store/b/copilotpro",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Starter Shared",
-          "bdt": 780,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 2990,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "microsoft copilot pro price in bangladesh",
         "microsoft copilot pro bangladesh",
@@ -7299,8 +6802,11 @@
           "microsoft copilot pro bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "adobe-firefly",
@@ -7310,22 +6816,7 @@
       "official_usd": 4.99,
       "official_url": "https://www.adobe.com/products/firefly.html",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Starter Shared",
-          "bdt": 190,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "label": "Pro Personal (own account)",
-          "bdt": 499,
-          "type": "personal",
-          "tos": "personal",
-          "duration": "1 month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "adobe firefly price in bangladesh",
         "adobe firefly bangladesh",
@@ -7453,8 +6944,11 @@
           "adobe firefly bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "freepik",
@@ -7580,7 +7074,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "pika",
@@ -7590,22 +7085,7 @@
       "official_usd": 8,
       "official_url": "https://pika.art",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Starter Shared",
-          "bdt": 310,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 1200,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "pika labs price in bangladesh",
         "pika labs bangladesh",
@@ -7722,8 +7202,11 @@
           "pika 2.5 subscription bd"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "descript",
@@ -7853,7 +7336,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "opus-clip",
@@ -7863,22 +7347,7 @@
       "official_usd": 15,
       "official_url": "https://www.opus.pro/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Starter Shared",
-          "bdt": 590,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 2240,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "opus clip price in bangladesh",
         "opus clip bangladesh",
@@ -7993,8 +7462,11 @@
           "long video to shorts tool bd"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "synthesia",
@@ -8004,24 +7476,7 @@
       "official_usd": 18,
       "official_url": "https://www.synthesia.io/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "label": "Starter — 1 Month",
-          "bdt": 4890,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        },
-        {
-          "label": "Creator — 1 Month",
-          "bdt": 14990,
-          "duration": "1 month",
-          "type": "personal",
-          "access_label": "Customer-specific access",
-          "billing_unit": "month"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "synthesia price in bangladesh",
         "synthesia bangladesh",
@@ -8134,10 +7589,11 @@
           "synthesia bd taka"
         ]
       },
-      "request_price": false,
-      "pricing_status": "approved-fixed",
+      "request_price": true,
+      "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "murf",
@@ -8147,22 +7603,7 @@
       "official_usd": 19,
       "official_url": "https://murf.ai/pricing",
       "price_source": "aips-live-jul26",
-      "plans": [
-        {
-          "type": "shared",
-          "label": "Starter Shared",
-          "bdt": 740,
-          "duration": "1 month",
-          "tos": "shared-med"
-        },
-        {
-          "type": "personal",
-          "label": "Personal",
-          "bdt": 2840,
-          "duration": "1 month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "keywords": [
         "murf ai price in bangladesh",
         "murf ai bangladesh",
@@ -8275,8 +7716,11 @@
           "murf ai bd taka"
         ]
       },
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "aips-student-essentials",
@@ -8396,7 +7840,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "aips-university-pro",
@@ -8517,7 +7962,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "aips-freelancer-bundle",
@@ -8637,7 +8083,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "aips-business-package",
@@ -8757,7 +8204,8 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "aips-b2b-implementation",
@@ -8878,27 +8326,15 @@
       "request_price": true,
       "pricing_status": "price-review-required",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed."
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "commercial_hold": "EXEC-010"
     },
     {
       "id": "chorki",
       "name": "Chorki",
       "icon": "🎬",
       "category": "Entertainment",
-      "plans": [
-        {
-          "label": "Yearly (official)",
-          "bdt": 599,
-          "duration": "year",
-          "tos": "official"
-        },
-        {
-          "label": "Monthly activation",
-          "bdt": 99,
-          "duration": "month",
-          "tos": "official"
-        }
-      ],
+      "plans": [],
       "official_usd": 5,
       "official_url": "https://chorki.com/subscribe",
       "brand": "Chorki",
@@ -8950,28 +8386,18 @@
         "src": "chorki.com/subscribe"
       },
       "status": "gap-fill",
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "bongo-bd",
       "name": "Bongo BD Premium",
       "icon": "🎬",
       "category": "Entertainment",
-      "plans": [
-        {
-          "label": "Monthly Premium",
-          "bdt": 149,
-          "duration": "month",
-          "tos": "official"
-        },
-        {
-          "label": "Yearly Premium",
-          "bdt": 999,
-          "duration": "year",
-          "tos": "official"
-        }
-      ],
+      "plans": [],
       "official_usd": 3,
       "official_url": "https://bongobd.com/",
       "brand": "Bongo BD",
@@ -9022,28 +8448,18 @@
         "src": "bongobd.com"
       },
       "status": "gap-fill",
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "truecaller-premium",
       "name": "Truecaller Premium",
       "icon": "📞",
       "category": "VPN & Security",
-      "plans": [
-        {
-          "label": "Premium Monthly",
-          "bdt": 350,
-          "duration": "month",
-          "tos": "shared-low"
-        },
-        {
-          "label": "Premium Personal",
-          "bdt": 790,
-          "duration": "month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "official_usd": 9.99,
       "official_url": "https://www.truecaller.com/premium",
       "brand": "Truecaller",
@@ -9095,28 +8511,18 @@
         "src": "BD market survey july 2026"
       },
       "status": "gap-fill",
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "deepseek",
       "name": "DeepSeek",
       "icon": "🔍",
       "category": "AI Assistants",
-      "plans": [
-        {
-          "label": "API Access — Starter",
-          "bdt": 199,
-          "duration": "month",
-          "tos": "shared-low"
-        },
-        {
-          "label": "API Access — Pro",
-          "bdt": 599,
-          "duration": "month",
-          "tos": "shared-low"
-        }
-      ],
+      "plans": [],
       "official_usd": 2,
       "official_url": "https://chat.deepseek.com/",
       "brand": "DeepSeek",
@@ -9168,28 +8574,18 @@
         "src": ""
       },
       "status": "new",
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "adobe-creative-cloud",
       "name": "Adobe Creative Cloud",
       "icon": "🎨",
       "category": "AI Image & Design",
-      "plans": [
-        {
-          "label": "Photography Plan (20GB)",
-          "bdt": 990,
-          "duration": "month",
-          "tos": "shared-low"
-        },
-        {
-          "label": "All Apps Plan",
-          "bdt": 4990,
-          "duration": "month",
-          "tos": "shared-med"
-        }
-      ],
+      "plans": [],
       "official_usd": 54.99,
       "official_url": "https://www.adobe.com/creativecloud/plans.html",
       "brand": "Adobe",
@@ -9241,28 +8637,18 @@
         "src": "BD market survey july 2026"
       },
       "status": "gap-fill",
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "tinder-plus",
       "name": "Tinder Plus",
       "icon": "❤️",
       "category": "BD Lifestyle",
-      "plans": [
-        {
-          "label": "Plus Monthly",
-          "bdt": 399,
-          "duration": "month",
-          "tos": "personal"
-        },
-        {
-          "label": "Gold Monthly",
-          "bdt": 690,
-          "duration": "month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "official_usd": 7.99,
       "official_url": "https://tinder.com/",
       "brand": "Tinder",
@@ -9313,28 +8699,18 @@
         "src": ""
       },
       "status": "new",
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "pandapro",
       "name": "Foodpanda pro",
       "icon": "🛵",
       "category": "BD Lifestyle",
-      "plans": [
-        {
-          "label": "Monthly",
-          "bdt": 299,
-          "duration": "month",
-          "tos": "personal"
-        },
-        {
-          "label": "6 Months",
-          "bdt": 1299,
-          "duration": "6months",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "official_usd": 3.49,
       "official_url": "https://www.foodpanda.com.bd/",
       "brand": "Foodpanda",
@@ -9385,28 +8761,18 @@
         "src": "foodpanda.com.bd app"
       },
       "status": "gap-fill",
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     {
       "id": "pubg-royale-pass",
       "name": "PUBG Mobile Royal Pass",
       "icon": "🎮",
       "category": "Gaming",
-      "plans": [
-        {
-          "label": "Elite Pass (monthly)",
-          "bdt": 550,
-          "duration": "month",
-          "tos": "personal"
-        },
-        {
-          "label": "Elite Pass Plus",
-          "bdt": 990,
-          "duration": "month",
-          "tos": "personal"
-        }
-      ],
+      "plans": [],
       "official_usd": 5.99,
       "official_url": "https://www.pubgmobile.com/",
       "brand": "PUBG Mobile",
@@ -9458,8 +8824,11 @@
         "src": "BD gaming community survey july 2026"
       },
       "status": "gap-fill",
-      "pricing_status": "existing-local-catalog",
-      "pricing_revision": "pricing-v2-2026-09-17"
+      "pricing_status": "price-review-required",
+      "pricing_revision": "pricing-v2-2026-09-17",
+      "request_price": true,
+      "commercial_hold": "EXEC-010",
+      "commercial_note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     }
   ]
 }
