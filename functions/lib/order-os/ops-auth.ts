@@ -27,6 +27,8 @@ export class OpsAuthError extends Error {
   }
 }
 
+const LAST_SEEN_THROTTLE_MS = 5 * 60 * 1000;
+
 export async function requireOperator(request: Request, env: OpsEnv): Promise<Operator> {
   if (!env.DB) throw new OpsAuthError(503, "STAFF_BACKEND_NOT_CONFIGURED", "DB_NOT_CONFIGURED");
 
@@ -51,10 +53,13 @@ export async function requireOperator(request: Request, env: OpsEnv): Promise<Op
   if (!operator) throw new OpsAuthError(403, "FORBIDDEN", "OPERATOR_NOT_AUTHORIZED");
 
   // Presence tracking is best-effort and must never block an authorised request.
+  // Throttled in SQL to one write per operator per 5 minutes.
   try {
-    const ts = new Date().toISOString();
-    await env.DB.prepare("UPDATE operators SET last_seen_at=?, updated_at=? WHERE id=?")
-      .bind(ts, ts, operator.id).run();
+    const now = Date.now();
+    const ts = new Date(now).toISOString();
+    const cutoff = new Date(now - LAST_SEEN_THROTTLE_MS).toISOString();
+    await env.DB.prepare("UPDATE operators SET last_seen_at=?, updated_at=? WHERE id=? AND (last_seen_at IS NULL OR last_seen_at < ?)")
+      .bind(ts, ts, operator.id, cutoff).run();
   } catch {
     console.warn("operator_last_seen_update_failed");
   }

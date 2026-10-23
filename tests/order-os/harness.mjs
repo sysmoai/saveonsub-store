@@ -121,8 +121,8 @@ export async function makeWorld() {
       id, pub, `hash-${seq}`, `idem-${seq}-xxxxxxxxxxxxxxxx`, ref, total, name, phone, email, ts, ts);
     if (status === "payment_review") return { id, pub };
     if (status === "cancelled") { db.run("UPDATE orders SET status='cancelled' WHERE id=?", id); return { id, pub }; }
-    db.run(`INSERT INTO payment_verifications (id,order_id,provider,txn_ref_hash,txn_ref_last4,amount_minor,currency,verified_by,verified_at)
-      VALUES (?,?,?,?,?,?,?,?,?)`, `pv-${seq}`, id, "bkash", `txn-hash-${seq}`, "0000", total, "BDT", OPERATORS.owner.id, ts);
+    db.run(`INSERT INTO payment_verifications (id,order_id,provider,txn_ref_hash,txn_ref_last4,amount_minor,currency,evidence_ref,verified_by,verified_at)
+      VALUES (?,?,?,?,?,?,?,?,?,?)`, `pv-${seq}`, id, "bkash", `txn-hash-${seq}`, "0000", total, "BDT", `stmt:seed-${seq}`, OPERATORS.owner.id, ts);
     for (const step of ["payment_confirmed", "assigned", "fulfilling", "delivered", "support_open", "completed", "refunded"]) {
       if (status === step) {
         db.run("UPDATE orders SET status=?, assigned_operator_id=? WHERE id=?", step, assignee, id);

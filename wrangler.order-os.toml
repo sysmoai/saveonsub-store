@@ -1,6 +1,15 @@
-name = "saveonsub-order-os"
+# Staff / Order OS — its OWN Cloudflare Pages project. Never the storefront.
+#
+# The canonical storefront (project "saveonsub", saveonsub.com) is deployed by
+# .github/workflows/canonical-deploy-manual.yml from inside _site/, so it never
+# bundles ./functions. This config is the only place the staff API belongs:
+#   npx wrangler pages deploy --config wrangler.order-os.toml   (staging only,
+#   Access-protected, after Emon approves the project, D1 and R2 bindings)
+# audit_order_os.py fails if this name ever becomes "saveonsub" or the output
+# directory becomes the public _site artifact.
+name = "saveonsub-staff-staging"
 compatibility_date = "2026-09-27"
-pages_build_output_dir = "_site"
+pages_build_output_dir = "staff-ui"
 
 # Production IDs are intentionally absent from this implementation branch.
 # Create/bind the dedicated SaveOnSub D1 database only after schema and cost/security review.

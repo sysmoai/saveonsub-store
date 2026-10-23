@@ -118,7 +118,7 @@ terminal states immutable and forbid any paid-or-later state without an active m
 
 | Capability | owner | manager | fulfillment | support | viewer |
 |---|---|---|---|---|---|
-| Verify payment | yes | yes | no | no | no |
+| Verify payment | yes | only if `PAYMENT_VERIFIER_ROLES` includes `manager` | no | no | no |
 | Cancel / refund | yes | yes | no | no | no |
 | Claim order | yes | yes | yes | no | no |
 | Fulfil (fulfilling/delivered/completed) | yes | yes | own claimed orders | no | no |
@@ -134,10 +134,12 @@ Ripon is assumed to hold the `support` role. The role record is not in the repos
 
 ### Payment provenance
 
-`POST /api/ops/orders/:id/payment-verification` (owner/manager). A customer-submitted reference is a claim, never proof.
+`POST /api/ops/orders/:id/payment-verification` (owner = CEO only by default; `PAYMENT_VERIFIER_ROLES="owner,manager"` is the only
+widening). A customer-submitted reference is a claim, never proof. A required `evidence_ref` cites settlement evidence
+(`r2:sos/private/...` object or `stmt:...` merchant-statement id); a screenshot or any URL is refused.
 The verifier supplies provider, the provider reference and the exact amount seen in the merchant statement. The amount and
 currency must equal the order total (the expected total is not revealed on mismatch). Stored: provider, SHA-256 of
-`provider:reference`, last four characters, amount, currency, verifier, time. Not stored: the full reference.
+`provider:reference`, last four characters, amount, currency, evidence_ref, verifier, time. Not stored: the full reference.
 A partial unique index rejects the same reference on a second order and a second active verification on one order.
 
 ### Terminal-state reversal
@@ -150,3 +152,12 @@ verified again before fulfilment can restart.
 
 Clients receive stable codes only (`UNAUTHENTICATED`, `FORBIDDEN`, `STAFF_BACKEND_NOT_CONFIGURED`, `STALE_STATE`, ...).
 Token, JWKS and database error text is logged server-side and never returned.
+
+## Access JWT and deployment boundary (SOS-T018)
+
+- `TEAM_DOMAIN` must match `^https://[a-z0-9-]+\.cloudflareaccess\.com$`, otherwise every staff request is 503.
+- The token `type` claim must be exactly `app`; a missing `type` is 401.
+- `operators.last_seen_at` is written at most once per operator per 5 minutes (SQL-side throttle).
+- The staff API deploys only to its own Pages project (`wrangler.order-os.toml`, `saveonsub-staff-staging`). The storefront
+  workflow deploys from inside `_site/`, so `./functions` is never bundled into project `saveonsub`. Both are enforced by
+  `audit_order_os.py`. A Cloudflare dry run is still an owner action.

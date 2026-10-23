@@ -8,6 +8,8 @@ export type AccessIdentity = {
   subject: string;
 };
 
+const TEAM_DOMAIN_PATTERN = /^https:\/\/[a-z0-9-]+\.cloudflareaccess\.com$/;
+
 const b64url = (value: string) => {
   const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
   const padded = normalized + "=".repeat((4 - (normalized.length % 4)) % 4);
@@ -25,8 +27,8 @@ export async function verifyAccessRequest(
   const teamDomain = (env.TEAM_DOMAIN || "").replace(/\/$/, "");
   const audience = env.POLICY_AUD || "";
   // The issuer claim is compared to this value verbatim and the JWKS URL is
-  // built from it, so it must be an https origin.
-  if (!teamDomain.startsWith("https://") || !audience) throw new Error("ACCESS_NOT_CONFIGURED");
+  // built from it, so it must be exactly a Cloudflare Access team origin.
+  if (!TEAM_DOMAIN_PATTERN.test(teamDomain) || !audience) throw new Error("ACCESS_NOT_CONFIGURED");
 
   const token = request.headers.get("cf-access-jwt-assertion") || "";
   const parts = token.split(".");
@@ -58,7 +60,7 @@ export async function verifyAccessRequest(
   const now = Math.floor(Date.now() / 1000);
   if (typeof payload.exp !== "number" || payload.exp <= now) throw new Error("ACCESS_TOKEN_EXPIRED");
   if (payload.nbf && payload.nbf > now + 30) throw new Error("ACCESS_TOKEN_NOT_YET_VALID");
-  if (payload.type && payload.type !== "app") throw new Error("ACCESS_TOKEN_INVALID_TYPE");
+  if (payload.type !== "app") throw new Error("ACCESS_TOKEN_INVALID_TYPE");
   if (!payload.email || !payload.sub) throw new Error("ACCESS_IDENTITY_MISSING");
 
   let jwks: { keys?: JsonWebKey[] };

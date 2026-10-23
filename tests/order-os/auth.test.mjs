@@ -152,3 +152,38 @@ test("every ops order endpoint refuses unauthenticated callers", async () => {
   ];
   for (const r of results) assert.equal(r.status, 401);
 });
+
+test("T018-08: a token without a type claim is 401", async () => {
+  const token = await signJwt(w.keys, { ...goodClaims("owner"), type: undefined });
+  assert.equal((await listWith(token)).status, 401);
+});
+
+test("T018-08: TEAM_DOMAIN must be a *.cloudflareaccess.com origin (503 otherwise)", async () => {
+  for (const domain of ["https://evil.com", "https://saveonsub.cloudflareaccess.com.evil.com",
+                        "https://evil.com/x.cloudflareaccess.com", "https://a.b.cloudflareaccess.com"]) {
+    const saved = w.env.TEAM_DOMAIN;
+    w.env.TEAM_DOMAIN = domain;
+    const r = await w.api.list("owner");
+    w.env.TEAM_DOMAIN = saved;
+    assert.equal(r.status, 503, domain);
+  }
+});
+
+test("T018-08: last_seen_at is written at most once per 5 minutes per operator", async () => {
+  let writes = 0;
+  const prepare = w.db.prepare.bind(w.db);
+  w.db.prepare = (sql) => {
+    const stmt = prepare(sql);
+    if (/^\s*UPDATE operators SET last_seen_at/i.test(sql)) {
+      const run = stmt.run.bind(stmt);
+      stmt.run = async () => { const r = await run(); writes += r.meta.changes; return r; };
+    }
+    return stmt;
+  };
+  assert.equal((await w.api.list("owner")).status, 200);
+  assert.equal((await w.api.list("owner")).status, 200);
+  assert.equal(writes, 1);
+  w.db.run("UPDATE operators SET last_seen_at=? WHERE id=?", new Date(Date.now() - 6 * 60 * 1000).toISOString(), OPERATORS.owner.id);
+  assert.equal((await w.api.list("owner")).status, 200);
+  assert.equal(writes, 2);
+});

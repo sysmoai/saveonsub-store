@@ -10,7 +10,7 @@ let w;
 beforeEach(async () => { w = await makeWorld(); });
 afterEach(() => restoreFetch());
 
-const GOOD_VERIFY = { provider: "bkash", transaction_id: "9ABC12XYZ0", amount_bdt: 1500 };
+const GOOD_VERIFY = { provider: "bkash", transaction_id: "9ABC12XYZ0", amount_bdt: 1500, evidence_ref: "stmt:bkash-2026-01-01-0001" };
 
 // ---------------------------------------------------------------- Finding A
 test("A: owner/manager cannot take any edge that is not in the ordinary state machine", async () => {
@@ -159,10 +159,10 @@ test("B: payment_confirmed is impossible without a verification record (database
     VALUES ('x','SOS-X','h','k-xxxxxxxxxxxxxxxxxx','completed',100,'t','t')`), /ORDER_MUST_START_UNPAID/);
 });
 
-test("B: only owner/manager can verify; support, fulfillment and viewer are refused", async () => {
+test("B: only the owner (CEO) can verify by default; manager, support, fulfillment and viewer are refused", async () => {
   const { pub } = w.seedOrder({ status: "payment_review" });
   const before = w.snapshot();
-  for (const who of ["support", "fulfillA", "viewer"]) {
+  for (const who of ["manager", "support", "fulfillA", "viewer"]) {
     assert.equal((await w.api.verify(who, pub, GOOD_VERIFY)).status, 403, who);
   }
   assert.equal(w.snapshot(), before);
@@ -170,11 +170,12 @@ test("B: only owner/manager can verify; support, fulfillment and viewer are refu
 
 test("B: verification records provenance and confirms the order atomically", async () => {
   const { pub, id } = w.seedOrder({ status: "payment_review", ref: "9abc12xyz0" });
-  const r = await w.api.verify("manager", pub, { ...GOOD_VERIFY, evidence_note: "seen in merchant statement" });
+  const r = await w.api.verify("owner", pub, { ...GOOD_VERIFY, evidence_note: "seen in merchant statement" });
   assert.equal(r.status, 200);
   assert.equal(r.body.status, "payment_confirmed");
   const v = w.db.one("SELECT * FROM payment_verifications WHERE order_id=?", id);
-  assert.equal(v.verified_by, OPERATORS.manager.id);
+  assert.equal(v.verified_by, OPERATORS.owner.id);
+  assert.equal(v.evidence_ref, GOOD_VERIFY.evidence_ref);
   assert.equal(v.amount_minor, 150000);
   assert.equal(v.currency, "BDT");
   assert.equal(v.txn_ref_last4, "XYZ0");
@@ -233,13 +234,13 @@ test("B: the same provider reference cannot back two orders (duplicate control)"
   const b = w.seedOrder({ status: "payment_review", total: 150000 });
   assert.equal((await w.api.verify("owner", a.pub, GOOD_VERIFY)).status, 200);
   const before = w.snapshot();
-  const dup = await w.api.verify("manager", b.pub, { ...GOOD_VERIFY, transaction_id: "9abc12xyz0" });
+  const dup = await w.api.verify("owner", b.pub, { ...GOOD_VERIFY, transaction_id: "9abc12xyz0" });
   assert.equal(dup.status, 409);
   assert.equal(dup.body.error, "DUPLICATE_PAYMENT_REFERENCE");
   assert.equal(w.snapshot(), before, "failed duplicate leaves no verification, event or status change");
   assert.equal(w.order(b.pub).status, "payment_review");
   // Same reference on another provider is a different payment.
-  assert.equal((await w.api.verify("manager", b.pub, { ...GOOD_VERIFY, provider: "nagad" })).status, 200);
+  assert.equal((await w.api.verify("owner", b.pub, { ...GOOD_VERIFY, provider: "nagad" })).status, 200);
 });
 
 test("B: an order cannot be verified twice, and only while awaiting payment", async () => {
@@ -433,4 +434,37 @@ test("missing orders table does not crash the auth layer into a 200", async () =
   w.env.DB = saved;
   assert.equal(r.status, 503);
   assert.doesNotMatch(JSON.stringify(r.body), /operators|D1_ERROR/);
+});
+
+test("T018-07: PAYMENT_VERIFIER_ROLES can widen to manager only; never to support/fulfillment/viewer", async () => {
+  const saved = w.env.PAYMENT_VERIFIER_ROLES;
+  try {
+    w.env.PAYMENT_VERIFIER_ROLES = "owner,manager,support,fulfillment,viewer";
+    const a = w.seedOrder({ status: "payment_review" });
+    for (const who of ["support", "fulfillA", "viewer"]) {
+      assert.equal((await w.api.verify(who, a.pub, GOOD_VERIFY)).status, 403, who);
+    }
+    assert.equal((await w.api.verify("manager", a.pub, GOOD_VERIFY)).status, 200);
+  } finally {
+    w.env.PAYMENT_VERIFIER_ROLES = saved;
+  }
+  const b = w.seedOrder({ status: "payment_review" });
+  assert.equal((await w.api.verify("manager", b.pub, { ...GOOD_VERIFY, transaction_id: "OTHERTXN123" })).status, 403);
+});
+
+test("T018-07: evidence_ref is required and must be settlement evidence, not a screenshot or URL", async () => {
+  const { pub } = w.seedOrder({ status: "payment_review" });
+  const before = w.snapshot();
+  const { evidence_ref, ...noRef } = GOOD_VERIFY;
+  const missing = await w.api.verify("owner", pub, noRef);
+  assert.equal(missing.status, 400);
+  assert.equal(missing.body.error, "EVIDENCE_REF_REQUIRED");
+  for (const bad of ["https://example.test/shot.png", "r2:sos/private/payments/shot.png", "r2:sos/public/x",
+                     "r2:sos/private/../x", "screenshot", "stmt:", 42]) {
+    const r = await w.api.verify("owner", pub, { ...GOOD_VERIFY, evidence_ref: bad });
+    assert.equal(r.status, 400, String(bad));
+  }
+  assert.equal(w.snapshot(), before);
+  const ok = await w.api.verify("owner", pub, { ...GOOD_VERIFY, evidence_ref: "r2:sos/private/payments/2026/statement-0001.pdf" });
+  assert.equal(ok.status, 200);
 });

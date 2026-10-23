@@ -24,9 +24,8 @@ type CreateOrderBody = {
   items: CreateOrderItem[];
 };
 
-// This branch intentionally uses a tiny governed snapshot.
-// Production must generate this file from the canonical catalog/policy build,
-// never maintain prices by hand in the API.
+// Plans resolve only from the governed public catalog (catalog.json). While the
+// EXEC-010 HOLD is active every product is request_price, so every order is 409.
 import { resolveGovernedPlan } from "../../lib/order-os/catalog-policy";
 
 const json = (body: unknown, status = 200) =>

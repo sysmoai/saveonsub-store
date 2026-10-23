@@ -79,7 +79,7 @@ test("C: payment references and other internal columns are never returned by the
 
 test("C: event history is redacted per role on the server", async () => {
   const { pub, id } = w.seedOrder({ status: "payment_review" });
-  await w.api.verify("owner", pub, { provider: "bkash", transaction_id: "9ABC12XYZ0", amount_bdt: 1500, evidence_note: "stmt" });
+  await w.api.verify("owner", pub, { provider: "bkash", transaction_id: "9ABC12XYZ0", amount_bdt: 1500, evidence_note: "stmt", evidence_ref: "stmt:redaction-0001" });
   await w.api.claim("fulfillA", pub);
   await w.api.status("manager", pub, { status: "refunded", note: NOTE });
 
@@ -106,7 +106,7 @@ test("C: event history is redacted per role on the server", async () => {
 
 test("C: payment verification events never expose the provider reference", async () => {
   const { pub } = w.seedOrder({ status: "payment_review" });
-  await w.api.verify("owner", pub, { provider: "nagad", transaction_id: "SECRETTXN99", amount_bdt: 1500 });
+  await w.api.verify("owner", pub, { provider: "nagad", transaction_id: "SECRETTXN99", amount_bdt: 1500, evidence_ref: "stmt:redaction-0002" });
   for (const who of ["owner", "manager", "fulfillA", "support", "viewer"]) {
     assert.ok(!JSON.stringify((await w.api.events(who, pub)).body).includes("SECRETTXN99"), who);
   }

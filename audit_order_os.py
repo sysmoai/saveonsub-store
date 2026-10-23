@@ -6,14 +6,16 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 errors=[]
 
-policy=json.loads((ROOT/"ops/PRICING-V2-2026-09-17.json").read_text(encoding="utf-8"))
+# The order API resolves plans only from the governed public catalog
+# (functions/lib/order-os/catalog-policy.ts), never from ops/ pricing notes.
+catalog=json.loads((ROOT/"catalog.json").read_text(encoding="utf-8"))
 seen=set()
 sellable=0
-for product_id, product in policy["approved_products"].items():
-    plans=product.get("plans") or []
-    if product.get("mode")=="inquiry":
+for product in catalog["products"]:
+    product_id=product.get("id")
+    if product.get("request_price") is not False:
         continue
-    for plan in plans:
+    for plan in product.get("plans") or []:
         sellable+=1
         pid=plan.get("plan_id")
         if not pid:
@@ -25,8 +27,24 @@ for product_id, product in policy["approved_products"].items():
         seen.add(key)
         if not isinstance(plan.get("bdt"),int) or plan["bdt"]<=0:
             errors.append(f"{product_id}:{pid}: invalid BDT price")
-        if plan.get("access_type") not in {"personal","team"}:
+        if (plan.get("access_type") or plan.get("type")) not in {"personal","team"}:
             errors.append(f"{product_id}:{pid}: unsupported access_type")
+if "PRICING-V2" in (ROOT/"functions/lib/order-os/catalog-policy.ts").read_text(encoding="utf-8"):
+    errors.append("catalog-policy.ts must not read ops/PRICING-V2 (T018-02)")
+
+# T018-09: the staff/API Pages project must never be the storefront project.
+_wcfg=(ROOT/"wrangler.order-os.toml").read_text(encoding="utf-8")
+import re as _re
+_name=_re.search(r'^name\s*=\s*"([^"]+)"',_wcfg,_re.M)
+_out=_re.search(r'^pages_build_output_dir\s*=\s*"([^"]+)"',_wcfg,_re.M)
+if not _name or _name.group(1)=="saveonsub":
+    errors.append("wrangler.order-os.toml must name a separate staff Pages project, never 'saveonsub'")
+if not _out or _out.group(1).strip("./")=="_site":
+    errors.append("wrangler.order-os.toml must not publish the public _site artifact")
+for _wf in (ROOT/".github/workflows").glob("*.yml"):
+    for _line in _wf.read_text(encoding="utf-8").splitlines():
+        if "pages deploy" in _line and "cd _site" not in _line:
+            errors.append(f"{_wf.name}: 'pages deploy' must run from inside _site: {_line.strip()}")
 
 required=[
     "functions/api/orders/index.ts",

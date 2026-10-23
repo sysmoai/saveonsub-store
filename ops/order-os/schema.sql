@@ -137,6 +137,8 @@ CREATE TABLE IF NOT EXISTS payment_verifications (
   currency TEXT NOT NULL,
   matches_customer_reference INTEGER NOT NULL DEFAULT 0,
   evidence_note TEXT,
+  -- Settlement evidence (private R2 object or merchant statement id), never a screenshot URL.
+  evidence_ref TEXT NOT NULL CHECK (evidence_ref LIKE 'r2:sos/private/%' OR evidence_ref LIKE 'stmt:%'),
   verified_by TEXT NOT NULL REFERENCES operators(id),
   verified_at TEXT NOT NULL,
   voided_at TEXT,

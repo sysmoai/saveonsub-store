@@ -1,5 +1,4 @@
 import { requireOperator, authFailure, type OpsEnv } from "../../../../lib/order-os/ops-auth";
-import { isPrivileged } from "../../../../lib/order-os/order-workflow";
 import { json, nowIso, readJson, writeFailure } from "../../../../lib/order-os/http";
 
 // The only way an order reaches payment_confirmed.
@@ -9,22 +8,43 @@ import { json, nowIso, readJson, writeFailure } from "../../../../lib/order-os/h
 // order total was seen in the provider's merchant statement, and supplies the
 // provider reference themselves. We keep a hash (duplicate detection) and the
 // last four characters (operator recognition) - never the full reference.
-// Delegating this to support/fulfillment needs explicit CEO approval.
+//
+// Who may verify: the CEO (owner) only, by default. PAYMENT_VERIFIER_ROLES can
+// widen this to "owner,manager" and nothing else; support/fulfillment/viewer
+// can never verify. Every verification must cite settlement evidence
+// (evidence_ref): a private R2 object (r2:sos/private/...) or a merchant
+// statement id (stmt:...). A screenshot or any URL is not settlement evidence.
 
 const PROVIDERS = new Set(["bkash", "nagad", "rocket", "bank_transfer", "other"]);
 const TXN_PATTERN = /^[A-Z0-9][A-Z0-9_-]{5,39}$/;
 const MAX_BDT = 10_000_000;
+const EVIDENCE_REF = /^(?:r2:sos\/private\/[A-Za-z0-9][A-Za-z0-9._\/-]{0,199}|stmt:[A-Za-z0-9][A-Za-z0-9._:-]{3,119})$/;
+const SCREENSHOT = /\.(?:png|jpe?g|webp|gif|heic|bmp)$/i;
+
+type VerifierEnv = OpsEnv & { PAYMENT_VERIFIER_ROLES?: string };
+
+export function paymentVerifierRoles(env: VerifierEnv): Set<string> {
+  const roles = new Set(["owner"]);
+  for (const role of String(env.PAYMENT_VERIFIER_ROLES || "").split(",")) {
+    if (role.trim() === "manager") roles.add("manager");
+  }
+  return roles;
+}
+
+export function validEvidenceRef(ref: string) {
+  return EVIDENCE_REF.test(ref) && !ref.includes("..") && !SCREENSHOT.test(ref);
+}
 
 async function sha256Hex(input: string) {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(input));
   return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-export const onRequestPost: PagesFunction<OpsEnv> = async ({ request, env, params }) => {
+export const onRequestPost: PagesFunction<VerifierEnv> = async ({ request, env, params }) => {
   let operator;
   try { operator = await requireOperator(request, env); }
   catch (e) { return authFailure(e); }
-  if (!isPrivileged(operator.role)) return json({ error: "PAYMENT_VERIFICATION_FORBIDDEN" }, 403);
+  if (!paymentVerifierRoles(env).has(operator.role)) return json({ error: "PAYMENT_VERIFICATION_FORBIDDEN" }, 403);
 
   const body = await readJson(request);
   if (!body) return json({ error: "INVALID_JSON" }, 400);
@@ -34,6 +54,9 @@ export const onRequestPost: PagesFunction<OpsEnv> = async ({ request, env, param
   const amountBdt = typeof body.amount_bdt === "number" ? body.amount_bdt : NaN;
   const currency = typeof body.currency === "string" ? body.currency.toUpperCase() : "BDT";
   const note = typeof body.evidence_note === "string" ? body.evidence_note.trim().slice(0, 300) : "";
+  const evidenceRef = typeof body.evidence_ref === "string" ? body.evidence_ref.trim() : "";
+  if (!evidenceRef) return json({ error: "EVIDENCE_REF_REQUIRED" }, 400);
+  if (!validEvidenceRef(evidenceRef)) return json({ error: "INVALID_EVIDENCE_REF" }, 400);
   if (!PROVIDERS.has(provider)) return json({ error: "INVALID_PROVIDER" }, 400);
   if (!TXN_PATTERN.test(txn)) return json({ error: "INVALID_TRANSACTION_REFERENCE" }, 400);
   if (!Number.isFinite(amountBdt) || amountBdt <= 0 || amountBdt > MAX_BDT) return json({ error: "INVALID_AMOUNT" }, 400);
@@ -64,9 +87,9 @@ export const onRequestPost: PagesFunction<OpsEnv> = async ({ request, env, param
   try {
     await env.DB.batch([
       env.DB.prepare(`INSERT INTO payment_verifications
-        (id,order_id,provider,txn_ref_hash,txn_ref_last4,amount_minor,currency,matches_customer_reference,evidence_note,verified_by,verified_at)
-        SELECT ?,id,?,?,?,total_minor,currency,?,?,?,? FROM orders WHERE id=? AND status='payment_review' AND total_minor=? AND currency=?`)
-        .bind(verificationId, provider, hash, last4, matchesCustomer, note || null, operator.id, ts, order.id, order.total_minor, order.currency),
+        (id,order_id,provider,txn_ref_hash,txn_ref_last4,amount_minor,currency,matches_customer_reference,evidence_note,evidence_ref,verified_by,verified_at)
+        SELECT ?,id,?,?,?,total_minor,currency,?,?,?,?,? FROM orders WHERE id=? AND status='payment_review' AND total_minor=? AND currency=?`)
+        .bind(verificationId, provider, hash, last4, matchesCustomer, note || null, evidenceRef, operator.id, ts, order.id, order.total_minor, order.currency),
       env.DB.prepare(`INSERT INTO order_events(order_id,event_type,actor_type,actor_id,payload_json,created_at)
         SELECT order_id,'payment_verified','operator',?,?,? FROM payment_verifications WHERE id=?`)
         .bind(operator.id, JSON.stringify({ provider, last4, amount_minor: amountMinor, matches_customer_reference: !!matchesCustomer }), ts, verificationId),
