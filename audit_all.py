@@ -123,26 +123,10 @@ if 'prefers-reduced-motion' not in _css: issues.append("style.css missing reduce
 if ':focus' not in _css: issues.append("style.css missing focus states (keyboard a11y)")
 
 idx=open('index.html').read()
-for p in cat['products']:
-    if p.get('bestseller_rank',0)>0:
-        plans = p.get('plans') or []
-        if not plans:
-            # Inquiry-only/HOLD SKU (e.g. pulled off a fixed price because it
-            # no longer clears the margin floor, or the provider's own price
-            # undercuts it). min() on an empty plan list used to crash this
-            # whole audit the moment any bestseller-ranked product went HOLD.
-            # There is no approved price to check a homepage figure against,
-            # and none should be invented — but the homepage card for this
-            # product must show a confirm-price prompt, not a leaked/stale
-            # BDT figure left over from before it went inquiry-only.
-            name = re.escape(p.get('name', p['id']))
-            card = re.search(rf'<h3>{name}</h3>.*?</div>\s*</div>', idx, re.S)
-            if card and re.search(r'৳[\d,]+', card.group(0)):
-                issues.append(f"HOMEPAGE DRIFT: {p['id']} is inquiry-only (no approved plans) but its homepage card still shows a BDT price — {card.group(0)[:160]}")
-            continue
-        f=min(pl['bdt'] for pl in plans)
-        if f"৳{f:,}" not in idx and f"৳{f}" not in idx:
-            issues.append(f"HOMEPAGE DRIFT: {p['id']} from-price ৳{f} not on index")
+from audit_home_prices import homepage_price_issues
+with open('ops/PRICING-V2-2026-09-17.json', encoding='utf-8') as policy_file:
+    pricing_policy = json.load(policy_file)
+issues.extend(homepage_price_issues(cat['products'], idx, pricing_policy))
 for f in ['blog/index.html','_headers','_redirects','build_all.sh','README.md','build_home.py','contact.html','track.html','students.html','offers.html','sitemap.html','bn.html',
           'sw.js','offline.html','assets/icon-192.png','assets/icon-512.png','order.html','bn/faq.html','bn/how-to-order.html']:
     if not os.path.exists(f): issues.append(f"missing {f}")
