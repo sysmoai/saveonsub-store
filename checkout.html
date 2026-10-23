@@ -219,7 +219,7 @@ function confirmWA(){
 }
 function upsell(){
   const inCart=new Set(cartGet().map(i=>i.id));
-  const picks=CATALOG.products.filter(p=>['canva-pro','perplexity-pro','spotify'].includes(p.id)&&!inCart.has(p.id)).slice(0,3);
+  const picks=CATALOG.products.filter(p=>['canva-pro','perplexity-pro','spotify'].includes(p.id)&&!inCart.has(p.id)&&!p.request_price&&Array.isArray(p.plans)&&p.plans.length).slice(0,3);
   document.getElementById('upsell').innerHTML=picks.map(p=>{
     const ch=p.plans.reduce((a,b)=>a.bdt<b.bdt?a:b);
     return `<div class="citem"><span>${p.icon} <b>${p.name}</b><br><span style="color:var(--muted);font-size:12px">${ch.label}</span></span>
