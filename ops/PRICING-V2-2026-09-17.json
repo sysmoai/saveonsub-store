@@ -32,7 +32,7 @@
           "plan_id": "go-1m"
         }
       ],
-      "price_change_note": "CEO decision 2026-10-23 (EMON HOSSAIN): keep BDT 1,299. This is a documented exception to the BDT 500 net-profit floor: at the $8/month official anchor the estimated landed cost is ~BDT 1,141 (8 x 124 x 1.15), leaving ~BDT 158 contribution. The engineering recommendation of BDT 1,690 was reviewed and declined. Revisit if acquisition cost or FX changes."
+      "price_change_note": "CEO decision 2026-10-23 (EMON HOSSAIN): keep BDT 1,299. Recorded exception to the BDT 500 net-profit floor. Cost basis and estimated contribution are held in private business records, not in this public repository. The engineering recommendation of a higher price was reviewed and declined."
     },
     "chatgpt-plus": {
       "official_usd": 20,
@@ -109,7 +109,7 @@
           "plan_id": "google-ai-pro-1m"
         }
       ],
-      "price_change_note": "CEO decision 2026-10-23 (EMON HOSSAIN): restore the BDT 3,390 fixed price after the engineering HOLD. Risk on record: Google bills Bangladesh directly at BDT 2,500/month (gemini.google/bd, fetched 2026-10-23), so this price sits above the provider's own direct local price. The exact plan, fulfillment method and what the extra BDT 890 buys must be stated honestly on the page and confirmed before payment."
+      "price_change_note": "CEO decision 2026-10-23 (EMON HOSSAIN): restore the BDT 3,390 fixed price after the engineering HOLD. Risk on record: the provider sells this plan directly in Bangladesh at a lower price, so the page must state the access method and what SaveOnSub provides honestly, and confirm before payment."
     },
     "google-ai-plus": {
       "mode": "inquiry",

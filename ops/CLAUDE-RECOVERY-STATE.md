@@ -40,8 +40,8 @@ The pipeline of record is `build_site.py` (see `.github/workflows/quality-gates.
 
 | SKU | Decision | Notes |
 |---|---|---|
-| ChatGPT Go | **Stay ৳1,299** | Documented exception to the ৳500 net-profit floor (~৳158 est. contribution at $8 anchor). Recorded in `ops/PRICING-V2-2026-09-17.json`. Engineering suggestion of ৳1,690 declined. |
-| Google AI Pro | **Restore ৳3,390** | Risk accepted on record: Google bills Bangladesh directly at ৳2,500/mo (gemini.google/bd, 2026-10-23). Page must state access method honestly. |
+| ChatGPT Go | **Stay ৳1,299** | Documented exception to the ৳500 net-profit floor. Cost basis and contribution are kept in private records, not in this public repo. |
+| Google AI Pro | **Restore ৳3,390** | Risk accepted on record: the provider sells this plan directly in Bangladesh for less (public price). Page must state the access method honestly. |
 | Netflix | Bangladesh-scoped tiers (Mobile 2.99 / Basic 3.99 / Standard 7.99 / Premium 9.99 USD) | Previous session corrected its own US-tier mistake from `netflix.com/bd`. Source not independently re-verified by this session. Needs a human spot-check. |
 
 No other price was changed. Engineering recommendations are not CEO-approved prices.
