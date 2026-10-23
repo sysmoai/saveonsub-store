@@ -197,7 +197,7 @@
       "plans": [
         {
           "label": "Go — 1 Month",
-          "bdt": 1690,
+          "bdt": 1299,
           "duration": "1 month",
           "type": "personal",
           "access_label": "Customer-specific access",
@@ -886,7 +886,16 @@
       "official_usd": 19.99,
       "official_url": "https://one.google.com/about/google-ai-plans/",
       "price_source": "aips-live-jul26",
-      "plans": [],
+      "plans": [
+        {
+          "label": "Google AI Pro — 1 Month",
+          "bdt": 3390,
+          "duration": "1 month",
+          "type": "personal",
+          "access_label": "Customer-specific access",
+          "billing_unit": "month"
+        }
+      ],
       "keywords": [
         "google ai pro price in bangladesh",
         "google ai pro bangladesh",
@@ -1014,10 +1023,10 @@
           "google ai pro bd taka"
         ]
       },
-      "request_price": true,
-      "pricing_status": "price-review-required",
+      "request_price": false,
+      "pricing_status": "approved-fixed",
       "pricing_revision": "pricing-v2-2026-09-17",
-      "commercial_note": "2026-10-23 HOLD (engineering decision, pending CEO confirmation): Google bills Bangladesh directly in BDT for this exact plan at BDT 2,500/month (gemini.google/bd, fetched 2026-10-23), which is below this SKU's prior USD-anchor-formula price of BDT 3,390. Selling above the provider's own direct local price contradicts SaveOnSub's core value proposition and is commercially indefensible, so the fixed price is withheld rather than carried forward. Re-enable only with an honest service-fee framing (e.g. assistance/activation fee on top of the BDT 2,500 reference) or other CEO-approved model — not a reinstated USD-FX markup."
+      "commercial_note": "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
     },
     {
       "id": "google-ai-plus",

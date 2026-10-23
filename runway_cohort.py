@@ -55,11 +55,20 @@ def facts_panel(bn=False):
 </section>'''
 
 
+# Pricing V2 relabelled the legacy "Unlimited Personal" plan "Unlimited — 1 Month".
+# Both spellings must stay disabled: Runway stopped new Unlimited sales on
+# 2026-06-01, so the card must never reach a purchase action.
+UNLIMITED_LABELS = ("Unlimited Personal", "Unlimited — 1 Month")
+
+
 def disable_unlimited_card(text, bn=False):
-    start = text.find('<div class="pcard"', text.find('<b>Unlimited Personal</b>') - 250)
+    label = next((l for l in UNLIMITED_LABELS if f'<b>{l}</b>' in text), None)
+    if label is None:
+        raise SystemExit("RUNWAY COHORT ERROR — Unlimited card start missing")
+    start = text.find('<div class="pcard"', text.find(f'<b>{label}</b>') - 250)
     if start < 0:
         raise SystemExit("RUNWAY COHORT ERROR — Unlimited card start missing")
-    marker = 'cartAdd(&quot;runway&quot;,&quot;Unlimited Personal&quot;'
+    marker = f'cartAdd(&quot;runway&quot;,&quot;{label}&quot;'
     button_pos = text.find(marker, start)
     if button_pos < 0:
         raise SystemExit("RUNWAY COHORT ERROR — Unlimited purchase action missing")
@@ -96,8 +105,11 @@ def patch_product(rel, bn=False):
         raise SystemExit(f"RUNWAY COHORT ERROR — official anchor missing in {rel}")
     text = re.sub(r'<tr><td>Official list converted at site anchor rate</td>.*?</tr>', '', text, flags=re.S)
     text = re.sub(r'<tr><td>অফিসিয়াল[^<]*(?:anchor|converted)[^<]*</td>.*?</tr>', '', text, flags=re.S | re.I)
-    text = re.sub(r',?\s*\{"@type":\s*"Offer",\s*"name":\s*"Unlimited Personal".*?\}', '', text, count=1, flags=re.S)
+    for label in UNLIMITED_LABELS:
+        text = re.sub(r',?\s*\{"@type":\s*"Offer",\s*"name":\s*"' + re.escape(label) + r'".*?\}', '', text, count=1, flags=re.S)
     text = text.replace('"offerCount": 3', '"offerCount": 2').replace('"highPrice": 11362', '"highPrice": 4186')
+    # Pricing V2 Unlimited price must not survive as the advertised high price.
+    text = text.replace('"highPrice": 15990', '"highPrice": 5890')
     text = disable_unlimited_card(text, bn)
     anchor = '<h2 class="mt3" style="font-size:22px">আপনার প্ল্যান বেছে নিন</h2>' if bn else '<h2 class="mt3" style="font-size:22px">Choose your plan</h2>'
     if anchor not in text:
@@ -127,7 +139,7 @@ for rel in ["p/runway.html", "bn/p/runway.html"]:
     for marker in [f'data-runway-facts="{VERIFIED}"', f'data-runway-official="{VERIFIED}"', 'data-runway-legacy-unlimited="retired-new-sales"']:
         if marker not in text:
             raise SystemExit(f"RUNWAY COHORT ERROR — missing marker {marker} in {rel}")
-    for stale in ["Official: ~৳1,320", "SAVE 62%", "cartAdd(&quot;runway&quot;,&quot;Unlimited Personal&quot;", '"name": "Unlimited Personal"']:
+    for stale in ["Official: ~৳1,320", "SAVE 62%"] + [f'cartAdd(&quot;runway&quot;,&quot;{l}&quot;' for l in UNLIMITED_LABELS] + [f'"name": "{l}"' for l in UNLIMITED_LABELS]:
         if stale in text:
             raise SystemExit(f"RUNWAY COHORT ERROR — stale signal survived in {rel}: {stale}")
 

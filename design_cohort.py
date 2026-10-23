@@ -36,6 +36,10 @@ def inject_before_first_notice(text, block):
         return text
     marker = '<div class="notice mt2"'
     if marker not in text:
+        # Inquiry-only/HOLD placeholder pages (data-inquiry-only) have no
+        # plan notices; fixed-price pages must still carry the anchor.
+        if 'data-inquiry-only' in text and '</div></main>' in text:
+            return text.replace('</div></main>', block + '</div></main>', 1)
         raise SystemExit("language-agnostic notice injection anchor missing")
     return text.replace(marker, block + marker, 1)
 

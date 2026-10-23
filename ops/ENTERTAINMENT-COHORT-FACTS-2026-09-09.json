@@ -17,23 +17,26 @@
     {
       "date": "2026-10-23",
       "method": "engineering decision (requested to resolve rather than leave open)",
-      "decision": "Adopting the web-search-consensus structure (Standard-with-Ads $8.99 / Standard $19.99 / Premium $26.99, Basic discontinued) over the help-center fetch result. Reasoning: the help-center answer is internally self-contradictory on its face (no 'Mobile' tier has ever existed in the US; 'Basic' is independently, widely documented as discontinued in 2024-2025), while the $8.99/$19.99/$26.99 structure was returned by two independent searches, is internally consistent, and matches well-established reporting of Netflix's 2025-2026 price increases. This is the best available evidence without live-checkout access; it is NOT a primary-source screenshot. Recommend a human spot-check netflix.com's live pricing page when convenient, but the gate no longer needs to stay blocked on this basis.",
-      "margin_flag": "If SaveOnSub's Netflix catalog entry was priced against the old $2.99-$9.99 assumption, its acquisition-cost basis was likely 2-3x too low under the corrected structure — flagged for a margin re-check on the Netflix catalog row specifically (not changed here; catalog.json Netflix pricing is out of scope for this pass since netflix is not a Pricing V2-governed AI SKU)."
+      "decision": "SUPERSEDED — this was WRONG. Adopted the US-market web-search-consensus structure ($8.99/$19.99/$26.99, Basic discontinued) for a Bangladesh-scoped facts file. The error: Netflix runs country-specific tier structures, not one global structure, and multiple independent sources describing the US market's 2024-2025 price increase do not establish what Bangladesh is billed. Country-scoping was not kept distinct from market-wide reporting. Corrected below."
+    },
+    {
+      "date": "2026-10-23",
+      "method": "direct fetch of https://www.netflix.com/bd/ (the actual Bangladesh-scoped official URL, not a help-center article or aggregator) plus two further Bangladesh-scoped web searches",
+      "decision": "RESTORED the original four-tier Mobile $2.99 / Basic $3.99 / Standard $7.99 / Premium $9.99 structure (480p/720p/1080p/4K+HDR, 1/1/2/4 simultaneous streams respectively). The direct fetch of netflix.com/bd itself states 'Starts at USD 2.99... Plans range from USD 2.99 to USD 9.99/month' — a primary source, correctly scoped to Bangladesh, confirming this range. Multiple independent searches scoped to Bangladesh specifically (not the US) consistently name all four tiers and prices. Netflix charges Bangladesh accounts in USD (no local BDT price list) and uses a lower-tier structure retained in Bangladesh/South-Asia-class markets, distinct from the higher 3-tier US structure reported in the prior (incorrect) pass. verified_on bumped on this corrected, properly country-scoped basis.",
+      "lesson": "Provider pricing must be scoped by country, currency and effective date before being treated as a reference — the same provider can legitimately show different structures in different markets at the same time. Do not substitute one market's reporting for another's without an explicit same-country source."
     }
   ],
   "netflix": {
-    "official_source": "https://www.netflix.com/bd/ (Bangladesh does not get a separate official BDT price list; global USD tiers are the reference)",
+    "official_source": "https://www.netflix.com/bd/",
     "currency": "USD",
     "verified_on": "2026-10-23",
     "plans": {
-      "Standard with Ads": {"price_month": 8.99, "quality": "1080p", "devices": "2 simultaneous streams", "ads": true},
-      "Standard": {"price_month": 19.99, "quality": "1080p", "devices": "2 simultaneous streams", "ads": false},
-      "Premium": {"price_month": 26.99, "quality": "4K + HDR", "devices": "4 simultaneous streams", "ads": false}
+      "Mobile": {"price_month": 2.99, "quality": "480p", "devices": "1 screen, phone/tablet"},
+      "Basic": {"price_month": 3.99, "quality": "720p (HD)", "devices": "1 screen, phone/tablet/laptop/TV"},
+      "Standard": {"price_month": 7.99, "quality": "1080p (Full HD)", "devices": "2 screens, phone/tablet/laptop/TV"},
+      "Premium": {"price_month": 9.99, "quality": "4K UHD + HDR", "devices": "4 screens, phone/tablet/laptop/TV"}
     },
-    "retired_tiers": {
-      "Mobile": "never an official US tier; was India/limited-market only and should not be used as a US/global reference",
-      "Basic": "discontinued for new and returning US subscribers, 2024-2025"
-    }
+    "billing_note": "Netflix does not bill Bangladesh in BDT; accounts are charged in USD, so the exact BDT amount depends on card/bank FX conversion at the time of billing."
   },
   "spotify": {
     "official_source": "https://www.spotify.com/bd-en/premium/",

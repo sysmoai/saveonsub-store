@@ -8,11 +8,27 @@ from templates import nav_en, nav_bn, footer_en, footer_bn
 cat = json.load(open('catalog.json'))
 rate = cat['meta']['usd_anchor_rate']
 tos_meta = cat['meta']['tos_risk_levels']
-sla_meta = cat['meta']['delivery_slas']
+# apply_pricing_v2.py deliberately pops delivery_slas/warranty from meta —
+# "SLA/warranty is always order-specific" is current commercial-truth policy,
+# not a removed-by-accident field. Never reconstruct a fixed SLA promise here.
+sla_meta = cat['meta'].get('delivery_slas', {})
 os.makedirs('p', exist_ok=True)
 
-TOS_LABEL = {"official": "OFFICIAL", "personal": "PERSONAL", "shared-low": "SHARED · LOW RISK", "shared-med": "SHARED · WARRANTY COVERED", "bundle": "BUNDLE"}
-TOS_CLASS = {"official": "official", "personal": "personal", "shared-low": "shared-low", "shared-med": "shared-med", "bundle": "shared-low"}
+TOS_LABEL = {"official": "OFFICIAL", "personal": "PERSONAL", "shared-low": "SHARED · LOW RISK", "shared-med": "SHARED · WARRANTY COVERED", "bundle": "BUNDLE", "team": "TEAM / WORKSPACE"}
+TOS_CLASS = {"official": "official", "personal": "personal", "shared-low": "shared-low", "shared-med": "shared-med", "bundle": "shared-low", "team": "personal"}
+
+def plan_tos(pl):
+    # Pricing-V2-governed plans (apply_pricing_v2.py's public_plan()) carry
+    # "type" (personal/team/bundle/service), not the legacy "tos" field.
+    return pl.get('tos') or pl.get('type') or 'personal'
+
+def rel_price_html(x):
+    # A "People also buy" pick can itself be inquiry-only/HOLD (empty plans).
+    # Never invent a price for it either.
+    plans = x.get('plans') or []
+    if not plans:
+        return '<div class="price" style="font-size:13px;color:var(--muted)">Confirm price</div>'
+    return f'<div class="price">৳{min(pl["bdt"] for pl in plans):,}</div>'
 
 def esc(s): return html.escape(str(s), quote=True)
 def jstr(s): return json.dumps(s, ensure_ascii=False)
@@ -34,11 +50,70 @@ def related(p):
         same += [x for x in products if x['category'] != p['category'] and x['category'] != 'Bundles' and x not in same and x['id'] != p['id']][:3-len(same)]
     return same[:3]
 
+def sla_text(sla_key):
+    # delivery_slas was deliberately removed from catalog meta by
+    # apply_pricing_v2.py ("SLA/warranty is always order-specific" is current
+    # policy) — never reconstruct a fixed timing promise when it's absent.
+    return sla_meta.get(sla_key, 'timing confirmed before payment')
+
+def inquiry_page(p):
+    # This SKU has no approved plans right now (apply_pricing_v2.py fail-closes
+    # unapproved AI products, bundles pending component re-verification, and
+    # any SKU pulled off a fixed price for a documented commercial reason —
+    # e.g. google-ai-pro, HOLD 2026-10-23). Never invent a price here. This
+    # root page is a minimal, structurally valid placeholder: the staged
+    # pipeline's commercial_truth_v2.py fully rewrites <main>, <title> and the
+    # meta description for every governed product before anything deploys.
+    name = p['name'].replace('🎁 ', '')
+    title = f"{name} Price in Bangladesh — Confirm Current Price | SAVEONSUB"
+    if len(title) > 60: title = f"{name[:30]} — Confirm Price | SAVEONSUB"
+    desc = f"{name} in Bangladesh: current price, access type and availability are confirmed on WhatsApp before any payment."
+    if len(desc) > 155: desc = desc[:152] + "…"
+    speak_ld = {"@context": "https://schema.org", "@type": "WebPage",
+        "url": f"https://saveonsub.com/p/{p['id']}.html",
+        "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["h1", ".anchor"]}}
+    wa = f"https://wa.me/8801305869242?text=" + esc(f"Hi, please confirm the current {name} price, exact tier and access method.")
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{esc(title)}</title>
+<meta name="description" content="{esc(desc)}">
+<link rel="canonical" href="https://saveonsub.com/p/{p['id']}.html">
+<link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/p/{p['id']}.html">
+<link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn/p/{p['id']}.html">
+<link rel="alternate" hreflang="x-default" href="https://saveonsub.com/p/{p['id']}.html">
+<meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
+<meta property="og:type" content="product"><meta property="og:url" content="https://saveonsub.com/p/{p['id']}.html">
+<meta name="theme-color" content="#102634">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{json.dumps(speak_ld, ensure_ascii=False)}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+{nav_en("../")}
+<main id="main" data-inquiry-only="1"><div class="wrap" style="max-width:880px">
+  <div class="crumbs"><a href="../index.html">Home</a> › <a href="../all.html">All Products</a> › {esc(name)}</div>
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><span style="font-size:46px">{p['icon']}</span><h1 style="font-size:clamp(26px,4vw,38px)">{esc(name)} — Confirm Current Price</h1></div>
+  <p class="sub mt2">The current price for {esc(name)} is confirmed on WhatsApp before any payment. Access type, availability and support terms are shown before you order.</p>
+  <div class="ctas mt2"><a class="btn btn-primary btn-sm" href="{wa}" target="_blank" rel="noopener">Confirm current price on WhatsApp</a></div>
+</div></main>
+<button class="fab fab-wa" onclick="location.href='{wa}'" aria-label="WhatsApp">💬 WhatsApp</button>
+{footer_en("../")}
+<script src="../assets/catalog.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>"""
+
 def page(p):
+    if not p.get('plans'):
+        return inquiry_page(p)
     cheapest = min(p['plans'], key=lambda x: x['bdt'])
     official_bdt = round(p['official_usd'] * rate)
     save = max(0, round(100 - cheapest['bdt']/official_bdt*100)) if official_bdt > cheapest['bdt'] else 0
-    # Strip emoji prefixes for titles (they waste SERP characters)  
+    # Strip emoji prefixes for titles (they waste SERP characters)
     name = p['name'].replace('🎁 ', '')
     import unicodedata as _uc
     name_clean = name
@@ -48,7 +123,7 @@ def page(p):
     title = f"{name_clean} Price in Bangladesh — ৳{cheapest['bdt']:,} | SAVEONSUB"
     if len(title) > 60: title = f"{name_clean} BD Price — ৳{cheapest['bdt']:,} | SAVEONSUB"
     if len(title) > 60: title = f"{name_clean[:40]} — ৳{cheapest['bdt']:,} | SAVEONSUB"
-    desc = f"{name_clean} in Bangladesh from ৳{cheapest['bdt']:,}/{cheapest['duration']} (official reference ~৳{official_bdt:,}). Local BDT payment, {sla_meta[cheapest['sla']]} delivery for this plan; access and SaveOnSub warranty terms shown on-page."
+    desc = f"{name_clean} in Bangladesh from ৳{cheapest['bdt']:,}/{cheapest['duration']} (official reference ~৳{official_bdt:,}). Local BDT payment, {sla_text(cheapest.get('sla'))} delivery for this plan; access and SaveOnSub warranty terms shown on-page."
     if len(desc) > 155: desc = desc[:152] + "…"
 
     offers = [{"@type": "Offer", "name": pl['label'], "price": pl['bdt'], "priceCurrency": "BDT",
@@ -75,23 +150,23 @@ def page(p):
 
     plans_html = ""
     for pl in p['plans']:
-        tos = pl['tos']
+        tos = plan_tos(pl)
         plans_html += f"""
       <div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
         <div><b>{esc(pl['label'])}</b><br>
           <span class="tos {TOS_CLASS[tos]}">{TOS_LABEL[tos]}</span>
-          <span style="font-size:12px;color:var(--muted)"> · {esc(pl['duration'])} · delivery {esc(sla_meta[pl['sla']])}</span></div>
+          <span style="font-size:12px;color:var(--muted)"> · {esc(pl['duration'])} · delivery {esc(sla_text(pl.get('sla')))}</span></div>
         <div style="display:flex;align-items:center;gap:14px">
           <span style="font-size:22px;font-weight:900;color:var(--green2)">৳{pl['bdt']:,}</span>
           <button class="btn btn-primary btn-sm" onclick="cartAdd({jattr(p['id'])},{jattr(pl['label'])},{pl['bdt']},{jattr(name)})">Add to cart</button>
         </div></div>"""
 
     tos_notes = "".join(f'<p style="margin-top:6px"><span class="tos {TOS_CLASS[t]}">{TOS_LABEL[t]}</span> <span style="color:var(--muted);font-size:13.5px">{esc(tos_meta.get(t,""))}</span></p>'
-                        for t in dict.fromkeys(pl['tos'] for pl in p['plans']) if t in tos_meta)
+                        for t in dict.fromkeys(plan_tos(pl) for pl in p['plans']) if t in tos_meta)
 
     faq_html = "".join(f"<details{' open' if i==0 else ''}><summary>{esc(f['q'])}</summary><p>{esc(f['a'])}</p></details>" for i, f in enumerate(p['faq']))
 
-    rel_html = "".join(f"""<a class="pcard" href="{x['id']}.html"><span class="icon">{x['icon']}</span><h3>{esc(x['name'].replace('🎁 ',''))}</h3><span class="cat">{esc(x['category'])}</span><div class="price">৳{min(pl['bdt'] for pl in x['plans']):,}</div></a>""" for x in related(p))
+    rel_html = "".join(f"""<a class="pcard" href="{x['id']}.html"><span class="icon">{x['icon']}</span><h3>{esc(x['name'].replace('🎁 ',''))}</h3><span class="cat">{esc(x['category'])}</span>{rel_price_html(x)}</a>""" for x in related(p))
 
 
     mk = p.get('market', {})
@@ -192,7 +267,7 @@ def page(p):
   {guide_html}
   {market_html}
   <div class="notice mt2"><b>🏷️ What these labels mean (we're honest):</b>{tos_notes}</div>
-  <div class="notice green mt2">🛡️ <b>Warranty:</b> {esc(cat['meta']['warranty'])}</div>
+  <div class="notice green mt2">🛡️ <b>Warranty:</b> {esc(cat['meta'].get('warranty', 'Warranty and replacement terms are order-specific and confirmed in writing before payment.'))}</div>
   <div class="notice mt2">🧭 <b>Price-match guarantee:</b> Find a lower official price? We match it + 5% off. Every subscription is official, activated on YOUR own account, and 100% customer-owned.</div>
   <div class="notice mt2" style="font-size:12.5px;color:var(--muted);line-height:1.6"><b>Important Notice:</b> SAVEONSUB is not an official distributor, reseller, or partner of any subscription platform. We provide setup and activation support to help Bangladesh-based users access plans using local payment methods (bKash, Nagad, bank transfer). Your account is 100% customer-owned; we do not retain access to your credentials. If we cannot complete activation within the agreed window, you receive a full refund per our refund policy.</div>
   <h2 class="mt3" style="font-size:22px">Questions about {esc(name)}</h2>
@@ -215,33 +290,82 @@ def page(p):
 
 count = 0
 for p in products:
-    open(f"p/{p['id']}.html", 'w').write(page(p))
+    # Render first: open(..., 'w') truncates, so a page() exception used to
+    # leave a zero-byte committed page behind (p/chatgpt-plus.html).
+    html_out = page(p)
+    open(f"p/{p['id']}.html", 'w', encoding='utf-8').write(html_out)
     count += 1
 print(f"OK: generated {count} product pages in p/")
 
 # ===================== BANGLA PRODUCT PAGES (bn/p/<id>.html) =====================
 TOS_LABEL_BN = {"official": "অফিসিয়াল", "personal": "পার্সোনাল অ্যাকাউন্ট",
-                "shared-low": "শেয়ার্ড · কম ঝুঁকি", "shared-med": "শেয়ার্ড · ওয়ারেন্টিসহ", "bundle": "বান্ডেল"}
+                "shared-low": "শেয়ার্ড · কম ঝুঁকি", "shared-med": "শেয়ার্ড · ওয়ারেন্টিসহ", "bundle": "বান্ডেল", "team": "টিম / ওয়ার্কস্পেস"}
 SLA_BN = {"instant": "৫–১৫ মিনিট", "fast": "১–৩ ঘণ্টা", "same-day": "একই দিনে", "1-2-days": "১–২ দিন"}
-def sla_bn(s): return SLA_BN.get(s, esc(sla_meta.get(s, s)))
+def sla_bn(s): return SLA_BN.get(s) or esc(sla_meta.get(s, 'পেমেন্টের আগে নিশ্চিত করা হয়'))
 # Universal, hand-written Bangla FAQ — applies honestly to every product
 def bn_faq(name, frm):
     return [
       ("এটা কি আসল এবং নিরাপদ?",
        "অ্যাক্সেস পদ্ধতি, shared/personal ঝুঁকি এবং প্রযোজ্য warranty অর্ডারের আগে দেখুন। shared access-এ sensitive data ব্যবহার করবেন না। Pay-after-testing শুধু যে product/order-এ স্পষ্টভাবে offer করা হয় সেখানে প্রযোজ্য।"),
       ("কত দ্রুত ডেলিভারি পাব?",
-       "ইনস্ট্যান্ট প্রোডাক্ট হোয়াটসঅ্যাপে ৫–১৫ মিনিটে। পার্সোনাল অ্যাকাউন্ট সেটআপে ১–২ দিন লাগতে পারে — প্রতিটি প্ল্যানে সময় লেখা আছে।"),
+       "ডেলিভারির সময় প্রোডাক্ট ও অর্ডার অনুযায়ী ভিন্ন হয়; পেমেন্টের আগে নির্দিষ্ট সময় নিশ্চিত করা হয়। প্রতিটি প্ল্যানে exact timing দেখানো থাকে।"),
       ("কীভাবে পেমেন্ট করব?",
        "বিকাশ, নগদ বা রকেটে সেন্ড মানি — কোনো কার্ড বা ব্যাংক অ্যাকাউন্ট লাগবে না। চেকআউটে পুরো নির্দেশনা কপি বাটনসহ দেওয়া থাকে।"),
       ("শেয়ার্ড প্ল্যানে আমার তথ্য কি অন্যরা দেখবে?",
        "নিশ্চিতভাবে বলা যায় না — privacy exact access method-এর ওপর নির্ভর করে। shared credentials-এ অন্য access holder activity বা data দেখতে পারে। sensitive information-এর জন্য personal/customer-specific plan নিন।"),
       ("যদি কাজ না করে?",
-       "SaveOnSub policy অনুযায়ী applicable warranty-তে support hours-এর মধ্যে ১ ঘণ্টার replacement target আছে; shared coverage ৭ দিন এবং personal coverage ৩০ দিন, যদি product page-এ অন্য কিছু না লেখা থাকে।"),
+       "কভারেজ অফার-ভিত্তিক — replacement timing, refund eligibility এবং exclusions প্রোডাক্ট ও access method অনুযায়ী ভিন্ন হতে পারে। পেমেন্টের আগে selected product/order-এ দেখানো written terms-ই প্রযোজ্য।"),
       (f"{name} বাংলাদেশে দাম কত?",
        f"{name} আমাদের এখানে ৳{frm:,} থেকে শুরু — বিকাশ/নগদে, ওয়ারেন্টিসহ। অফিসিয়াল দামের চেয়ে অনেক কম, আর প্রতিটি প্ল্যানের ঝুঁকি আগে থেকে জানিয়ে দিই।"),
     ]
 
+def bn_inquiry_page(p):
+    name = p['name'].replace('🎁 ', '')
+    title = f"{name} বাংলাদেশে — বর্তমান মূল্য নিশ্চিত করুন | SAVEONSUB"
+    if len(title) > 70: title = f"{name} — মূল্য নিশ্চিত করুন | SAVEONSUB"
+    if len(title) > 70: title = f"{name[:36].rstrip()} | SAVEONSUB"
+    desc = f"{name} বাংলাদেশে: বর্তমান মূল্য, access type এবং availability পেমেন্টের আগে WhatsApp-এ নিশ্চিত করা হয়।"
+    speak_ld = {"@context": "https://schema.org", "@type": "WebPage",
+        "url": f"https://saveonsub.com/bn/p/{p['id']}.html",
+        "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["h1", ".anchor"]}}
+    wa = f"https://wa.me/8801305869242?text=" + esc(f"হাই, {name}-এর বর্তমান মূল্য, exact tier ও access method নিশ্চিত করুন।")
+    return f"""<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{esc(title)}</title>
+<meta name="description" content="{esc(desc)}">
+<link rel="canonical" href="https://saveonsub.com/bn/p/{p['id']}.html">
+<link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/p/{p['id']}.html">
+<link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/bn/p/{p['id']}.html">
+<link rel="alternate" hreflang="x-default" href="https://saveonsub.com/p/{p['id']}.html">
+<meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
+<meta property="og:type" content="product"><meta property="og:url" content="https://saveonsub.com/bn/p/{p['id']}.html">
+<meta name="theme-color" content="#102634">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="../../assets/site.webmanifest">
+<link rel="stylesheet" href="../../assets/style.css">
+<script type="application/ld+json">{json.dumps(speak_ld, ensure_ascii=False)}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+{nav_bn("../../")}
+<main id="main" data-inquiry-only="1"><div class="wrap" style="max-width:880px">
+  <div class="crumbs"><a href="../../bn.html">হোম</a> › <a href="../../bn/all.html">সব প্রোডাক্ট</a> › {esc(name)}</div>
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><span style="font-size:46px">{p['icon']}</span><h1 style="font-size:clamp(26px,4vw,38px)">{esc(name)} — বর্তমান মূল্য নিশ্চিত করুন</h1></div>
+  <p class="sub mt2">{esc(name)}-এর বর্তমান মূল্য পেমেন্টের আগে WhatsApp-এ নিশ্চিত করা হয়। Access type, availability এবং support terms অর্ডারের আগে দেখানো হয়।</p>
+  <div class="ctas mt2"><a class="btn btn-primary btn-sm" href="{wa}" target="_blank" rel="noopener">WhatsApp-এ মূল্য নিশ্চিত করুন</a></div>
+</div></main>
+<button class="fab fab-wa" onclick="location.href='{wa}'" aria-label="WhatsApp">💬 WhatsApp</button>
+{footer_bn("../../")}
+<script src="../../assets/catalog.js"></script>
+<script src="../../assets/app.js"></script>
+</body>
+</html>"""
+
 def bn_page(p):
+    if not p.get('plans'):
+        return bn_inquiry_page(p)
     cheapest = min(p['plans'], key=lambda x: x['bdt'])
     official_bdt = round(p['official_usd'] * rate)
     name = p['name'].replace('🎁 ', '')
@@ -255,7 +379,7 @@ def bn_page(p):
     title = f"{name_clean_bn} দাম বাংলাদেশে — ৳{frm:,} থেকে | SAVEONSUB"
     if len(title) > 60: title = f"{name_clean_bn[:40]} — ৳{frm:,} থেকে | SAVEONSUB"
     if len(title) > 60: title = f"{name_clean_bn[:30]} | SAVEONSUB"
-    desc = f"{name_clean_bn} বাংলাদেশে ৳{frm:,} থেকে — local BDT payment, {sla_bn(cheapest['sla'])} delivery। access type এবং প্রযোজ্য SaveOnSub warranty এই page-এ দেখানো আছে।"
+    desc = f"{name_clean_bn} বাংলাদেশে ৳{frm:,} থেকে — local BDT payment, {sla_bn(cheapest.get('sla'))} delivery। access type এবং প্রযোজ্য SaveOnSub warranty এই page-এ দেখানো আছে।"
     if len(desc) > 155: desc = desc[:152] + "…"
 
     offers = [{"@type": "Offer", "name": pl['label'], "price": pl['bdt'], "priceCurrency": "BDT",
@@ -283,19 +407,19 @@ def bn_page(p):
 
     plans_html = ""
     for pl in p['plans']:
-        tos = pl['tos']
+        tos = plan_tos(pl)
         plans_html += f"""
       <div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
         <div><b>{esc(pl['label'])}</b><br>
           <span class="tos {TOS_CLASS[tos]}">{TOS_LABEL_BN[tos]}</span>
-          <span style="font-size:12px;color:var(--muted)"> · {esc(pl['duration'])} · ডেলিভারি {sla_bn(pl['sla'])}</span></div>
+          <span style="font-size:12px;color:var(--muted)"> · {esc(pl['duration'])} · ডেলিভারি {sla_bn(pl.get('sla'))}</span></div>
         <div style="display:flex;align-items:center;gap:14px">
           <span style="font-size:22px;font-weight:900;color:var(--green2)">৳{pl['bdt']:,}</span>
           <button class="btn btn-primary btn-sm" onclick="cartAdd({jattr(p['id'])},{jattr(pl['label'])},{pl['bdt']},{jattr(name)})">কার্টে যোগ করুন</button>
         </div></div>"""
 
     faq_html = "".join(f"<details{' open' if i==0 else ''}><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for i, (q, a) in enumerate(faqs))
-    rel_html = "".join(f"""<a class="pcard" href="{x['id']}.html"><span class="icon">{x['icon']}</span><h3>{esc(x['name'].replace('🎁 ',''))}</h3><span class="cat">{esc(x['category'])}</span><div class="price">৳{min(pl['bdt'] for pl in x['plans']):,}</div></a>""" for x in related(p))
+    rel_html = "".join(f"""<a class="pcard" href="{x['id']}.html"><span class="icon">{x['icon']}</span><h3>{esc(x['name'].replace('🎁 ',''))}</h3><span class="cat">{esc(x['category'])}</span>{rel_price_html(x)}</a>""" for x in related(p))
 
     mk = p.get('market', {})
     if mk.get('surveyed'):
@@ -389,6 +513,7 @@ def bn_page(p):
 os.makedirs('bn/p', exist_ok=True)
 bcount = 0
 for p in products:
-    open(f"bn/p/{p['id']}.html", 'w').write(bn_page(p))
+    bn_out = bn_page(p)  # render before open(): 'w' truncates on a crash
+    open(f"bn/p/{p['id']}.html", 'w', encoding='utf-8').write(bn_out)
     bcount += 1
 print(f"OK: generated {bcount} Bangla product pages in bn/p/")

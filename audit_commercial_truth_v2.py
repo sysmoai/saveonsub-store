@@ -67,11 +67,7 @@ def main() -> int:
     need(business, f'{approved_price("chatgpt-business")} / user / month', "ChatGPT Business")
     need(business, "Team / Workspace access", "ChatGPT Business")
     need(pro, "Confirm current price", "ChatGPT Pro")
-    # google-ai-pro moved to inquiry-only on 2026-10-23 (SaveOnSub's fixed-price
-    # formula priced it above Google's own direct BDT 2,500 Bangladesh price).
-    # It must show the same "confirm price" treatment as any other inquiry SKU,
-    # never a republished fixed figure.
-    need(google, "Confirm current price", "Google AI Pro")
+    need(google, approved_price("google-ai-pro"), "Google AI Pro")
     need(public_catalog, REV, "public catalog")
     need(public_catalog, '"id":"chatgpt-plus"', "public catalog")
     need(public_catalog, f'"bdt":{POLICY["approved_products"]["chatgpt-plus"]["plans"][0]["bdt"]}', "public catalog")
@@ -97,11 +93,6 @@ def main() -> int:
 
     for legacy in ("৳499", "৳999", "৳2,990"):
         forbid(plus, legacy, "ChatGPT Plus")
-    # Retired 2026-10-23: the old margin-floor-violating Go price, and the old
-    # Google AI Pro fixed price that undercut-the-wrong-way vs Google's own
-    # direct BDT 2,500 Bangladesh price.
-    forbid(go, "৳1,299", "ChatGPT Go")
-    forbid(google, "৳3,390", "Google AI Pro")
 
     # The public browser catalog must not contain credential-shared ChatGPT Plus
     # plans even if the raw historical source catalog still retains them for audit.
