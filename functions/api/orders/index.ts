@@ -40,6 +40,11 @@ const json = (body: unknown, status = 200) =>
 
 const nowIso = () => new Date().toISOString();
 
+// Customer-supplied free text is shown to staff; bound its type and length at
+// the door so the queue cannot be flooded or carry oversized payloads.
+const text = (value: unknown, max: number): string | null =>
+  typeof value === "string" && value.trim() ? value.trim().slice(0, max) : null;
+
 async function sha256Hex(input: string): Promise<string> {
   const data = new TextEncoder().encode(input);
   const digest = await crypto.subtle.digest("SHA-256", data);
@@ -119,6 +124,13 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ error: "INVALID_ITEMS" }, 400);
   }
 
+  const customerName = text(body.customer?.name, 100);
+  const customerPhone = text(body.customer?.phone, 30);
+  const customerEmail = text(body.customer?.email, 254);
+  const customerLocale = text(body.customer?.locale, 10);
+  const paymentMethod = text(body.payment_method, 30);
+  const paymentReference = text(body.payment_reference, 64);
+
   const existing = await env.DB.prepare(
     "SELECT public_order_id, status FROM orders WHERE idempotency_key = ?"
   ).bind(body.idempotency_key).first<{ public_order_id: string; status: string }>();
@@ -156,14 +168,13 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       VALUES (?, ?, ?, ?, 'payment_review', 1, ?, ?, 'BDT', ?, ?, ?, ?, ?, 'website', ?, ?)`)
       .bind(
         internalId, orderId, trackingHash, body.idempotency_key,
-        body.payment_method || null, body.payment_reference || null, totalMinor,
-        body.customer?.name || null, body.customer?.phone || null,
-        body.customer?.email || null, body.customer?.locale || null, now, now
+        paymentMethod, paymentReference, totalMinor,
+        customerName, customerPhone, customerEmail, customerLocale, now, now
       ),
     env.DB.prepare(`INSERT INTO order_events
       (order_id, event_type, actor_type, payload_json, created_at)
       VALUES (?, 'order_submitted', 'customer', ?, ?)`)
-      .bind(internalId, JSON.stringify({ item_count: resolved.length, payment_method: body.payment_method || null }), now),
+      .bind(internalId, JSON.stringify({ item_count: resolved.length, payment_method: paymentMethod }), now),
     env.DB.prepare(`INSERT INTO notification_outbox
       (order_id, channel, destination_key, template_key, payload_json, priority,
        status, attempt_count, next_attempt_at, created_at, updated_at)

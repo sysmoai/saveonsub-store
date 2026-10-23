@@ -1,48 +1,59 @@
-import { requireOperator, canTransition, type OpsEnv } from "../../../../lib/order-os/ops-auth";
+import { requireOperator, authFailure, type OpsEnv } from "../../../../lib/order-os/ops-auth";
+import { decideTransition, isOrderStatus, isPrivileged } from "../../../../lib/order-os/order-workflow";
+import { json, nowIso, readJson, writeFailure } from "../../../../lib/order-os/http";
 
-const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store"}});
-const now=()=>new Date().toISOString();
-
-export const onRequestPost: PagesFunction<OpsEnv> = async ({request,env,params}) => {
+export const onRequestPost: PagesFunction<OpsEnv> = async ({ request, env, params }) => {
   let operator;
-  try { operator=await requireOperator(request,env); }
-  catch(e){ return json({error:String(e)},401); }
+  try { operator = await requireOperator(request, env); }
+  catch (e) { return authFailure(e); }
 
-  let body:{status?:string;note?:string};
-  try{ body=await request.json(); }catch{ return json({error:"INVALID_JSON"},400); }
-  const to=String(body.status||"");
-  const allowed=new Set(["payment_review","payment_confirmed","assigned","fulfilling","delivered","support_open","completed","cancelled","refunded"]);
-  if(!allowed.has(to)) return json({error:"INVALID_STATUS"},400);
+  const body = await readJson(request);
+  if (!body) return json({ error: "INVALID_JSON" }, 400);
+  const to = typeof body.status === "string" ? body.status : "";
+  if (!isOrderStatus(to) || to === "submitted") return json({ error: "INVALID_STATUS" }, 400);
+  const note = typeof body.note === "string" ? body.note.slice(0, 500) : "";
+  const expected = typeof body.expected_status === "string" ? body.expected_status : "";
 
-  const orderId=String(params.orderId||"");
-  const order=await env.DB.prepare("SELECT id,status,assigned_operator_id FROM orders WHERE public_order_id=?")
-    .bind(orderId).first<any>();
-  if(!order) return json({error:"ORDER_NOT_FOUND"},404);
-  if(!canTransition(operator.role,order.status,to)) return json({error:"TRANSITION_FORBIDDEN",from:order.status,to},403);
+  const orderId = String(params.orderId || "");
+  let order;
+  try {
+    order = await env.DB.prepare("SELECT id,status,assigned_operator_id FROM orders WHERE public_order_id=?")
+      .bind(orderId).first<any>();
+  } catch { return json({ error: "STAFF_BACKEND_UNAVAILABLE" }, 503); }
+  if (!order) return json({ error: "ORDER_NOT_FOUND" }, 404);
+  if (expected && expected !== order.status) return json({ error: "STALE_STATE", current: order.status }, 409);
 
-  if(["payment_confirmed","cancelled","refunded"].includes(to) && !["owner","manager"].includes(operator.role)){
-    return json({error:"MANAGER_APPROVAL_REQUIRED"},403);
-  }
-  if(["assigned","fulfilling","delivered"].includes(to) && order.assigned_operator_id && order.assigned_operator_id!==operator.id && !["owner","manager"].includes(operator.role)){
-    return json({error:"NOT_ASSIGNED_OPERATOR"},403);
-  }
+  const decision = decideTransition(operator.role, order.status, to);
+  if (!decision.ok) return json({ error: decision.code, from: order.status, to }, decision.status);
 
-  const ts=now();
-  const field = to==="payment_confirmed" ? "payment_confirmed_at" :
-                to==="delivered" ? "delivered_at" :
-                to==="completed" ? "completed_at" : null;
+  // Fulfilment work must be done by the operator the order is assigned to.
+  const isFulfiller = operator.role === "fulfillment";
+  if (to === "fulfilling" && !order.assigned_operator_id) return json({ error: "CLAIM_REQUIRED" }, 409);
+  if (isFulfiller && order.assigned_operator_id !== operator.id) return json({ error: "NOT_ASSIGNED_OPERATOR" }, 403);
 
-  const updates=["status=?","updated_at=?"];
-  const values:any[]=[to,ts];
-  if(field){updates.push(`${field}=?`);values.push(ts);}
-  values.push(order.id);
+  const ts = nowIso();
+  const stamp = to === "delivered" ? "delivered_at" : to === "completed" ? "completed_at" : null;
+  const sets = ["status=?", "updated_at=?"];
+  const setBinds: unknown[] = [to, ts];
+  if (stamp) { sets.push(`${stamp}=?`); setBinds.push(ts); }
 
-  await env.DB.batch([
-    env.DB.prepare(`UPDATE orders SET ${updates.join(",")} WHERE id=?`).bind(...values),
-    env.DB.prepare(`INSERT INTO order_events(order_id,event_type,actor_type,actor_id,payload_json,created_at)
-      VALUES(?,'status_changed','operator',?,?,?)`)
-      .bind(order.id,operator.id,JSON.stringify({from:order.status,to,note:(body.note||"").slice(0,500)}),ts)
-  ]);
+  // Compare-and-set: the write only applies if the order is still in the state
+  // we validated against (and, for fulfillers, still assigned to them). The
+  // audit event shares the identical guard, so a lost race or refused change
+  // leaves no event behind.
+  let guard = "id=? AND status=?";
+  const guardBinds: unknown[] = [order.id, order.status];
+  if (isFulfiller) { guard += " AND assigned_operator_id=?"; guardBinds.push(operator.id); }
 
-  return json({ok:true,order_id:orderId,from:order.status,to});
+  try {
+    const results = await env.DB.batch([
+      env.DB.prepare(`INSERT INTO order_events(order_id,event_type,actor_type,actor_id,payload_json,created_at)
+        SELECT id,'status_changed','operator',?,?,? FROM orders WHERE ${guard}`)
+        .bind(operator.id, JSON.stringify({ from: order.status, to, note }), ts, ...guardBinds),
+      env.DB.prepare(`UPDATE orders SET ${sets.join(",")} WHERE ${guard}`).bind(...setBinds, ...guardBinds),
+    ]);
+    if (results[1].meta.changes !== 1) return json({ error: "STALE_STATE" }, 409);
+  } catch (e) { return writeFailure(e); }
+
+  return json({ ok: true, order_id: orderId, from: order.status, to, privileged: isPrivileged(operator.role) });
 };
