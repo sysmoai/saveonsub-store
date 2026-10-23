@@ -3,9 +3,25 @@ const WA = "8801305869242";
 const BKASH = "+8801305869242";
 
 /* ---------- Cart (localStorage) ---------- */
-function cartGet(){ try{return JSON.parse(localStorage.getItem('sos_cart')||'[]')}catch(e){return []} }
+/* Fail closed: an item is sellable only if it exactly matches a priced plan of a
+   non-request_price product in the governed public CATALOG. Price-on-request
+   (HOLD) products, unknown plans, edited prices, or a missing CATALOG never
+   reach the cart, and stale stored items are dropped on read. */
+function cartPlanOk(id, planLabel, bdt, planId){
+  if(typeof CATALOG==='undefined' || !CATALOG || !Array.isArray(CATALOG.products)) return false;
+  const p=CATALOG.products.find(x=>x && x.id===id);
+  if(!p || p.request_price || !Array.isArray(p.plans)) return false;
+  return p.plans.some(pl=>pl && pl.label===planLabel && Number(pl.bdt)===Number(bdt) && Number(bdt)>0
+    && (planId===undefined || planId===null || pl.plan_id===undefined || pl.plan_id===planId));
+}
+function cartGet(){
+  let c; try{c=JSON.parse(localStorage.getItem('sos_cart')||'[]')}catch(e){c=[]}
+  if(!Array.isArray(c)) return [];
+  return c.filter(i=>i && cartPlanOk(i.id, i.plan, i.bdt, i.plan_id) && Number.isInteger(i.qty) && i.qty>0);
+}
 function cartSet(c){ localStorage.setItem('sos_cart', JSON.stringify(c)); cartBadge(); }
 function cartAdd(id, planLabel, bdt, name){
+  if(!cartPlanOk(id, planLabel, bdt)){ toast('This plan is price on request — please confirm on WhatsApp'); return; }
   const c = cartGet();
   const ex = c.find(i=>i.id===id && i.plan===planLabel);
   if(ex){ ex.qty++; } else { c.push({id, plan:planLabel, bdt:Number(bdt), name, qty:1}); }
