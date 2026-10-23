@@ -116,12 +116,12 @@ def sanitize_common(text: str) -> str:
         # default policy is payment verified before activation. These specific
         # sentences claimed or implied blanket/first-order entitlement.
         "A trust feature pioneered for first orders: the reseller sends access before you pay, you verify it works, then pay within an hour. SAVEONSUB offers it on most instant products.":
-            "Pay-After-Testing is not a standard feature. If support explicitly confirms it for your specific order, the exact sequence is agreed before any payment; otherwise use the standard checkout flow.",
-        "5) Ideally: <b>pay-after-testing</b> for first orders.": "5) Ask whether Pay-After-Testing applies to your specific order — it is confirmed case by case, not guaranteed.",
+            "Payment is made only after support confirms the price, access method and timing in writing; use the standard checkout flow.",
+        "5) Ideally: <b>pay-after-testing</b> for first orders.": "5) Get the price, access method and terms confirmed in writing before paying.",
         "Haven't sent payment yet? Send it via <b id=\"method2\">bKash</b> — or use <b>Pay-After-Testing</b> on your first order.":
-            "Haven't sent payment yet? Send it via <b id=\"method2\">bKash</b> — or ask support whether Pay-After-Testing applies to your order.",
+            "Haven't sent payment yet? Send it via <b id=\"method2\">bKash</b> after support confirms the price and access method.",
         "Send money via <b id=\"method2\">bKash</b> (or use <b>Pay-After-Testing</b> on your first order).":
-            "Send money via <b id=\"method2\">bKash</b> (অথবা আপনার অর্ডারে Pay-After-Testing প্রযোজ্য কিনা সাপোর্টকে জিজ্ঞাসা করুন)।",
+            "সাপোর্ট মূল্য ও অ্যাক্সেস পদ্ধতি নিশ্চিত করার পর <b id=\"method2\">bKash</b>-এ টাকা পাঠান।",
         # Remaining blanket replacement/guarantee-duration promises the generic
         # "(?:7|30)[- ]day (warranty|support terms)" regex below does not catch
         # because these specific sentences use the word "guarantee" rather than
@@ -131,8 +131,20 @@ def sanitize_common(text: str) -> str:
         "covered by our support terms (replacement in 1 hour, 7-day guarantee).": "covered by order-specific support terms shown before payment.",
         "SAVEONSUB replaces dead seats within 1 hour (7-day guarantee).": "SaveOnSub's order-specific support terms apply if a seat stops working.",
     }
+    # Prose rewrites must never touch link targets: "warranty" -> "support
+    # terms" previously turned href="warranty.html" into a broken
+    # href="support terms.html" on every page. Mask href/src/action values and
+    # bare URLs, rewrite the prose, then restore the originals exactly.
+    masked: list[str] = []
+
+    def _mask(m: "re.Match") -> str:
+        masked.append(m.group(0))
+        return f"\x00URL{len(masked) - 1}\x00"
+
+    text = re.sub(r'\b(?:href|src|action)\s*=\s*(?:"[^"]*"|\'[^\']*\')|https?://[^\s"\'<>]+', _mask, text, flags=re.I)
     for old, new in replacements.items():
         text = text.replace(old, new)
+    text = re.sub(r"\x00URL(\d+)\x00", lambda m: masked[int(m.group(1))], text)
 
     text = re.sub(r"(?:·|&middot;)\s*A SYSmoAI venture\.\s*", "· ", text)
     text = re.sub(r"একটি\s*SYSmoAI\s*উদ্যোগ[^।]*।\s*", "", text)
@@ -158,8 +170,10 @@ def sanitize_common(text: str) -> str:
     text = re.sub(r"\b\d[\d,]*\+?\s+customers\b", "customers", text, flags=re.I)
     text = re.sub(r"<s>\s*৳[\d,]+(?:\.\d+)?\s*</s>", "", text, flags=re.I)
     text = re.sub(r"\b(?:our\s+)?#1\s+(?:seller|product)\b", "listed product", text, flags=re.I)
-    text = text.replace("Pay-after-testing", "Order-specific payment/access confirmation")
-    text = text.replace("pay-after-testing", "order-specific payment/access confirmation")
+    # Pay-After-Testing is not a general offer (EXEC-010 D6). Backstop for any
+    # residual wording on pages not rewritten above; exec003_claims_guard.py
+    # fails the build if any form survives.
+    text = re.sub(r"\bPay[- ]?After[- ]?Testing\b", "order-specific payment/access confirmation", text, flags=re.I)
 
     # Every floating WhatsApp button sitewide (not just governed AI product
     # pages) used a raw, unescaped message spliced into a single-quoted JS
@@ -222,7 +236,7 @@ def product_main(product: dict, bn: bool) -> str:
         heading = f"{name} — বাংলাদেশে মূল্য ও অ্যাক্সেস"
         intro = "SaveOnSub-এর বর্তমান পাবলিক অফারটি নিচে দেখুন। পেমেন্টের আগে exact provider tier, access method, availability এবং order-specific support terms নিশ্চিত করুন।"
         access_heading = "অ্যাক্সেস আগে নিশ্চিত করুন"
-        access_copy = "Credential-shared AI access-কে provider-supported personal বা team access হিসেবে দেখানো হয় না। এই পেজে fixed price থাকলে সেটি SaveOnSub-এর approved local catalog price; provider checkout price আলাদা হতে পারে।"
+        access_copy = "SaveOnSub credential-sharing ব্যবস্থাকে provider-supported personal বা team access হিসেবে দেখায় না। Exact access method পেমেন্টের আগে লিখিতভাবে জানানো হয়; provider checkout price আলাদা হতে পারে।"
         how_heading = "অর্ডার করার আগে"
         how_items = ["Exact plan/tier নিশ্চিত করুন", "অ্যাক্সেস পদ্ধতি ও account/workspace ownership নিশ্চিত করুন", "বর্তমান availability ও delivery timing নিশ্চিত করুন", "তারপর দেখানো local payment method ব্যবহার করুন"]
         independent = "SaveOnSub একটি স্বাধীন local subscription/payment assistance store; provider-এর সাথে affiliation কেবল স্পষ্টভাবে প্রমাণিত হলে বলা হবে। Provider plan, limits ও terms পরিবর্তিত হতে পারে।"
@@ -232,12 +246,16 @@ def product_main(product: dict, bn: bool) -> str:
         heading = f"{name} Price in Bangladesh"
         intro = "Review the current SaveOnSub public offer below. Before payment, confirm the exact provider tier, access method, availability and order-specific support terms."
         access_heading = "Confirm the access model before payment"
-        access_copy = "Credential-shared AI access is not presented as provider-supported personal or team access. When this page shows a fixed price, it is SaveOnSub's approved local catalog price; the provider checkout price can be different."
+        access_copy = "SaveOnSub does not present credential-sharing arrangements as provider-supported personal or team access. The exact access method is disclosed in writing before payment; the provider checkout price can be different."
         how_heading = "Before you order"
         how_items = ["Confirm the exact plan or tier", "Confirm the account/workspace access method and ownership", "Confirm current availability and delivery timing", "Then use the local payment method shown at checkout"]
         independent = "SaveOnSub is an independent local subscription/payment assistance store. Provider affiliation is stated only when it is explicitly evidenced. Provider plans, limits and terms can change."
         confirm = "Confirm current price on WhatsApp"
         provider_text = "Verify provider pricing/terms"
+
+    if request_price:
+        how_items = how_items[:3] + (["কোনো পেমেন্ট নয় যতক্ষণ না SaveOnSub লিখিতভাবে মূল্য ও অ্যাক্সেস পদ্ধতি নিশ্চিত করে"] if bn else
+                                     ["No payment until SaveOnSub confirms the price and access method in writing"])
 
     provider_ref = ""
     if official_url:
@@ -250,7 +268,7 @@ def product_main(product: dict, bn: bool) -> str:
         # text) — esc() alone leaves literal spaces/commas/parens and mangles
         # non-ASCII product names. Same defect class fixed in the floating CTA.
         confirm_msg = urlquote(f"Hi, please confirm the current {name} price, exact tier and access method.", safe="")
-        plan_html = f'''<div class="pcard"><div><b>{esc(confirm)}</b><br><span class="tos">{esc("PRICE REVIEW REQUIRED" if not bn else "মূল্য যাচাই প্রয়োজন")}</span></div><div class="ctas"><a class="btn btn-primary btn-sm" href="https://wa.me/{WA}?text={confirm_msg}" target="_blank" rel="noopener">{esc(confirm)}</a></div></div>'''
+        plan_html = f'''<div class="pcard"><div><b>{esc(confirm)}</b><br><span class="tos">{esc("PRICE ON REQUEST" if not bn else "মূল্য অনুরোধসাপেক্ষ")}</span></div><div class="ctas"><a class="btn btn-primary btn-sm" href="https://wa.me/{WA}?text={confirm_msg}" target="_blank" rel="noopener">{esc(confirm)}</a></div></div>'''
         anchor = esc(confirm)
     else:
         cards = []
@@ -270,7 +288,15 @@ def product_main(product: dict, bn: bool) -> str:
         anchor = ("From " if len(plans) > 1 and not bn else "") + money(min(int(p["bdt"]) for p in plans))
 
     caveat = ""
-    if pid == "chatgpt-business":
+    if pid == "chatgpt-plus" and request_price:
+        caveat = ("<div class=\"notice mt2\">ChatGPT Plus বর্তমানে commercial HOLD-এ আছে: এই পেজ থেকে অর্ডার বা পেমেন্ট নেওয়া হচ্ছে না। কোনো মূল্য প্রকাশিত নেই।</div>" if bn else
+                  "<div class=\"notice mt2\">ChatGPT Plus is currently on commercial HOLD: it is not available to order or pay for from this page, and no price is published.</div>")
+    elif pid == "google-ai-pro" and request_price:
+        caveat = ("<div class=\"notice mt2\">Google AI Pro: মূল্য অনুরোধসাপেক্ষ। এই পেজে কোনো মূল্য বা চেকআউট নেই।</div>" if bn else
+                  "<div class=\"notice mt2\">Google AI Pro is Price on Request. This page has no published price and no checkout.</div>")
+    elif request_price:
+        caveat = ""
+    elif pid == "chatgpt-business":
         caveat = "<div class=\"notice mt2\">ChatGPT Business is a workspace product and provider minimum-seat/billing rules can apply. Confirm the current seat requirement and workspace role before payment.</div>"
     elif pid in {"chatgpt-go", "chatgpt-plus", "claude-pro"}:
         caveat = "<div class=\"notice mt2\">This listing is not a credential-sharing offer. Confirm the exact customer-specific activation method before payment.</div>"
@@ -278,6 +304,8 @@ def product_main(product: dict, bn: bool) -> str:
         caveat = "<div class=\"notice mt2\">Fixed-price sale is paused on this page until the currently available provider tier and checkout amount are reconfirmed.</div>"
 
     items = "".join(f"<li>{esc(x)}</li>" for x in how_items)
+    # Price-on-request (HOLD) pages carry no checkout path at all.
+    checkout_link = "" if request_price else f'<p><a class="btn btn-ghost btn-sm" href="{checkout}">{"চেকআউট দেখুন" if bn else "View checkout"}</a></p>'
     return f'''<main id="main" data-commercial-truth="{REVISION}"><div class="wrap" style="max-width:880px">
 <div class="crumbs"><a href="{home}">{'হোম' if bn else 'Home'}</a> › <a href="{all_link}">{'সব সাবস্ক্রিপশন' if bn else 'All subscriptions'}</a> › {esc(name)}</div>
 <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><span style="font-size:46px">{icon}</span><div><h1 style="font-size:clamp(26px,4vw,38px)">{esc(heading)}</h1><span class="cat">{cat}</span></div></div>
@@ -287,7 +315,7 @@ def product_main(product: dict, bn: bool) -> str:
 <div class="grid mt2" style="grid-template-columns:1fr;gap:10px">{plan_html}</div>
 {caveat}
 <section class="mt3"><h2 style="font-size:22px">{esc(access_heading)}</h2><p>{esc(access_copy)}</p></section>
-<section class="mt3"><h2 style="font-size:22px">{esc(how_heading)}</h2><ul>{items}</ul><p><a class="btn btn-ghost btn-sm" href="{checkout}">{'চেকআউট দেখুন' if bn else 'View checkout'}</a></p></section>
+<section class="mt3"><h2 style="font-size:22px">{esc(how_heading)}</h2><ul>{items}</ul>{checkout_link}</section>
 <div class="notice mt3">{esc(independent)}</div>
 </div></main>'''
 
@@ -421,7 +449,7 @@ def home_body(governed: dict, bn: bool) -> str:
         h1 = "সঠিক সাবস্ক্রিপশন বেছে নিন। BDT-তে পেমেন্ট করুন। অ্যাক্সেস আগে বুঝে নিন।"
         sub = "AI, productivity, streaming ও অন্যান্য subscription তুলনা করুন। Fixed price কেবল approved plan-এ দেখানো হয়; dynamic plan-এ payment-এর আগে exact tier, access method এবং বর্তমান price নিশ্চিত করা হয়।"
         how = [("১. প্রোডাক্ট বাছুন", "আপনার কাজ অনুযায়ী tool/plan নির্বাচন করুন।"), ("২. অ্যাক্সেস নিশ্চিত করুন", "Personal/customer-specific, provider-supported Team/Workspace, Bundle বা Setup/Service—exact method আগে জানুন।"), ("৩. মূল্য নিশ্চিত করুন", "Fixed approved price থাকলে page-এ দেখবেন; অন্যথায় WhatsApp-এ current checkout reconfirm করা হবে।"), ("৪. তারপর পেমেন্ট", "Availability, delivery timing ও support terms নিশ্চিত হওয়ার পর দেখানো local method ব্যবহার করুন।")]
-        note = "Credential-shared AI access-কে provider-supported personal/team plan হিসেবে দেখানো হয় না। SaveOnSub স্বাধীন local subscription/payment assistance store; provider plans ও terms পরিবর্তিত হতে পারে।"
+        note = "SaveOnSub credential-sharing ব্যবস্থাকে provider-supported personal/team plan হিসেবে দেখায় না। SaveOnSub স্বাধীন local subscription/payment assistance store; provider plans ও terms পরিবর্তিত হতে পারে।"
         browse = "সব সাবস্ক্রিপশন দেখুন"
         ask = "WhatsApp-এ সাহায্য নিন"
     else:
@@ -429,7 +457,7 @@ def home_body(governed: dict, bn: bool) -> str:
         h1 = "Choose the right subscription. Pay in BDT. Know the access model first."
         sub = "Compare AI, productivity, streaming and other subscriptions. Fixed prices are published only for approved plans; dynamic plans require confirmation of the exact tier, access method and current checkout before payment."
         how = [("1. Pick the product", "Choose the tool or plan that matches the work you need to do."), ("2. Confirm access", "Know whether it is customer-specific, a provider-supported Team/Workspace seat, a Bundle, or a Setup/Service arrangement."), ("3. Confirm the price", "Approved fixed prices appear on the page; dynamic plans are reconfirmed against the current provider tier before payment."), ("4. Pay after confirmation", "Use the displayed local payment method after availability, delivery timing and support terms are confirmed.")]
-        note = "Credential-shared AI access is not presented as provider-supported personal/team commerce. SaveOnSub is an independent local subscription/payment assistance store; provider plans and terms can change."
+        note = "SaveOnSub does not present credential-sharing arrangements as provider-supported personal/team commerce. SaveOnSub is an independent local subscription/payment assistance store; provider plans and terms can change."
         browse = "Browse subscriptions"
         ask = "Ask on WhatsApp"
     steps = "".join(f'<div class="step"><h3>{esc(a)}</h3><p>{esc(b)}</p></div>' for a, b in how)

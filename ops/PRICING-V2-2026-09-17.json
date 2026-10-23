@@ -4,6 +4,15 @@
   "approved_at": "2026-09-17",
   "currency": "BDT",
   "fx_reference_bdt_per_usd": 124,
+  "commercial_hold": {
+    "status": "HOLD",
+    "authority": "EXEC-010 locked decisions (founder Emon Hossain, reaffirmed 2026-10-23 22:07 Asia/Dhaka)",
+    "rule": "Every product is Price on Request: no published sell price, no cart/checkout action, no priced structured-data Offer and no price in WhatsApp prefills until the founder approves a specific price in his own words.",
+    "google-ai-pro": "Price on Request (EXEC-010 D1). No price, no checkout.",
+    "chatgpt-plus": "HOLD (EXEC-010 D2). The earlier BDT 3,390 is not re-approved and not sellable.",
+    "other_products": "Re-prices recorded as 'CEO decisions' in ops/CLAUDE-RECOVERY-STATE.md were agent-recorded, not founder-approved; pending founder confirmation.",
+    "reference": "handoffs SOS-T018 (CLAUDE_HANDOFF_PR66_67_GAPS.md) T018-01"
+  },
   "positioning": {
     "personal": "Customer-specific access where the provider supports it; confirm the exact activation method before payment.",
     "team": "Provider-supported team or workspace seat; confirm seat count, role and billing unit before payment.",
@@ -21,416 +30,175 @@
   ],
   "approved_products": {
     "chatgpt-go": {
-      "official_usd": 8,
-      "plans": [
-        {
-          "label": "Go — 1 Month",
-          "access_type": "personal",
-          "bdt": 1299,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "go-1m"
-        }
-      ],
-      "price_change_note": "CEO decision 2026-10-23 (EMON HOSSAIN): keep BDT 1,299. Recorded exception to the BDT 500 net-profit floor. Cost basis and estimated contribution are held in private business records, not in this public repository. The engineering recommendation of a higher price was reviewed and declined."
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "official_usd": 8
     },
     "chatgpt-plus": {
-      "official_usd": 20,
-      "plans": [
-        {
-          "label": "Plus — 1 Month",
-          "access_type": "personal",
-          "bdt": 3390,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "plus-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "official_usd": 20
     },
     "chatgpt-business": {
-      "official_usd": 25,
-      "plans": [
-        {
-          "label": "Business Standard Seat",
-          "access_type": "team",
-          "bdt": 4290,
-          "duration": "1 month",
-          "billing_unit": "user/month",
-          "plan_id": "business-standard-seat"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "official_usd": 25
     },
     "chatgpt-pro": {
       "mode": "inquiry",
-      "note": "New $200 Pro subscriptions/upgrades are not published as fixed-price commerce in this release. Reconfirm the currently available provider tier before payment."
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "claude-pro": {
-      "official_usd": 20,
-      "plans": [
-        {
-          "label": "Claude Pro — 1 Month",
-          "access_type": "personal",
-          "bdt": 3390,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "claude-pro-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "official_usd": 20
     },
     "claude-max": {
-      "plans": [
-        {
-          "label": "Claude Max 5x — 1 Month",
-          "access_type": "personal",
-          "bdt": 16790,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "claude-max-5x-1m"
-        },
-        {
-          "label": "Claude Max 20x — 1 Month",
-          "access_type": "personal",
-          "bdt": 33590,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "claude-max-20x-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "google-ai-pro": {
-      "official_usd": 19.99,
-      "plans": [
-        {
-          "label": "Google AI Pro — 1 Month",
-          "access_type": "personal",
-          "bdt": 3390,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "google-ai-pro-1m"
-        }
-      ],
-      "price_change_note": "CEO decision 2026-10-23 (EMON HOSSAIN): restore the BDT 3,390 fixed price after the engineering HOLD. Risk on record: the provider sells this plan directly in Bangladesh at a lower price, so the page must state the access method and what SaveOnSub provides honestly, and confirm before payment."
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "official_usd": 19.99
     },
     "google-ai-plus": {
       "mode": "inquiry",
-      "note": "The legacy catalog provider-price reference does not match the current approved pricing baseline; reconfirm the exact provider tier before publishing a fixed price."
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "perplexity-pro": {
-      "plans": [
-        {
-          "label": "Perplexity Pro — 1 Month",
-          "access_type": "personal",
-          "bdt": 3390,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "perplexity-pro-1m"
-        },
-        {
-          "label": "Perplexity Max — 1 Month",
-          "access_type": "personal",
-          "bdt": 33590,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "perplexity-max-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "supergrok": {
-      "plans": [
-        {
-          "label": "SuperGrok — 1 Month",
-          "access_type": "personal",
-          "bdt": 5090,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "supergrok-1m"
-        },
-        {
-          "label": "SuperGrok Premium — 1 Month",
-          "access_type": "personal",
-          "bdt": 16790,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "supergrok-premium-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "midjourney": {
-      "plans": [
-        {
-          "label": "Basic — 1 Month",
-          "access_type": "personal",
-          "bdt": 1990,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "basic-1m"
-        },
-        {
-          "label": "Standard — 1 Month",
-          "access_type": "personal",
-          "bdt": 5090,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "standard-1m"
-        },
-        {
-          "label": "Pro — 1 Month",
-          "access_type": "personal",
-          "bdt": 10090,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "pro-1m"
-        },
-        {
-          "label": "Mega — 1 Month",
-          "access_type": "personal",
-          "bdt": 20190,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "mega-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "leonardo": {
-      "official_usd": 12,
-      "plans": [
-        {
-          "label": "Entry Paid Tier — 1 Month",
-          "access_type": "personal",
-          "bdt": 2290,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "entry-paid-tier-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "official_usd": 12
     },
     "runway": {
-      "plans": [
-        {
-          "label": "Standard — 1 Month",
-          "access_type": "personal",
-          "bdt": 2690,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "standard-1m"
-        },
-        {
-          "label": "Pro — 1 Month",
-          "access_type": "personal",
-          "bdt": 5890,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "pro-1m"
-        },
-        {
-          "label": "Unlimited — 1 Month",
-          "access_type": "personal",
-          "bdt": 15990,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "unlimited-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "heygen": {
-      "official_usd": 29,
-      "plans": [
-        {
-          "label": "Creator — 1 Month",
-          "access_type": "personal",
-          "bdt": 4890,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "creator-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "official_usd": 29
     },
     "synthesia": {
-      "plans": [
-        {
-          "label": "Starter — 1 Month",
-          "access_type": "personal",
-          "bdt": 4890,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "starter-1m"
-        },
-        {
-          "label": "Creator — 1 Month",
-          "access_type": "personal",
-          "bdt": 14990,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "creator-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "elevenlabs": {
-      "plans": [
-        {
-          "label": "Starter — 1 Month",
-          "access_type": "personal",
-          "bdt": 1390,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "starter-1m"
-        },
-        {
-          "label": "Creator — 1 Month",
-          "access_type": "personal",
-          "bdt": 3690,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "creator-1m"
-        },
-        {
-          "label": "Pro — 1 Month",
-          "access_type": "personal",
-          "bdt": 16690,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "pro-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "suno": {
-      "plans": [
-        {
-          "label": "Pro — 1 Month",
-          "access_type": "personal",
-          "bdt": 1990,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "pro-1m"
-        },
-        {
-          "label": "Premier — 1 Month",
-          "access_type": "personal",
-          "bdt": 5090,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "premier-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "udio": {
-      "plans": [
-        {
-          "label": "Standard — 1 Month",
-          "access_type": "personal",
-          "bdt": 1990,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "standard-1m"
-        },
-        {
-          "label": "Pro — 1 Month",
-          "access_type": "personal",
-          "bdt": 5090,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "pro-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "github-copilot": {
-      "plans": [
-        {
-          "label": "Copilot Pro — 1 Month",
-          "access_type": "personal",
-          "bdt": 1990,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "copilot-pro-1m"
-        },
-        {
-          "label": "Copilot Pro+ — 1 Month",
-          "access_type": "personal",
-          "bdt": 6590,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "copilot-pro-plus-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "cursor": {
-      "official_usd": 20,
-      "plans": [
-        {
-          "label": "Cursor Pro — 1 Month",
-          "access_type": "personal",
-          "bdt": 3390,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "cursor-pro-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "official_usd": 20
     },
     "replit": {
-      "official_usd": 20,
-      "plans": [
-        {
-          "label": "Replit Core — 1 Month",
-          "access_type": "personal",
-          "bdt": 3390,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "replit-core-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "official_usd": 20
     },
     "notion-ai": {
-      "official_usd": 20,
-      "plans": [
-        {
-          "label": "Notion Paid AI/Business — 1 Month",
-          "access_type": "personal",
-          "bdt": 3390,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "notion-paid-ai-business-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "official_usd": 20
     },
     "grammarly": {
-      "official_usd": 30,
-      "plans": [
-        {
-          "label": "Grammarly Paid Plan — 1 Month",
-          "access_type": "personal",
-          "bdt": 5090,
-          "duration": "1 month",
-          "billing_unit": "month",
-          "plan_id": "grammarly-paid-plan-1m"
-        }
-      ]
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "official_usd": 30
     },
     "canva-pro": {
-      "mode": "inquiry"
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "kling-ai": {
-      "mode": "inquiry"
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "pika-labs": {
-      "mode": "inquiry"
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "mistral": {
-      "mode": "inquiry"
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "gamma-pro": {
-      "mode": "inquiry"
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "v0": {
-      "mode": "inquiry"
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "freepik": {
-      "mode": "inquiry"
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "ideogram": {
-      "mode": "inquiry"
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "descript": {
-      "mode": "inquiry"
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     }
   }
 }

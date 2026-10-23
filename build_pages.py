@@ -178,7 +178,7 @@ def page(p):
   <tr><th>Reference</th><th>Price</th><th>Notes</th></tr>
   <tr><td>Official list converted at site anchor rate</td><td>~৳{official_bdt:,}/mo</td><td>Verify the current provider price at the official link above</td></tr>
   <tr><td>BD market snapshot</td><td>৳{mk['low']:,} – ৳{mk['high']:,}</td><td>Historical survey; seller access/warranty terms can differ</td></tr>
-  <tr style="background:rgba(20,212,184,.07)"><td><b>SAVEONSUB</b></td><td><b>from ৳{ours_low:,}</b></td><td><b>Access type + SaveOnSub warranty shown before payment</b></td></tr>
+  <tr style="background:rgba(20,212,184,.07)"><td><b>SAVEONSUB</b></td><td><b>from ৳{ours_low:,}</b></td><td><b>Access type, timing and coverage confirmed in writing before payment</b></td></tr>
   </table></div>
   <p style="font-size:13px;color:var(--muted);margin-top:8px">Last cited snapshot: {esc(mk['who'])} <i>(source: {esc(mk['src'])})</i>. At that snapshot, the current SaveOnSub from-price is {position} the cited range; verify current competitor pricing yourself before buying.</p>"""
     else:
@@ -205,7 +205,7 @@ def page(p):
         searched_html = f"""<h2 class="mt3" style="font-size:20px">Commonly searched as</h2>
   <p style="font-size:13px;color:var(--muted);line-height:1.9">{chips_en}</p>
   {f'<p style="font-size:13px;color:var(--muted);line-height:1.9">{chips_bn}</p>' if chips_bn else ''}
-  <p style="font-size:12.5px;color:var(--muted)">However you search it, {esc(name)} in Bangladesh is here from ৳{cheapest['bdt']:,} with bKash/Nagad and a written warranty.</p>"""
+  <p style="font-size:12.5px;color:var(--muted)">However you search it, {esc(name)} in Bangladesh is here from ৳{cheapest['bdt']:,} with bKash/Nagad; timing and coverage confirmed in writing before payment.</p>"""
     # guide cross-links (internal linking)
     GUIDE_LINKS = {
       "AI Video": ("ai-video-tools-price-comparison-bd-2026", "AI video tool price comparison BD"),
@@ -258,7 +258,6 @@ def page(p):
   <div class="anchor mt2">
     <span class="official">Official: ~৳{official_bdt:,}/mo (${p['official_usd']})</span>
     <span class="ours">From ৳{cheapest['bdt']:,}</span>
-    {f'<span class="savepct">SAVE {save}%</span>' if save>0 else ''}
     <a href="{esc(p['official_url'])}" target="_blank" rel="noopener nofollow" style="font-size:12.5px;color:var(--muted);text-decoration:underline">verify official ↗</a>
   </div>
   <h2 class="mt3" style="font-size:22px">Choose your plan</h2>
@@ -267,9 +266,8 @@ def page(p):
   {guide_html}
   {market_html}
   <div class="notice mt2"><b>🏷️ What these labels mean (we're honest):</b>{tos_notes}</div>
-  <div class="notice green mt2">🛡️ <b>Warranty:</b> {esc(cat['meta'].get('warranty', 'Warranty and replacement terms are order-specific and confirmed in writing before payment.'))}</div>
-  <div class="notice mt2">🧭 <b>Price-match guarantee:</b> Find a lower official price? We match it + 5% off. Every subscription is official, activated on YOUR own account, and 100% customer-owned.</div>
-  <div class="notice mt2" style="font-size:12.5px;color:var(--muted);line-height:1.6"><b>Important Notice:</b> SAVEONSUB is not an official distributor, reseller, or partner of any subscription platform. We provide setup and activation support to help Bangladesh-based users access plans using local payment methods (bKash, Nagad, bank transfer). Your account is 100% customer-owned; we do not retain access to your credentials. If we cannot complete activation within the agreed window, you receive a full refund per our refund policy.</div>
+  <div class="notice green mt2">🛡️ <b>Coverage:</b> Timing and coverage are confirmed in writing before payment.</div>
+  <div class="notice mt2" style="font-size:12.5px;color:var(--muted);line-height:1.6"><b>Important Notice:</b> SAVEONSUB is not an official distributor, reseller, or partner of any subscription platform. We provide setup and activation support to help Bangladesh-based users access plans using local payment methods (bKash, Nagad, bank transfer). Account ownership and credential handling depend on the access method, which is disclosed before payment. If we cannot complete activation within the agreed window, you receive a full refund per our refund policy.</div>
   <h2 class="mt3" style="font-size:22px">Questions about {esc(name)}</h2>
   <div class="mt2">{faq_html}</div>
   {searched_html}
@@ -299,8 +297,8 @@ print(f"OK: generated {count} product pages in p/")
 
 # ===================== BANGLA PRODUCT PAGES (bn/p/<id>.html) =====================
 TOS_LABEL_BN = {"official": "অফিসিয়াল", "personal": "পার্সোনাল অ্যাকাউন্ট",
-                "shared-low": "শেয়ার্ড · কম ঝুঁকি", "shared-med": "শেয়ার্ড · ওয়ারেন্টিসহ", "bundle": "বান্ডেল", "team": "টিম / ওয়ার্কস্পেস"}
-SLA_BN = {"instant": "৫–১৫ মিনিট", "fast": "১–৩ ঘণ্টা", "same-day": "একই দিনে", "1-2-days": "১–২ দিন"}
+                "shared-low": "শেয়ার্ড · কম ঝুঁকি", "shared-med": "শেয়ার্ড · শর্ত লিখিতভাবে নিশ্চিত", "bundle": "বান্ডেল", "team": "টিম / ওয়ার্কস্পেস"}
+SLA_BN = {"instant": "পেমেন্টের আগে নিশ্চিত", "fast": "পেমেন্টের আগে নিশ্চিত", "same-day": "পেমেন্টের আগে নিশ্চিত", "1-2-days": "পেমেন্টের আগে নিশ্চিত"}
 def sla_bn(s): return SLA_BN.get(s) or esc(sla_meta.get(s, 'পেমেন্টের আগে নিশ্চিত করা হয়'))
 # Universal, hand-written Bangla FAQ — applies honestly to every product
 def bn_faq(name, frm):
@@ -316,7 +314,7 @@ def bn_faq(name, frm):
       ("যদি কাজ না করে?",
        "কভারেজ অফার-ভিত্তিক — replacement timing, refund eligibility এবং exclusions প্রোডাক্ট ও access method অনুযায়ী ভিন্ন হতে পারে। পেমেন্টের আগে selected product/order-এ দেখানো written terms-ই প্রযোজ্য।"),
       (f"{name} বাংলাদেশে দাম কত?",
-       f"{name} আমাদের এখানে ৳{frm:,} থেকে শুরু — বিকাশ/নগদে, ওয়ারেন্টিসহ। অফিসিয়াল দামের চেয়ে অনেক কম, আর প্রতিটি প্ল্যানের ঝুঁকি আগে থেকে জানিয়ে দিই।"),
+       f"{name} আমাদের এখানে ৳{frm:,} থেকে শুরু — বিকাশ/নগদে। সময় ও কভারেজ পেমেন্টের আগে লিখিতভাবে নিশ্চিত করা হয়, আর প্রতিটি প্ল্যানের ঝুঁকি আগে থেকে জানিয়ে দিই।"),
     ]
 
 def bn_inquiry_page(p):
@@ -429,7 +427,7 @@ def bn_page(p):
   <tr><th>কোথায়</th><th>দাম</th><th>ওয়ারেন্টি?</th></tr>
   <tr><td>Official list, site anchor rate-এ converted</td><td>~৳{official_bdt:,}/মাস</td><td>বর্তমান provider price official link-এ verify করুন</td></tr>
   <tr><td>বাংলাদেশ market snapshot</td><td>৳{mk['low']:,} – ৳{mk['high']:,}</td><td>Historical survey; seller access/warranty terms ভিন্ন হতে পারে</td></tr>
-  <tr style="background:rgba(20,212,184,.07)"><td><b>SAVEONSUB</b></td><td><b>৳{frm:,} থেকে</b></td><td><b>✅ ১ ঘণ্টার রিপ্লেসমেন্ট, লিখিত</b></td></tr>
+  <tr style="background:rgba(20,212,184,.07)"><td><b>SAVEONSUB</b></td><td><b>৳{frm:,} থেকে</b></td><td><b>সময় ও কভারেজ পেমেন্টের আগে লিখিতভাবে নিশ্চিত</b></td></tr>
   </table></div>
   <p style="font-size:13px;color:var(--muted);margin-top:8px"><i>(সোর্স: {esc(mk['src'])})</i>. বর্তমান SaveOnSub from-price {position}; কেনার আগে competitor-এর current price নিজে verify করুন।</p>"""
     else:
@@ -442,7 +440,7 @@ def bn_page(p):
         chips_bn = " · ".join(esc(k) for k in searched_bn)
         searched_html = f"""<h2 class="mt3" style="font-size:20px">যেভাবে মানুষ খোঁজে</h2>
   <p style="font-size:13px;color:var(--muted);line-height:1.9">{chips_bn}</p>
-  <p style="font-size:12.5px;color:var(--muted)">যেভাবেই খুঁজুন, {esc(name)} বাংলাদেশে এখানে ৳{frm:,} থেকে — বিকাশ/নগদে, লিখিত ওয়ারেন্টিসহ।</p>"""
+  <p style="font-size:12.5px;color:var(--muted)">যেভাবেই খুঁজুন, {esc(name)} বাংলাদেশে এখানে ৳{frm:,} থেকে — বিকাশ/নগদে; সময় ও কভারেজ পেমেন্টের আগে লিখিতভাবে নিশ্চিত।</p>"""
 
     wa = "https://wa.me/8801305869242?text=" + esc(f"আসসালামু আলাইকুম! আমি {name} ({cheapest['label']}, ৳{cheapest['bdt']}) নিতে চাই")
     return f"""<!DOCTYPE html>
@@ -490,8 +488,7 @@ def bn_page(p):
   <h2 class="mt3" style="font-size:22px">আপনার প্ল্যান বেছে নিন</h2>
   <div class="grid mt2" style="grid-template-columns:1fr;gap:10px">{plans_html}</div>
   {market_html}
-  <div class="notice green mt2">🛡️ <b>ওয়ারেন্টি:</b> সাপোর্ট আওয়ারে ১ ঘণ্টার মধ্যে রিপ্লেসমেন্ট। শেয়ার্ডে ৭ দিন, পার্সোনালে ৩০ দিন গ্যারান্টি।</div>
-  <div class="notice mt2">🧭 <b>প্রাইস-ম্যাচ গ্যারান্টি:</b> কম অফিসিয়াল দাম পেয়েছেন? আমরা ম্যাচ করব + ৫% ছাড়। প্রতিটি সাবস্ক্রিপশন অফিসিয়াল, আপনার নিজের অ্যাকাউন্টে অ্যাক্টিভেটেড, ১০০% গ্রাহক-নিয়ন্ত্রিত।</div>
+  <div class="notice green mt2">🛡️ <b>কভারেজ:</b> সময় ও কভারেজ পেমেন্টের আগে লিখিতভাবে নিশ্চিত করা হয়।</div>
   <div class="notice mt2" style="font-size:12.5px;color:var(--muted);line-height:1.6"><b>গুরুত্বপূর্ণ বিজ্ঞপ্তি:</b> SAVEONSUB কোনো সাবস্ক্রিপশন প্ল্যাটফর্মের অফিসিয়াল ডিস্ট্রিবিউটর, রিসেলার বা অংশীদার নয়। আমরা বাংলাদেশ-ভিত্তিক ব্যবহারকারীদের স্থানীয় পেমেন্ট পদ্ধতি (বিকাশ, নগদ, ব্যাংক ট্রান্সফার) ব্যবহার করে সাবস্ক্রিপশন প্ল্যান অ্যাক্সেস করতে সেটআপ ও অ্যাক্টিভেশন সহায়তা প্রদান করি। অ্যাকাউন্ট ১০০% আপনার মালিকানাধীন; আমরা আপনার ক্রেডেনশিয়াল অ্যাক্সেস রাখি না। নির্ধারিত সময়ের মধ্যে অ্যাক্টিভেশন সম্পন্ন করতে না পারলে আমাদের রিফান্ড নীতি অনুযায়ী সম্পূর্ণ রিফান্ড পাবেন।</div>
   <h2 class="mt3" style="font-size:22px">{esc(name)} নিয়ে সাধারণ প্রশ্ন</h2>
   <div class="mt2">{faq_html}</div>

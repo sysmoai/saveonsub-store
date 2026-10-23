@@ -255,7 +255,7 @@ article("best-ai-tools-for-students-bangladesh",
 # 4
 article("how-to-pay-for-ai-tools-with-bkash",
  "How to Pay for AI Tools with bKash (2026 Guide)",
- "OpenAI, Midjourney and Netflix don't take bKash. Here's exactly how 3,000+ Bangladeshis pay anyway: send-money flow, what's safe, scam red flags, refunds.",
+ "OpenAI, Midjourney and Netflix don't take bKash. Here's exactly how people in Bangladesh pay anyway: send-money flow, what's safe, scam red flags, refunds.",
  "How to pay for AI tools with bKash — the complete guide",
  f"""<span class="pill">PAYMENT GUIDE · UPDATED {today}</span>
 <h1 style="font-size:clamp(26px,4vw,38px)">How to pay for AI tools with bKash — <span class="grad-text">the complete guide</span></h1>
@@ -280,7 +280,7 @@ article("how-to-pay-for-ai-tools-with-bkash",
 # 5
 article("shared-vs-personal-ai-subscriptions-honest-guide",
  "Shared vs Personal AI Subscriptions — The Honest Guide",
- "Shared seats are 70-85% cheaper and violate provider ToS. Personal costs more but is bulletproof. The full trade-off table nobody else publishes.",
+ "Shared seats are usually cheaper and violate provider ToS. Personal costs more but is bulletproof. The full trade-off table nobody else publishes.",
  "Shared vs personal subscriptions — the guide resellers don't write",
  f"""<span class="pill">HONESTY SERIES · UPDATED {today}</span>
 <h1 style="font-size:clamp(26px,4vw,38px)">Shared vs personal subscriptions — <span class="grad-text">the guide resellers don't write</span></h1>
@@ -288,7 +288,7 @@ article("shared-vs-personal-ai-subscriptions-honest-guide",
 <h2 class="mt3" style="font-size:22px">The trade-off, fully stated</h2>
 <div class="tbl mt2"><table>
 <tr><th></th><th>Shared seat</th><th>Personal plan</th></tr>
-<tr><td>Price</td><td>🏆 70–85% cheaper (৳499 vs ৳2,200)</td><td>Near-official</td></tr>
+<tr><td>Price</td><td>🏆 usually cheaper (৳499 vs ৳2,200)</td><td>Near-official</td></tr>
 <tr><td>Provider ToS</td><td>❌ Violates it — that's WHY it's cheap</td><td>✅ Fully compliant</td></tr>
 <tr><td>Seat stability</td><td>Can reset occasionally (warranty replaces in 1h)</td><td>Rock solid</td></tr>
 <tr><td>Privacy of your chats/files</td><td>✅ Private per-user (verified per product)</td><td>✅ Private</td></tr>
@@ -301,7 +301,7 @@ article("shared-vs-personal-ai-subscriptions-honest-guide",
 <h2 class="mt3" style="font-size:22px">Provider enforcement reality (2026)</h2>
 <p class="sub" style="font-size:15px">Anthropic (Claude) enforces hardest — we recommend personal Claude. OpenAI resets seats periodically. Google is tolerant (family-style sharing). Canva teams are officially supported — lowest-risk shared product we sell. This ranking is printed on each product page as the risk label.</p>
 <div class="heroctas mt3"><a class="btn btn-primary" href="../all.html">Every product, labeled honestly →</a></div>""",
- [("What's the difference between shared and personal subscriptions?","Shared = one subscription split among users (70-85% cheaper, violates provider ToS, can reset — warranty covers). Personal = your own account (near-official price, zero risk)."),
+ [("What's the difference between shared and personal subscriptions?","Shared = one subscription split among users (usually cheaper, violates provider ToS, can reset — warranty covers). Personal = your own account (near-official price, zero risk)."),
   ("Will other people see my data on a shared plan?","No — on ChatGPT, Midjourney and similar tools each user's content stays private. What's shared is the cost, not your data."),
   ("Which AI providers ban shared accounts most?","Anthropic (Claude) enforces most aggressively; OpenAI does periodic resets; Google and Canva are most tolerant. Honest resellers label this per product.")])
 
@@ -531,7 +531,7 @@ qa += [
  ("What is pay-after-testing?",
   "A SAVEONSUB trust feature for first orders: they send the subscription access BEFORE you pay; you verify it works, then pay via bKash within an hour. Removes the scam risk that plagues BD subscription shopping."),
  ("Shared vs personal subscription — what's the difference?",
-  "Shared = one subscription split across users: 70-85% cheaper, violates provider terms, seats can reset (warranted sellers replace them). Personal = your own account at near-official price, zero risk. Your data stays private either way on tools like ChatGPT. Full guide: " + BASE + "/blog/shared-vs-personal-ai-subscriptions-honest-guide.html"),
+  "Shared = one subscription split across users: usually cheaper, violates provider terms, seats can reset (warranted sellers replace them). Personal = your own account at near-official price, zero risk. Your data stays private either way on tools like ChatGPT. Full guide: " + BASE + "/blog/shared-vs-personal-ai-subscriptions-honest-guide.html"),
  ("Which AI subscription providers ban shared accounts most?",
   "Anthropic (Claude) enforces hardest — buy personal Claude. OpenAI resets seats periodically. Google tolerates family-style sharing. Canva teams are officially supported. Honest BD sellers label this per product like SAVEONSUB's risk labels."),
  ("What is the cheapest AI subscription in Bangladesh?",
