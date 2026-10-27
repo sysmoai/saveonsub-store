@@ -11,4 +11,8 @@ crons = ["*/2 * * * *"]
 # database_name = "saveonsub-order-os"
 # database_id = "<PRODUCTION_ID>"
 
-# ORDER_NOTIFICATION_WEBHOOK must be configured as a secret, never committed.
+# The old generic ORDER_NOTIFICATION_WEBHOOK is intentionally unused.
+# Configure the SOS-only secrets SOS_RIPON_ALERT_WEBHOOK and SOS_EMON_ALERT_WEBHOOK
+# after validating the owner and operator destinations. Never commit webhook URLs.
+# Optional: SOS_PAID_ESCALATION_MINUTES (default 15; owner-approved SLA policy).
+# If bindings or webhooks are absent, alert delivery is NOT active.

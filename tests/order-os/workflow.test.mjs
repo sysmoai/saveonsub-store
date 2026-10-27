@@ -10,7 +10,7 @@ let w;
 beforeEach(async () => { w = await makeWorld(); });
 afterEach(() => restoreFetch());
 
-const GOOD_VERIFY = { provider: "bkash", transaction_id: "9ABC12XYZ0", amount_bdt: 1500, evidence_ref: "stmt:bkash-2026-01-01-0001" };
+const GOOD_VERIFY = { provider: "bkash", transaction_id: "9ABC12XYZ0", amount_bdt: 1500, evidence_ref: "stmt:bkash-2026-01-01-0001", receipt_confirmed: true, receipt_source: "receiving_account_history" };
 
 // ---------------------------------------------------------------- Finding A
 test("A: owner/manager cannot take any edge that is not in the ordinary state machine", async () => {
@@ -239,7 +239,8 @@ test("B: the same provider reference cannot back two orders (duplicate control)"
   assert.equal(dup.body.error, "DUPLICATE_PAYMENT_REFERENCE");
   assert.equal(w.snapshot(), before, "failed duplicate leaves no verification, event or status change");
   assert.equal(w.order(b.pub).status, "payment_review");
-  // Same reference on another provider is a different payment.
+  // A different provider reference is distinct, but the order must select that actual receiving channel.
+  w.db.run("UPDATE orders SET payment_method=? WHERE public_order_id=?", "nagad", b.pub);
   assert.equal((await w.api.verify("owner", b.pub, { ...GOOD_VERIFY, provider: "nagad" })).status, 200);
 });
 

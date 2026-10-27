@@ -9,8 +9,10 @@ Turn SaveOnSub checkout from a browser-local WhatsApp handoff into a durable ord
 customer checkout
 -> server validates governed catalog price/access truth
 -> durable order created
--> priority staff notification queued
--> human verifies payment
+-> unpaid order stored without staff interruption
+-> owner confirms received funds against recipient account history / bank statement
+-> unique P0 paid-order notification queued atomically with verified payment
+-> existing SOS notification Worker informs Ripon and escalates unclaimed payment to EMON
 -> human claims fulfillment
 -> delivery evidence/status recorded
 -> customer can track with a private tracking token
@@ -47,9 +49,9 @@ State changes are append-only in order_events. orders.status is the current proj
 ## Priority model
 
 P0: paid/confirmed customer waiting, delivery failure, duplicate payment, security issue
-P1: new order awaiting payment review, customer reply requiring human action
+P1: urgent customer reply requiring human action (not routine inquiry or unpaid claim)
 P2: support request, renewal due, stock risk
-P3: lead/newsletter/general question
+P3: unpaid order, lead/newsletter/general question
 
 Human operators should receive P0/P1 first.
 
@@ -59,7 +61,7 @@ Human operators should receive P0/P1 first.
 - Every public order create request requires an idempotency key.
 - An order is not shown as accepted until the server confirms persistence.
 - Notification sending uses an outbox so an external webhook failure never loses the order.
-- Notification retries are bounded and logged.
+- Notification retries are bounded and logged. Only payment-confirmed orders enqueue paid-order alerts; an unclaimed paid order escalates to EMON after a configured delay.
 - Payment confirmation and delivery remain human-controlled.
 - Customer tracking uses a random token, not sequential IDs alone.
 - No passwords, OTPs, subscription credentials, card data or secret keys are stored in order records.
@@ -137,7 +139,7 @@ Ripon is assumed to hold the `support` role. The role record is not in the repos
 `POST /api/ops/orders/:id/payment-verification` (owner = CEO only by default; `PAYMENT_VERIFIER_ROLES="owner,manager"` is the only
 widening). A customer-submitted reference is a claim, never proof. A required `evidence_ref` cites settlement evidence
 (`r2:sos/private/...` object or `stmt:...` merchant-statement id); a screenshot or any URL is refused.
-The verifier supplies provider, the provider reference and the exact amount seen in the merchant statement. The amount and
+The verifier supplies provider, the provider reference, the exact amount actually received, receipt_confirmed=true and a receipt_source (receiving_account_history for bKash/Nagad/Rocket, bank_statement for bank_transfer). This is an accountable human attestation, not automated financial confirmation. The amount and
 currency must equal the order total (the expected total is not revealed on mismatch). Stored: provider, SHA-256 of
 `provider:reference`, last four characters, amount, currency, evidence_ref, verifier, time. Not stored: the full reference.
 A partial unique index rejects the same reference on a second order and a second active verification on one order.
@@ -161,3 +163,11 @@ Token, JWKS and database error text is logged server-side and never returned.
 - The staff API deploys only to its own Pages project (`wrangler.order-os.toml`, `saveonsub-staff-staging`). The storefront
   workflow deploys from inside `_site/`, so `./functions` is never bundled into project `saveonsub`. Both are enforced by
   `audit_order_os.py`. A Cloudflare dry run is still an owner action.
+
+## Personal Send Money channels — staged 2026-10-28
+
+The user-confirmed current incoming channels are personal bKash, Nagad, Rocket and bank transfer. Neither a customer screenshot nor the customer-entered reference can confirm receipt. No personal-account scraping, forwarding private SMS, screen automation, password or OTP collection is authorized. Production order acceptance remains blocked while SKU permission and governed plan selection are HOLD.
+
+The checkout creates a passive P3 payment_review order; it sends no urgent operator webhook. The owner-only payment-verification endpoint checks exact amount/currency, duplicate provider reference, staff identity, private evidence reference and receipt-source attestation, then atomically updates status to payment_confirmed/P0, records the audit event and queues one sanitized paid_order_priority alert. This backend does not call any wallet API or check balances automatically.
+
+The pre-existing scheduled Worker at workers/order-notifications uses the paid-only dispatch module workers/sos-paid-alerts.mjs. It sends only minimal order ID/amount/provider, skips delivery when a secret webhook is absent, retries failed messages, and creates an owner escalation after the configured interval if status is still payment_confirmed/unclaimed. Delivery is at least once; downstream services should deduplicate by stable delivery_key. No public site, DNS, account destination or live Cloudflare deployment is changed by this branch. See PERSONAL-PAYMENT-RAILS-2026-10-28.md for operator checklist and acceptance gates.
