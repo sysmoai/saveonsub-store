@@ -99,7 +99,7 @@ CREATE INDEX IF NOT EXISTS idx_outbox_due
 -- A customer-submitted claim must never emit this template.
 CREATE UNIQUE INDEX IF NOT EXISTS ux_paid_outbox_once
   ON notification_outbox(order_id, template_key, destination_key)
-  WHERE template_key='paid_order_priority';
+  WHERE template_key IN ('paid_order_priority','paid_order_unclaimed');
 
 CREATE TABLE IF NOT EXISTS support_threads (
   id TEXT PRIMARY KEY,
