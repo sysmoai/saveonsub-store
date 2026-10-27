@@ -74,11 +74,12 @@ export const onRequestPost: PagesFunction<VerifierEnv> = async ({ request, env, 
   const orderId = String(params.orderId || "");
   let order;
   try {
-    order = await env.DB.prepare("SELECT id,status,total_minor,currency,payment_reference FROM orders WHERE public_order_id=?")
+    order = await env.DB.prepare("SELECT id,status,total_minor,currency,payment_method,payment_reference FROM orders WHERE public_order_id=?")
       .bind(orderId).first<any>();
   } catch { return json({ error: "STAFF_BACKEND_UNAVAILABLE" }, 503); }
   if (!order) return json({ error: "ORDER_NOT_FOUND" }, 404);
   if (order.status !== "payment_review") return json({ error: "NOT_AWAITING_PAYMENT", status: order.status }, 409);
+  if (order.payment_method !== provider) return json({ error: "PAYMENT_METHOD_MISMATCH" }, 409);
   // The expected total is deliberately not echoed back: the verifier must read it off the statement.
   if (currency !== order.currency || amountMinor !== order.total_minor) return json({ error: "AMOUNT_OR_CURRENCY_MISMATCH" }, 409);
 
