@@ -105,7 +105,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const customerEmail = text(body.customer?.email, 254);
   const customerLocale = text(body.customer?.locale, 10);
   // These are payment instructions, never an API-confirmed payment.
-  const rawPaymentMethod = (text(body.payment_method, 30) || "").toLowerCase().replace(/[\\s-]+/g, "_");
+  const rawPaymentMethod = (text(body.payment_method, 30) || "").toLowerCase().replace(/[\s-]+/g, "_");
   const paymentMethod = rawPaymentMethod === "bank" ? "bank_transfer" : rawPaymentMethod;
   if (!["bkash", "nagad", "rocket", "bank_transfer"].includes(paymentMethod)) {
     return json({ error: "UNSUPPORTED_PAYMENT_METHOD" }, 400);
