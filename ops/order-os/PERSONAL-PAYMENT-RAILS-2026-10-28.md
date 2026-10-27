@@ -54,3 +54,19 @@ A screenshot, forwarded message, unverified SMS, customer transaction ID, or bro
 Personal P2P vs authorized P2B collection must be reviewed against each provider's current terms and Bangladesh requirements; using a personal account is not evidence of commercial authorization. bKash offers separate Merchant/Online Business and Personal Retail Account paths that may be investigated, but do **not** create or upgrade an account, change website payment details or buy any service without CEO review. Marketing/SEO/ads must not promote blocked SKUs.
 
 **Release status:** Code in a stacked GitHub draft PR only. No live money movement, production account modification, customer data ingestion, deployment or live alert registration.
+
+## Staged protected human interface
+
+The implementation branch adds `staff-ui/orders.html` and `staff-ui/orders.js`, linked from the existing private catalog screen. The form makes an owner explicitly check an actual received credit, enter the channel, receiving-account reference, exact incoming amount and a private `evidence_ref`, and check an attestation checkbox before the payment API is called. The UI never treats a browser-side claim as proof, never caches secrets in localStorage and displays the status as queued, not delivered. Paid-order claim / start fulfillment / mark delivered buttons call the existing server-enforced staff endpoints. The new form is a staged browser feature only: no live authentication, accounts or production deploy established yet.
+
+### Blocking Ripon role compatibility
+
+The preexisting `functions/lib/order-os/order-workflow.ts` only permits `owner`, `manager` and `fulfillment` to claim an order. The legacy architecture document assumes Ripon may be a `support` user, which can **not** claim or mark orders delivered. The actual D1 operator record has not been authenticated. Before live use, verify Ripon's own MFA login and real role, then have EMON approve the narrow role assignment that meets fulfillment duties. Do not silently widen support permissions, let agents impersonate owner, or alter Cloudflare Access roles without approval.
+
+### Provider selection mismatch
+
+The payment-verification endpoint now rejects a provider that differs from the channel recorded on the order. If a customer used a different personal wallet or bank than selected, hold the original order for manual reconciliation and correct it only through an auditable owner-approved workflow; do not misclassify the incoming money or reuse a reference across orders.
+
+### Alert race and CI
+
+An unclaimed escalation waiting in the outbox is suppressed if Ripon claims before dispatch; this race scenario is included in local worker tests and the CI-targeted test file. Local Worker simulated SQLite tests passed (6/6); full stacked repository CI, Cloudflare staging tests, and real mobile delivery are still unverified. The alert delivery contract is at-least-once, not exactly-once.
