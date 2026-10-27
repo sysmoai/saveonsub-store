@@ -95,6 +95,12 @@ CREATE TABLE IF NOT EXISTS notification_outbox (
 CREATE INDEX IF NOT EXISTS idx_outbox_due
   ON notification_outbox(status, priority, next_attempt_at);
 
+-- Exactly one paid-priority message per verified order and destination.
+-- A customer-submitted claim must never emit this template.
+CREATE UNIQUE INDEX IF NOT EXISTS ux_paid_outbox_once
+  ON notification_outbox(order_id, template_key, destination_key)
+  WHERE template_key='paid_order_priority';
+
 CREATE TABLE IF NOT EXISTS support_threads (
   id TEXT PRIMARY KEY,
   order_id TEXT REFERENCES orders(id) ON DELETE SET NULL,
@@ -139,6 +145,7 @@ CREATE TABLE IF NOT EXISTS payment_verifications (
   evidence_note TEXT,
   -- Settlement evidence (private R2 object or merchant statement id), never a screenshot URL.
   evidence_ref TEXT NOT NULL CHECK (evidence_ref LIKE 'r2:sos/private/%' OR evidence_ref LIKE 'stmt:%'),
+  receipt_source TEXT CHECK (receipt_source IN ('receiving_account_history','bank_statement')),
   verified_by TEXT NOT NULL REFERENCES operators(id),
   verified_at TEXT NOT NULL,
   voided_at TEXT,
