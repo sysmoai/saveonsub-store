@@ -77,6 +77,7 @@ test("attestation and actual receiving-account source are required", async () =>
 test("the same incoming reference cannot pay two orders or trigger two alerts", async () => {
   const a = w.seedOrder();
   const b = w.seedOrder();
+  w.db.run("UPDATE orders SET payment_method='nagad' WHERE id IN (?,?)", a.id, b.id);
   assert.equal((await w.api.verify("owner", a.pub, good("nagad"))).status, 200);
   const replay = await w.api.verify("owner", b.pub, good("nagad"));
   assert.equal(replay.status, 409);
@@ -95,6 +96,7 @@ test("underpayment and unsupported role do not create paid alerts", async () => 
 
 test("storage uniqueness blocks duplicate priority notification for the same verified order", async () => {
   const { pub, id } = w.seedOrder();
+  w.db.run("UPDATE orders SET payment_method='rocket' WHERE id=?", id);
   assert.equal((await w.api.verify("owner", pub, good("rocket"))).status, 200);
   const row = paidAlerts()[0];
   assert.throws(() => w.db.run(
@@ -102,4 +104,13 @@ test("storage uniqueness blocks duplicate priority notification for the same ver
     id, "webhook", row.destination_key, row.template_key, "{}", row.next_attempt_at, row.created_at, row.updated_at
   ), /UNIQUE/);
   assert.equal(paidAlerts().length, 1);
+});
+
+test("a real receipt from another rail cannot silently pay the selected order", async () => {
+  const { pub } = w.seedOrder(); // Selected rail = bkash.
+  const r = await w.api.verify("owner", pub, good("nagad"));
+  assert.equal(r.status, 409);
+  assert.equal(r.body.error, "PAYMENT_METHOD_MISMATCH");
+  assert.equal(w.order(pub).status, "payment_review");
+  assert.equal(paidAlerts().length, 0);
 });
