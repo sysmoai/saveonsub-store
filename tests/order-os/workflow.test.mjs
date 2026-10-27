@@ -239,7 +239,8 @@ test("B: the same provider reference cannot back two orders (duplicate control)"
   assert.equal(dup.body.error, "DUPLICATE_PAYMENT_REFERENCE");
   assert.equal(w.snapshot(), before, "failed duplicate leaves no verification, event or status change");
   assert.equal(w.order(b.pub).status, "payment_review");
-  // Same reference on another provider is a different payment.
+  // A different provider reference is distinct, but the order must select that actual receiving channel.
+  w.db.run("UPDATE orders SET payment_method=? WHERE public_order_id=?", "nagad", b.pub);
   assert.equal((await w.api.verify("owner", b.pub, { ...GOOD_VERIFY, provider: "nagad" })).status, 200);
 });
 
