@@ -1,4 +1,4 @@
-// SaveOnSub-only Cloudflare Scheduled Worker; STAGING until explicit CEO approval.
+// SaveOnSub-only dispatch module for the EXISTING order-notifications Worker; staging until CEO approval.
 // Delivery is at-least-once. The receiver should dedupe by delivery_key.
 // No customer PII, credential, wallet account or payment reference is sent.
 
@@ -99,8 +99,3 @@ export async function dispatchPaidAlerts(env, clock = new Date(), send = fetch) 
   return { processed: sent + failed, sent, failed, skipped };
 }
 
-export default {
-  async scheduled(_event, env, ctx) {
-    ctx.waitUntil(dispatchPaidAlerts(env));
-  },
-};
