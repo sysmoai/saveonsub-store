@@ -30,6 +30,14 @@ export async function dispatchPaidAlerts(env, clock = new Date(), send = fetch) 
     WHERE template_key IN ('paid_order_priority','paid_order_unclaimed') AND status='sending' AND updated_at<?`)
     .bind(now, stale).run();
 
+  // If Ripon has since claimed or closed the order, cancel any queued CEO
+  // "unclaimed" escalation instead of sending a stale interrupt.
+  await env.DB.prepare(`UPDATE notification_outbox SET status='dead',last_error='already_claimed',updated_at=?
+    WHERE template_key='paid_order_unclaimed' AND status IN ('pending','failed')
+      AND order_id IN (SELECT id FROM orders WHERE status<>'payment_confirmed'
+        OR assigned_operator_id IS NOT NULL)`)
+    .bind(now).run();
+
   // Never dispatch an old priority alert against a refunded/cancelled order.
   await env.DB.prepare(`UPDATE notification_outbox SET status='dead',last_error='order_ineligible',updated_at=?
     WHERE template_key IN ('paid_order_priority','paid_order_unclaimed')
@@ -45,6 +53,8 @@ export async function dispatchPaidAlerts(env, clock = new Date(), send = fetch) 
     WHERE n.template_key IN ('paid_order_priority','paid_order_unclaimed')
       AND n.status IN ('pending','failed') AND n.next_attempt_at<=?
       AND o.status IN (${PAID_STATUSES})
+      AND (n.template_key <> 'paid_order_unclaimed'
+        OR (o.status='payment_confirmed' AND o.assigned_operator_id IS NULL))
     ORDER BY n.priority ASC,n.created_at ASC,n.id ASC LIMIT 20`)
     .bind(now).all()).results || [];
   let sent = 0, failed = 0, skipped = 0;
