@@ -58,3 +58,18 @@ test('claimed order gets no escalation; refunded order gets no external alert', 
   assert.equal(calls,1);
   assert.equal(refunded.rows("SELECT status FROM notification_outbox WHERE destination_key='sos-ripon'")[0].status,'dead');
 });
+
+test('pending owner escalation is cancelled if Ripon claims after queueing but before delivery', async () => {
+  const DB = fixture();
+  await dispatchPaidAlerts({ DB }, clock, async () => { throw Error('no configured destination'); });
+  assert.equal(DB.rows("SELECT status FROM notification_outbox WHERE destination_key='sos-emon'")[0].status, 'pending');
+  DB.prepare("UPDATE orders SET assigned_operator_id=? WHERE id=?").bind('ripon-synthetic', 'order-1').run();
+  let calls = 0;
+  const sent = await dispatchPaidAlerts({
+    DB,
+    SOS_EMON_ALERT_WEBHOOK: 'https://hooks.example.test/e'
+  }, clock, async () => { calls++; return { ok: true }; });
+  assert.equal(sent.sent, 0);
+  assert.equal(calls, 0);
+  assert.equal(DB.rows("SELECT status FROM notification_outbox WHERE destination_key='sos-emon'")[0].status, 'dead');
+});
