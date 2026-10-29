@@ -77,9 +77,16 @@ if "turnstileSiteKey: """ not in config:
     errors.append("branch config must not contain a production Turnstile site key")
 
 api=(ROOT/"functions/api/orders/index.ts").read_text(encoding="utf-8")
-for needle in ["TURNSTILE_SECRET_KEY","idempotency_key","resolveGovernedPlan","notification_outbox","trackingToken"]:
+for needle in ["TURNSTILE_SECRET_KEY","idempotency_key","resolveGovernedPlan","trackingToken"]:
     if needle not in api:
         errors.append(f"order API missing guard/feature: {needle}")
+
+# Paid-only alerts belong to the human verification path, never public claims.
+if 'INSERT INTO notification_outbox' in api:
+    errors.append('public order creation must not emit urgent paid alerts')
+paid_api=(ROOT/'functions/api/ops/orders/[orderId]/payment-verification.ts').read_text(encoding='utf-8')
+if 'notification_outbox' not in paid_api:
+    errors.append('verified payment endpoint must queue paid alerts atomically')
 
 auth=(ROOT/"functions/lib/order-os/access-auth.ts").read_text(encoding="utf-8")
 for needle in ["cf-access-jwt-assertion","RS256","POLICY_AUD","cdn-cgi/access/certs","crypto.subtle.verify"]:

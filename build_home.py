@@ -308,7 +308,7 @@ bn = f'''<!DOCTYPE html>
     <p class="sub">ChatGPT, Netflix, Canva, Midjourney সহ ৫০+ টুল — অথেনটিক, ৫–১৫ মিনিটে WhatsApp-এ ডেলিভারি, বিকাশে পেমেন্ট। প্রতিটা প্ল্যানে সৎ লেবেল, প্রতিটা সিটে ওয়ারেন্টি।</p>
     <div class="heroctas"><a href="all.html" class="btn btn-primary">সব প্রোডাক্ট দেখুন →</a><a href="quiz.html" class="btn btn-ghost">🧭 কোনটা নেবেন? কুইজ</a></div>
     <div class="anchor"><span class="official">অফিসিয়াল ChatGPT Plus: ৳2,200/মাস</span><span class="ours">আমাদের: ৳{chat_from}</span><span class="savepct">{save_pct}% সাশ্রয়</span></div>
-    <div class="ticker mt2"><span class="dotp"></span><span>211+ অর্ডার — Google AI Pro (আমাদের #১)</span></div>
+    <div class="ticker mt2"><span class="dotp"></span><span>Google AI Pro — বর্তমান প্ল্যান ও অ্যাক্সেসের শর্ত যাচাই করুন</span></div>
   </div>
   <div><div class="grid g3" style="gap:12px">{bn_cards}</div></div>
 </div></header>
