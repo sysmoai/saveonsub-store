@@ -51,6 +51,11 @@
   }
   window.sosTrack = track;
 
+  function cookie(name){
+    const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]{1,255})'));
+    return m ? m[1].replace(/[^A-Za-z0-9._-]/g, '') : '';
+  }
+
   function attributionLine(){
     const parts = ['source=' + clean(location.pathname || '/')];
     if(ATTR.landing && ATTR.landing !== location.pathname) parts.push('landing=' + ATTR.landing);
@@ -58,6 +63,11 @@
     if(ATTR.utm_source) parts.push('utm_source=' + ATTR.utm_source);
     if(ATTR.utm_medium) parts.push('utm_medium=' + ATTR.utm_medium);
     if(ATTR.utm_campaign) parts.push('utm_campaign=' + ATTR.utm_campaign);
+    // Meta click/browser ids exist only if the visitor accepted the Meta Pixel.
+    // They let a confirmed bKash order be reported back to Meta (marketing/meta_capi.py).
+    const fbc = cookie('_fbc'), fbp = cookie('_fbp');
+    if(fbc) parts.push('fbc=' + fbc);
+    if(fbp) parts.push('fbp=' + fbp);
     return '[SOS attribution: ' + parts.join(' | ') + ']';
   }
 
@@ -90,6 +100,30 @@
       track('add_to_cart', {product_id: clean(id), plan: clean(planLabel), value_bdt: Number(bdt) || 0});
       return originalCartAdd.apply(this, arguments);
     };
+  }
+
+  // Checkout funnels both "order" and "pay-after-testing" through saveOrder().
+  if(typeof window.saveOrder === 'function'){
+    const originalSaveOrder = window.saveOrder;
+    window.saveOrder = function(o){
+      try {
+        const items = (o && o.items) || [];
+        const ids = cartIdsFor(items);
+        track('order_submit', {
+          order_id: clean(o.oid), order_kind: clean(o.kind), payment_method: clean(o.method),
+          value_bdt: Number(o.total) || 0, num_items: items.reduce(function(s, i){ return s + (Number(i.qty) || 1); }, 0),
+          product_ids: ids
+        });
+      } catch(e){}
+      return originalSaveOrder.apply(this, arguments);
+    };
+  }
+  function cartIdsFor(items){
+    // Order records keep names only; the cart (still populated here) has ids.
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem('sos_cart') || '[]') || []; } catch(e){}
+    const ids = cart.map(function(i){ return clean(i.id); }).filter(Boolean);
+    return ids.length ? ids : items.map(function(i){ return clean(i.name); });
   }
 
   document.addEventListener('click', function(e){
