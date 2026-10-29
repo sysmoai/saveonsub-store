@@ -1,6 +1,6 @@
 /* SaveOnSub Meta Pixel bridge — maps first-party sos:track events to Meta.
  *
- * Fail-closed: while PIXEL_ID is empty this file makes no network request and
+ * Fail-closed: if PIXEL_ID is emptied this file makes no network request and
  * shows nothing. Setting the ID (a public value, not a secret) turns it on.
  *
  * Consent: Global Privacy Control / Do Not Track always win. Otherwise a small
@@ -20,7 +20,7 @@
 (function(){
   'use strict';
 
-  const PIXEL_ID = '';            // e.g. '123456789012345' — from Meta Events Manager
+  const PIXEL_ID = '2330425734478961'; // "SaveOnSub Website" dataset, Sysmoai Business Portfolio
   const CONSENT_MODE = 'notice';  // 'notice' | 'opt-in'
   const CURRENCY = 'BDT';
   const CONSENT_KEY = 'sos_ads_consent_v1';
