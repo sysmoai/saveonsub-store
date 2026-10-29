@@ -2,6 +2,15 @@
 
 Date: 2026-10-30, Asia/Dhaka. Scope: SaveOnSub ONLY. No private business records belong in this public repository.
 
+## Current activation status
+
+- Draft PR **#75**: https://github.com/sysmoai/saveonsub-store/pull/75 . Never merged or deployed.
+- After explicit owner approval in the current Codex chat, created the dedicated **empty** D1 `saveonsub-order-os` and **empty** Pages project `saveonsub-staff-staging` in the same verified Cloudflare account as canonical project `saveonsub`.
+- Browser verified D1 exists with **0 tables**, and the Pages project says **Create your first deployment**. No Git connection, custom domain, schema, DB binding, Access permission or application deployment was added. No other business resource was modified.
+- The actual D1 UUID and screenshots are retained in ignored local activation evidence, outside this public repository. Cloudflare showed Free-plan request allowance and $0.00 account billable usage; no upgrade or paid plan was selected.
+- GitHub Business OS validation and Commerce SSOT checks both passed for code commit `3ff4cf4` and CI-boundary follow-up `2ee8799`. Latest code security evidence remains 94/94 backend and 7/7 commerce tests. Documentation updates do not imply new deployment authorization.
+- Owner approval covered resource creation only. Owner login identity, new Access permissions, staging migrations/bindings and app deployment remain separate gates before private cloud acceptance.
+
 ## Ownership and source
 
 - Codex branch: `codex/business-os-2026-10-30`.
@@ -55,7 +64,7 @@ python audit_order_os.py
 ## Ordered activation gates
 
 1. Review this stacked diff and dependencies #65/#66/#67/#71. Issue **#69 remains open**: the inherited source has zero sellable governed plans. Do not restore stale/shared/unauthorized offers. Obtain SKU rights, current prices, costs and support terms from the owner before enabling sales.
-2. CEO approves a **separate** `saveonsub-staff-staging` Pages project and **dedicated** `saveonsub-order-os` D1 on the approved account. No new VPS or paid service required by this code. Free-tier eligibility and account quotas must be checked before creating resources. Never bind another business's DB or bucket.
+2. **Resource creation completed with approval** (see current activation status). Reuse the empty `saveonsub-staff-staging` Pages project and dedicated `saveonsub-order-os` D1; do not create duplicates. No new VPS or paid service required by this code. Never bind another business's DB or bucket.
 3. Owner confirms exact staff identity/roles and Access application/audience. Protect the entire staff host (including preview aliases) before real data. Keep owner receipt verification narrow; do not silently promote Ripon or any AI identity. Actual role enrollment/new access requires approval.
 4. Back up any existing dedicated DB. Review/apply `schema.sql`, `ops/commerce/001_catalog_content_foundation.sql`, then additive `business-schema.sql` in staging. Verify existing table compatibility first. The business extension does not rewrite old rows. Private media needs a separately approved SOS-only R2 binding if that module is activated; dashboard alone does not need R2.
 5. Set `DB`, `TEAM_DOMAIN`, `POLICY_AUD` through the authorized account, never in source/chat. Existing `wrangler.order-os.toml` intentionally has no live DB ID. Do not guess identifiers or use the storefront project. D1 bindings, Access policy changes and remote migrations remain owner-gated.
