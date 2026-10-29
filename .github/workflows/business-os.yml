@@ -19,5 +19,18 @@ jobs:
       - run: node --check staff-ui/business.js
       - run: node --import ./tests/order-os/register.mjs --test tests/order-os/*.test.mjs
       - run: python audit_order_os.py
+      - run: python -m pip install -r requirements.txt
+      - name: Verify private review files stay outside storefront
+        run: |
+          mkdir -p .local
+          printf 'SYNTHETIC PRIVATE QA SENTINEL' > .local/do-not-ship.txt
+          python stage_deploy.py
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('_site')
+          for name in ['.local','staff-ui','functions','ops','tests','workers']:
+              assert not (root/name).exists(), name
+          assert Path('staff-ui/assets/logo.svg').read_bytes()==Path('assets/logo.svg').read_bytes()
+          PY
       - run: npx --yes wrangler@4 pages functions build functions --outfile /tmp/sos-business-functions.mjs
       # Validation only. No deployment, credentials or production DB access.
