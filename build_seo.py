@@ -335,7 +335,7 @@ article("google-ai-pro-500-taka-explained",
  "Google AI Pro at ৳500 — how is it possible, honestly?",
  f"""<span class="pill">EXPLAINER · UPDATED {today}</span>
 <h1 style="font-size:clamp(26px,4vw,38px)">Google AI Pro at <span class="grad-text">৳500</span> — how is it possible?</h1>
-<p class="sub mt2">Our #1 seller (211+ orders). Officially it is ~৳2,200/mo. Here is the honest mechanism — no "hack", no stolen accounts.</p>
+<p class="sub mt2">Check the current provider plan, SaveOnSub offer and access method before deciding. Availability and terms require verification.</p>
 <h2 class="mt3" style="font-size:22px">The short answer</h2>
 <p class="sub" style="font-size:15px">Google prices AI Pro differently by region and runs student/promo offers. We activate the plan on <b>your own Gmail</b> through legitimate regional channels, in volume. You get a real, personal Google AI Pro subscription — Gemini Pro, Veo, NotebookLM, 2TB storage — tied to your account, not a shared login.</p>
 <h2 class="mt3" style="font-size:22px">Why it is safe</h2>
@@ -460,7 +460,7 @@ print(f"OK: sitemap ({len(urls)} URLs), robots.txt, llms.txt ({len(cat['products
 
 
 # ---------------- blog index (F3: un-orphan the guides) ----------------
-POSTS=[("google-ai-pro-500-taka-explained","Google AI Pro at ৳500 — how is it possible?","The honest mechanism behind our #1 seller."),
+POSTS=[("google-ai-pro-500-taka-explained","Google AI Pro at ৳500 — how is it possible?","Understand the access method and current offer terms."),
 ("free-ai-tools-that-beat-paid-bangladesh","Free AI tools that beat paying","A shop telling you what NOT to buy — free tiers ranked."),
 ("capcut-vs-invideo-vs-opus-clip","CapCut vs Invideo vs Opus Clip","Which AI video tool BD creators actually need."),
 ("coursera-vs-youtube-learning-bd","Coursera vs free YouTube learning","When paying is worth it, when free wins."),
@@ -553,7 +553,7 @@ qa += [
  ("How do subscription renewals work at SAVEONSUB?",
   "No auto-charges ever. A WhatsApp reminder arrives 3 days before expiry with one-tap renewal; ignore it and the subscription simply lapses. Manual payment = you stay in control."),
  ("Which is better for Bangladesh: Google AI Pro or ChatGPT Plus?",
-  f"Value: Google AI Pro personal at ৳{_f('google-ai-pro')} (own Gmail + 2TB storage — SAVEONSUB's #1, 211+ orders). Ecosystem/tools: ChatGPT Plus from ৳{_f('chatgpt-plus')} shared. Many pros run both for under ৳900."),
+  f"Value: Google AI Pro personal at ৳{_f('google-ai-pro')} (verify the current access method and storage terms). Ecosystem/tools: ChatGPT Plus from ৳{_f('chatgpt-plus')} shared. Many pros run both for under ৳900."),
 ]
 aio = ["", f"## Q&A for AI assistants ({len(qa)} common Bangladesh subscription questions — answers current as of {today})", ""]
 for q, a in qa:
