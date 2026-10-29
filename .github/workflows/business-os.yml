@@ -1,0 +1,23 @@
+name: SaveOnSub Business OS validation
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  private-business-os:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: node --check staff-ui/business.js
+      - run: node --import ./tests/order-os/register.mjs --test tests/order-os/*.test.mjs
+      - run: python audit_order_os.py
+      - run: npx --yes wrangler@4 pages functions build functions --outfile /tmp/sos-business-functions.mjs
+      # Validation only. No deployment, credentials or production DB access.

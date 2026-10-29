@@ -39,7 +39,7 @@ ROOT = pathlib.Path(__file__).resolve().parent
 DEST = ROOT / '_site'
 BRAND_LOCK = 'data-brand-lock="2026-08-19-approved"'
 
-EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
+EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next', '.local',
                 '__pycache__', 'node_modules', 'marketing', 'reports', 'ops',
                 'functions', 'workers', 'tests', 'staff-ui', '_site'}
 EXCLUDE_EXT = {'.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml',

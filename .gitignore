@@ -17,3 +17,4 @@ _site/
 # wrangler local cache (contains Cloudflare account id)
 .wrangler/
 graphify-out/
+.local/
