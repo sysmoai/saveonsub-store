@@ -14,6 +14,7 @@ STEPS = [
     "catalog_source_hardening.py",
     "apply_pricing_v2.py",
     "build_public_catalog.py",
+    "catalog_hold_gate.py",
     "stage_deploy.py",
     "release_hardening.py",
     "google_ai_cohort.py",
