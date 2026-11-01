@@ -3,7 +3,7 @@ name: SaveOnSub Quality Gates
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main]
+    branches: [main, 'review/**']
   push:
     branches: [main]
   schedule:
@@ -56,6 +56,16 @@ jobs:
 
       - name: Build exact canonical candidate
         run: python build_site.py
+
+      - name: Product SEO staged gate (post-build, same _site artifact)
+        run: |
+          set -euo pipefail
+          python product_seo_enrich.py --check
+          python -m unittest -v tests.test_product_seo 2>&1 | tee /tmp/product_seo_tests.log
+          ! grep -q "skipped" /tmp/product_seo_tests.log
+
+      - name: No SaveOnSub sale price in any staged HTML (EXEC-010 HOLD)
+        run: python hold_content_price_guard.py --check
 
       - name: Verify governed pricing-v2 release boundary
         run: |
