@@ -1,10 +1,16 @@
 name: SaveOnSub Canonical Deploy
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      approved_sha:
+        description: 'Full reviewed main commit SHA (40 lowercase hex characters)'
+        required: true
+        type: string
+      release_ack:
+        description: 'Type DEPLOY_SOS_EXEC010_HOLD to confirm all SKUs remain inquiry-only'
+        required: true
+        type: string
 
 concurrency:
   group: saveonsub-canonical-production
@@ -23,13 +29,44 @@ jobs:
     environment: production
 
     steps:
+      - name: Fail closed unless manual CEO release acknowledgement and SHA match
+        env:
+          APPROVED_SHA: ${{ inputs.approved_sha }}
+          RELEASE_ACK: ${{ inputs.release_ack }}
+          TRIGGER_REF: ${{ github.ref }}
+          TRIGGER_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "$TRIGGER_REF" != "refs/heads/main" ]]; then
+            echo "::error::Only the reviewed main branch can be published to canonical production."
+            exit 1
+          fi
+          if [[ "$RELEASE_ACK" != "DEPLOY_SOS_EXEC010_HOLD" ]]; then
+            echo "::error::Explicit EXEC-010 HOLD acknowledgement is required; no deployment occurred."
+            exit 1
+          fi
+          if [[ ! "$APPROVED_SHA" =~ ^[0-9a-f]{40}$ ]] || [[ "$APPROVED_SHA" != "$TRIGGER_SHA" ]]; then
+            echo "::error::Approved SHA must be the exact 40-character commit selected at workflow dispatch."
+            exit 1
+          fi
+          echo "Manual release intent verified for exact main commit (HOLD: no sellable SKU)."
+
       - name: Checkout exact release source
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'push' && github.sha || 'main' }}
+          ref: ${{ github.sha }}
 
-      - name: Capture exact release SHA
-        run: echo "DEPLOY_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Capture and recheck exact release SHA
+        env:
+          APPROVED_SHA: ${{ inputs.approved_sha }}
+        run: |
+          set -euo pipefail
+          DEPLOY_SHA=$(git rev-parse HEAD)
+          if [[ "$DEPLOY_SHA" != "$APPROVED_SHA" ]]; then
+            echo "::error::Checked-out commit does not equal CEO-approved SHA; aborting."
+            exit 1
+          fi
+          echo "DEPLOY_SHA=$DEPLOY_SHA" >> "$GITHUB_ENV"
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -51,6 +88,8 @@ jobs:
         run: |
           set -euo pipefail
           python build_site.py
+          python catalog_hold_gate.py
+          python hold_content_price_guard.py --check
           test -f _site/index.html
           test -f _site/robots.txt
           test -f _site/sitemap.xml
@@ -143,6 +182,8 @@ jobs:
             curl -fsSL --max-time 20 https://saveonsub.com/p/chatgpt-pro -o /tmp/chatgpt-pro.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/p/google-ai-pro -o /tmp/google-ai.html || true
             curl -fsSL --max-time 20 https://saveonsub.com/checkout -o /tmp/checkout.html || true
+            curl -fsSL --max-time 20 https://saveonsub.com/assets/catalog.js -o /tmp/sos-public-catalog.js || true
+            curl -fsSL --max-time 20 https://saveonsub.com/blog/google-ai-pro-500-taka-explained -o /tmp/sos-google-guide.html || true
             if grep -q 'User-agent: OAI-SearchBot' /tmp/robots.txt 2>/dev/null \
               && grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' /tmp/home.html 2>/dev/null \
               && grep -q 'commercial HOLD' /tmp/chatgpt-plus.html 2>/dev/null \
@@ -157,6 +198,11 @@ jobs:
               && ! grep -q '৳499' /tmp/chatgpt-plus.html 2>/dev/null \
               && ! grep -q 'SHARED · POLICY RISK' /tmp/chatgpt-plus.html 2>/dev/null \
               && grep -q '<meta name="robots" content="noindex,follow">' /tmp/checkout.html 2>/dev/null \
+              && test -s /tmp/sos-public-catalog.js \
+              && ! grep -q 'price_precedence' /tmp/sos-public-catalog.js \
+              && ! grep -q '"bdt"' /tmp/sos-public-catalog.js \
+              && test -s /tmp/sos-google-guide.html \
+              && ! grep -q '211+ orders' /tmp/sos-google-guide.html \
               && ! grep -q 'https://saveonsub.com/.*\.html' /tmp/sitemap.xml 2>/dev/null; then
               echo 'Canonical production verified — EXEC-010 HOLD (Price on Request) is live.'
               exit 0
