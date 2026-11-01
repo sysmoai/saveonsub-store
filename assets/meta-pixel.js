@@ -31,7 +31,11 @@
   if(nav.globalPrivacyControl === true || nav.doNotTrack === '1' || window.doNotTrack === '1') return;
 
   function getConsent(){ try { return localStorage.getItem(CONSENT_KEY) || ''; } catch(e){ return ''; } }
-  function setConsent(v){ try { localStorage.setItem(CONSENT_KEY, v); } catch(e){} }
+  function setConsent(v){
+    try { localStorage.setItem(CONSENT_KEY, v); } catch(e){}
+    // Lets other measurement (assets/ga4.js) follow the same single choice.
+    try { window.dispatchEvent(new CustomEvent('sos:consent', {detail: {value: v}})); } catch(e){}
+  }
 
   let loaded = false;
   let viewedCheckout = false;
@@ -143,8 +147,8 @@
     const text = document.createElement('span');
     text.style.flex = '1 1 240px';
     text.innerHTML = bn
-      ? 'আমাদের Facebook বিজ্ঞাপন কতটা কাজ করছে তা মাপতে আমরা Meta Pixel ব্যবহার করি। <a href="/privacy.html" style="color:var(--green2,#14d4b8)">বিস্তারিত</a>'
-      : 'We use the Meta Pixel to measure our Facebook ads. <a href="/privacy.html" style="color:var(--green2,#14d4b8)">Details</a>';
+      ? 'আমাদের Facebook বিজ্ঞাপন ও website কতটা কাজ করছে তা মাপতে আমরা Meta Pixel ও Google Analytics ব্যবহার করি। <a href="/privacy.html" style="color:var(--green2,#14d4b8)">বিস্তারিত</a>'
+      : 'We use the Meta Pixel and Google Analytics to measure our ads and website. <a href="/privacy.html" style="color:var(--green2,#14d4b8)">Details</a>';
     const ok = document.createElement('button');
     ok.className = 'btn btn-primary btn-sm';
     ok.textContent = bn ? 'ঠিক আছে' : 'OK';
