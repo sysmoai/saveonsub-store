@@ -114,6 +114,10 @@ for path in SITE.rglob('*.html'):
     if '/assets/meta-pixel.js' not in text and '/assets/measurement.js' in text:
         text = re.sub(r'(<script src="/assets/measurement\.js" defer></script>)',
                       r'\1\n<script src="/assets/meta-pixel.js" defer></script>', text, count=1)
+    # GA4 bridge: opt-in only, listens to sos:track and to the shared consent notice.
+    if '/assets/ga4.js' not in text and '/assets/meta-pixel.js' in text:
+        text = re.sub(r'(<script src="/assets/meta-pixel\.js" defer></script>)',
+                      r'\1\n<script src="/assets/ga4.js" defer></script>', text, count=1)
 
     if text != original:
         path.write_text(text, encoding='utf-8')
@@ -146,6 +150,9 @@ if not measurement.exists():
 if not (SITE / 'assets' / 'meta-pixel.js').exists():
     print('RELEASE HARDENING FAILED — staged meta-pixel.js missing.', file=sys.stderr)
     raise SystemExit(1)
+if not (SITE / 'assets' / 'ga4.js').exists():
+    print('RELEASE HARDENING FAILED — staged ga4.js missing.', file=sys.stderr)
+    raise SystemExit(1)
 
 hits = []
 html_pages = list(SITE.rglob('*.html'))
@@ -162,6 +169,8 @@ for path in html_pages + [p for p in (SITE / 'llms.txt',) if p.exists()]:
         hits.append((path.as_posix(), '/assets/measurement.js', 'first-party attribution script missing'))
     if path.suffix == '.html' and '/assets/meta-pixel.js' not in text:
         hits.append((path.as_posix(), '/assets/meta-pixel.js', 'Meta Pixel bridge script missing'))
+    if path.suffix == '.html' and '/assets/ga4.js' not in text:
+        hits.append((path.as_posix(), '/assets/ga4.js', 'GA4 bridge script missing'))
 
 if hits:
     print(f'RELEASE HARDENING FAILED — {len(hits)} unsafe staged item(s):', file=sys.stderr)
