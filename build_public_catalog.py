@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from catalog_hold_gate import catalog_errors
 
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "catalog.json"
@@ -37,6 +38,7 @@ DROP_KEYS = {
     "delivery_sla",
     "replacement",
     "faq",
+    "save_bdt", "official_usd", "price_source",
 }
 
 
@@ -50,7 +52,15 @@ def scrub(value):
 
 def main() -> int:
     data = json.loads(SRC.read_text(encoding="utf-8"))
+    policy = json.loads((ROOT / 'ops' / 'PRICING-V2-2026-09-17.json').read_text(encoding='utf-8'))
+    errors = catalog_errors(data, policy)
+    if errors:
+        raise SystemExit('[public-catalog] HOLD violation: ' + '; '.join(errors[:10]))
     public = scrub(data)
+    for product in public['products']:
+        product['sellability'] = 'inquiry_only'
+    if any('"bdt":' in json.dumps(p) for p in public['products']):
+        raise SystemExit('[public-catalog] a fixed BDT price survived HOLD projection')
     revision = public.get("meta", {}).get("commercial_revision", "unknown")
     payload = json.dumps(public, ensure_ascii=False, separators=(",", ":"))
     OUT.write_text(
