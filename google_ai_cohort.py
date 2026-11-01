@@ -3,7 +3,7 @@
 
 This is a deterministic release-time cohort transformer. It preserves existing
 ranking URLs while replacing stale official references, unsupported savings/social
-proof, and injecting current decision-helping information verified on 2026-09-04.
+proof, and injecting current decision-helping information validated using current dated first-party evidence; student promotions are held when the official page conflicts.
 """
 from pathlib import Path
 import json
@@ -22,6 +22,8 @@ facts = json.loads(FACTS_PATH.read_text(encoding="utf-8"))
 verified_on = facts["verified_on"]
 source = facts["official_source"]
 student = facts["student_offer"]
+if student.get("offer_currently_confirmed") is not False or student.get("verification_status") != "HOLD_OFFICIAL_PAGE_CONTRADICTS_ITSELF":
+    raise SystemExit("Student promotional entitlement must be independently verified before release")
 plans = facts["official_plans"]
 
 
@@ -38,8 +40,8 @@ def cohort_panel(lang="en"):
     </table></div>
     <p style="font-size:13px;color:var(--muted);margin-top:8px">Google Bangladesh subscription page থেকে {verified_on} তারিখে যাচাই করা। Provider feature/limit বদলাতে পারে। <a href="{source}" target="_blank" rel="noopener nofollow">Google-এ বর্তমান তথ্য দেখুন ↗</a></p>
   </section>
-  <section class="notice green mt2" data-student-offer="{student['claim_deadline']}">
-    🎓 <b>Eligible college student হলে আগে Google-এর free offer check করুন:</b> Google বর্তমানে eligible 18+ college students-এর জন্য {student['plan']} ১ বছর ৳0 অফার দেখাচ্ছে; claim deadline {student['claim_deadline']}. Offer শেষে current regular price অনুযায়ী auto-renew হতে পারে। <a href="{student['official_source']}" target="_blank" rel="noopener nofollow">Eligibility/terms যাচাই ↗</a>
+  <section class="notice mt2" data-student-offer-status="unverified-conflict">
+    🎓 <b>Student promotion নিশ্চিত নয়:</b> Google-এর বাংলাদেশ student page-এর heading-এ ফ্রি এক বছরের অফার লেখা থাকলেও FAQ বলছে আগের অফারটি ৯ ডিসেম্বর ২০২৫-এ শেষ হয়েছে। Google নিজে তথ্য নিশ্চিত না করা এবং উপযুক্ত account-এর checkout-এ শর্ত না দেখা পর্যন্ত ফ্রি subscription বা deadline ধরে নেবেন না। <a href="{student['official_source']}" target="_blank" rel="noopener nofollow">Google-এর terms দেখুন ↗</a>
   </section>'''
     return f'''\n  <section class="notice mt2" data-google-ai-facts="{verified_on}">
     <h2 style="font-size:22px;margin:0 0 10px">Google AI Plus vs Pro — Bangladesh</h2>
@@ -50,8 +52,8 @@ def cohort_panel(lang="en"):
     </table></div>
     <p style="font-size:13px;color:var(--muted);margin-top:8px">Verified against Google’s Bangladesh subscription page on {verified_on}. Provider features and limits can change. <a href="{source}" target="_blank" rel="noopener nofollow">Check current Google details ↗</a></p>
   </section>
-  <section class="notice green mt2" data-student-offer="{student['claim_deadline']}">
-    🎓 <b>Eligible college student? Check Google’s free offer before buying:</b> Google currently advertises {student['plan']} for 1 year at ৳0 for eligible 18+ college students, with a claim deadline of {student['claim_deadline']}. After the offer, auto-renewal may apply at the then-current regular price. <a href="{student['official_source']}" target="_blank" rel="noopener nofollow">Verify eligibility and terms ↗</a>
+  <section class="notice mt2" data-student-offer-status="unverified-conflict">
+    🎓 <b>Student promotion eligibility is not confirmed:</b> Google's Bangladesh student page advertises a free year in its heading but says in the FAQ that the previous offer ended on 9 December 2025. Until Google resolves this conflict and an eligible account shows valid checkout terms, do not assume a free subscription, deadline or transferable promotional access. <a href="{student['official_source']}" target="_blank" rel="noopener nofollow">Check Google terms ↗</a>
   </section>'''
 
 
