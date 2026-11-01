@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """SAVEONSUB build step 4: SEO/AIO/GEO — sitemap.xml, robots.txt, llms.txt, 6 blog landing pages.
 Run locally: python3 build_seo.py"""
+from catalog_hold_gate import refuse_legacy_generator
+# Retired direct generator: creates stale fixed-price and unverifiable claims.
+# Canonical governed output is built by `python build_site.py` only.
+refuse_legacy_generator("build_seo.py")
 import json, os, html, datetime
 from templates import nav_en, footer_en
 
