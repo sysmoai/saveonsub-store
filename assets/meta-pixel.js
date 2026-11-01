@@ -129,6 +129,9 @@
     }
   });
 
+  // ga4.js listens for this; it loads Google Analytics only after 'granted'.
+  function announce(v){ try { window.dispatchEvent(new CustomEvent('sos:consent', {detail: v})); } catch(e){} }
+
   function showNotice(){
     if(document.getElementById('sos-ads-consent')) return;
     const bn = (document.documentElement.lang || '').startsWith('bn');
@@ -143,8 +146,8 @@
     const text = document.createElement('span');
     text.style.flex = '1 1 240px';
     text.innerHTML = bn
-      ? 'আমাদের Facebook বিজ্ঞাপন কতটা কাজ করছে তা মাপতে আমরা Meta Pixel ব্যবহার করি। <a href="/privacy.html" style="color:var(--green2,#14d4b8)">বিস্তারিত</a>'
-      : 'We use the Meta Pixel to measure our Facebook ads. <a href="/privacy.html" style="color:var(--green2,#14d4b8)">Details</a>';
+      ? 'আমাদের বিজ্ঞাপন ও ওয়েবসাইট কতটা কাজ করছে তা মাপতে আমরা Meta Pixel ও Google Analytics ব্যবহার করি। <a href="/privacy.html" style="color:var(--green2,#14d4b8)">বিস্তারিত</a>'
+      : 'We use the Meta Pixel and Google Analytics to measure our ads and website. <a href="/privacy.html" style="color:var(--green2,#14d4b8)">Details</a>';
     const ok = document.createElement('button');
     ok.className = 'btn btn-primary btn-sm';
     ok.textContent = bn ? 'ঠিক আছে' : 'OK';
@@ -152,10 +155,11 @@
     no.className = 'btn btn-sm';
     no.style.cssText = 'background:none;border:1px solid var(--line,#24504c);color:inherit';
     no.textContent = bn ? 'না' : 'Decline';
-    ok.onclick = function(){ setConsent('granted'); bar.remove(); loadPixel(); };
+    ok.onclick = function(){ setConsent('granted'); bar.remove(); loadPixel(); announce('granted'); };
     no.onclick = function(){
       setConsent('denied'); bar.remove();
       if(loaded && window.fbq) window.fbq('consent', 'revoke');
+      announce('denied');
     };
     bar.appendChild(text); bar.appendChild(ok); bar.appendChild(no);
     document.body.appendChild(bar);
