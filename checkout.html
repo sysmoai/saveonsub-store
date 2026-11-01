@@ -213,8 +213,12 @@ function recordOrder(kind, txn){
 function confirmWA(){
   if(!cartGet().length){toast('Cart is empty');return;}
   const txn=document.getElementById('txn').value.trim();
+  // Capture the immutable order handoff while the validated cart is intact.
+  // recordOrder() clears localStorage, so building WhatsApp afterwards sent
+  // EMPTY item lines and TOTAL ৳0 even when a real cart was present.
+  const orderLink = waOrder({oid:OID,method:PAY,txn:txn});
   recordOrder('order', txn);
-  window.open(waOrder({oid:OID,method:PAY,txn:txn}), '_blank');
+  window.open(orderLink, '_blank');
   location.href='order.html';
 }
 function upsell(){

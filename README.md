@@ -1,113 +1,49 @@
-# SAVEONSUB Store
+# SAVEONSUB Store — Engineering and Commercial Safety
 
-**Bangladesh's honest premium subscription store** — A [SYSmoAI](https://sysmoai.com) venture by [Emon Hossain](https://emonhossain.pro).
+**Canonical business:** SAVEONSUB / https://saveonsub.com
+**GitHub:** [sysmoai/saveonsub-store](https://github.com/sysmoai/saveonsub-store)
+**Production:** Cloudflare Pages project `saveonsub` — not Vercel or GitHub Pages.
+**Authority:** CEO-approved commercial policy, provider eligibility and a verified release. A source file, green test or draft PR is NOT a live price or transaction approval.
 
-> 64 products · 214 pages · 0 audit gaps · Static HTML · bKash/Nagad · Dual EN/BN · AIO-optimized
+## Current source truth (1 Nov 2026)
 
----
+- `main:catalog.json` retains **72 historical products and 138 historical plan records**; these are source history, not a sellable current pricebook.
+- Review branch PR #66 and its PR #76 follow-up hold all **72 products** at **zero approved sellable plans**, with explicit `EXEC-010`, `request_price=true` and `pricing_status=price-review-required`. Do not restore the 138 historic plans as customer offers.
+- Affordable **BDT 499 entry-price lane** remains a **CEO commercial research objective**, with a possible exception to the former BDT 500-per-order contribution threshold. It does not authorize shared credentials, any exact plan, a published price, a refund rule, or payment collection.
+- Full storefront and search-intent URLs must be preserved. Setup, training and support are optional services; do not replace the subscription store with consulting-only content.
+- See [Issue #69](https://github.com/sysmoai/saveonsub-store/issues/69), [Issue #70](https://github.com/sysmoai/saveonsub-store/issues/70), [PR #76](https://github.com/sysmoai/saveonsub-store/pull/76), and [P0 public claims matrix](ops/SOS-P0-PUBLIC-CLAIMS-MATRIX-2026-11-01.md).
 
-## Quick Start
+## Correct safe developer workflow
 
 ```bash
-# Rebuild entire site from catalog.json
-bash build_all.sh
-
-# Run audit only (must return 0 GAPS before any push)
+python3 -m pip install -r requirements.txt
+python3 -m unittest -v test_audit_home_prices
+python3 -m unittest discover -v -s tests -p 'test_*.py'
+python3 catalog_hold_gate.py
+python3 build_site.py
+python3 audit_commercial_truth_v2.py
 python3 audit_all.py
-
-# Serve locally
-python3 -m http.server 8765
-# → http://localhost:8765
 ```
 
-## Architecture
+- `build_site.py` is the **only canonical governed builder**. It writes a sanitized `_site/` candidate; running it is **not** a deployment.
+- `build_all.sh` and `build_catalog.py` are safe compatibility entrypoints, delegating to the governed build/public catalog pipeline.
+- `build_home.py` and `build_seo.py` are **retired**: direct execution fails closed because these historic generators contain stale pricing and unsupported commercial claims.
+- `assets/catalog.js` is generated at build time from a scrubbed, inquiry-only projection. Never treat an old checked-in asset as proof of a reviewed release.
+- The synthetic checkout test uses no real customer or payment data: `node tests/checkout_handoff_synthetic.mjs .`.
 
-```
-catalog.json          ← SINGLE SOURCE OF TRUTH (edit only this)
-    │
-    ├─ build_catalog.py   → assets/catalog.js (derived, never hand-edit)
-    ├─ build_assets.py    → assets/*.png, favicon, social cards, PWA icons
-    ├─ build_home.py      → index.html, bn.html
-    ├─ build_pages.py     → p/<id>.html (EN+BN, 64×2)
-    ├─ build_trust.py     → warranty, refund, privacy, terms, about, contact, etc.
-    ├─ build_seo.py       → sitemap.xml, robots.txt, llms.txt
-    ├─ build_category.py  → c/<cat>.html (EN+BN, 11×2)
-    └─ audit_all.py       → adversarial QA gate (exit 0 = clean)
-```
+## Deployment protection
 
-**Never hand-edit generated files.** Change catalog.json → run `bash build_all.sh` → audit passes → commit.
+**Never deploy the repository root.** Only stage `_site/` to the exact authorized Cloudflare Pages project after the CEO approves the reviewed candidate. Public output must exclude `catalog.json`, Python scripts, staff APIs, SQL migrations, private records, customer data, source images and secrets. Follow `DEPLOY.md` and `.github/workflows/canonical-deploy-manual.yml` with rollback and canonical-domain smoke tests. Staging Cloudflare/D1/Access setup and production release are separate human-approval gates.
 
-## Brand Laws (non-negotiable, enforced by audit)
+The private staff / Order OS is separately staged in draft [PR #75](https://github.com/sysmoai/saveonsub-store/pull/75). Historical local tests, an empty D1 resource or an HTML dashboard are **not** proof of live authenticated commerce. Human receiving-side payment verification is required before an order is marked paid; screenshots, typed references and browser localStorage are not verified settlement.
 
-1. No fake reviews, ratings, or testimonials
-2. No fake urgency (countdown timers, limited stock, "X bought now")
-3. No unverifiable statistics
-4. Coral (#fb7185) reserved for risk disclosure ONLY
-5. Every public claim traces to a verified source
-6. Always show official price + link
-7. Recommend free tier when it genuinely fits
+## Brand, safety and business separation
 
-## Key Files
+- Locked original SaveOnSub PNG is immutable. Never draw, regenerate or recolor the approved logo; use verified locked derivative assets.
+- Canonical WhatsApp: **+8801305869242** / https://wa.me/8801305869242.
+- No unverified bestseller/order counts, 100% privacy/ownership promises, universal instant delivery, misleading price comparisons, unsupported rights/resale claims, fake ratings, or price in structured data while commercial HOLD applies.
+- No raw customer data, payment account details, credentials, supplier costs, margin ledgers or personal business secrets in this public repository.
+- Keep other brands' products, finance, credentials, orders, evidence and customers strictly separate; legacy `aips-*` product IDs are a taxonomy/provenance review item, not authorization to merge businesses.
+- Search performance and the 50K monthly organic traffic objective must be reported from real SOS-owned analytics. A target is never a measured result.
 
-| Path | Purpose |
-|---|---|
-| `MASTER-PROMPT-AND-PLAN.md` | Full phased plan + reusable mega-prompt |
-| `BRAND-SYSTEM.md` | Design tokens, voice, brand laws |
-| `BLUEPRINT.md` | IA, UX, page specs, conversion flows |
-| `GAP-REGISTER.md` | Known gaps registry |
-| `AIO-TEST-PROTOCOL.md` | LLM recommendation testing (pre-deploy) |
-| `LAUNCH-CHECKLIST.md` | Pre-launch steps (Emon executes) |
-| `templates.py` | Unified nav/footer per language (imported by all builds) |
-
-## Deployment
-
-Target: **Cloudflare Pages** (or any static host).
-
-```bash
-# Deploy artifact: everything in 12_SOS/store/
-# Frameworks preset: None
-# Build command: bash build_all.sh
-# Build output directory: ./
-# Environment: Python 3.x with Pillow
-```
-
-Cloudflare Pages `_headers` and `_redirects` are included.
-
-## PWA
-
-- Service worker (`sw.js`) with offline fallback
-- Web manifest (`assets/site.webmanifest`) with maskable icons
-- 192×192 and 512×512 icons
-- Install prompt on homepage
-
-## Schema.org Coverage
-
-Every page carries structured data: OnlineStore, Product+AggregateOffer, FAQPage, BreadcrumbList, Quiz, ItemList, Article, SpeakableSpecification, SearchAction.
-
-## Security
-
-- CSP with `script-src 'self'` in `_headers`
-- HSTS, X-Content-Type-Options, frame-ancestors
-- Source files (`.py`, `.sh`, `catalog.json`) blocked from deploy via `_redirects`
-- No external scripts, no trackers, no analytics by default
-
-## CI/CD Ready
-
-- `build_all.sh` returns non-zero exit on any build failure
-- `audit_all.py` returns non-zero exit on any gap
-- Compatible with GitHub Actions, Cloudflare Pages CI, or local pre-commit hooks
-
-## Emon-Gated (never do autonomously)
-
-- Payments, real PII collection, sending customer messages
-- Publishing/deploying, DNS changes, domain purchases
-- Price changes for `status: "proposed-new"` products
-- Anything violating brand laws
-
-## License
-
-Private — [SYSmoAI](https://sysmoai.com). All product names and trademarks belong to their respective owners.
-
----
-
-Built in Dhaka, Bangladesh 🇧🇩
+**Approval boundary:** No unapproved merge/deploy, price changes, money movement, D1 migration, Access grants, ad spending, bulk messaging, DNS changes or production schema changes.
