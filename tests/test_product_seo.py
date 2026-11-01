@@ -58,6 +58,43 @@ class ProductSeo(unittest.TestCase):
             s.enrich("<html><head><title>x</title></head><body><main></main></body></html>",
                      CATALOG["netflix"], CATALOG, COPY, False)
 
+    def test_breadcrumb_urls_are_locale_correct(self):
+        for p in CATALOG.values():
+            cat = s.slug(p["category"])
+            en = json.loads(s.breadcrumb_ld(p, False).split(">", 1)[1].rsplit("<", 1)[0])
+            bn = json.loads(s.breadcrumb_ld(p, True).split(">", 1)[1].rsplit("<", 1)[0])
+            self.assertEqual([i["item"] for i in en["itemListElement"]],
+                             [f"{s.BASE}/", f"{s.BASE}/all", f"{s.BASE}/c/{cat}", f"{s.BASE}/p/{p['id']}"])
+            self.assertEqual([i["item"] for i in bn["itemListElement"]],
+                             [f"{s.BASE}/bn", f"{s.BASE}/all", f"{s.BASE}/bn/c/{cat}", f"{s.BASE}/bn/p/{p['id']}"])
+            self.assertEqual(bn["itemListElement"][0]["name"], "হোম")
+
+    def test_section_links_stay_in_page_locale(self):
+        import re
+        for pid in ("netflix", "canva-pro", "bundle-dev", "cursor"):
+            for bn in (False, True):
+                sec = s.section_html(CATALOG[pid], CATALOG, COPY, bn)
+                for href in re.findall(r'href="([^"]+)"', sec):
+                    if href.startswith("http"):
+                        continue
+                    # relative to /p/ (EN) or /bn/p/ (BN): only siblings or ../c/<slug>
+                    self.assertTrue(re.fullmatch(r"[a-z0-9-]+|\.\./c/[a-z0-9-]+", href), href)
+
+    @unittest.skipUnless((ROOT / "_site" / "p").exists(), "staged site not built")
+    def test_staged_section_links_resolve_to_same_locale_pages(self):
+        import re
+        for base, prefix in ((ROOT / "_site" / "p", ""), (ROOT / "_site" / "bn" / "p", "bn/")):
+            for page in base.glob("*.html"):
+                t = page.read_text(encoding="utf-8")
+                sec = re.search(rf"<section[^>]*{re.escape(s.MARK)}.*?</section>", t, re.S)
+                self.assertIsNotNone(sec, page)
+                for href in re.findall(r'href="([^"]+)"', sec.group(0)):
+                    if href.startswith("http"):
+                        continue
+                    target = (page.parent / (href + ".html")).resolve()
+                    self.assertTrue(target.exists(), f"{page}: {href}")
+                    self.assertEqual(prefix == "bn/", "/_site/bn/" in target.as_posix(), f"{page}: {href}")
+
 
 if __name__ == "__main__":
     unittest.main()

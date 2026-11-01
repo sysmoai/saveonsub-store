@@ -131,15 +131,15 @@ def section_html(p: dict, products: dict, copy: dict, bn: bool) -> str:
         if bn:
             parts.append(
                 f'<h2 class="mt3" style="font-size:22px">বাংলাদেশে {esc(name)}-এর দাম কত?</h2>'
-                f'<p>প্রোভাইডারের অফিসিয়াল তালিকায় রেফারেন্স মূল্য US${esc(usd)} '
-                f'(<a href="{esc(url)}" target="_blank" rel="noopener nofollow">অফিসিয়াল মূল্য দেখুন ↗</a>)। '
+                f'<p>আমাদের ক্যাটালগে প্রোভাইডারের US তালিকা-মূল্যের রেফারেন্স US${esc(usd)}; এটি বাংলাদেশের বর্তমান মূল্য নয়। '
+                f'বর্তমান মূল্য ও আপনার দেশে প্ল্যান পাওয়া যায় কিনা <a href="{esc(url)}" target="_blank" rel="noopener nofollow">অফিসিয়াল পেজে দেখুন ↗</a>। '
                 f'প্রোভাইডার দেশ, ট্যাক্স ও প্ল্যান অনুযায়ী মূল্য বদলাতে পারে। SaveOnSub-এর বর্তমান টাকায় মূল্য ও অ্যাক্সেস পদ্ধতি পেমেন্টের আগে লিখিতভাবে নিশ্চিত করা হয়।</p>'
             )
         else:
             parts.append(
                 f'<h2 class="mt3" style="font-size:22px">How much is {esc(name)} in Bangladesh?</h2>'
-                f'<p>The provider lists a reference price of US${esc(usd)} '
-                f'(<a href="{esc(url)}" target="_blank" rel="noopener nofollow">see official pricing ↗</a>). '
+                f'<p>Our catalog\'s reference for the provider\'s US list price is US${esc(usd)}; this is not a verified Bangladesh price. '
+                f'Check the current price and whether the plan is offered in your country on the <a href="{esc(url)}" target="_blank" rel="noopener nofollow">official pricing page ↗</a>. '
                 f'Provider prices can vary by country, tax and plan. SaveOnSub confirms its current BDT price and the exact access method in writing before any payment.</p>'
             )
     links = related(p, products, bn)
@@ -147,7 +147,7 @@ def section_html(p: dict, products: dict, copy: dict, bn: bool) -> str:
         lis = "".join(f'<li><a href="{esc(pid)}">{esc(n)}</a></li>' for pid, n in links)
         cat = esc(p["category"])
         heading = "সম্পর্কিত টুল" if bn else "Related tools"
-        cat_link = f'<a href="{"../" if bn else ""}../c/{slug(p["category"])}">{cat}</a>'
+        cat_link = f'<a href="../c/{slug(p["category"])}">{cat}</a>'
         more = f'<p>{"আরও দেখুন: " if bn else "More in "}{cat_link}</p>'
         parts.append(f'<h2 class="mt3" style="font-size:22px">{heading}</h2><ul>{lis}</ul>{more}')
     parts.append("</section>")
@@ -157,10 +157,11 @@ def section_html(p: dict, products: dict, copy: dict, bn: bool) -> str:
 def breadcrumb_ld(p: dict, bn: bool) -> str:
     name = clean_name(p["name"])
     prefix = "/bn" if bn else ""
+    # /bn/all canonicalises to /all, so the indexable All Products target is /all.
     items = [
-        ("Home", f"{BASE}{'/bn' if bn else '/'}"),
-        ("All Products", f"{BASE}/all"),
-        (p["category"], f"{BASE}/c/{slug(p['category'])}"),
+        ("হোম" if bn else "Home", f"{BASE}{'/bn' if bn else '/'}"),
+        ("সব প্রোডাক্ট" if bn else "All Products", f"{BASE}/all"),
+        (p["category"], f"{BASE}{prefix}/c/{slug(p['category'])}"),
         (name, f"{BASE}{prefix}/p/{p['id']}"),
     ]
     data = {
