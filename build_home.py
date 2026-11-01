@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """SAVEONSUB build step 6: GENERATE index.html from catalog.json (kills price drift forever).
 Run locally: python3 build_home.py"""
+from catalog_hold_gate import refuse_legacy_generator
+# Retired direct generator: creates stale fixed-price and unverifiable claims.
+# Canonical governed output is built by `python build_site.py` only.
+refuse_legacy_generator("build_home.py")
 import json, html
 from site_config import SUPPORT_PHONE_E164, SUPPORT_PHONE_DISPLAY
 
