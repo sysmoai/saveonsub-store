@@ -40,6 +40,12 @@ jobs:
           python audit_all.py
           python deploy_preflight.py
 
+      - name: Run provider fact and production freeze unit tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p 'test_provider_fact_claim_boundaries.py' -v
+          python -m unittest discover -s tests -p 'test_main_publish_freeze.py' -v
+
       - name: Build exact canonical candidate
         run: python build_site.py
 
@@ -63,7 +69,9 @@ jobs:
           ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
           ! grep -q 'SHARED · WARRANTY COVERED' _site/p/chatgpt-plus.html
           ! grep -q '5–15 min' _site/p/chatgpt-plus.html
-          grep -q 'data-entertainment-facts="2026-09-09"' _site/p/netflix.html
+          # Match the actual reviewed provider fact record, not a stale hard-coded date.
+          ENTERTAINMENT_VERIFIED=$(python -c 'import json; print(json.load(open("ops/ENTERTAINMENT-COHORT-FACTS-2026-09-09.json"))["verified_on"])')
+          grep -q "data-entertainment-facts=\"${ENTERTAINMENT_VERIFIED}\"" _site/p/netflix.html
           grep -q 'Spotify BD: Individual ৳219/mo' _site/p/spotify.html
           grep -q 'YouTube Premium: available in Bangladesh' _site/p/youtube-premium.html
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html

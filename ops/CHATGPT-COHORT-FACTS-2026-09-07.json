@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-09-07",
+  "verified_on": "2026-11-01",
   "market": "Bangladesh",
   "official_sources": {
     "pricing": "https://chatgpt.com/pricing/",
@@ -7,28 +7,39 @@
     "go_launch": "https://openai.com/index/introducing-chatgpt-go/",
     "multi_currency": "https://help.openai.com/en/articles/10421635-multi-currency-billing",
     "account_sharing": "https://help.openai.com/en/articles/10471989-openai-account-sharing-policy",
-    "terms": "https://openai.com/policies/terms-of-use/"
+    "terms": "https://openai.com/policies/terms-of-use/",
+    "pro_tiers": "https://help.openai.com/en/articles/9793128-about-chatgpt-pro-tiers"
   },
   "official_consumer_reference": {
-    "free": {"positioning": "trying ChatGPT"},
+    "free": {
+      "positioning": "trying ChatGPT"
+    },
     "go": {
       "published_usd_month": 8,
-      "price_note": "OpenAI says some markets may use localized pricing; exact checkout price is the source of truth."
+      "price_note": "USD 8/month was the published US launch reference on 2026-01-16; Go availability/pricing is localized. It is not a guaranteed current Bangladesh checkout price."
     },
     "plus": {
       "published_usd_month": 20,
       "billing": "monthly",
       "api_included": false,
-      "feature_note": "Current Plus includes expanded access to advanced reasoning, deep research, Codex, memory/context, ChatGPT Work, scheduled tasks and early features, subject to limits and change."
+      "feature_note": "Plus has expanded model/tool access compared with Free. Specific model names, feature availability and usage limits are subject to current account controls, and may change."
     },
     "pro": {
       "published_usd_month": 200,
-      "price_note": "Verify current account checkout before quoting a localized total."
+      "price_note": "This amount refers only to the Pro 200 tier, NOT a single universal Pro price. Pro 100, Pro 200 and Pro 500 have different monthly costs and allowances. Check the account's available plan and checkout.",
+      "tiers_usd_per_month": {
+        "Pro 100": 100,
+        "Pro 200": 200,
+        "Pro 500": 500
+      }
     }
   },
   "bangladesh_billing": {
     "bdt_supported_on_web": true,
-    "all_country_web_methods": ["credit card", "debit card"],
+    "all_country_web_methods": [
+      "credit card",
+      "debit card"
+    ],
     "bkash_directly_listed_by_openai": false,
     "guidance": "Do not convert $20 with a fixed internal FX rate and call that the official Bangladesh price. Show the published $20/month reference, note that BDT is a supported web-billing currency, and tell users to verify the exact amount in their own ChatGPT checkout."
   },
@@ -36,22 +47,47 @@
     "individual_account": true,
     "credential_sharing_allowed": false,
     "summary": "OpenAI says an account is for the individual who created it; credentials should not be shared or the account made available to someone else.",
-    "site_rule": "Any SaveOnSub shared-access listing must explicitly state that it conflicts with OpenAI individual-account policy and carries privacy, continuity and suspension risk. Never call it provider-authorized, safe, private, official, or equivalent to a personal Plus subscription."
+    "site_rule": "Do not advertise or fulfill shared OpenAI individual-account credentials as a compliant subscription. Hold any such legacy SaveOnSub SKU and verify a legitimate customer-owned account or permitted distinct workspace seat before offering it; disclosure of risk does not authorize credential sharing."
   },
   "saveonsub_offer_snapshot": {
     "chatgpt-plus": [
-      {"label": "Starter Shared (6–8 users)", "bdt": 499, "access": "shared"},
-      {"label": "Premium Shared (2–3 users)", "bdt": 999, "access": "shared"},
-      {"label": "Personal (your email)", "bdt": 2990, "access": "personal/customer-specific"}
+      {
+        "label": "Starter Shared (6–8 users)",
+        "bdt": 499,
+        "access": "shared"
+      },
+      {
+        "label": "Premium Shared (2–3 users)",
+        "bdt": 999,
+        "access": "shared"
+      },
+      {
+        "label": "Personal (your email)",
+        "bdt": 2990,
+        "access": "personal/customer-specific"
+      }
     ]
   },
   "bd_serp_snapshot": {
     "verified_on": "2026-09-07",
     "observed": [
-      {"site": "Soft Office BD", "visible_price_bdt": 399, "note": "commercial guide/product positioning"},
-      {"site": "Digi Subscriber", "visible_price_bdt": "399-1499", "note": "multiple variants"},
-      {"site": "Bengali IT", "visible_price_bdt": "799-999", "note": "product page; mixed Go/Plus language"}
-    ]
+      {
+        "site": "Soft Office BD",
+        "visible_price_bdt": 399,
+        "note": "commercial guide/product positioning"
+      },
+      {
+        "site": "Digi Subscriber",
+        "visible_price_bdt": "399-1499",
+        "note": "multiple variants"
+      },
+      {
+        "site": "Bengali IT",
+        "visible_price_bdt": "799-999",
+        "note": "product page; mixed Go/Plus language"
+      }
+    ],
+    "status": "HISTORICAL_SEP_2026_NOT_CURRENT_RANKING_OR_PRICE"
   },
   "portfolio_intent_ownership": {
     "saveonsub": {
@@ -65,8 +101,35 @@
         "how to buy chatgpt in bangladesh"
       ]
     },
-    "aips": {"overlap": "high", "recommended_future_role": "brand/navigational and store-offer demand rather than duplicating SaveOnSub's exact neutral comparison intent"},
-    "aitp": {"overlap": "medium", "recommended_future_role": "personal-seat/service intent and its own brand demand"},
-    "aipt": {"overlap": "low-to-medium", "recommended_future_role": "bundles/student/store-specific intent"}
+    "aips": {
+      "overlap": "high",
+      "recommended_future_role": "brand/navigational and store-offer demand rather than duplicating SaveOnSub's exact neutral comparison intent"
+    },
+    "aitp": {
+      "overlap": "medium",
+      "recommended_future_role": "personal-seat/service intent and its own brand demand"
+    },
+    "aipt": {
+      "overlap": "low-to-medium",
+      "recommended_future_role": "bundles/student/store-specific intent"
+    }
+  },
+  "verification_scope": {
+    "provider": "OpenAI",
+    "current_fact_recheck_on": "2026-11-01",
+    "scope": "Go US launch anchor, Plus USD20 and limits/API separation, Pro tier diversification, BDT web billing and individual-account restrictions. No seller checkout or BD local price verified.",
+    "first_party_sources": [
+      "https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus",
+      "https://help.openai.com/en/articles/11989085-what-is-chatgpt-go",
+      "https://help.openai.com/en/articles/9793128-about-chatgpt-pro-tiers",
+      "https://help.openai.com/en/articles/10421635-multi-currency-billing",
+      "https://help.openai.com/en/articles/10471989-openai-account-sharing-policy"
+    ],
+    "limitation": "Only current provider facts named in scope are reverified. Historical reseller/SERP/seller snapshots remain dated and are NOT present-day offers, authorized resellers, or checkout evidence."
+  },
+  "saveonsub_offer_snapshot_archive": {
+    "captured_on": "2026-09-07",
+    "status": "HISTORICAL_NOT_CURRENT_NOT_APPROVED",
+    "note": "The archived 499/999/2990 BDT options are retained for audit only; in particular shared account offers must not be republished."
   }
 }
