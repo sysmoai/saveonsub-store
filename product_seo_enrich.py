@@ -9,7 +9,7 @@ Per product page (EN /p and BN /bn/p) it:
   description built from ops/seo/PRODUCT-COPY-*.json;
 - strips decorative emoji from the H1;
 - adds unique crawlable sections: "What is X", an official-price reference
-  (provider list price + official link only, never a SaveOnSub price),
+  (official provider link only, no numeric price, never a SaveOnSub price),
   and related-product internal links (same category, bundles, contents);
 - adds BreadcrumbList JSON-LD where it is missing.
 
@@ -37,7 +37,7 @@ EMOJI = re.compile(
     "[\U0001F000-\U0001FAFF☀-➿⬀-⯿️‍]+"
 )
 FORBIDDEN = re.compile(
-    r"৳|\btaka\b|cheapest|lowest price|\#1\b|lifetime|guarantee|shared account|instant delivery",
+    r"৳|US\$\s?\d|\btaka\b|cheapest|lowest price|\#1\b|lifetime|guarantee|shared account|instant delivery",
     re.I,
 )
 
@@ -126,20 +126,20 @@ def section_html(p: dict, products: dict, copy: dict, bn: bool) -> str:
     parts = [f'<section class="mt3" {MARK}>']
     if what:
         parts.append(f'<h2 style="font-size:22px">{esc(name)} {"কী?" if bn else "— what is it?"}</h2><p>{esc(what)}</p>')
-    usd, url = p.get("official_usd"), p.get("official_url")
-    if usd and url and not p.get("contains"):
+    url = p.get("official_url")
+    # No numeric provider price here: catalog official_usd is not per-SKU
+    # date/region verified, so the section links to the official page only.
+    if url and not p.get("contains"):
         if bn:
             parts.append(
                 f'<h2 class="mt3" style="font-size:22px">বাংলাদেশে {esc(name)}-এর দাম কত?</h2>'
-                f'<p>আমাদের ক্যাটালগে প্রোভাইডারের US তালিকা-মূল্যের রেফারেন্স US${esc(usd)}; এটি বাংলাদেশের বর্তমান মূল্য নয়। '
-                f'বর্তমান মূল্য ও আপনার দেশে প্ল্যান পাওয়া যায় কিনা <a href="{esc(url)}" target="_blank" rel="noopener nofollow">অফিসিয়াল পেজে দেখুন ↗</a>। '
+                f'<p>প্রোভাইডারের বর্তমান মূল্য ও আপনার দেশে প্ল্যান পাওয়া যায় কিনা <a href="{esc(url)}" target="_blank" rel="noopener nofollow">অফিসিয়াল পেজে দেখুন ↗</a>। '
                 f'প্রোভাইডার দেশ, ট্যাক্স ও প্ল্যান অনুযায়ী মূল্য বদলাতে পারে। SaveOnSub-এর বর্তমান টাকায় মূল্য ও অ্যাক্সেস পদ্ধতি পেমেন্টের আগে লিখিতভাবে নিশ্চিত করা হয়।</p>'
             )
         else:
             parts.append(
                 f'<h2 class="mt3" style="font-size:22px">How much is {esc(name)} in Bangladesh?</h2>'
-                f'<p>Our catalog\'s reference for the provider\'s US list price is US${esc(usd)}; this is not a verified Bangladesh price. '
-                f'Check the current price and whether the plan is offered in your country on the <a href="{esc(url)}" target="_blank" rel="noopener nofollow">official pricing page ↗</a>. '
+                f'<p>Check the provider\'s current price and whether the plan is offered in your country on the <a href="{esc(url)}" target="_blank" rel="noopener nofollow">official pricing page ↗</a>. '
                 f'Provider prices can vary by country, tax and plan. SaveOnSub confirms its current BDT price and the exact access method in writing before any payment.</p>'
             )
     links = related(p, products, bn)
