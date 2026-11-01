@@ -3,7 +3,7 @@ name: SaveOnSub Quality Gates
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main]
+    branches: [main, 'review/**']
   push:
     branches: [main]
   schedule:
@@ -56,6 +56,9 @@ jobs:
 
       - name: Build exact canonical candidate
         run: python build_site.py
+
+      - name: No SaveOnSub sale price in any staged HTML (EXEC-010 HOLD)
+        run: python hold_content_price_guard.py --check
 
       - name: Verify governed pricing-v2 release boundary
         run: |

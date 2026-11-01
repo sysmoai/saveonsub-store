@@ -31,6 +31,7 @@ STEPS = [
     "technical_seo_hardening.py",
     "commercial_truth_v2.py",
     "sanitize_pricing_v2_legacy.py",
+    "hold_content_price_guard.py",
     "audit_commercial_truth_v2.py",
     "exec003_claims_guard.py",
     "shared_copy_check.py",
