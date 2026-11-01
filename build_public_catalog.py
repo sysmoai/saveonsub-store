@@ -8,8 +8,9 @@ runtime data.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
-from catalog_hold_gate import catalog_errors
+from catalog_hold_gate import approved_plans, catalog_errors
 
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "catalog.json"
@@ -86,14 +87,25 @@ def main() -> int:
             for index, child in enumerate(value):
                 yield from residual_price_fields(child, f"{location}[{index}]")
 
-    remaining = list(residual_price_fields(public))
+    unlock = (policy.get("commercial_hold") or {}).get("status") == "SELECTIVE_UNLOCK"
+    approved = approved_plans(policy) if unlock else {}
+    # Under a CEO selective unlock, plan-level "bdt" is the one allowed price
+    # field, and only on products whose plans catalog_errors() matched to the
+    # pricebook. Everything else is still fail-closed.
+    remaining = [
+        loc for loc in residual_price_fields(public)
+        if not (unlock and re.fullmatch(r"catalog\.products\[\d+\]\.plans\[\d+\]\.bdt", loc))
+    ]
     if remaining:
         raise SystemExit(
             "[public-catalog] residual fixed-price fields; no JS written: "
             + ", ".join(remaining[:10])
         )
     for product in public["products"]:
-        product["sellability"] = "inquiry_only"  # legacy status='live' is not sale permission
+        if unlock and product.get("plans") and product.get("id") in approved:
+            product["sellability"] = "approved"
+        else:
+            product["sellability"] = "inquiry_only"  # legacy status='live' is not sale permission
     revision = public.get("meta", {}).get("commercial_revision", "unknown")
     payload = json.dumps(public, ensure_ascii=False, separators=(",", ":"))
     OUT.write_text(

@@ -206,8 +206,12 @@ def js_args(*values) -> str:
 def access_label(plan: dict, bn: bool = False) -> str:
     kind = plan.get("type") or plan.get("access_type")
     if bn:
-        return {"personal": "কাস্টমার-নির্দিষ্ট অ্যাক্সেস", "team": "টিম / ওয়ার্কস্পেস অ্যাক্সেস"}.get(kind, "অ্যাক্সেস পদ্ধতি নিশ্চিত করুন")
-    return {"personal": "Customer-specific access", "team": "Team / Workspace access"}.get(kind, "Confirm access method")
+        return {"personal": "কাস্টমার-নির্দিষ্ট অ্যাক্সেস", "team": "টিম / ওয়ার্কস্পেস অ্যাক্সেস",
+                "shared": "শেয়ার্ড অ্যাকাউন্ট (একাধিক ব্যবহারকারী)", "official": "অফিসিয়াল প্ল্যান — সেটআপ সহায়তা",
+                "bundle": "বান্ডেল"}.get(kind, "অ্যাক্সেস পদ্ধতি নিশ্চিত করুন")
+    return {"personal": "Customer-specific access", "team": "Team / Workspace access",
+            "shared": "Shared account (multiple users)", "official": "Official plan — setup help",
+            "bundle": "Bundle"}.get(kind, "Confirm access method")
 
 
 def price_label(plan: dict, bn: bool = False) -> str:

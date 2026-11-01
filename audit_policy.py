@@ -49,7 +49,13 @@ def audit(catalog: dict, policy: dict) -> list[str]:
     ai_categories = set(policy.get("ai_categories", []))
     products = {p.get("id"): p for p in catalog.get("products", [])}
 
+    unlock = policy.get("commercial_hold") or {}
+    superseded = str(unlock.get("supersedes", "")) if unlock.get("status") == "SELECTIVE_UNLOCK" else ""
     for pid, why in LOCKED_NO_SALE.items():
+        # The same founder may lift a locked decision, but only by a recorded
+        # SELECTIVE_UNLOCK that names the decision and the product explicitly.
+        if pid in superseded and why.split()[1] in superseded:
+            continue
         product = products.get(pid)
         if product is None:
             issues.append(f"{pid}: missing from catalog ({why} must stay visible as no-sale)")
@@ -67,6 +73,8 @@ def audit(catalog: dict, policy: dict) -> list[str]:
             if not product.get("request_price") or plans:
                 issues.append(f"{pid}: not Price on Request during EXEC-010 HOLD")
             continue
+        if product.get("request_price") and not plans and superseded and rule and rule.get("mode") == "fixed":
+            continue  # source row; apply_pricing_v2.py projects the CEO pricebook at build time
         if product.get("request_price"):
             category = str(product.get("category", ""))
             scoped = (rule and rule.get("mode") == "inquiry") or category in ai_categories \

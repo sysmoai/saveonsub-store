@@ -59,6 +59,11 @@ def homepage_price_issues(products, html, policy):
         cards = [card for card in parser.cards if any(
             link in (f'p/{pid}.html', f'/p/{pid}.html', f'p/{pid}', f'/p/{pid}')
             for link in card['links'])]
+        if not plans and rule.get('mode') == 'fixed' and \
+                (policy.get('commercial_hold') or {}).get('status') == 'SELECTIVE_UNLOCK':
+            # CEO pricebook plans are projected at build time and audited on the
+            # staged site by audit_commercial_truth_v2.py.
+            continue
         if not plans:
             if not inquiry:
                 issues.append(f'{prefix}: empty plans without an explicit matching inquiry policy')

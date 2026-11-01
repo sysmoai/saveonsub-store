@@ -1,17 +1,16 @@
 {
   "schema_version": 1,
   "revision": "pricing-v2-2026-09-17",
-  "approved_at": "2026-09-17",
+  "approved_at": "2026-11-02",
   "currency": "BDT",
   "fx_reference_bdt_per_usd": 124,
   "commercial_hold": {
-    "status": "HOLD",
-    "authority": "EXEC-010 locked decisions (founder Emon Hossain, reaffirmed 2026-10-23 22:07 Asia/Dhaka)",
-    "rule": "Every product is Price on Request: no published sell price, no cart/checkout action, no priced structured-data Offer and no price in WhatsApp prefills until the founder approves a specific price in his own words.",
-    "google-ai-pro": "Price on Request (EXEC-010 D1). No price, no checkout.",
-    "chatgpt-plus": "HOLD (EXEC-010 D2). The earlier BDT 3,390 is not re-approved and not sellable.",
-    "other_products": "Re-prices recorded as 'CEO decisions' in ops/CLAUDE-RECOVERY-STATE.md were agent-recorded, not founder-approved; pending founder confirmation.",
-    "reference": "handoffs SOS-T018 (CLAUDE_HANDOFF_PR66_67_GAPS.md) T018-01"
+    "status": "SELECTIVE_UNLOCK",
+    "authority": "Founder & CEO Md. Emon Hossain — written approval \"APPROVED ALL\" (2026-11-01 23:14 UTC / 2026-11-02 05:14 Asia/Dhaka, Claude project thread message cmsg_01TSmi8NsZ1znxuFP4UZMMwK9b46czYDvYWbkipfv5SvGu) of the itemized 67-product / 133-plan BDT price list sent to him in the same thread.",
+    "rule": "Only plans listed in approved_products with mode=fixed may be published. Every other product stays Price on Request. Prices must match this file exactly; shared plans must be labelled as shared access.",
+    "supersedes": "EXEC-010 HOLD (D1 google-ai-pro, D2 chatgpt-plus) for the approved plans only, by the same founder.",
+    "approved_sku_count": 133,
+    "excluded": "aips-* products (other business unit) remain Price on Request."
   },
   "positioning": {
     "personal": "Customer-specific access where the provider supports it; confirm the exact activation method before payment.",
@@ -30,111 +29,439 @@
   ],
   "approved_products": {
     "chatgpt-go": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Personal (your email)",
+          "bdt": 450,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02",
       "official_usd": 8
     },
     "chatgpt-plus": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (6–8 users)",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Premium Shared (2–3 users)",
+          "bdt": 999,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal (your email)",
+          "bdt": 2990,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02",
       "official_usd": 20
     },
     "chatgpt-business": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (7 seats)",
+          "bdt": 699,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Premium Shared (2–3)",
+          "bdt": 1299,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal seat",
+          "bdt": 3990,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02",
       "official_usd": 25
     },
     "chatgpt-pro": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Premium Shared (5–6)",
+          "bdt": 4500,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 29900,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "claude-pro": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Premium Shared (2–3)",
+          "bdt": 1495,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal (your email)",
+          "bdt": 2990,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Team Seat — Personal",
+          "bdt": 3990,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02",
       "official_usd": 20
     },
     "claude-max": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Max 5x Personal",
+          "bdt": 14950,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Max 20x Personal",
+          "bdt": 29900,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "google-ai-pro": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Personal (your Gmail)",
+          "bdt": 500,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02",
       "official_usd": 19.99
     },
     "google-ai-plus": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Shared",
+          "bdt": 299,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal (your Gmail)",
+          "bdt": 799,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "perplexity-pro": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Shared",
+          "bdt": 350,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 2990,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Max — Personal",
+          "bdt": 29900,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "supergrok": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Lite — Personal",
+          "bdt": 1495,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Standard — Personal",
+          "bdt": 3990,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "midjourney": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Standard Shared",
+          "bdt": 1199,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Standard Premium Shared (3 max)",
+          "bdt": 2399,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Standard Personal",
+          "bdt": 3990,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Pro Shared",
+          "bdt": 4788,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Pro Personal",
+          "bdt": 8970,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Mega Personal",
+          "bdt": 17940,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "leonardo": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Apprentice Shared",
+          "bdt": 599,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Standard Personal (own account)",
+          "bdt": 1499,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02",
       "official_usd": 12
     },
     "runway": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Standard Personal (625 credits)",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Pro Personal (2250 credits)",
+          "bdt": 4186,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Unlimited Personal",
+          "bdt": 11362,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "heygen": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (budget)",
+          "bdt": 899,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Creator Shared",
+          "bdt": 1499,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02",
       "official_usd": 29
     },
     "synthesia": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (budget)",
+          "bdt": 399,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Starter Shared",
+          "bdt": 700,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "elevenlabs": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Personal (30K chars)",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Creator Personal (100K chars)",
+          "bdt": 3289,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Pro Personal (500K chars)",
+          "bdt": 14802,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "suno": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Pro Personal (~500 songs)",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Premier Personal (~2000 songs)",
+          "bdt": 3990,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "udio": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (budget)",
+          "bdt": 249,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Pro Shared",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "github-copilot": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Pro Personal (your GitHub)",
+          "bdt": 590,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Pro+ Personal (1500 reqs)",
+          "bdt": 5831,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "cursor": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Pro Personal",
+          "bdt": 590,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Pro+ Personal (3x credits)",
+          "bdt": 8970,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02",
       "official_usd": 20
     },
     "replit": {
@@ -144,21 +471,63 @@
       "official_usd": 20
     },
     "notion-ai": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Business Monthly (official, Notion AI incl.)",
+          "bdt": 800,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Business 6-Month (one-time ৳4,800)",
+          "bdt": 4800,
+          "duration": "6 months",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02",
       "official_usd": 20
     },
     "grammarly": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared",
+          "bdt": 470,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 1790,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02",
       "official_usd": 30
     },
     "canva-pro": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Team seat (your login)",
+          "bdt": 299,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal Pro",
+          "bdt": 1499,
+          "duration": "1 year",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "kling-ai": {
       "mode": "inquiry",
@@ -181,24 +550,786 @@
       "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "v0": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (budget)",
+          "bdt": 399,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Pro Shared",
+          "bdt": 999,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "freepik": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (budget)",
+          "bdt": 249,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Premium Shared",
+          "bdt": 450,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "ideogram": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Plus Personal",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Pro Personal",
+          "bdt": 8970,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     },
     "descript": {
-      "mode": "inquiry",
-      "plans": [],
-      "note": "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared",
+          "bdt": 470,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 1790,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "mistral-pro": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Personal",
+          "bdt": 1299,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "manus": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Standard Personal",
+          "bdt": 2500,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "envato-elements": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Shared",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 2499,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "invideo": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Plus Shared",
+          "bdt": 699,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 2499,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "kling": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared",
+          "bdt": 270,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Pro Personal (own account)",
+          "bdt": 1299,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "capcut-pro": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Family Shared (2-3 users)",
+          "bdt": 249,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Starter Shared",
+          "bdt": 399,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "otter": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (budget)",
+          "bdt": 399,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Pro Shared (6000 min)",
+          "bdt": 799,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "replit-core": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Core Personal",
+          "bdt": 500,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "windsurf": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (budget)",
+          "bdt": 299,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Pro Shared",
+          "bdt": 590,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "quillbot": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared",
+          "bdt": 390,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 1490,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "jasper": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Creator Starter Shared",
+          "bdt": 1520,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Creator Personal",
+          "bdt": 5830,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "writesonic": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (budget)",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Individual Shared",
+          "bdt": 799,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "gamma": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (budget)",
+          "bdt": 249,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Plus Shared",
+          "bdt": 399,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "netflix": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "1 Screen (private profile)",
+          "bdt": 349,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal (your email)",
+          "bdt": 799,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "spotify": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Family slot (your account)",
+          "bdt": 129,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Official BD Individual (guide)",
+          "bdt": 219,
+          "duration": "1 month",
+          "access_type": "official"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "youtube-premium": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Family slot (your Gmail)",
+          "bdt": 149,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Official BD Individual (guide)",
+          "bdt": 239,
+          "duration": "1 month",
+          "access_type": "official"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "prime-video": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "1 Screen",
+          "bdt": 249,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 899,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "hoichoi": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (budget)",
+          "bdt": 299,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Official Yearly (guide/gift)",
+          "bdt": 599,
+          "duration": "1 year",
+          "access_type": "official"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "coursera-plus": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Shared",
+          "bdt": 1199,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 4999,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "linkedin-premium": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Personal (your profile)",
+          "bdt": 1999,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "nordvpn": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Shared",
+          "bdt": 299,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal (1 year)",
+          "bdt": 3499,
+          "duration": "1 year",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "surfshark": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared (budget)",
+          "bdt": 149,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Shared",
+          "bdt": 249,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "bundle-starter": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "ChatGPT Shared + Canva Team",
+          "bdt": 799,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "bundle-creator": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "SuperGrok + Midjourney Shared",
+          "bdt": 999,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "bundle-research": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "ChatGPT + Perplexity Shared",
+          "bdt": 600,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "bundle-video": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Invideo Plus + CapCut Pro Shared",
+          "bdt": 999,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "bundle-dev": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Cursor Shared + Copilot Personal",
+          "bdt": 1799,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "copilot-pro": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared",
+          "bdt": 780,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 2990,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "adobe-firefly": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared",
+          "bdt": 190,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Pro Personal (own account)",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "pika": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared",
+          "bdt": 310,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 1200,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "opus-clip": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared",
+          "bdt": 590,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 2240,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "murf": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Starter Shared",
+          "bdt": 740,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Personal",
+          "bdt": 2840,
+          "duration": "1 month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "chorki": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Yearly (official)",
+          "bdt": 599,
+          "duration": "year",
+          "access_type": "personal"
+        },
+        {
+          "label": "Monthly activation",
+          "bdt": 99,
+          "duration": "month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "bongo-bd": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Monthly Premium",
+          "bdt": 149,
+          "duration": "month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Yearly Premium",
+          "bdt": 999,
+          "duration": "year",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "truecaller-premium": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Premium Monthly",
+          "bdt": 350,
+          "duration": "month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Premium Personal",
+          "bdt": 790,
+          "duration": "month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "deepseek": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "API Access — Starter",
+          "bdt": 199,
+          "duration": "month",
+          "access_type": "personal"
+        },
+        {
+          "label": "API Access — Pro",
+          "bdt": 599,
+          "duration": "month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "adobe-creative-cloud": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Photography Plan (20GB)",
+          "bdt": 990,
+          "duration": "month",
+          "access_type": "personal"
+        },
+        {
+          "label": "All Apps Plan",
+          "bdt": 4990,
+          "duration": "month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "tinder-plus": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Plus Monthly",
+          "bdt": 399,
+          "duration": "month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Gold Monthly",
+          "bdt": 690,
+          "duration": "month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "pandapro": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Monthly",
+          "bdt": 299,
+          "duration": "month",
+          "access_type": "personal"
+        },
+        {
+          "label": "6 Months",
+          "bdt": 1299,
+          "duration": "6months",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
+    },
+    "pubg-royale-pass": {
+      "mode": "fixed",
+      "plans": [
+        {
+          "label": "Elite Pass (monthly)",
+          "bdt": 550,
+          "duration": "month",
+          "access_type": "personal"
+        },
+        {
+          "label": "Elite Pass Plus",
+          "bdt": 990,
+          "duration": "month",
+          "access_type": "personal"
+        }
+      ],
+      "approved_by": "CEO Emon Hossain",
+      "approved_on": "2026-11-02"
     }
   }
 }

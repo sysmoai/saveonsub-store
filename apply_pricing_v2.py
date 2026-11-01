@@ -23,6 +23,8 @@ def public_plan(plan: dict) -> dict:
     access_type = plan.get("access_type", "personal")
     access_label = {
         "personal": "Customer-specific access",
+        "shared": "Shared account (multiple users)",
+        "official": "Official plan — setup help",
         "team": "Team / Workspace access",
         "bundle": "Bundle",
         "service": "Setup / Service",

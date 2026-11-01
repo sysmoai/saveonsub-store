@@ -74,7 +74,8 @@ class GateFailsClosed(unittest.TestCase):
                 self.assertEqual(1, g.main(["--check"]))
                 self.assertEqual(0, g.main([]))
                 self.assertEqual(0, g.main(["--check"]))
-                self.assertIn("price on request", (site / "blog" / "x.html").read_text(encoding="utf-8"))
+                expected = g.UNLOCK_REPLACEMENT if g.unlock_book() is not None else g.REPLACEMENT
+                self.assertIn(expected, (site / "blog" / "x.html").read_text(encoding="utf-8"))
             finally:
                 g.SITE = old
 
