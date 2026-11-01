@@ -235,6 +235,14 @@ def check(products: dict) -> list[str]:
         sec = re.search(rf"<section[^>]*{re.escape(MARK)}.*?</section>", t, re.S)
         if sec and FORBIDDEN.search(re.sub(r"<[^>]+>", " ", sec.group(0))):
             errors.append(f"{rel}: forbidden commercial claim inside SEO section")
+        for href in re.findall(r'href="([^"]+)"', sec.group(0)) if sec else []:
+            if href.startswith("http"):
+                continue
+            target = (path.parent / (href + ".html")).resolve()
+            if not target.exists():
+                errors.append(f"{rel}: SEO section link target missing: {href}")
+            elif ("/_site/bn/" in target.as_posix()) != bn:
+                errors.append(f"{rel}: SEO section link crosses locale: {href}")
     return errors
 
 
@@ -257,7 +265,7 @@ def main(argv: list[str]) -> int:
     if errors:
         print("\n".join(errors), file=sys.stderr)
         raise SystemExit(f"[product-seo] FAIL — {len(errors)} issue(s)")
-    print("[product-seo] PASS — titles, descriptions, H1, unique sections and breadcrumbs verified")
+    print("[product-seo] PASS — titles, descriptions, H1, unique sections, same-locale link targets and breadcrumbs verified")
     return 0
 
 
