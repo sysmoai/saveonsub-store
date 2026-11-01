@@ -154,7 +154,10 @@ for rel in [
 plus = (SITE / 'p/chatgpt-plus.html').read_text(encoding='utf-8')
 if f'data-chatgpt-facts="{VERIFIED}"' not in plus or 'BDT is a supported currency' not in plus:
     raise SystemExit('ERROR: verified ChatGPT Plus fact panel missing')
-if 'SHARED · POLICY RISK' not in plus:
+# Pricing V2 retired shared ChatGPT Plus seats (personal-only). The label is
+# still mandatory if a shared plan ever reappears, but must not be demanded
+# when none exists (quality-gates.yml asserts it is absent in that case).
+if 'class="tos shared' in plus and 'SHARED · POLICY RISK' not in plus:
     raise SystemExit('ERROR: shared ChatGPT plans are not policy-risk labeled')
 
 go = (SITE / 'p/chatgpt-go.html').read_text(encoding='utf-8')

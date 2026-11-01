@@ -66,7 +66,7 @@ The canonical Cloudflare workflow runs the same build orchestrator and adds exac
 
 The production secret `CLOUDFLARE_API_TOKEN` must be least-privilege and able to access account `4ca6269edabb6ad2906d70ec6845de22`, Pages project `saveonsub`.
 
-The workflow verifies this project through the Cloudflare API before Wrangler is allowed to upload anything. Secret values must never be printed, committed or requested in chat.
+The workflow verifies this project through the Cloudflare API before Wrangler is allowed to upload anything. It reads only `secrets.CLOUDFLARE_API_TOKEN`: there is no Global API key, alternative token name or deploy-hook fallback, and Wrangler runs from inside `_site/` so the repository's `functions/` can never be bundled into the storefront project. Owner action: create the scoped Pages token, then rotate and delete any Global API keys and deploy hooks. Secret values must never be printed, committed or requested in chat.
 
 Credential rotation/replacement, DNS changes and domain ownership changes remain human-controlled boundaries.
 

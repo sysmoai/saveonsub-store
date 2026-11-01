@@ -1,5 +1,13 @@
 {
-  "verified_on": "2026-09-08",
+  "verified_on": "2026-10-23",
+  "verification_log": [
+    {
+      "date": "2026-10-23",
+      "method": "web search, multiple third-party aggregators (canva.com itself returned HTTP 403 to automated fetch)",
+      "canva_findings": "Sources conflict between US$144/yr and US$180/yr for Canva Pro individual. This matches and reconfirms the instability this file already recorded on 2026-09-27 (see design_cohort.py VERIFIED marker) — treat Canva Pro as NOT a stable fixed-price reference; canva-pro correctly remains 'mode: inquiry' in Pricing V2 and should stay that way until a single checkout price can be confirmed directly.",
+      "midjourney_findings": "Basic $10, Standard $30, Pro $60, Mega $120/month reconfirmed via multiple independent sources, exactly matching this file's existing official_plans table. No change."
+    }
+  ],
   "market": "Bangladesh",
   "canva": {
     "official_sources": {

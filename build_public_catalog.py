@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from catalog_hold_gate import catalog_errors
 
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "catalog.json"
@@ -37,6 +38,7 @@ DROP_KEYS = {
     "delivery_sla",
     "replacement",
     "faq",
+    "save_bdt", "official_usd", "price_source",
 }
 
 
@@ -50,7 +52,48 @@ def scrub(value):
 
 def main() -> int:
     data = json.loads(SRC.read_text(encoding="utf-8"))
+    policy = json.loads((ROOT / 'ops' / 'PRICING-V2-2026-09-17.json').read_text(encoding='utf-8'))
+    errors = catalog_errors(data, policy)
+    if errors:
+        raise SystemExit('[public-catalog] HOLD violation: ' + '; '.join(errors[:10]))
     public = scrub(data)
+    # Public metadata is allowlisted; old FX anchors and historical pricing
+    # precedence (including cross-business provenance) must not be shipped.
+    meta = public.get("meta", {})
+    if not isinstance(meta, dict):
+        raise SystemExit("[public-catalog] malformed public metadata")
+    public["meta"] = {
+        key: meta[key]
+        for key in ("brand", "currency", "commercial_revision", "pricing_review_rule")
+        if key in meta
+    }
+
+    # Fail closed on price fields at ANY nested depth. A substring test for
+    # just "bdt" misses e.g. "sale_price_bdt" in a future data extension.
+    forbidden = {
+        "bdt", "from_bdt", "price_bdt", "approved_price_bdt",
+        "sale_price_bdt", "save_bdt", "official_bdt", "official_usd",
+        "usd_anchor_rate", "price_precedence", "price_source",
+    }
+
+    def residual_price_fields(value, location="catalog"):
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if key in forbidden:
+                    yield f"{location}.{key}"
+                yield from residual_price_fields(child, f"{location}.{key}")
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                yield from residual_price_fields(child, f"{location}[{index}]")
+
+    remaining = list(residual_price_fields(public))
+    if remaining:
+        raise SystemExit(
+            "[public-catalog] residual fixed-price fields; no JS written: "
+            + ", ".join(remaining[:10])
+        )
+    for product in public["products"]:
+        product["sellability"] = "inquiry_only"  # legacy status='live' is not sale permission
     revision = public.get("meta", {}).get("commercial_revision", "unknown")
     payload = json.dumps(public, ensure_ascii=False, separators=(",", ":"))
     OUT.write_text(

@@ -43,6 +43,7 @@ def main() -> int:
     policy = load(POLICY_PATH)
     approved = policy.get("approved_products", {})
     ai_categories = set(policy.get("ai_categories", []))
+    hold = (policy.get("commercial_hold") or {}).get("status") == "HOLD"
 
     meta = catalog.setdefault("meta", {})
     meta["usd_anchor_rate"] = policy.get("fx_reference_bdt_per_usd", 124)
@@ -73,6 +74,22 @@ def main() -> int:
         # Legacy bundle rows included credential-shared AI components, so they are
         # inquiry-only in this release rather than silently repriced.
         is_bundle = category == "bundles" or pid.startswith("bundle-") or pid.startswith("aips-")
+
+        # EXEC-010 commercial HOLD: while the founder has not approved specific
+        # prices, every product is Price on Request. No sell price, plan card,
+        # cart action or priced Offer may be generated from any source row.
+        if hold:
+            product["plans"] = []
+            product["request_price"] = True
+            product["pricing_status"] = "price-review-required"
+            product["pricing_revision"] = policy["revision"]
+            product["commercial_hold"] = "EXEC-010"
+            product["commercial_note"] = (rule or {}).get(
+                "note",
+                "Price on Request — EXEC-010 commercial HOLD. Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published.",
+            )
+            inquiry += 1
+            continue
 
         if rule and rule.get("mode") != "inquiry" and rule.get("plans"):
             product["plans"] = [public_plan(p) for p in rule["plans"]]
@@ -113,7 +130,7 @@ def main() -> int:
     CATALOG_PATH.write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(
         f"[pricing-v2] revision={policy['revision']} fixed={fixed} inquiry={inquiry} "
-        f"existing-non-ai={untouched}; usd_reference={meta['usd_anchor_rate']}"
+        f"existing-non-ai={untouched}; hold={hold}; usd_reference={meta['usd_anchor_rate']}"
     )
     return 0
 

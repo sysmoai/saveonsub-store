@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """Apply verified Canva + Midjourney facts to staged public pages, fail closed."""
+import json
 from pathlib import Path
 import re
 
 ROOT = Path("_site")
-VERIFIED = "2026-09-08"
+REPO_ROOT = Path(__file__).resolve().parent
+FACTS = json.loads((REPO_ROOT / "ops" / "DESIGN-COHORT-FACTS-2026-09-08.json").read_text(encoding="utf-8"))
+# Previously a second, disconnected hardcoded literal — editing the facts JSON's
+# verified_on had no effect on this script's actual output. Load it instead.
+VERIFIED = FACTS["verified_on"]
 
 
 def load(path):
@@ -31,6 +36,10 @@ def inject_before_first_notice(text, block):
         return text
     marker = '<div class="notice mt2"'
     if marker not in text:
+        # Inquiry-only/HOLD placeholder pages (data-inquiry-only) have no
+        # plan notices; fixed-price pages must still carry the anchor.
+        if 'data-inquiry-only' in text and '</div></main>' in text:
+            return text.replace('</div></main>', block + '</div></main>', 1)
         raise SystemExit("language-agnostic notice injection anchor missing")
     return text.replace(marker, block + marker, 1)
 
@@ -60,9 +69,12 @@ def harden_canva(path, bn=False):
         t = t.replace(phrase, "workspace access and design ownership depend on the exact team/workspace setup")
 
     official = (
-        '<span class="official" data-design-facts="2026-09-08">Canva official reference: Pro is for one person; Canva lists Pro at US$180/year. New team sign-ups use Canva Business. Verify local checkout before buying.</span>'
+        # 2026-10-23 re-check: third-party sources conflict between $144/yr and
+        # $180/yr for Canva Pro. Do not publish a single fixed USD anchor —
+        # same instability this cohort already flagged on 2026-09-27.
+        f'<span class="official" data-design-facts="{VERIFIED}">Canva official reference: Pro is for one person. Canva pricing can vary by locale/session; verify the current pricing page and checkout before buying. New team sign-ups use Canva Business.</span>'
         if not bn else
-        '<span class="official" data-design-facts="2026-09-08">Canva অফিসিয়াল রেফারেন্স: Pro এক ব্যক্তির জন্য; Canva Pro-এর প্রকাশিত বার্ষিক মূল্য US$180। নতুন team signup Canva Business-এ যায়। কিনার আগে local checkout যাচাই করুন।</span>'
+        f'<span class="official" data-design-facts="{VERIFIED}">Canva অফিসিয়াল রেফারেন্স: Pro এক ব্যক্তির জন্য। Canva pricing locale/session অনুযায়ী ভিন্ন হতে পারে; কেনার আগে current pricing page ও checkout যাচাই করুন। নতুন team signup Canva Business-এ যায়।</span>'
     )
     t = re.sub(r'<span class="official">.*?</span>', official, t, count=1, flags=re.S)
 
@@ -104,9 +116,9 @@ def harden_midjourney(path, bn=False):
     t = t.replace("শেয়ার্ড · কম ঝুঁকি", "শেয়ার্ড · প্রোভাইডার-পলিসি ঝুঁকি")
 
     official = (
-        '<span class="official" data-design-facts="2026-09-08">Midjourney official plans: Basic US$10, Standard US$30, Pro US$60, Mega US$120 per month. Annual billing is 20% lower.</span>'
+        f'<span class="official" data-design-facts="{VERIFIED}">Midjourney official plans: Basic US$10, Standard US$30, Pro US$60, Mega US$120 per month. Annual billing is 20% lower.</span>'
         if not bn else
-        '<span class="official" data-design-facts="2026-09-08">Midjourney অফিসিয়াল মাসিক প্ল্যান: Basic US$10, Standard US$30, Pro US$60, Mega US$120। Annual billing 20% কম।</span>'
+        f'<span class="official" data-design-facts="{VERIFIED}">Midjourney অফিসিয়াল মাসিক প্ল্যান: Basic US$10, Standard US$30, Pro US$60, Mega US$120। Annual billing 20% কম।</span>'
     )
     t = re.sub(r'<span class="official">.*?</span>', official, t, count=1, flags=re.S)
 

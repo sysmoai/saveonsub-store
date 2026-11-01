@@ -91,9 +91,21 @@ def patch_page(path: Path, product_id: str, lang="en"):
     text = text.replace('our ৳500 is market leader', 'SaveOnSub listed ৳500 in that historical snapshot')
 
     if 'data-google-ai-facts=' not in text:
-        if insert_marker not in text:
+        if insert_marker in text:
+            text = text.replace(insert_marker, cohort_panel(lang) + '\n  ' + insert_marker, 1)
+        elif 'data-inquiry-only' in text:
+            # Inquiry-only/HOLD SKU (no approved plans -> no "Choose your plan"
+            # section). Fixed-price pages stay strict: a missing marker there
+            # is still a hard error. Here we show only the verified provider
+            # facts plus an explicit provider-reference line; no SaveOnSub
+            # price is introduced.
+            per_mo = 'মাস' if lang == 'bn' else 'mo'
+            ref = f'<p class="sub mt2"><span class="official">Google Bangladesh: ৳{official:,}/{per_mo}</span></p>'
+            if '</div></main>' not in text:
+                raise RuntimeError(f"inquiry page has no </div></main> anchor in {path}")
+            text = text.replace('</div></main>', ref + cohort_panel(lang) + '\n</div></main>', 1)
+        else:
             raise RuntimeError(f"insert marker missing in {path}")
-        text = text.replace(insert_marker, cohort_panel(lang) + '\n  ' + insert_marker, 1)
 
     text = re.sub(r'official reference ~?৳[\d,]+', f'Google Bangladesh reference ৳{official:,}', text)
     text = re.sub(r'official ~?৳[\d,]+', f'Google Bangladesh ৳{official:,}', text)

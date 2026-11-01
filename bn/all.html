@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>সব প্রোডাক্ট — SAVEONSUB | AI, স্ট্রিমিং, টুল</title>
-<meta name="description" content="Browse every subscription: ChatGPT, Claude, Netflix, Canva, Midjourney + more. Honest labels, bKash/Nagad, from ৳129. Filter by category, price, plan type.">
+<meta name="description" content="Browse every subscription: ChatGPT, Claude, Netflix, Canva, Midjourney + more. Labeled by access method, bKash/Nagad, price on request. Filter by category.">
 <link rel="canonical" href="https://saveonsub.com/all.html">
 <link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/all.html">
 <link rel="alternate" hreflang="bn-bd" href="https://saveonsub.com/all.html">
@@ -80,15 +80,6 @@
 
   <div class="toolbar">
     <input type="search" id="q" placeholder="🔍 Search products…" oninput="draw()" aria-label="Search products">
-    <select id="type" onchange="draw()" aria-label="Plan type">
-      <option value="">সব প্ল্যান টাইপ</option><option value="official">Official</option><option value="personal">Personal</option><option value="shared-low">Shared · low risk</option><option value="shared-med">Shared · covered</option>
-    </select>
-    <select id="price" onchange="draw()" aria-label="Price range">
-      <option value="">যেকোনো দাম</option><option value="0-500">৳৫০০-এর নিচে</option><option value="500-1000">৳500–1,000</option><option value="1000-99999">৳1,000+</option>
-    </select>
-    <select id="sort" onchange="draw()" aria-label="Sort">
-      <option value="pop">সাজান: জনপ্রিয়</option><option value="pl">দাম: কম→বেশি</option><option value="ph">দাম: বেশি→কম</option><option value="az">নাম: অ-হ</option><option value="sv">সবচেয়ে সাশ্রয়</option>
-    </select>
   </div>
   <div class="chips" id="chips" role="tablist"></div>
   <div class="count" id="count" aria-live="polite"></div>
@@ -160,35 +151,23 @@ function chips(){
 }
 
 function card(p){
-  const rank = p.bestseller_rank>0 ? `<span class="rank">#${p.bestseller_rank} SELLER</span>` : (p.status==='gap-fill'||p.status==='new' ? `<span class="rank" style="background:var(--cyan);color:#00243a">NEW</span>` : '');
-  const hot = p.orders>100 ? `<span class="hot">🔥 ${p.orders}+ orders</span>` : '';
-  return `<div class="pcard">${rank}
+  // EXEC-010 HOLD: listing cards show no price, rank, order count, savings or cart.
+  return `<div class="pcard">
     <span class="icon">${p.icon}</span>
     <h3>${p.name}</h3>
     <span class="cat">${p.category}</span>
-    <div class="price">৳${p.from_bdt.toLocaleString()}<s>৳${p.official_bdt.toLocaleString()}</s></div>
-    <div class="from"><span class="tos ${p.from_tos}">${p.from_tos.replace('-','·')}</span> ${p.save_pct>0?`<b style="color:var(--green2)">save ${p.save_pct}%</b>`:''} ${hot}</div>
+    <div class="price">মূল্য অনুরোধসাপেক্ষ</div>
     <div class="ctas">
-      <a class="btn btn-ghost btn-sm" href="p/${p.id}.html">Details</a>
-      <button class="btn btn-primary btn-sm" onclick="cartAdd('${p.id}','${p.plans.reduce((a,b)=>a.bdt<b.bdt?a:b).label.replace(/'/g,"\\'")}',${p.from_bdt},'${p.name.replace(/'/g,"\\'")}')">Add ৳${p.from_bdt}</button>
+      <a class="btn btn-ghost btn-sm" href="p/${p.id}.html">বিস্তারিত</a>
     </div></div>`;
 }
 
 function draw(){
   const q=(document.getElementById('q').value||'').toLowerCase();
-  const ty=document.getElementById('type').value;
-  const pr=document.getElementById('price').value;
-  const so=document.getElementById('sort').value;
   let list=P.filter(p=>p.category!=="Bundles");
   if(cat0!=="All") list=list.filter(p=>p.category===cat0);
-  if(q) list=list.filter(p=>(p.name+' '+p.category+' '+p.keywords.join(' ')).toLowerCase().includes(q));
-  if(ty) list=list.filter(p=>p.plans.some(pl=>pl.tos===ty));
-  if(pr){ const [lo,hi]=pr.split('-').map(Number); list=list.filter(p=>p.from_bdt>=lo&&p.from_bdt<=hi); }
-  if(so==='pl') list.sort((a,b)=>a.from_bdt-b.from_bdt);
-  else if(so==='ph') list.sort((a,b)=>b.from_bdt-a.from_bdt);
-  else if(so==='az') list.sort((a,b)=>a.name.localeCompare(b.name));
-  else if(so==='sv') list.sort((a,b)=>b.save_pct-a.save_pct);
-  else list.sort((a,b)=>(b.orders-a.orders)||(a.from_bdt-b.from_bdt));
+  if(q) list=list.filter(p=>(p.name+' '+p.category+' '+(p.keywords||[]).join(' ')).toLowerCase().includes(q));
+  list.sort((a,b)=>a.name.localeCompare(b.name));
   document.getElementById('grid').innerHTML=list.map(card).join('')||'<p style="color:var(--muted)">কোনো প্রোডাক্ট মেলেনি. <a href="https://wa.me/8801305869242?text=Do%20you%20have%20this%20product:%20" style="color:var(--green2)">হোয়াটসঅ্যাপে জিজ্ঞেস করুন</a> — ৪৮ ঘণ্টার মধ্যে প্রোডাক্ট যোগ করি.</p>';
   var qVal = document.getElementById('q').value||'';
   var safeQ = qVal.replace(/[<>&\"']/g, '').substring(0,80);
@@ -196,16 +175,11 @@ function draw(){
 }
 
 function bundles(){
+  // EXEC-010 HOLD: bundles are price on request; no price, savings or cart.
   document.getElementById('bgrid').innerHTML=P.filter(function(p){return p.category==="Bundles"}).map(function(p){
-    var faqDesc=(p.faq&&p.faq[0]&&p.faq[0].a)?p.faq[0].a.split('.')[0]:'Bundle deal';
-    var saveHtml=(p.save_bdt||0)>0?'<span class="save">Save ৳'+p.save_bdt+'</span>':'<span class="save">Package deal</span>';
-    var planLabel=(p.plans[0]||{}).label||'Plan';
-    var cleanName=p.name.replace('🎁 ','🎁 ').replace(/'/g,"\\'");
-    return '<div class="bcard"><h3>'+cleanName+'</h3>'+
-      '<p class="sub" style="font-size:13px">'+faqDesc+'.</p>'+
-      '<div style="font-size:22px;font-weight:900;color:var(--green2)">৳'+p.from_bdt.toLocaleString()+'</div>'+saveHtml+
-      '<div class="ctas"><a class="btn btn-ghost btn-sm" href="p/'+p.id+'.html">Details</a>'+
-      '<button class="btn btn-primary btn-sm" onclick="cartAdd(\''+p.id+'\',\''+planLabel.replace(/'/g,"\\'")+'\','+p.from_bdt+',\''+p.name.replace(/🎁 /g,'').replace(/'/g,"\\'")+'\')">Add</button></div></div>';
+    return '<div class="bcard"><h3>'+p.name+'</h3>'+
+      '<div style="font-size:18px;font-weight:800;color:var(--green2)">মূল্য অনুরোধসাপেক্ষ</div>'+
+      '<div class="ctas"><a class="btn btn-ghost btn-sm" href="p/'+p.id+'.html">বিস্তারিত</a></div></div>';
   }).join('');
 }
 
