@@ -133,13 +133,13 @@ def section_html(p: dict, products: dict, copy: dict, bn: bool) -> str:
         if bn:
             parts.append(
                 f'<h2 class="mt3" style="font-size:22px">বাংলাদেশে {esc(name)}-এর দাম কত?</h2>'
-                f'<p>প্রোভাইডারের বর্তমান মূল্য ও আপনার দেশে প্ল্যান পাওয়া যায় কিনা <a href="{esc(url)}" target="_blank" rel="noopener nofollow">অফিসিয়াল পেজে দেখুন ↗</a>। '
+                f'<p>প্রোভাইডারের বর্তমান মূল্য ও আপনার দেশে প্ল্যান পাওয়া যায় কিনা <a href="{esc(url)}" target="_blank" rel="noopener nofollow">প্রোভাইডারের অফিসিয়াল ওয়েবসাইটে দেখুন ↗</a>। '
                 f'প্রোভাইডার দেশ, ট্যাক্স ও প্ল্যান অনুযায়ী মূল্য বদলাতে পারে। SaveOnSub-এর বর্তমান টাকায় মূল্য ও অ্যাক্সেস পদ্ধতি পেমেন্টের আগে লিখিতভাবে নিশ্চিত করা হয়।</p>'
             )
         else:
             parts.append(
                 f'<h2 class="mt3" style="font-size:22px">How much is {esc(name)} in Bangladesh?</h2>'
-                f'<p>Check the provider\'s current price and whether the plan is offered in your country on the <a href="{esc(url)}" target="_blank" rel="noopener nofollow">official pricing page ↗</a>. '
+                f'<p>Check the provider\'s current price and whether the plan is offered in your country on the <a href="{esc(url)}" target="_blank" rel="noopener nofollow">official provider website ↗</a>. '
                 f'Provider prices can vary by country, tax and plan. SaveOnSub confirms its current BDT price and the exact access method in writing before any payment.</p>'
             )
     links = related(p, products, bn)
