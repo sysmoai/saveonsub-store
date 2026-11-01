@@ -30,6 +30,7 @@ STEPS = [
     "cache_safe_brand.py",
     "technical_seo_hardening.py",
     "commercial_truth_v2.py",
+    "bangla_guides.py",
     "product_seo_enrich.py",
     "sanitize_pricing_v2_legacy.py",
     "hold_content_price_guard.py",

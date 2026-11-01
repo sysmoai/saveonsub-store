@@ -78,7 +78,7 @@ class ProductSeo(unittest.TestCase):
                     if href.startswith("http"):
                         continue
                     # relative to /p/ (EN) or /bn/p/ (BN): only siblings or ../c/<slug>
-                    self.assertTrue(re.fullmatch(r"[a-z0-9-]+|\.\./c/[a-z0-9-]+", href), href)
+                    self.assertTrue(re.fullmatch(r"[a-z0-9-]+|\.\./c/[a-z0-9-]+|(\.\./)+blog/[a-z0-9-]+", href), href)
 
     @unittest.skipUnless((ROOT / "_site" / "p").exists(), "staged site not built")
     def test_staged_section_links_resolve_to_same_locale_pages(self):
@@ -93,8 +93,29 @@ class ProductSeo(unittest.TestCase):
                         continue
                     target = (page.parent / (href + ".html")).resolve()
                     self.assertTrue(target.exists(), f"{page}: {href}")
-                    self.assertEqual(prefix == "bn/", "/_site/bn/" in target.as_posix(), f"{page}: {href}")
+                    if "/_site/blog/" not in target.as_posix():
+                        self.assertEqual(prefix == "bn/", "/_site/bn/" in target.as_posix(), f"{page}: {href}")
 
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class BanglaGuides(unittest.TestCase):
+    def test_sources_parse_and_have_no_claims(self):
+        import bangla_guides as g
+        products, guides = g.load()
+        self.assertGreaterEqual(len(guides), 3)
+        for meta in guides:
+            self.assertTrue(all(p in products for p in meta["related"]), meta["slug"])
+            html_out = g.md_to_html(meta["body"])
+            self.assertIn("<h2", html_out)
+            self.assertNotIn("৳", html_out)
+
+    def test_faq_rows_have_four_fields_and_no_claims(self):
+        for pid, rows in s.FAQS.items():
+            self.assertIn(pid, CATALOG)
+            for r in rows:
+                self.assertEqual(4, len(r), pid)
+                for x in r:
+                    self.assertIsNone(s.FORBIDDEN.search(x), pid)

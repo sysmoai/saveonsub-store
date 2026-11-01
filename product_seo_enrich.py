@@ -28,6 +28,8 @@ ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
 CATALOG = ROOT / "catalog.json"
 COPY = ROOT / "ops" / "seo" / "PRODUCT-COPY-2026-11-01.json"
+FAQ = ROOT / "ops" / "seo" / "PRODUCT-FAQ-2026-11-01.json"
+GUIDES = ROOT / "ops" / "seo" / "guides"
 BASE = "https://saveonsub.com"
 MARK = 'data-product-seo="product-seo-2026-11-01"'
 TITLE_MAX = 60
@@ -120,6 +122,46 @@ def related(p: dict, products: dict, bn: bool) -> list[tuple[str, str]]:
     return links
 
 
+def load_faq() -> dict:
+    return json.loads(FAQ.read_text(encoding="utf-8"))["products"] if FAQ.exists() else {}
+
+
+def load_guides() -> dict:
+    """product id -> [(slug, title)] from the Bangla guide sources."""
+    out: dict = {}
+    for path in sorted(GUIDES.glob("*.md")) if GUIDES.exists() else []:
+        head = path.read_text(encoding="utf-8").split("---")[1]
+        meta = dict(l.split(":", 1) for l in head.strip().splitlines() if ":" in l)
+        rel = [x.strip() for x in meta.get("related", "").strip().strip("[]").split(",") if x.strip()]
+        for pid in rel:
+            out.setdefault(pid, []).append((meta["slug"].strip(), meta["title"].strip()))
+    return out
+
+
+FAQS = load_faq()
+GUIDE_LINKS = load_guides()
+
+
+def faq_html(pid: str, bn: bool) -> str:
+    rows = FAQS.get(pid) or []
+    if not rows:
+        return ""
+    items = "".join(
+        f'<h3 class="mt2" style="font-size:17px">{esc(r[2] if bn else r[0])}</h3><p>{esc(r[3] if bn else r[1])}</p>'
+        for r in rows
+    )
+    return f'<h2 class="mt3" style="font-size:22px">{"সাধারণ প্রশ্ন" if bn else "Frequently asked questions"}</h2>{items}'
+
+
+def guide_html(pid: str, bn: bool) -> str:
+    rows = GUIDE_LINKS.get(pid) or []
+    if not rows:
+        return ""
+    up = "../../" if bn else "../"
+    lis = "".join(f'<li><a href="{up}blog/{esc(slug)}">{esc(title)}</a></li>' for slug, title in rows)
+    return f'<h2 class="mt3" style="font-size:22px">{"বাংলা গাইড" if bn else "Bangla guides"}</h2><ul>{lis}</ul>'
+
+
 def section_html(p: dict, products: dict, copy: dict, bn: bool) -> str:
     name = clean_name(p["name"])
     what = what_text(p, copy, products, bn)
@@ -142,6 +184,8 @@ def section_html(p: dict, products: dict, copy: dict, bn: bool) -> str:
                 f'<p>Check the provider\'s current price and whether the plan is offered in your country on the <a href="{esc(url)}" target="_blank" rel="noopener nofollow">official provider website ↗</a>. '
                 f'Provider prices can vary by country, tax and plan. SaveOnSub confirms its current BDT price and the exact access method in writing before any payment.</p>'
             )
+    parts.append(faq_html(p["id"], bn))
+    parts.append(guide_html(p["id"], bn))
     links = related(p, products, bn)
     if links:
         lis = "".join(f'<li><a href="{esc(pid)}">{esc(n)}</a></li>' for pid, n in links)
@@ -241,7 +285,7 @@ def check(products: dict) -> list[str]:
             target = (path.parent / (href + ".html")).resolve()
             if not target.exists():
                 errors.append(f"{rel}: SEO section link target missing: {href}")
-            elif ("/_site/bn/" in target.as_posix()) != bn:
+            elif "/_site/blog/" not in target.as_posix() and ("/_site/bn/" in target.as_posix()) != bn:
                 errors.append(f"{rel}: SEO section link crosses locale: {href}")
     return errors
 
