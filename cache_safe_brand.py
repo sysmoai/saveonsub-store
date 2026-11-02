@@ -17,7 +17,6 @@ ROOT = pathlib.Path(__file__).resolve().parent
 SITE = ROOT / "_site"
 ASSETS = SITE / "assets"
 SOURCE = ASSETS / "logo.svg"
-PWA_ICON = ASSETS / "icon-192.png"
 MANIFEST = ASSETS / "site.webmanifest"
 BRAND_LOCK = 'data-brand-lock="2026-08-19-approved"'
 DATA_RE = re.compile(r'href="data:image/png;base64,([A-Za-z0-9+/=]+)"')
@@ -68,15 +67,17 @@ def build_transparent_logo(svg_text: str) -> tuple[pathlib.Path, str]:
 
 
 def build_favicon_png() -> pathlib.Path:
-    if not PWA_ICON.is_file():
-        raise SystemExit("CACHE-SAFE BRAND ERROR — approved icon-192.png missing")
+    """One even downscale of the pinned SOS-007 master, not a resize of icon-192."""
+    from stage_deploy import render_square_icon
     try:
-        icon = Image.open(PWA_ICON).convert("RGBA")
-        icon = icon.resize((32, 32), Image.Resampling.LANCZOS)
+        icon = render_square_icon(32)
     except Exception as exc:
         raise SystemExit(f"CACHE-SAFE BRAND ERROR — cannot derive favicon PNG: {exc}")
     out = ASSETS / "favicon-32.png"
     icon.save(out, format="PNG", optimize=True)
+    with Image.open(out) as reopened:
+        if reopened.convert("RGB").tobytes() != icon.tobytes():
+            raise SystemExit("CACHE-SAFE BRAND ERROR — favicon-32.png pixels changed while saving")
     return out
 
 
