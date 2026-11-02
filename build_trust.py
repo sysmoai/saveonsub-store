@@ -149,7 +149,7 @@ body = """<span class="pill">🔒 PRIVACY</span>
 <h2 class="mt3" style="font-size:21px">Deletion</h2>
 <p class="sub" style="font-size:15px">Message "delete my data" on WhatsApp — order history and contact gone within 72 hours (ends warranty coverage, which needs the records).</p>
 <h2 class="mt3" style="font-size:21px">Shared-plan privacy</h2>
-<p class="sub" style="font-size:15px">On shared subscriptions, other seat-holders can never see your usage: ChatGPT chats, Midjourney galleries (private mode), Spotify listening (family slots are separate accounts) are all per-user private. Where a product has a real privacy limitation, it's stated on that product's page.</p>"""
+<p class="sub" style="font-size:15px">On shared plans, other seat-holders may be able to see chats, files, history or settings, depending on the product. Do not enter personal, financial or confidential information on a shared plan. The known risk for each product is stated on its page. If privacy matters, choose a personal plan.</p>"""
 pages['privacy'] = dict(title="Privacy — We Barely Want Your Data | SAVEONSUB", desc="No PINs, no cards, no passwords, no tracking. What we collect (almost nothing), why, and how to delete it with one WhatsApp message.", crumb="Privacy", body=body, schema="", robots="")
 
 # ---------- Terms ----------
