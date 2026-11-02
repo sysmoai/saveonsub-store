@@ -1,0 +1,35 @@
+name: SOS VM Preflight - Read Only
+on:
+  pull_request:
+    paths:
+      - 'ops/sos-work-computer/**'
+      - '.github/workflows/sos-vm-preflight.yml'
+  push:
+    branches:
+      - 'ops/sos-work-computer-*'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: POSIX shell syntax
+        run: sh -n ops/sos-work-computer/sos_vm_preflight.sh
+      - name: Run read-only preflight on a disposable GitHub runner
+        run: |
+          timeout 10 sh ops/sos-work-computer/sos_vm_preflight.sh > "$RUNNER_TEMP/sos_preflight.txt"
+          grep -q '^SOS_WORK_COMPUTER_PREFLIGHT_V1' "$RUNNER_TEMP/sos_preflight.txt"
+          grep -q '^mode=read_only' "$RUNNER_TEMP/sos_preflight.txt"
+          grep -q '^secrets_printed=no' "$RUNNER_TEMP/sos_preflight.txt"
+          grep -q '^RESULT=OBSERVATION_ONLY_NO_CHANGES' "$RUNNER_TEMP/sos_preflight.txt"
+          echo 'SAFE_PREFLIGHT_CONTRACT_OK'
+      - name: Assert no host-changing actions in preflight
+        run: |
+          if grep -En '(^|[[:space:]])(sudo|useradd|usermod|passwd|apt|yum|dnf|systemctl[[:space:]]+(start|stop|enable|disable)|rm[[:space:]]+-rf|chmod|chown)[[:space:]]' ops/sos-work-computer/sos_vm_preflight.sh | grep -vE '^#'; then
+            echo 'Unexpected mutating command in read-only preflight.'
+            exit 1
+          fi
+          echo 'MUTATION_GUARD_OK'
