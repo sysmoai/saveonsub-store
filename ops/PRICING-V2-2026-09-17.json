@@ -1330,6 +1330,31 @@
       ],
       "approved_by": "CEO Emon Hossain",
       "approved_on": "2026-11-02"
+    },
+    "aips-student-essentials": {
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Another business unit's package; not part of the CEO-approved SaveOnSub pricebook. No fixed price is published."
+    },
+    "aips-university-pro": {
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Another business unit's package; not part of the CEO-approved SaveOnSub pricebook. No fixed price is published."
+    },
+    "aips-freelancer-bundle": {
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Another business unit's package; not part of the CEO-approved SaveOnSub pricebook. No fixed price is published."
+    },
+    "aips-business-package": {
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Another business unit's package; not part of the CEO-approved SaveOnSub pricebook. No fixed price is published."
+    },
+    "aips-b2b-implementation": {
+      "mode": "inquiry",
+      "plans": [],
+      "note": "Price on Request — EXEC-010 commercial HOLD. Another business unit's package; not part of the CEO-approved SaveOnSub pricebook. No fixed price is published."
     }
   }
 }
