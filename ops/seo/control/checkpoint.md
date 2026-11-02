@@ -1,4 +1,4 @@
-# Checkpoint — cycle 3 (2026-11-03)
+# Checkpoint — cycle 4 (2026-11-03)
 
 - main f265c25; live 77c20d55. PR #91 (CEO "APPROVED ALL" pricebook) open, CI green, unmerged.
 - This branch is stacked on #91: adds `catalog_reconcile.py` (last build step) and fixes
@@ -21,3 +21,8 @@
 - `tools_explorer.py` stages `/tools` (AI Tools Explorer) only when that private family file is present;
   publishing it needs a CEO decision (PUB-001).
 - All five pricebook-only IDs resolved as aliases.
+
+## Cycle 4
+- `universe_registry.py --atlas <psv>` ingests the Notion ATLAS export (name, category, status/access, site host;
+  no prices). Family flags are intersections, so one enterprise-only row does not hide a consumer family.
+- Explorer skips families that are only other-unit packages, services or not-sellable per source.

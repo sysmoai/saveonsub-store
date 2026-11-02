@@ -33,7 +33,7 @@ TITLE = "AI Tools Explorer — Find the Right AI Tool | SAVEONSUB"
 DESC = ("Browse AI tools by job: chat, image, video, voice, code, writing and productivity. "
         "See which tools SaveOnSub sells and visit official sites for the rest.")
 FORBIDDEN = re.compile(r"৳|\$\s?\d|cheapest|lowest price|#1\b|lifetime|guarantee|instant delivery|in stock|warranty", re.I)
-SKIP_FLAGS = {"other_unit_package", "service_candidate"}
+SKIP_FLAGS_ALL = {"other_unit_package", "service_candidate", "not_sellable_per_source"}
 
 
 def esc(v) -> str:
@@ -49,6 +49,8 @@ def listed(families: list[dict]) -> list[dict]:
             continue
         if f.get("capability_group") in (None, "Unmapped", "Bundles"):
             continue
+        if not f.get("sos_products") and SKIP_FLAGS_ALL.intersection(f.get("flags_all") or []):
+            continue  # enterprise-only / other units' packages are not consumer discovery
         url = f.get("official_url") or ""
         if not f.get("sos_products") and not url.startswith("https://"):
             continue  # unverified tools stay internal until an official source is recorded

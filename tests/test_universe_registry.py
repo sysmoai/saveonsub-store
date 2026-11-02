@@ -50,6 +50,23 @@ class UniverseRegistryTests(unittest.TestCase):
     def test_no_source_record_dropped(self):
         self.assertEqual(6, build(self.root, self.catalog, self.policy)[0]["summary"]["source_records_total"])
 
+    def test_atlas_rows_classified(self):
+        atlas = self.root / "atlas.psv"
+        atlas.write_text("\n".join([
+            "# categories: 0 AI Chat & Assistants;1 AI Agents & Automation",
+            "# status/access: 0 Live/Personal;1 Not-sellable/Customer-owned;2 Planned/Shared",
+            "ChatGPT Plus — Personal|0|0|chatgpt.com", "Palantir|1|1|palantir.com",
+            "Student Pack|0|2|aipremiumshop.com", "Zapier|1|2|zapier.com"]) + "\n", encoding="utf-8")
+        public, private = build(self.root, self.catalog, self.policy, atlas)
+        recs = {r["brand"]: r for r in private["records"] if r["source"] == "aips-atlas"}
+        self.assertEqual("APPROVED_SELLABLE", recs["ChatGPT Plus — Personal"]["classification"])
+        self.assertIn("not_sellable_per_source", recs["Palantir"]["flags"])
+        self.assertIn("other_unit_package", recs["Student Pack"]["flags"])
+        self.assertEqual(4, public["summary"]["sources"]["aips-atlas"]["records"])
+        # Zapier also has an unflagged personal row, so the family-level flag set is empty.
+        self.assertEqual([], next(f for f in public["families"] if f["family"] == "zapier")["flags_all"])
+        self.assertIn("not_sellable_per_source", next(f for f in public["families"] if f["family"] == "palantir")["flags_all"])
+
     def test_source_prices_never_copied(self):
         public, private = build(self.root, self.catalog, self.policy)
         blob = json.dumps([public, private])
