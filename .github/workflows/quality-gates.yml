@@ -64,6 +64,9 @@ jobs:
           python -m unittest -v tests.test_product_seo 2>&1 | tee /tmp/product_seo_tests.log
           ! grep -q "skipped" /tmp/product_seo_tests.log
 
+      - name: Brand kit pinned files match staged output
+        run: python -m unittest -v tests.test_brand_kit_integration
+
       - name: No SaveOnSub sale price in any staged HTML (EXEC-010 HOLD)
         run: python hold_content_price_guard.py --check
 

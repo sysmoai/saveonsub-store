@@ -17,7 +17,6 @@ ROOT = pathlib.Path(__file__).resolve().parent
 SITE = ROOT / "_site"
 ASSETS = SITE / "assets"
 SOURCE = ASSETS / "logo.svg"
-PWA_ICON = ASSETS / "icon-192.png"
 MANIFEST = ASSETS / "site.webmanifest"
 BRAND_LOCK = 'data-brand-lock="2026-08-19-approved"'
 DATA_RE = re.compile(r'href="data:image/png;base64,([A-Za-z0-9+/=]+)"')
@@ -55,7 +54,12 @@ def build_transparent_logo(svg_text: str) -> tuple[pathlib.Path, str]:
         source.load()
     except Exception as exc:
         raise SystemExit(f"CACHE-SAFE BRAND ERROR — cannot decode approved PNG master: {exc}")
-    rgba = transparentize_white_matte(source)
+    # Brand kit v1.0 masters already carry real alpha (and the reverse wordmark
+    # has white letters), so only legacy white-matte rasters are keyed.
+    if source.mode == "RGBA" and source.getextrema()[3][0] < 255:
+        rgba = source.convert("RGBA")
+    else:
+        rgba = transparentize_white_matte(source)
     stable = ASSETS / "logo-transparent.png"
     rgba.save(stable, format="PNG", optimize=True)
     raw = stable.read_bytes()
@@ -68,15 +72,16 @@ def build_transparent_logo(svg_text: str) -> tuple[pathlib.Path, str]:
 
 
 def build_favicon_png() -> pathlib.Path:
-    if not PWA_ICON.is_file():
-        raise SystemExit("CACHE-SAFE BRAND ERROR — approved icon-192.png missing")
-    try:
-        icon = Image.open(PWA_ICON).convert("RGBA")
-        icon = icon.resize((32, 32), Image.Resampling.LANCZOS)
-    except Exception as exc:
-        raise SystemExit(f"CACHE-SAFE BRAND ERROR — cannot derive favicon PNG: {exc}")
+    """Publish the kit's pinned micro favicon (M1); never resize a larger icon."""
+    pinned = ASSETS / "brand" / "favicon-32.png"
+    record = ASSETS / "brand" / "brand-export.json"
+    if not pinned.is_file() or not record.is_file():
+        raise SystemExit("CACHE-SAFE BRAND ERROR — pinned brand favicon-32.png or brand-export.json missing")
+    expected = json.loads(record.read_text(encoding="utf-8"))["files"]["favicon-32.png"]["sha256"]
+    if hashlib.sha256(pinned.read_bytes()).hexdigest() != expected:
+        raise SystemExit("CACHE-SAFE BRAND ERROR — pinned favicon-32.png does not match brand-export.json")
     out = ASSETS / "favicon-32.png"
-    icon.save(out, format="PNG", optimize=True)
+    shutil.copyfile(pinned, out)
     return out
 
 

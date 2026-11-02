@@ -1,6 +1,14 @@
-/* SAVEONSUB — Design System v3. Haor Teal + Meghna Sky. */
+/* SAVEONSUB — Design System v3. Haor Teal + Meghna Sky.
+   Brand kit v1.0 tokens (SOS-CEO-20261102-002) are the colour authority; the
+   site accent below maps to teal-on-dark #34C3B2 because the site is dark. */
 :root {
   color-scheme: dark;
+  --sos-navy: #082034;
+  --sos-teal: #018379;
+  --sos-teal-on-dark: #34c3b2;
+  --sos-white: #ffffff;
+  --sos-surface: #f5f7f8;
+  --sos-ink-muted: #4a5a68;
   --bg: #06181a;
   --bg2: #091f22;
   --bg3: #0d292d;
@@ -8,13 +16,13 @@
   --ink: #f2fbfa;
   --muted: #93bdb7;
   --line: rgba(147, 189, 183, 0.18);
-  --green: #14d4b8;
+  --green: var(--sos-teal-on-dark);
   --green2: #2ef0d2;
   --cyan: #7cc7ff;
   --coral: #ff7a8f;
   --gold: #ffb648;
-  --grad: linear-gradient(135deg, #14d4b8 0%, #7cc7ff 100%);
-  --grad-rev: linear-gradient(135deg, #7cc7ff 0%, #14d4b8 100%);
+  --grad: linear-gradient(135deg, #34c3b2 0%, #7cc7ff 100%);
+  --grad-rev: linear-gradient(135deg, #7cc7ff 0%, #34c3b2 100%);
   --maxw: 1180px;
   --radius-sm: 10px;
   --radius: 16px;
