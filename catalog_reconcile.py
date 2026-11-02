@@ -45,7 +45,8 @@ HREFLANG = re.compile(r'hreflang="([^"]+)" href="([^"]+)"')
 # Pricebook-only ids that name an existing catalog product (same provider and
 # official URL). They never had a page (live /p/<alias> returns 404), so they
 # stay inquiry-only and resolve to the canonical product instead of a new page.
-ALIASES = {"kling-ai": "kling", "pika-labs": "pika", "gamma-pro": "gamma"}
+ALIASES = {"kling-ai": "kling", "pika-labs": "pika", "gamma-pro": "gamma",
+           "mistral": "mistral-pro", "replit": "replit-core"}
 JS_CATALOG = re.compile(r"const CATALOG = (\{.*?\});\s*$", re.S | re.M)
 
 

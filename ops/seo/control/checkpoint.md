@@ -1,4 +1,4 @@
-# Checkpoint — cycle 2 (2026-11-03)
+# Checkpoint — cycle 3 (2026-11-03)
 
 - main f265c25; live 77c20d55. PR #91 (CEO "APPROVED ALL" pricebook) open, CI green, unmerged.
 - This branch is stacked on #91: adds `catalog_reconcile.py` (last build step) and fixes
@@ -14,3 +14,10 @@
 - kling-ai / pika-labs / gamma-pro are aliases of kling / pika / gamma; only replit and mistral remain held.
 - Priced product pages now carry lastmod 2026-11-02 in sitemap; BN bundle-video title de-duplicated.
 - Open: SEO-006 (20 indexable pages not in sitemap), ISO-001 (AIPS /modes pages, CEO).
+
+## Cycle 3 (V13.0)
+- `universe_registry.py --aips <checkout> --private-out <file>` classifies other units' catalogs; it never reads
+  prices or sales copy. Its outputs stay private (gitignored), on the CEO machine under 00_CONTROL/saveonsub/.
+- `tools_explorer.py` stages `/tools` (AI Tools Explorer) only when that private family file is present;
+  publishing it needs a CEO decision (PUB-001).
+- All five pricebook-only IDs resolved as aliases.

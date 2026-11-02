@@ -1,0 +1,60 @@
+"""Synthetic tests: portfolio research rows never become SaveOnSub offers by themselves."""
+import json
+import tempfile
+import unittest
+from pathlib import Path
+
+from universe_registry import build, family_key
+
+
+class UniverseRegistryTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        root = Path(self.tmp.name)
+        data = root / "artifacts" / "aips-landing" / "data"
+        data.mkdir(parents=True)
+        rows = [
+            {"id": "a", "brand": "ChatGPT", "accessType": "personal", "sourceUrl": "https://openai.com", "price": 1, "category": "ai-assistant"},
+            {"id": "b", "brand": "ChatGPT", "accessType": "shared", "sourceUrl": "https://openai.com", "price": 1, "category": "ai-assistant"},
+            {"id": "c", "brand": "Zapier", "accessType": "personal", "sourceUrl": "https://zapier.com", "price": 1, "category": "ai-workspace"},
+            {"id": "d", "brand": "Mystery", "accessType": "personal", "category": "ai-workspace"},
+            {"id": "e", "brand": "AIPS", "accessType": "bundle", "sourceUrl": "", "category": "bundles"},
+        ]
+        (data / "products.json").write_text(json.dumps({"products": rows}), encoding="utf-8")
+        (data / "services.json").write_text(json.dumps([{"slug": "setup", "name": "Setup", "priceBdt": 9}]), encoding="utf-8")
+        self.root = root
+        self.catalog = {"products": [{"id": "chatgpt-plus", "name": "ChatGPT Plus", "category": "AI Assistants"}]}
+        self.policy = {"approved_products": {"chatgpt-plus": {"mode": "fixed", "plans": [{"label": "P", "bdt": 1, "access_type": "personal"}]}}}
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def records(self):
+        return {r["source_id"]: r for r in build(self.root, self.catalog, self.policy)[1]["records"]}
+
+    def test_family_key_strips_tier_words(self):
+        self.assertEqual("chatgpt", family_key("ChatGPT Plus"))
+        self.assertEqual("otter", family_key("Otter.ai Pro"))
+        self.assertEqual("pika", family_key("Pika Labs"))
+
+    def test_classification(self):
+        r = self.records()
+        self.assertEqual("APPROVED_SELLABLE", r["a"]["classification"])
+        self.assertEqual("INQUIRY_ONLY", r["b"]["classification"])
+        self.assertIn("provider_rights_review", r["b"]["flags"])
+        self.assertEqual("RESEARCH_ONLY", r["c"]["classification"])
+        self.assertEqual("NEEDS_FACT_VERIFICATION", r["d"]["classification"])
+        self.assertIn("other_unit_package", r["e"]["flags"])
+        self.assertEqual("RESEARCH_ONLY", r["setup"]["classification"])
+
+    def test_no_source_record_dropped(self):
+        self.assertEqual(6, build(self.root, self.catalog, self.policy)[0]["summary"]["source_records_total"])
+
+    def test_source_prices_never_copied(self):
+        public, private = build(self.root, self.catalog, self.policy)
+        blob = json.dumps([public, private])
+        self.assertNotIn("price", blob.lower().replace("pricing", ""))
+
+
+if __name__ == "__main__":
+    unittest.main()
