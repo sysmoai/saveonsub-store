@@ -1,12 +1,42 @@
 {
  "updated": "2026-11-03",
- "last_cycle": 1,
+ "last_cycle": 2,
  "main_sha": "f265c25",
  "live_deployment": "77c20d55 (do not roll back to f7f1e404 or 1c6b91b9)",
- "pricebook_pr": {"number": 91, "head": "27c965a", "state": "open, CI green, awaiting CEO merge"},
+ "pricebook_pr": {
+  "number": 91,
+  "head": "27c965a",
+  "state": "open, CI green, awaiting CEO merge"
+ },
  "working_branch": "seo/pricebook-reconcile-periods-2026-11-03 (stacked on #91)",
- "reconcile": {"pricebook_entries": 77, "fixed_products": 67, "approved_plans": 133, "inquiry_entries": 10,
-               "held_without_page": ["gamma-pro", "kling-ai", "mistral", "pika-labs", "replit"], "mismatches": 0},
- "blockers": ["CEO merge of #91, then manual Cloudflare zip deploy", "Provider-rights review for shared-access plans (private register)"],
- "next_task": "SEO-002"
+ "reconcile": {
+  "pricebook_entries": 77,
+  "fixed_products": 67,
+  "approved_plans": 133,
+  "inquiry_entries": 10,
+  "held_without_page": [
+   "mistral",
+   "replit"
+  ],
+  "mismatches": 0,
+  "aliases": {
+   "kling-ai": "kling",
+   "pika-labs": "pika",
+   "gamma-pro": "gamma"
+  }
+ },
+ "blockers": [
+  "CEO merge of #91, then manual Cloudflare zip deploy",
+  "Provider-rights review for shared-access plans (private register)"
+ ],
+ "next_task": "SEO-002",
+ "gsc_baseline": {
+  "checked": "2026-11-03",
+  "property": "sc-domain:saveonsub.com",
+  "data_from": "2026-10-31",
+  "clicks": 0,
+  "impressions": 0,
+  "indexing_report": "processing",
+  "status": "VERIFIED"
+ }
 }

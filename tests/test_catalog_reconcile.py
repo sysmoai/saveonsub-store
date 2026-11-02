@@ -55,6 +55,17 @@ class ReconcileTests(unittest.TestCase):
         ledger = reconcile(self.policy, self.catalog, self.site)[2]
         self.assertEqual(["held"], ledger["summary"]["held_without_page"])
 
+    def test_alias_resolves_to_existing_product(self):
+        self.policy["approved_products"]["kling-ai"] = {"mode": "inquiry", "plans": []}
+        self.catalog["products"].append({"id": "kling"})
+        errors, _, ledger = reconcile(self.policy, self.catalog, self.site)
+        self.assertEqual({"kling-ai": "kling"}, ledger["summary"]["aliases"])
+        self.assertNotIn("kling-ai", ledger["summary"]["held_without_page"])
+
+    def test_alias_without_target_blocked(self):
+        self.policy["approved_products"]["kling-ai"] = {"mode": "inquiry", "plans": []}
+        self.assertTrue(any("alias target kling" in e for e in self.errors()))
+
     def test_yearly_price_labelled_monthly_blocked(self):
         self.body = self.body.replace("৳1,499 / year", "৳1,499 / month")
         self.write()

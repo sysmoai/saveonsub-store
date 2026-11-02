@@ -42,6 +42,10 @@ PRICE = re.compile(r"৳\s?([\d,]+)")
 WA_LINK = re.compile(r"https://wa\.me/(\d+)(?:\?text=([^\"'\s<>]+))?")
 CANONICAL = re.compile(r'<link rel="canonical" href="([^"]+)"')
 HREFLANG = re.compile(r'hreflang="([^"]+)" href="([^"]+)"')
+# Pricebook-only ids that name an existing catalog product (same provider and
+# official URL). They never had a page (live /p/<alias> returns 404), so they
+# stay inquiry-only and resolve to the canonical product instead of a new page.
+ALIASES = {"kling-ai": "kling", "pika-labs": "pika", "gamma-pro": "gamma"}
 JS_CATALOG = re.compile(r"const CATALOG = (\{.*?\});\s*$", re.S | re.M)
 
 
@@ -141,7 +145,10 @@ def reconcile(policy: dict, catalog: dict, site: Path) -> tuple[list[str], list[
         if pid not in products:
             if mode == "fixed":
                 errors.append(f"{pid}: fixed price approved but no catalog product/page")
-            record["route_decision"] = "HELD_NO_PAGE"
+            target = ALIASES.get(pid)
+            if target is not None and target not in products:
+                errors.append(f"{pid}: alias target {target} is not a catalog product")
+            record["route_decision"] = f"ALIAS_OF:{target}" if target else "HELD_NO_PAGE"
             records.append(record)
             continue
 
@@ -190,6 +197,8 @@ def reconcile(policy: dict, catalog: dict, site: Path) -> tuple[list[str], list[
         "inquiry_entries": len(records) - len(fixed),
         "approved_plans": sum(len(r["plans"]) for r in fixed),
         "held_without_page": sorted(r["product_id"] for r in records if r["route_decision"] == "HELD_NO_PAGE"),
+        "aliases": {r["product_id"]: r["route_decision"].split(":", 1)[1]
+                    for r in records if r["route_decision"].startswith("ALIAS_OF:")},
         "plans_by_provider_terms_status": {},
         "errors": len(errors),
         "warnings": len(warnings),
@@ -218,7 +227,7 @@ def main(argv: list[str]) -> int:
         LEDGER.write_text(json.dumps(ledger, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print(f"[reconcile] PASS — {s['pricebook_entries']} pricebook entries, {s['fixed_products']} priced "
           f"products / {s['approved_plans']} plans, {s['inquiry_entries']} inquiry, "
-          f"held without page: {', '.join(s['held_without_page']) or 'none'}")
+          f"aliases: {len(s['aliases'])}, held without page: {', '.join(s['held_without_page']) or 'none'}")
     return 0
 
 
