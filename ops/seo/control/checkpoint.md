@@ -1,4 +1,4 @@
-# Checkpoint — cycle 4 (2026-11-03)
+# Checkpoint — cycle 5 (2026-11-03)
 
 - main f265c25; live 77c20d55. PR #91 (CEO "APPROVED ALL" pricebook) open, CI green, unmerged.
 - This branch is stacked on #91: adds `catalog_reconcile.py` (last build step) and fixes
@@ -26,3 +26,10 @@
 - `universe_registry.py --atlas <psv>` ingests the Notion ATLAS export (name, category, status/access, site host;
   no prices). Family flags are intersections, so one enterprise-only row does not hide a consumer family.
 - Explorer skips families that are only other-unit packages, services or not-sellable per source.
+
+## Cycle 5 (V14.0)
+- `--seeds` ingests the workbook's research-seed list (category letter legend in the file header; tl;dv rejoined).
+- Family status now follows SaveOnSub's own pricebook first: a family with an approved SaveOnSub plan is
+  APPROVED_SELLABLE even when the research row carries no access type.
+- Seed-only families have no official URL yet, so they stay NEEDS_FACT_VERIFICATION and off the explorer.
+- Next: fuzzy-duplicate review of seed families (e.g. google gemini/google, kimi/moonshot, llama/meta).

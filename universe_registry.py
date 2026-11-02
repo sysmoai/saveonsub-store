@@ -20,6 +20,9 @@ Usage:
 --atlas takes a compact pipe-separated export of the AIPS ATLAS Notion database
 (name|category index|status/access index|website host; the legend is in the
 file's # header lines). Price columns are never exported.
+--seeds takes the research-seed list ("X: name; name" per category letter; the
+letter legend is in the # header). Seeds carry no URL or access data, so they
+classify against known families or stay NEEDS_FACT_VERIFICATION.
 
 Writes the family-level, public-safe crosswalk to ops/seo/control/universe-families.json.
 The record-level registry (with source ids) goes only to --private-out.
@@ -110,6 +113,27 @@ def load_atlas(path: Path) -> list[dict]:
     return rows
 
 
+def load_seeds(path: Path) -> list[dict]:
+    """Parse research seeds; rejoin names a spreadsheet split on ';' (tl;dv)."""
+    legend, rows = {}, []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("# letters:"):
+            legend = dict(item.strip().split(" ", 1) for item in line.split(":", 1)[1].split(";") if item.strip())
+        elif re.match(r"^[A-Z]: ", line):
+            letter, names = line[0], [n.strip() for n in line[3:].split(";") if n.strip()]
+            i = 0
+            while i < len(names):
+                name, split = names[i], None
+                if name == "tl" and i + 1 < len(names) and names[i + 1] == "dv":
+                    name, split = "tl;dv", "rejoined_split_name"
+                    i += 1
+                rows.append({"id": f"seed:{len(rows)}", "brand": name, "name": name, "category": legend.get(letter, letter),
+                             "accessType": "unknown", "sourceUrl": "", "seed_letter": letter,
+                             "review": split, "api_grain": letter == "O"})
+                i += 1
+    return rows
+
+
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
 
@@ -135,6 +159,10 @@ def classify(row: dict, fam: dict | None) -> tuple[str, list[str]]:
     access = row.get("accessType") or "unknown"
     if access == "shared":
         flags.append("provider_rights_review")
+    if row.get("api_grain"):
+        flags.append("api_or_platform")
+    if row.get("review"):
+        flags.append(row["review"])
     if row.get("source_status") == "Not-sellable":
         flags.append("not_sellable_per_source")
     if row.get("other_unit"):
@@ -143,6 +171,8 @@ def classify(row: dict, fam: dict | None) -> tuple[str, list[str]]:
     if row.get("brand") == "AIPS" or access in ("bundle", "service") or "Setup Service" in str(row.get("brand")):
         flags.append("other_unit_package" if row.get("brand") == "AIPS" else "service_candidate")
         return "RESEARCH_ONLY", flags
+    if fam is not None and access == "unknown":
+        return "INQUIRY_ONLY", flags
     if fam is None:
         if not row.get("sourceUrl"):
             return "NEEDS_FACT_VERIFICATION", flags
@@ -152,14 +182,18 @@ def classify(row: dict, fam: dict | None) -> tuple[str, list[str]]:
     return "INQUIRY_ONLY", flags
 
 
-def build(aips_root: Path, catalog: dict, policy: dict, atlas: Path | None = None) -> tuple[dict, dict]:
+def build(aips_root: Path, catalog: dict, policy: dict, atlas: Path | None = None,
+          seeds: Path | None = None) -> tuple[dict, dict]:
     rows = json.loads((aips_root / AIPS_PRODUCTS).read_text(encoding="utf-8"))["products"]
     for r in rows:
         r["_source"] = "aips-products"
     atlas_rows = load_atlas(atlas) if atlas else []
     for r in atlas_rows:
         r["_source"] = "aips-atlas"
-    rows = rows + atlas_rows
+    seed_rows = load_seeds(seeds) if seeds else []
+    for r in seed_rows:
+        r["_source"] = "research-seeds"
+    rows = rows + atlas_rows + seed_rows
     services = json.loads((aips_root / AIPS_SERVICES).read_text(encoding="utf-8"))
     services = services if isinstance(services, list) else services.get("services", [])
     fams = sos_families(catalog, policy)
@@ -183,8 +217,10 @@ def build(aips_root: Path, catalog: dict, policy: dict, atlas: Path | None = Non
         f = families.setdefault(key, {
             "family": key, "brand": row.get("brand"), "provider": row.get("provider"),
             "official_url": row.get("sourceUrl"),
-            "capability_group": CAPABILITY.get(row.get("category"), "Unmapped"),
+            # Seed legends already use capability-group names, so those pass through.
+            "capability_group": CAPABILITY.get(row.get("category"), row.get("category") if row.get("seed_letter") else "Unmapped"),
             "sos_products": (fam or {}).get("sos_products", []),
+            "sos_sellable": bool((fam or {}).get("access_types")),
             "source_records": 0, "classifications": collections.Counter(), "fuzzy_review": review,
             "flags_all": None,
         })
@@ -202,14 +238,15 @@ def build(aips_root: Path, catalog: dict, policy: dict, atlas: Path | None = Non
         if key not in families:
             families[key] = {"family": key, "brand": None, "provider": None, "official_url": None,
                              "capability_group": CAPABILITY.get(fam["category"], fam["category"]),
-                             "sos_products": fam["sos_products"], "source_records": 0,
+                             "sos_products": fam["sos_products"], "sos_sellable": bool(fam["access_types"]),
+                             "source_records": 0,
                              "classifications": {}, "fuzzy_review": [], "sos_only": True}
 
     for f in families.values():
         f["flags_all"] = sorted(f.get("flags_all") or [])
         f["classifications"] = dict(f["classifications"])
         cls = f["classifications"]
-        f["status"] = ("APPROVED_SELLABLE" if cls.get("APPROVED_SELLABLE") else
+        f["status"] = ("APPROVED_SELLABLE" if cls.get("APPROVED_SELLABLE") or (f.get("sos_sellable") and not f.get("sos_only")) else
                        "INQUIRY_ONLY" if cls.get("INQUIRY_ONLY") else
                        "SOS_ONLY" if f.get("sos_only") else
                        "NEEDS_FACT_VERIFICATION" if cls.get("NEEDS_FACT_VERIFICATION") and not cls.get("RESEARCH_ONLY") else
@@ -218,13 +255,17 @@ def build(aips_root: Path, catalog: dict, policy: dict, atlas: Path | None = Non
     by = lambda items, k: dict(collections.Counter(x.get(k) for x in items).most_common())
     product_records = [r for r in records if r["source"] != "aips-services"]
     summary = {
-        "sources": {"aips-products": {"records": len(rows) - len(atlas_rows), "sha256_16": sha(aips_root / AIPS_PRODUCTS)},
+        "sources": {"aips-products": {"records": len(rows) - len(atlas_rows) - len(seed_rows), "sha256_16": sha(aips_root / AIPS_PRODUCTS)},
+                    **({"research-seeds": {"records": len(seed_rows), "sha256_16": sha(seeds)}} if seeds else {}),
                     **({"aips-atlas": {"records": len(atlas_rows), "sha256_16": sha(atlas)}} if atlas else {}),
                     "aips-services": {"records": len(services), "sha256_16": sha(aips_root / AIPS_SERVICES)}},
         "source_records_total": len(records),
         "unique_source_brands": len({r["brand"] for r in product_records}),
         "families_by_source": {src: len({r["family"] for r in records if r["source"] == src})
-                               for src in ("aips-products", "aips-atlas", "aips-services")},
+                               for src in ("aips-products", "aips-atlas", "research-seeds", "aips-services")},
+        "seed_only_families": len({r["family"] for r in records if r["source"] == "research-seeds"}
+                                  - {r["family"] for r in records if r["source"] != "research-seeds"}),
+        "review_exceptions": [r["brand"] for r in records if "rejoined_split_name" in (r.get("flags") or [])],
         "atlas_only_families": sorted({r["family"] for r in records if r["source"] == "aips-atlas"}
                                       - {r["family"] for r in records if r["source"] == "aips-products"}),
         "families_total": len(families),
@@ -246,11 +287,12 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--aips", required=True, type=Path)
     ap.add_argument("--atlas", type=Path)
+    ap.add_argument("--seeds", type=Path)
     ap.add_argument("--private-out", type=Path)
     a = ap.parse_args()
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     policy = json.loads(POLICY.read_text(encoding="utf-8"))
-    public, private = build(a.aips, catalog, policy, a.atlas)
+    public, private = build(a.aips, catalog, policy, a.atlas, a.seeds)
     if public["summary"]["unclassified_records"]:
         raise SystemExit("[universe] unclassified source records")
     PUBLIC_OUT.parent.mkdir(parents=True, exist_ok=True)

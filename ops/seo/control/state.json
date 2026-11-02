@@ -1,6 +1,6 @@
 {
  "updated": "2026-11-03",
- "last_cycle": 4,
+ "last_cycle": 5,
  "main_sha": "f265c25",
  "live_deployment": "77c20d55 (do not roll back to f7f1e404 or 1c6b91b9)",
  "pricebook_pr": {
@@ -41,6 +41,7 @@
  "universe": {
   "registry": "private, CEO machine 00_CONTROL/saveonsub/ (derived from other units' catalogs)",
   "explorer": "/tools staged only when the private family file is present; publishing needs CEO decision",
-  "atlas": "Notion ATLAS 231 rows read 2026-11-03 via CEO browser (prices excluded); private export in 00_CONTROL/saveonsub/"
+  "atlas": "Notion ATLAS 231 rows read 2026-11-03 via CEO browser (prices excluded); private export in 00_CONTROL/saveonsub/",
+  "seeds": "557 research seeds (workbook 1xEbrJFl..., 2026-11-03) ingested via --seeds; private copy in 00_CONTROL/saveonsub/"
  }
 }

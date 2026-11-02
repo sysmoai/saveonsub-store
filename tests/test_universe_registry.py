@@ -67,6 +67,20 @@ class UniverseRegistryTests(unittest.TestCase):
         self.assertEqual([], next(f for f in public["families"] if f["family"] == "zapier")["flags_all"])
         self.assertIn("not_sellable_per_source", next(f for f in public["families"] if f["family"] == "palantir")["flags_all"])
 
+    def test_seed_rows_rejoined_and_classified(self):
+        seeds = self.root / "seeds.txt"
+        seeds.write_text("\n".join([
+            "# letters: A AI Chat, Reasoning & Assistants; L AI Productivity, Documents & Meetings",
+            "A: ChatGPT; Kimi", "L: tl; dv; Granola"]) + "\n", encoding="utf-8")
+        public, private = build(self.root, self.catalog, self.policy, None, seeds)
+        recs = {r["brand"]: r for r in private["records"] if r["source"] == "research-seeds"}
+        self.assertEqual(["ChatGPT", "Kimi", "tl;dv", "Granola"], list(recs))
+        self.assertEqual("INQUIRY_ONLY", recs["ChatGPT"]["classification"])
+        self.assertEqual("NEEDS_FACT_VERIFICATION", recs["Kimi"]["classification"])
+        self.assertEqual(["tl;dv"], public["summary"]["review_exceptions"])
+        chat = next(f for f in public["families"] if f["family"] == "chatgpt")
+        self.assertEqual("APPROVED_SELLABLE", chat["status"])
+
     def test_source_prices_never_copied(self):
         public, private = build(self.root, self.catalog, self.policy)
         blob = json.dumps([public, private])
