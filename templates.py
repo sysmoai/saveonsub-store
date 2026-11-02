@@ -159,7 +159,8 @@ def footer_bn(rel=""):
 # ===== COMMON HEAD ELEMENTS =====
 def head_common(rel=""):
     return f'''<link rel="icon" href="{rel}assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="{rel}assets/apple-touch-icon.png">
+<link rel="icon" href="{rel}assets/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="{rel}assets/apple-touch-icon.png" sizes="180x180">
 <link rel="manifest" href="{rel}assets/site.webmanifest">
 <meta property="og:image" content="https://saveonsub.com/assets/og-image.png">
 <link rel="stylesheet" href="{rel}assets/style.css">'''
