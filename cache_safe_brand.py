@@ -67,17 +67,17 @@ def build_transparent_logo(svg_text: str) -> tuple[pathlib.Path, str]:
 
 
 def build_favicon_png() -> pathlib.Path:
-    """One even downscale of the pinned SOS-007 master, not a resize of icon-192."""
-    from stage_deploy import render_square_icon
+    """Copy the hash-pinned logo-system favicon. Do not resize icon-192."""
+    from stage_deploy import BRAND_SRC, BRAND_WEB_ICONS, _pinned_bytes
+    name = "favicon-32.png"
     try:
-        icon = render_square_icon(32)
+        raw = _pinned_bytes(BRAND_SRC / "web" / name, BRAND_WEB_ICONS[name])
     except Exception as exc:
-        raise SystemExit(f"CACHE-SAFE BRAND ERROR — cannot derive favicon PNG: {exc}")
-    out = ASSETS / "favicon-32.png"
-    icon.save(out, format="PNG", optimize=True)
-    with Image.open(out) as reopened:
-        if reopened.convert("RGB").tobytes() != icon.tobytes():
-            raise SystemExit("CACHE-SAFE BRAND ERROR — favicon-32.png pixels changed while saving")
+        raise SystemExit(f"CACHE-SAFE BRAND ERROR — pinned favicon-32.png rejected: {exc}")
+    out = ASSETS / name
+    out.write_bytes(raw)
+    if out.read_bytes() != raw:
+        raise SystemExit("CACHE-SAFE BRAND ERROR — favicon-32.png changed while copying")
     return out
 
 
@@ -93,10 +93,16 @@ def normalize_manifest() -> None:
     if not isinstance(icons, list):
         raise SystemExit("CACHE-SAFE BRAND ERROR — staged manifest icons missing")
     icons = [icon for icon in icons if icon.get("src") != "/assets/favicon.svg"]
-    required = {"/assets/icon-192.png", "/assets/icon-512.png"}
+    required = {"/assets/icon-192.png", "/assets/icon-512.png", "/assets/icon-maskable-512.png"}
     present = {icon.get("src") for icon in icons}
     if not required.issubset(present):
         raise SystemExit("CACHE-SAFE BRAND ERROR — approved PWA PNG icons missing from manifest")
+    maskable = [
+        icon for icon in icons
+        if icon.get("src") == "/assets/icon-maskable-512.png" and icon.get("purpose") == "maskable"
+    ]
+    if len(maskable) != 1:
+        raise SystemExit("CACHE-SAFE BRAND ERROR — manifest is missing the maskable 512 icon")
     manifest["icons"] = icons
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     if "favicon.svg" in MANIFEST.read_text(encoding="utf-8"):

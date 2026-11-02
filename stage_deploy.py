@@ -23,12 +23,12 @@ from /assets/logo.svg on every deployed page.
 
 The header lockup served on pages stays the approved 2026-08-19 logo.svg
 wrapper. cache_safe_brand.py turns that wrapper into the cache-busted header
-PNG. Square icons and the OG-card logo are not cut out of that 280x78 raster.
-They are even LANCZOS downscales of the hash-pinned founder originals in
-brand_src/ (registry SOS-007 icon and SOS-009 lockup, both CEO_PROVIDED /
-PENDING_LOCK). The build refuses to continue if those bytes change, and
-brand_src/ is never copied into the public artifact. The deprecated tilted
-price-tag + ৳ identity stays blocked by the SVG gate below.
+PNG. Public icons are not cropped from that 280x78 raster and are not resized
+at build time. They are byte copies of the hash-pinned Logo System v0.2 files
+in brand_src/web/, exported from the decided master icon S (registry SOS-007).
+The OG card still downscales the hash-pinned SOS-009 lockup, without cropping
+or upscaling it. brand_src/ is never copied into the public artifact. The
+deprecated tilted price-tag + ৳ identity stays blocked by the SVG gate below.
 """
 import base64
 import glob
@@ -125,25 +125,49 @@ def _font(size: int):
 
 
 BRAND_SRC = ROOT / 'brand_src'
-# Registry SOS-007. CEO_PROVIDED / PENDING_LOCK. 1254x1254 RGB, white mark on a dark square.
+# Decided master icon S (D-MASTER-S, 2026-11-02). Kept as the source record.
+# Publication icons are the logo-system exports below; this file is not resized.
 BRAND_ICON_SRC = BRAND_SRC / 'SOS-LOCKED-20261023-04_Circular_Icon_White_Over_Dark_1254x1254.png'
 BRAND_ICON_SHA256 = '681858ffbe873a1377735ddc8cea8c916c0f01b48a27a81d924f525c014201f9'
-# Registry SOS-009. CEO_PROVIDED / PENDING_LOCK. 2172x724 RGB horizontal lockup.
+# Registry SOS-009 horizontal lockup, used for the OG card only.
 BRAND_LOCKUP_SRC = BRAND_SRC / 'SOS-009_horizontal_lockup_2172x724.png'
 BRAND_LOCKUP_SHA256 = 'c12510d3dc75ad876b7dc2ff390ddc891dd0513364b05bdc406eaf0385d29e06'
+# Logo System v0.2 web set, exported from SOS-007. Copied byte-for-byte.
+BRAND_WEB_ICONS = {
+    'apple-touch-icon.png': '23f7273be9b992015dc8f7dda9fa169e0629dd22135024ec7653877fc92e246b',
+    'favicon-32.png': '8ae0986f084813aec4404aa68c4f078e7cdf49c48a30f407bae3c41784377b91',
+    'favicon.ico': '37c5d19ae3a5f26fe4e2893a261ac041edeb808bc07cdddc2cd907cf4143b497',
+    'icon-192.png': 'dfc42dc2caccae301267e35c45fe8c958d01f12349c1a10f6bfee718d3f1778f',
+    'icon-512.png': 'b8936f5d79ba5258df05adf7e1087b4379d7f9fbf0b6331df68070d34e662e95',
+    'icon-maskable-512.png': '9a2f21b63953043dc19f37c91cbadb33705606373718defeb78cad1f230ff058',
+}
+FAVICON_ICO_SIZES = {(16, 16), (32, 32), (48, 48), (64, 64)}
+BRAND_MANIFEST_ICONS = [
+    {'src': '/assets/favicon.svg', 'sizes': 'any', 'type': 'image/svg+xml', 'purpose': 'any'},
+    {'src': '/assets/icon-192.png', 'sizes': '192x192', 'type': 'image/png', 'purpose': 'any'},
+    {'src': '/assets/icon-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'any'},
+    {'src': '/assets/apple-touch-icon.png', 'sizes': '180x180', 'type': 'image/png', 'purpose': 'any'},
+    {'src': '/assets/icon-maskable-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'maskable'},
+]
+
+
+def _pinned_bytes(path: pathlib.Path, sha256: str) -> bytes:
+    """Return file bytes only when they match the pinned SHA256."""
+    if not path.is_file():
+        raise RuntimeError(f'brand asset missing: {path}')
+    raw = path.read_bytes()
+    digest = hashlib.sha256(raw).hexdigest()
+    if digest != sha256:
+        raise RuntimeError(
+            f'brand asset hash mismatch: {path.name} (expected {sha256}, got {digest})'
+        )
+    return raw
 
 
 def _pinned_original(path: pathlib.Path, sha256: str, size: tuple, mode: str = 'RGB'):
     """Open a founder-original brand file only when its bytes match the pin."""
     from PIL import Image
-    if not path.is_file():
-        raise RuntimeError(f'brand original missing: {path}')
-    raw = path.read_bytes()
-    digest = hashlib.sha256(raw).hexdigest()
-    if digest != sha256:
-        raise RuntimeError(
-            f'brand original hash mismatch: {path.name} (expected {sha256}, got {digest})'
-        )
+    raw = _pinned_bytes(path, sha256)
     image = Image.open(io.BytesIO(raw))
     image.load()
     if image.mode != mode or image.size != size:
@@ -154,73 +178,47 @@ def _pinned_original(path: pathlib.Path, sha256: str, size: tuple, mode: str = '
     return image
 
 
-def render_square_icon(size: int):
-    """Evenly downscale the pinned square icon. Never crop, upscale, or recolour."""
+def install_pinned_web_icons(assets: pathlib.Path, dest_root: pathlib.Path) -> None:
+    """Copy logo-system icons unchanged. Never resize, crop, or recolour them."""
     from PIL import Image
-    icon = _pinned_original(BRAND_ICON_SRC, BRAND_ICON_SHA256, (1254, 1254), 'RGB')
-    if icon.width != icon.height:
-        raise RuntimeError(f'refusing to crop non-square brand icon {icon.size}')
-    if size < 1 or size > icon.width:
-        raise RuntimeError(f'refusing to upscale or invent brand icon size {size}')
-    return icon.resize((size, size), Image.Resampling.LANCZOS)
-
-
-def write_favicon_ico(dest: pathlib.Path):
-    """Write a root ICO whose 16/32/48 frames are each downscaled from the master."""
-    icon = _pinned_original(BRAND_ICON_SRC, BRAND_ICON_SHA256, (1254, 1254), 'RGB')
-    # Pillow thumbnails each requested size from this image. Passing the master,
-    # not a 48px intermediate, keeps 16 and 32 one step away from the original.
-    icon.save(
-        dest,
-        format='ICO',
-        sizes=[(16, 16), (32, 32), (48, 48)],
-    )
-    return dest
+    assets.mkdir(parents=True, exist_ok=True)
+    for name, digest in BRAND_WEB_ICONS.items():
+        raw = _pinned_bytes(BRAND_SRC / 'web' / name, digest)
+        target = assets / name
+        target.write_bytes(raw)
+        if target.read_bytes() != raw:
+            raise RuntimeError(f'brand icon changed while copying: {name}')
+    ico = (assets / 'favicon.ico').read_bytes()
+    root_ico = dest_root / 'favicon.ico'
+    root_ico.write_bytes(ico)
+    if root_ico.read_bytes() != ico:
+        raise RuntimeError('root favicon.ico changed while copying')
+    with Image.open(root_ico) as im:
+        if set(im.ico.sizes()) != FAVICON_ICO_SIZES:
+            raise RuntimeError(
+                f'favicon.ico sizes {sorted(im.ico.sizes())}, expected 16/32/48/64'
+            )
 
 
 def build_public_brand_derivatives():
-    """Create public icons and the OG card from hash-pinned brand_src originals.
+    """Copy pinned SOS-007 web icons and build the OG card from SOS-009.
 
-    Square icons are even LANCZOS downscales of the 1254px SOS-007 master.
-    The OG logo is an even downscale of the 2172px SOS-009 lockup. Neither is
-    cropped, recoloured, or taken from the 280x78 header raster. Header HTML
-    still uses the approved logo.svg wrapper.
+    Icons are the Logo System v0.2 files, copied byte-for-byte. The OG logo is
+    an even downscale of the 2172px SOS-009 lockup. Neither comes from a crop
+    of the 280x78 header raster. Header HTML still uses the approved logo.svg.
     """
     from PIL import Image, ImageDraw
 
     assets = DEST / 'assets'
     assets.mkdir(parents=True, exist_ok=True)
 
-    icon = _pinned_original(BRAND_ICON_SRC, BRAND_ICON_SHA256, (1254, 1254), 'RGB')
-    lockup = _pinned_original(BRAND_LOCKUP_SRC, BRAND_LOCKUP_SHA256, (2172, 724), 'RGB')
-    resample = Image.Resampling.LANCZOS
-    if icon.width != icon.height:
-        raise RuntimeError(f'refusing to crop non-square brand icon {icon.size}')
-
     # Stable filenames. /assets/*.png is cached for 7 days and sw.js is
     # stale-while-revalidate. A filename or query change is what busts
     # returning visitors; that stays deferred because the pages and the
     # favicon-32.png quality-gate string still use these paths.
-    for name, side in (
-        ('favicon-32.png', 32),
-        ('apple-touch-icon.png', 180),
-        ('icon-192.png', 192),
-        ('icon-512.png', 512),
-    ):
-        rendered = icon.resize((side, side), resample)
-        rendered.save(assets / name, format='PNG', optimize=True)
-        with Image.open(assets / name) as saved:
-            if saved.convert('RGB').tobytes() != rendered.tobytes():
-                raise RuntimeError(f'{name} pixels changed while saving')
-    write_favicon_ico(DEST / 'favicon.ico')
-    with Image.open(DEST / 'favicon.ico') as ico:
-        if sorted(ico.ico.sizes()) != [(16, 16), (32, 32), (48, 48)]:
-            raise RuntimeError(f'favicon.ico sizes missing: {sorted(ico.ico.sizes())}')
-        for side in (16, 32, 48):
-            frame = ico.ico.getimage((side, side)).convert('RGB')
-            direct = icon.resize((side, side), resample)
-            if frame.tobytes() != direct.tobytes():
-                raise RuntimeError(f'favicon.ico {side}px is not an even downscale of the pinned icon')
+    install_pinned_web_icons(assets, DEST)
+    lockup = _pinned_original(BRAND_LOCKUP_SRC, BRAND_LOCKUP_SHA256, (2172, 724), 'RGB')
+    resample = Image.Resampling.LANCZOS
 
     # Social preview: compose the exact approved lockup with approved brand lines.
     # The logo itself is not recreated or typeset.
@@ -271,12 +269,7 @@ def build_public_brand_derivatives():
         'background_color': '#102634',
         'theme_color': '#102634',
         'lang': 'en-BD',
-        'icons': [
-            {'src': '/assets/favicon.svg', 'sizes': 'any', 'type': 'image/svg+xml', 'purpose': 'any'},
-            {'src': '/assets/icon-192.png', 'sizes': '192x192', 'type': 'image/png', 'purpose': 'any'},
-            {'src': '/assets/icon-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'any'},
-            {'src': '/assets/apple-touch-icon.png', 'sizes': '180x180', 'type': 'image/png', 'purpose': 'any'},
-        ],
+        'icons': BRAND_MANIFEST_ICONS,
     })
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
 
@@ -285,13 +278,14 @@ def build_public_brand_derivatives():
         'apple-touch-icon.png': (180, 180),
         'icon-192.png': (192, 192),
         'icon-512.png': (512, 512),
+        'icon-maskable-512.png': (512, 512),
         'og-image.png': (1200, 630),
     }
     for name, dims in expected.items():
         with Image.open(assets / name) as im:
             if im.size != dims:
                 raise RuntimeError(f'bad brand derivative dimensions: {name}={im.size}, expected={dims}')
-    print('pinned brand icon/OG derivatives rebuilt from brand_src (SOS-007 and SOS-009, PENDING_LOCK)')
+    print('logo-system icons copied from brand_src/web (SOS-007 master S); OG lockup from SOS-009')
 
 
 def main():
