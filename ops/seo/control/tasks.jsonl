@@ -1,0 +1,6 @@
+{"id":"CAT-001","status":"done","title":"Deterministic pricebook -> artifact reconciliation as final build step","files":["catalog_reconcile.py","tests/test_catalog_reconcile.py"]}
+{"id":"CAT-002","status":"done","title":"Yearly/6-month prices rendered as '/ month' on 7 plans (EN+BN)","files":["apply_pricing_v2.py","commercial_truth_v2.py"]}
+{"id":"CAT-003","status":"ceo","title":"Resolve 5 pricebook-only IDs: kling-ai/pika-labs/gamma-pro look like duplicates of kling/pika/gamma; replit/mistral are new candidates","files":["ops/PRICING-V2-2026-09-17.json"]}
+{"id":"SEO-002","status":"todo","title":"Product/Offer JSON-LD for CEO-approved fixed plans (removed during HOLD by commercial_truth_v2.remove_jsonld); needs CEO decision on which access types appear in rich results","files":["commercial_truth_v2.py","product_seo_enrich.py"]}
+{"id":"SEO-003","status":"todo","title":"Keyword-to-canonical map from GSC export + existing build_keywords.py seeds; detect cannibalisation","files":["build_keywords.py","ops/seo/"]}
+{"id":"OPS-001","status":"ceo","title":"133 Meta inbox saved replies carry AIPS prices; replace with pricebook prices (CEO action)","files":[]}
