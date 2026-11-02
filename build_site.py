@@ -38,6 +38,7 @@ STEPS = [
     "exec003_claims_guard.py",
     "shared_copy_check.py",
     "audit_policy.py",
+    "catalog_reconcile.py",
 ]
 
 

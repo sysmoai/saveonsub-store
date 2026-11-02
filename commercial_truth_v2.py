@@ -214,11 +214,22 @@ def access_label(plan: dict, bn: bool = False) -> str:
             "bundle": "Bundle"}.get(kind, "Confirm access method")
 
 
+def duration_label(plan: dict, bn: bool = False) -> str:
+    duration = plan.get("duration", "1 month")
+    if bn:
+        return {"1 month": "১ মাস", "6 months": "৬ মাস", "1 year": "১ বছর"}.get(duration, duration)
+    return duration
+
+
 def price_label(plan: dict, bn: bool = False) -> str:
     base = money(plan["bdt"])
     unit = plan.get("billing_unit", "month")
     if unit == "user/month":
         return f"{base} / {'ব্যবহারকারী / মাস' if bn else 'user / month'}"
+    if unit == "year":
+        return f"{base} / {'বছর' if bn else 'year'}"
+    if unit == "6 months":
+        return f"{base} / {'৬ মাস' if bn else '6 months'}"
     return f"{base} / {'মাস' if bn else 'month'}"
 
 
@@ -283,7 +294,7 @@ def product_main(product: dict, bn: bool) -> str:
             billing = price_label(plan, bn)
             onclick = js_args(pid, label, price, name)
             cards.append(
-                f'''<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b>{esc(label)}</b><br><span class="tos personal">{esc(access)}</span><span style="font-size:12px;color:var(--muted)"> · {esc(plan.get("duration", "1 month"))}</span></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px;font-weight:900;color:var(--green2)">{esc(billing)}</span><button class="btn btn-primary btn-sm" onclick="cartAdd({onclick})">{'কার্টে যোগ করুন' if bn else 'Add to cart'}</button></div></div>'''
+                f'''<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b>{esc(label)}</b><br><span class="tos personal">{esc(access)}</span><span style="font-size:12px;color:var(--muted)"> · {esc(duration_label(plan, bn))}</span></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px;font-weight:900;color:var(--green2)">{esc(billing)}</span><button class="btn btn-primary btn-sm" onclick="cartAdd({onclick})">{'কার্টে যোগ করুন' if bn else 'Add to cart'}</button></div></div>'''
             )
         plan_html = "\n".join(cards)
         anchor = ("From " if len(plans) > 1 and not bn else "") + money(min(int(p["bdt"]) for p in plans))
