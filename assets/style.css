@@ -1056,3 +1056,11 @@ summary:focus-visible {
     -webkit-text-fill-color: #000;
   }
 }
+
+/* Approved lockup has a navy wordmark: keep it on a light chip so it stays legible on the dark header. */
+.logo img {
+  background: #fff;
+  padding: 4px 8px;
+  border-radius: 8px;
+  box-sizing: content-box;
+}
