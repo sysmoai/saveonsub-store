@@ -60,7 +60,8 @@ if DOMAIN not in sm: fails.append("sitemap.xml domain mismatch")
 # 6) Deploy artifact inventory
 deploy_files = [f for f in glob.glob('**/*', recursive=True)
                 if os.path.isfile(f) and not f.endswith(('.py', '.sh', '.md'))
-                and '.git' not in f and not f.startswith('_BACKUPS')]
+                and '.git' not in f and not f.startswith('_BACKUPS')
+                and 'brand_src' not in f.split(os.sep)]
 total_bytes = sum(os.path.getsize(f) for f in deploy_files)
 big = sorted(((os.path.getsize(f), f) for f in deploy_files), reverse=True)[:3]
 notes.append(f"deploy artifact: {len(deploy_files)} files, {total_bytes/1024/1024:.2f} MB total")
