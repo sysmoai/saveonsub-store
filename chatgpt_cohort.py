@@ -113,7 +113,9 @@ def patch_guide(path: Path):
     text = text.replace('ChatGPT Plus costs $20/mo officially (~৳2,200, card required). Real BD options compared: shared ৳499, personal ৳2,990, bKash payment — honest guide with risks.', 'ChatGPT Plus is $20/month as OpenAI’s published reference and BDT web billing is supported. Compare SaveOnSub options, payment paths, and shared-access policy/privacy risks.')
     text = re.sub(r'<h2 class="mt3" style="font-size:22px">The official price</h2>.*?</p>', '<h2 class="mt3" style="font-size:22px">The official reference</h2><p class="sub" style="font-size:15px">OpenAI publishes ChatGPT Plus at <b>$20/month</b>. BDT is supported for ChatGPT web billing, so the exact Bangladesh checkout amount should be read from your own OpenAI checkout rather than calculated with a fixed exchange rate. API usage is separate.</p>', text, count=1, flags=re.S)
     if 'data-chatgpt-facts=' not in text:
-        marker = '<h2 class="mt3" style="font-size:22px">Your real options in BD</h2>'
+        marker = ('<h2 class="mt3" style="font-size:22px">SaveOnSub personal subscription</h2>'
+                  if '<h2 class="mt3" style="font-size:22px">SaveOnSub personal subscription</h2>' in text
+                  else '<h2 class="mt3" style="font-size:22px">Your real options in BD</h2>')
         if marker not in text:
             raise SystemExit('ERROR: ChatGPT guide insert marker missing')
         text = text.replace(marker, plus_panel('en') + '\n' + marker, 1)
