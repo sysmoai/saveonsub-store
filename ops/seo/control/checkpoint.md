@@ -1,4 +1,4 @@
-# Checkpoint — cycle 2 (2026-11-03)
+# Checkpoint — cycle 5 (2026-11-03)
 
 - main f265c25; live 77c20d55. PR #91 (CEO "APPROVED ALL" pricebook) open, CI green, unmerged.
 - This branch is stacked on #91: adds `catalog_reconcile.py` (last build step) and fixes
@@ -14,3 +14,22 @@
 - kling-ai / pika-labs / gamma-pro are aliases of kling / pika / gamma; only replit and mistral remain held.
 - Priced product pages now carry lastmod 2026-11-02 in sitemap; BN bundle-video title de-duplicated.
 - Open: SEO-006 (20 indexable pages not in sitemap), ISO-001 (AIPS /modes pages, CEO).
+
+## Cycle 3 (V13.0)
+- `universe_registry.py --aips <checkout> --private-out <file>` classifies other units' catalogs; it never reads
+  prices or sales copy. Its outputs stay private (gitignored), on the CEO machine under 00_CONTROL/saveonsub/.
+- `tools_explorer.py` stages `/tools` (AI Tools Explorer) only when that private family file is present;
+  publishing it needs a CEO decision (PUB-001).
+- All five pricebook-only IDs resolved as aliases.
+
+## Cycle 4
+- `universe_registry.py --atlas <psv>` ingests the Notion ATLAS export (name, category, status/access, site host;
+  no prices). Family flags are intersections, so one enterprise-only row does not hide a consumer family.
+- Explorer skips families that are only other-unit packages, services or not-sellable per source.
+
+## Cycle 5 (V14.0)
+- `--seeds` ingests the workbook's research-seed list (category letter legend in the file header; tl;dv rejoined).
+- Family status now follows SaveOnSub's own pricebook first: a family with an approved SaveOnSub plan is
+  APPROVED_SELLABLE even when the research row carries no access type.
+- Seed-only families have no official URL yet, so they stay NEEDS_FACT_VERIFICATION and off the explorer.
+- Next: fuzzy-duplicate review of seed families (e.g. google gemini/google, kimi/moonshot, llama/meta).

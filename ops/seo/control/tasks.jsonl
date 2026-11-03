@@ -1,6 +1,6 @@
 {"id": "CAT-001", "status": "done", "title": "Deterministic pricebook -> artifact reconciliation as final build step", "files": ["catalog_reconcile.py", "tests/test_catalog_reconcile.py"]}
 {"id": "CAT-002", "status": "done", "title": "Yearly/6-month prices rendered as '/ month' on 7 plans (EN+BN)", "files": ["apply_pricing_v2.py", "commercial_truth_v2.py"]}
-{"id": "CAT-003", "status": "partial", "title": "kling-ai/pika-labs/gamma-pro resolved as aliases of kling/pika/gamma (never had pages). replit/mistral: new candidates, held inquiry-only pending CEO decision", "files": ["ops/PRICING-V2-2026-09-17.json"]}
+{"id": "CAT-003", "status": "done", "title": "All 5 pricebook-only IDs are aliases: kling-ai->kling, pika-labs->pika, gamma-pro->gamma, mistral->mistral-pro, replit->replit-core", "files": ["ops/PRICING-V2-2026-09-17.json"]}
 {"id": "SEO-002", "status": "todo", "title": "Product/Offer JSON-LD for CEO-approved fixed plans (removed during HOLD by commercial_truth_v2.remove_jsonld); needs CEO decision on which access types appear in rich results", "files": ["commercial_truth_v2.py", "product_seo_enrich.py"]}
 {"id": "SEO-003", "status": "todo", "title": "Keyword-to-canonical map from GSC export + existing build_keywords.py seeds; detect cannibalisation — GSC has data only from 2026-10-31 (0 clicks/0 impressions); recheck after 2026-11-17. 1,416 catalog seeds have no cross-product overlap.", "files": ["build_keywords.py", "ops/seo/"]}
 {"id": "OPS-001", "status": "ceo", "title": "133 Meta inbox saved replies carry AIPS prices; replace with pricebook prices (CEO action)", "files": []}
@@ -8,3 +8,9 @@
 {"id": "SEO-005", "status": "done", "title": "BN bundle-video title duplicated EN title; BN fallback now adds 'দাম'", "files": ["product_seo_enrich.py"]}
 {"id": "SEO-006", "status": "todo", "title": "20 indexable pages missing from sitemap (bn/about, bn/contact, bn/offers, bn/quiz, bn/students, modes, os, modes/bundle-*); decide include vs noindex", "files": ["build_seo.py", "technical_seo_hardening.py"]}
 {"id": "ISO-001", "status": "ceo", "title": "5 indexable /modes/aips-* pages on saveonsub.com (AIPS packages, inquiry-only): keep, noindex, or remove for business-unit isolation", "files": []}
+{"id": "UNI-001", "status": "done", "title": "universe_registry.py classifies other-unit research catalogs (no prices/copy); tools_explorer.py stages /tools from the private family file", "files": ["universe_registry.py", "tools_explorer.py"]}
+{"id": "UNI-002", "status": "todo", "title": "Notion ATLAS done (--atlas). Remaining: APEX brands/knowledge, AIPT/AITP public catalogs, ATLAS batch-2 (281 candidates not yet in Notion)", "files": ["universe_registry.py"]}
+{"id": "UNI-003", "status": "todo", "title": "Refine capability groups beyond the 9 source categories", "files": ["universe_registry.py"]}
+{"id": "UNI-004", "status": "todo", "title": "Extend existing quiz.html (Find My AI) to recommend from universe families", "files": ["quiz.html"]}
+{"id": "PUB-001", "status": "ceo", "title": "Approve publishing the cross-unit tool list (/tools) on saveonsub.com", "files": []}
+{"id": "SVC-001", "status": "ceo", "title": "SaveOnSub service menu needs CEO scope/owner/price decisions; other units' services stay research-only", "files": []}
