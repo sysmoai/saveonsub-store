@@ -1,9 +1,8 @@
 name: SaveOnSub Canonical Deploy
 
 on:
-  push:
-    branches:
-      - main
+  # EXEC-010 P0 emergency freeze: GitHub main pushes cannot publish.
+  # A separately approved, SHA-pinned release procedure is required.
   workflow_dispatch:
 
 concurrency:
@@ -18,6 +17,8 @@ env:
 
 jobs:
   validate-and-deploy:
+    # Fail closed even on manual dispatch. Enables an explicit release redesign.
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: production
