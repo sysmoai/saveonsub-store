@@ -87,13 +87,17 @@ jobs:
           import json
           p=json.load(open('ops/PRICING-V2-2026-09-17.json',encoding='utf-8'))
           rule=p['approved_products']['chatgpt-plus']
-          assert [(x['bdt'],x['access_type']) for x in rule['plans']]==[(3390,'personal')]
-          assert len(rule['held_plans'])==2 and all(x['commercial_status']=='HOLD' for x in rule['held_plans'])
-          assert p['commercial_hold']['approved_sku_count']==131
+          assert [(x['bdt'],x['access_type']) for x in rule['plans']]==[(499,'shared'),(999,'shared'),(3390,'personal')]
+          assert not rule.get('held_plans') and rule['latest_ceo_amendment']['status']=='CEO_APPROVED_ALL_THREE_LOCAL_OFFERS'
+          assert p['commercial_hold']['approved_sku_count']==133
           PY
-          ! grep -q '৳499' _site/p/chatgpt-plus.html  # SOS-PRICE-001 shared HOLD
-          ! grep -q '৳999' _site/p/chatgpt-plus.html
-          ! grep -q 'Shared account (multiple users)' _site/p/chatgpt-plus.html
+          grep -q '৳499' _site/p/chatgpt-plus.html  # CEO-approved shared, provider-policy conflict disclosed
+          grep -q '৳999' _site/p/chatgpt-plus.html
+          grep -q 'Shared account (multiple users)' _site/p/chatgpt-plus.html
+          grep -q 'data-provider-policy-disclosure="account-sharing"' _site/p/chatgpt-plus.html
+          grep -q 'OpenAI does not permit sharing individual accounts' _site/p/chatgpt-plus.html
+          grep -q 'data-provider-policy-disclosure="account-sharing"' _site/bn/p/chatgpt-plus.html
+          ! grep -q '৳2,990' _site/p/chatgpt-plus.html
           grep -q '৳500' _site/p/google-ai-pro.html
           grep -q '"bdt"' _site/assets/catalog.js
           python catalog_hold_gate.py
