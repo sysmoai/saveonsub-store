@@ -27,6 +27,12 @@ VERSIONED_FILES = ("favicon-32.png", "apple-touch-icon.png", "og-image.png", "si
 VERSIONED_REF = re.compile(r"assets/(" + "|".join(re.escape(n) for n in VERSIONED_FILES) + r")(?!\?v=)")
 
 
+LOGO_LINK = re.compile(r'(<a class="logo"[^>]*>)(?=<img src="((?:\.\./)*|/)?assets/logo-)')
+LOCKUP_ICON = ('<img src="{prefix}assets/brand/icon-transparent-128.png?v={v}" alt="" aria-hidden="true" '
+               'data-brand-symbol="kit-v1.0" width="34" height="34" '
+               'style="display:inline-block;width:34px;height:34px;margin-right:8px;vertical-align:middle">')
+
+
 def content_version(path: pathlib.Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()[:10]
 
@@ -153,6 +159,7 @@ def main() -> int:
     normalize_manifest()
     immutable_rel = f"assets/{immutable.name}"
     versioned = versioned_icon_refs()
+    icon_version = content_version(ASSETS / "brand" / "icon-transparent-128.png")
 
     changed = 0
     referenced = 0
@@ -161,6 +168,11 @@ def main() -> int:
         new = old.replace("assets/logo.svg", immutable_rel)
         new = re.sub(r'([./]*assets/)favicon\.svg', r'\1favicon-32.png', new)
         new = VERSIONED_REF.sub(lambda m: m.group(0) + "?v=" + versioned[m.group(1)], new)
+        # Header lockup: the kit's transparent symbol beside the kit wordmark (both
+        # pinned kit files, placed side by side; nothing is redrawn or recoloured).
+        new = LOGO_LINK.sub(lambda m: m.group(1) + LOCKUP_ICON.format(prefix=m.group(2) or "", v=icon_version), new)
+        new = new.replace('data-brand-lock="2026-08-19-approved" style="display:block;width:155px',
+                          'data-brand-lock="2026-08-19-approved" style="display:inline-block;vertical-align:middle;width:155px')
         if new != old:
             page.write_text(new, encoding="utf-8")
             changed += 1
