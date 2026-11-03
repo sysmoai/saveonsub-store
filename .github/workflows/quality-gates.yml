@@ -77,15 +77,23 @@ jobs:
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/favicon.svg
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
           grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/index.html
-          ! grep -q '৳3,390' _site/p/chatgpt-plus.html
+          grep -q '৳3,390' _site/p/chatgpt-plus.html
           ! grep -q '৳3,390' _site/p/google-ai-pro.html
           ! grep -q '৳1,299' _site/p/chatgpt-go.html
           ! grep -q '৳4,290' _site/p/chatgpt-business.html
           grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
           grep -q 'SELECTIVE_UNLOCK' ops/PRICING-V2-2026-09-17.json
-          grep -q '৳499' _site/p/chatgpt-plus.html  # CEO pricebook 2026-11-02
-          grep -q '৳999' _site/p/chatgpt-plus.html
-          grep -q 'Shared account (multiple users)' _site/p/chatgpt-plus.html
+          python - <<'PY'
+          import json
+          p=json.load(open('ops/PRICING-V2-2026-09-17.json',encoding='utf-8'))
+          rule=p['approved_products']['chatgpt-plus']
+          assert [(x['bdt'],x['access_type']) for x in rule['plans']]==[(3390,'personal')]
+          assert len(rule['held_plans'])==2 and all(x['commercial_status']=='HOLD' for x in rule['held_plans'])
+          assert p['commercial_hold']['approved_sku_count']==131
+          PY
+          ! grep -q '৳499' _site/p/chatgpt-plus.html  # SOS-PRICE-001 shared HOLD
+          ! grep -q '৳999' _site/p/chatgpt-plus.html
+          ! grep -q 'Shared account (multiple users)' _site/p/chatgpt-plus.html
           grep -q '৳500' _site/p/google-ai-pro.html
           grep -q '"bdt"' _site/assets/catalog.js
           python catalog_hold_gate.py
