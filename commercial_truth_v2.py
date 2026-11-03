@@ -206,8 +206,19 @@ def js_args(*values) -> str:
 def access_label(plan: dict, bn: bool = False) -> str:
     kind = plan.get("type") or plan.get("access_type")
     if bn:
-        return {"personal": "কাস্টমার-নির্দিষ্ট অ্যাক্সেস", "team": "টিম / ওয়ার্কস্পেস অ্যাক্সেস"}.get(kind, "অ্যাক্সেস পদ্ধতি নিশ্চিত করুন")
-    return {"personal": "Customer-specific access", "team": "Team / Workspace access"}.get(kind, "Confirm access method")
+        return {"personal": "কাস্টমার-নির্দিষ্ট অ্যাক্সেস", "team": "টিম / ওয়ার্কস্পেস অ্যাক্সেস",
+                "shared": "শেয়ার্ড অ্যাকাউন্ট (একাধিক ব্যবহারকারী)", "official": "অফিসিয়াল প্ল্যান — সেটআপ সহায়তা",
+                "bundle": "বান্ডেল"}.get(kind, "অ্যাক্সেস পদ্ধতি নিশ্চিত করুন")
+    return {"personal": "Customer-specific access", "team": "Team / Workspace access",
+            "shared": "Shared account (multiple users)", "official": "Official plan — setup help",
+            "bundle": "Bundle"}.get(kind, "Confirm access method")
+
+
+def duration_label(plan: dict, bn: bool = False) -> str:
+    duration = plan.get("duration", "1 month")
+    if bn:
+        return {"1 month": "১ মাস", "6 months": "৬ মাস", "1 year": "১ বছর"}.get(duration, duration)
+    return duration
 
 
 def price_label(plan: dict, bn: bool = False) -> str:
@@ -215,6 +226,10 @@ def price_label(plan: dict, bn: bool = False) -> str:
     unit = plan.get("billing_unit", "month")
     if unit == "user/month":
         return f"{base} / {'ব্যবহারকারী / মাস' if bn else 'user / month'}"
+    if unit == "year":
+        return f"{base} / {'বছর' if bn else 'year'}"
+    if unit == "6 months":
+        return f"{base} / {'৬ মাস' if bn else '6 months'}"
     return f"{base} / {'মাস' if bn else 'month'}"
 
 
@@ -279,7 +294,7 @@ def product_main(product: dict, bn: bool) -> str:
             billing = price_label(plan, bn)
             onclick = js_args(pid, label, price, name)
             cards.append(
-                f'''<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b>{esc(label)}</b><br><span class="tos personal">{esc(access)}</span><span style="font-size:12px;color:var(--muted)"> · {esc(plan.get("duration", "1 month"))}</span></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px;font-weight:900;color:var(--green2)">{esc(billing)}</span><button class="btn btn-primary btn-sm" onclick="cartAdd({onclick})">{'কার্টে যোগ করুন' if bn else 'Add to cart'}</button></div></div>'''
+                f'''<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b>{esc(label)}</b><br><span class="tos personal">{esc(access)}</span><span style="font-size:12px;color:var(--muted)"> · {esc(duration_label(plan, bn))}</span></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px;font-weight:900;color:var(--green2)">{esc(billing)}</span><button class="btn btn-primary btn-sm" onclick="cartAdd({onclick})">{'কার্টে যোগ করুন' if bn else 'Add to cart'}</button></div></div>'''
             )
         plan_html = "\n".join(cards)
         anchor = ("From " if len(plans) > 1 and not bn else "") + money(min(int(p["bdt"]) for p in plans))

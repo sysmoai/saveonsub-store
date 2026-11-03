@@ -19,6 +19,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+POLICY = ROOT / "ops" / "PRICING-V2-2026-09-17.json"
+DISCLOSURE = ("Shared account (multiple users)", "শেয়ার্ড অ্যাকাউন্ট (একাধিক ব্যবহারকারী)")
 
 SHARED_LABEL = re.compile(r"shared|family slot|private profile|\bscreens?\b|\bseats?\b|শেয়ার্ড|শেয়ার্ড", re.I)
 SHARED_TYPE = re.compile(r"^shared", re.I)
@@ -30,13 +32,28 @@ SHARED_PROMO = re.compile(
 )
 
 
-def shared_plans(products: list[dict]) -> list[str]:
+def ceo_approved_shared() -> set[tuple[str, str, int]]:
+    """(product, label, bdt) shared plans the CEO approved under SELECTIVE_UNLOCK."""
+    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    if (policy.get("commercial_hold") or {}).get("status") != "SELECTIVE_UNLOCK":
+        return set()
+    return {
+        (pid, str(p["label"]), int(p["bdt"]))
+        for pid, rule in (policy.get("approved_products") or {}).items()
+        if rule.get("mode") == "fixed"
+        for p in rule.get("plans") or []
+    }
+
+
+def shared_plans(products: list[dict], approved: set[tuple[str, str, int]] = frozenset()) -> list[str]:
     out = []
     for product in products:
         for plan in product.get("plans") or []:
             label = str(plan.get("label", ""))
             kind = str(plan.get("type") or plan.get("access_type") or "")
             if SHARED_LABEL.search(label) or SHARED_TYPE.search(kind):
+                if (str(product.get("id")), label, int(plan.get("bdt", -1))) in approved:
+                    continue
                 out.append(f"{product.get('id')}: {label} ({kind or 'untyped'})")
     return out
 
@@ -49,18 +66,26 @@ def public_catalog_products(site: Path) -> list[dict]:
     return json.loads(m.group(1)).get("products", []) if m else []
 
 
-def page_issues(site: Path) -> list[str]:
+def page_issues(site: Path, approved: set[tuple[str, str, int]] = frozenset()) -> list[str]:
     issues = []
+    approved_pids = {pid for pid, _, _ in approved}
     pages = sorted((site / "p").glob("*.html")) + sorted((site / "bn" / "p").glob("*.html"))
     for path in pages:
         rel = path.relative_to(site).as_posix()
         text = path.read_text(encoding="utf-8", errors="replace")
+        ceo_ok = path.stem in approved_pids
+        shared_cart = False
         for m in re.finditer(r'onclick="cartAdd\(([^)]*)\)"', text):
             if SHARED_LABEL.search(m.group(1)):
-                issues.append(f"{rel}: shared plan cart action {m.group(1)[:80]}")
+                shared_cart = True
+                if not ceo_ok:
+                    issues.append(f"{rel}: shared plan cart action {m.group(1)[:80]}")
         for m in re.finditer(r'"@type"\s*:\s*"Offer"[^{}]*"name"\s*:\s*"([^"]*)"', text):
-            if SHARED_LABEL.search(m.group(1)):
+            if SHARED_LABEL.search(m.group(1)) and not ceo_ok:
                 issues.append(f"{rel}: shared Offer {m.group(1)[:80]}")
+        # A CEO-approved shared plan must be disclosed as shared on the page.
+        if ceo_ok and shared_cart and not any(d in text for d in DISCLOSURE):
+            issues.append(f"{rel}: shared plan sold without the shared-account disclosure")
         for m in SHARED_PROMO.finditer(text):
             issues.append(f"{rel}: shared promo copy {m.group(0)!r}")
     return issues
@@ -69,16 +94,20 @@ def page_issues(site: Path) -> list[str]:
 def main(argv: list[str]) -> int:
     site = Path(argv[1]) if len(argv) > 1 else ROOT / "_site"
     catalog = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
-    issues = [f"catalog.json: {x}" for x in shared_plans(catalog.get("products", []))]
+    approved = ceo_approved_shared()
+    issues = [f"catalog.json: {x}" for x in shared_plans(catalog.get("products", []), approved)]
     if site.is_dir():
-        issues += [f"assets/catalog.js: {x}" for x in shared_plans(public_catalog_products(site))]
-        issues += page_issues(site)
+        issues += [f"assets/catalog.js: {x}" for x in shared_plans(public_catalog_products(site), approved)]
+        issues += page_issues(site, approved)
     if issues:
         print(f"[shared-copy] FAIL — {len(issues)} shared offer(s)/promo(s):")
         for x in issues[:60]:
             print("  " + x)
         return 1
-    print("[shared-copy] PASS — no sellable or promoted credential-shared offer")
+    if approved:
+        print("[shared-copy] PASS — only CEO-approved shared plans, each disclosed as shared; no shared promo copy")
+    else:
+        print("[shared-copy] PASS — no sellable or promoted credential-shared offer")
     return 0
 
 

@@ -1,0 +1,18 @@
+:root{
+  --sos-navy:#082034;
+  --sos-teal:#018379;
+  --sos-teal-on-dark:#34C3B2;
+  --sos-white:#FFFFFF;
+  --sos-surface:#F5F7F8;
+  --sos-line:#DDE3E8;
+  --sos-ink-muted:#4A5A68;
+  --sos-border:#7A8894;
+  --sos-danger:#9B2318;
+  --sos-font:'Inter','Noto Sans Bengali',system-ui,sans-serif;
+  --sos-font-bn:'Noto Sans Bengali',sans-serif;
+  --sos-font-mono:'IBM Plex Mono',monospace;
+  --sos-radius-sm:4px;
+  --sos-radius:6px;
+}
+:focus-visible{outline:2px solid var(--sos-navy);outline-offset:2px}
+.sos-dark :focus-visible{outline-color:#fff}

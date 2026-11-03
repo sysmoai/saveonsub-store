@@ -66,7 +66,8 @@ def fit(text: str, limit: int) -> str:
 def make_title(name: str, bn: bool) -> str:
     brand = " | SAVEONSUB"
     if bn:
-        options = [f"{name} দাম বাংলাদেশে{brand}", f"{name} বাংলাদেশে{brand}", f"{name}{brand}"]
+        # "দাম" keeps long bundle names from sharing the EN title verbatim.
+        options = [f"{name} দাম বাংলাদেশে{brand}", f"{name} বাংলাদেশে{brand}", f"{name} দাম{brand}", f"{name}{brand}"]
     else:
         options = [f"{name} Price in Bangladesh{brand}", f"{name} in Bangladesh{brand}", f"{name}{brand}"]
     for opt in options:

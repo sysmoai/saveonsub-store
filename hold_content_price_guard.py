@@ -23,17 +23,22 @@ Run with ``--check`` to only verify (no writes).
 """
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
+POLICY = ROOT / "ops" / "PRICING-V2-2026-09-17.json"
 
 G = r"(?:\s|<[^>]*>)*"  # whitespace and/or tags between words
 AMOUNT = r"৳\s?[1-9][0-9]*(?:,[0-9]{3})*"
 SUFFIX = r"(?:/mo(?:nth)?)?"
 REPLACEMENT = "price on request"
+# Under a CEO selective unlock, editorial pages point to the governed product
+# page instead of repeating a possibly stale amount.
+UNLOCK_REPLACEMENT = "current price on the product page"
 
 # (regex, replacement). Reviewed rewrites; order matters.
 REWRITES: list[tuple[str, str]] = [
@@ -103,19 +108,76 @@ def _unmask(text: str, kept: list[str]) -> str:
     return re.sub("\x00(\\d+)\x00", lambda m: kept[int(m.group(1))], text)
 
 
-def sanitize(text: str) -> str:
-    for pattern, repl in REWRITES:
-        text = re.sub(pattern, repl, text)
+def unlock_book() -> dict[str, set[int]] | None:
+    """Approved BDT amounts per product id, or None while the global HOLD applies."""
+    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    if (policy.get("commercial_hold") or {}).get("status") != "SELECTIVE_UNLOCK":
+        return None
+    return {
+        pid: {int(p["bdt"]) for p in rule.get("plans") or []}
+        for pid, rule in (policy.get("approved_products") or {}).items()
+        if rule.get("mode") == "fixed"
+    }
+
+
+def page_product(rel: str) -> str | None:
+    m = re.fullmatch(r"(?:bn/)?p/([a-z0-9-]+)\.html", rel.replace("\\", "/"))
+    return m.group(1) if m else None
+
+
+def _amount(token: str) -> int:
+    return int(re.sub(r"[^0-9]", "", token.split("/")[0]))
+
+
+CARD = re.compile(r'<div class="pcard">(?:(?!<div class="pcard">).)*?href="/?(?:bn/)?p/([a-z0-9-]+)(?:\.html)?"', re.S)
+CARD_PRICE = re.compile(r'(<div class="price">)([^<]*)(</div>)')
+
+
+def _mask_cards(text: str, book: dict[str, set[int]], kept: list[str]) -> str:
+    """Listing cards may show a CEO-approved price of the product they link to."""
+    def card(m: re.Match) -> str:
+        allowed = book.get(m.group(1), set())
+
+        def price(pm: re.Match) -> str:
+            amounts = [_amount(a) for a in AMOUNT_RE.findall(pm.group(2))]
+            if amounts and all(a in allowed for a in amounts):
+                kept.append(pm.group(2))
+                return pm.group(1) + MASK.format(len(kept) - 1) + pm.group(3)
+            return pm.group(0)
+
+        return CARD_PRICE.sub(price, m.group(0))
+
+    return CARD.sub(card, text)
+
+
+def sanitize(text: str, approved: set[int] | None = None, unlock: bool = False,
+             book: dict[str, set[int]] | None = None) -> str:
+    if not unlock:
+        for pattern, repl in REWRITES:
+            text = re.sub(pattern, repl, text)
     masked, kept = _mask(text)
-    masked = AMOUNT_RE.sub(REPLACEMENT, masked)
+    if book:
+        masked = _mask_cards(masked, book, kept)
+
+    def repl(m: re.Match) -> str:
+        if approved and _amount(m.group(0)) in approved:
+            return m.group(0)
+        return UNLOCK_REPLACEMENT if unlock else REPLACEMENT
+
+    masked = AMOUNT_RE.sub(repl, masked)
     return _unmask(masked, kept)
 
 
-def residues(text: str) -> list[str]:
-    masked, _ = _mask(text)
+def residues(text: str, approved: set[int] | None = None,
+             book: dict[str, set[int]] | None = None) -> list[str]:
+    masked, kept = _mask(text)
+    if book:
+        masked = _mask_cards(masked, book, kept)
     plain = re.sub(r"\s+", " ", masked)
     out = []
     for m in AMOUNT_RE.finditer(plain):
+        if approved and _amount(m.group(0)) in approved:
+            continue
         out.append(plain[max(0, m.start() - 50): m.end() + 20])
     return out
 
@@ -124,16 +186,20 @@ def main(argv: list[str]) -> int:
     check_only = "--check" in argv
     if not SITE.is_dir():
         raise SystemExit("[hold-content-price] missing _site; run build_site.py")
+    book = unlock_book()
+    unlock = book is not None
     changed, failures = 0, []
     for path in sorted(SITE.rglob("*.html")):
         text = path.read_text(encoding="utf-8", errors="replace")
+        pid = page_product(str(path.relative_to(SITE)))
+        approved = (book or {}).get(pid) if pid else None
         if not check_only:
-            new = sanitize(text)
+            new = sanitize(text, approved, unlock, book)
             if new != text:
                 path.write_text(new, encoding="utf-8")
                 changed += 1
                 text = new
-        for ctx in residues(text):
+        for ctx in residues(text, approved, book):
             failures.append(f"{path.relative_to(SITE)}: …{ctx}…")
     if failures:
         print("[hold-content-price] FAIL — SaveOnSub sale price still present under EXEC-010 HOLD:")
@@ -141,7 +207,10 @@ def main(argv: list[str]) -> int:
             print("  " + f)
         return 1
     mode = "checked" if check_only else f"sanitized {changed} page(s);"
-    print(f"[hold-content-price] PASS — {mode} no SaveOnSub sale price in staged HTML")
+    if unlock:
+        print(f"[hold-content-price] PASS — {mode} only CEO-approved prices on their own product pages")
+    else:
+        print(f"[hold-content-price] PASS — {mode} no SaveOnSub sale price in staged HTML")
     return 0
 
 

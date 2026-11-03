@@ -1,0 +1,109 @@
+{
+  "brand": "SaveOnSub",
+  "brand_version": "1.0.0",
+  "source_repo": "sysmoai/saveonsub-brand-system (private)",
+  "source_commit": "87e6806af7dfb2bd38d455e10127534f4b96528f",
+  "decision_record": "SOS-CEO-20261102-002",
+  "files": {
+    "wordmark-full-color-600w.png": {
+      "source": "01_logos/wordmark/SaveOnSub_wordmark_full-color_600w.png",
+      "sha256": "b1c4191bbaa495268a8e8d39f5999b8e6201656ff5a3ee0ae5863f2357fde968",
+      "bytes": 53859
+    },
+    "wordmark-full-color-1200w.png": {
+      "source": "01_logos/wordmark/SaveOnSub_wordmark_full-color_1200w.png",
+      "sha256": "1c89a61266b2170c2c7c71475b5e628a263df3c1edcd673c945799f0c63a3e14",
+      "bytes": 177710
+    },
+    "wordmark-full-color-1200w.webp": {
+      "source": "01_logos/wordmark/SaveOnSub_wordmark_full-color_1200w.webp",
+      "sha256": "16ffb15b29b317669c0ae9626a94e590a4c25f8a123d4d6253977c010da52a35",
+      "bytes": 53294
+    },
+    "wordmark-reverse-600w.png": {
+      "source": "01_logos/wordmark/SaveOnSub_wordmark_reverse_600w.png",
+      "sha256": "b4ac59a49aac5e2740357e567d1ea1de624c214d44bab16a9c09ed2b4fe10ba9",
+      "bytes": 35479
+    },
+    "wordmark-reverse-1200w.png": {
+      "source": "01_logos/wordmark/SaveOnSub_wordmark_reverse_1200w.png",
+      "sha256": "c8fbb6aff83272328cbb21c58737e02142c77db920f1da46b9edfe222ee4ce3d",
+      "bytes": 91314
+    },
+    "wordmark-reverse-1200w.webp": {
+      "source": "01_logos/wordmark/SaveOnSub_wordmark_reverse_1200w.webp",
+      "sha256": "10c58c996405ae4c052b07769047b2b5c0b9f80af53bc5f29dbb9a765e442677",
+      "bytes": 45264
+    },
+    "icon-transparent-128.png": {
+      "source": "02_icon/sizes/SOS-D001_icon_transparent_128.png",
+      "sha256": "76117694fbe4749fa0e2684ee9773b7900a13a4c7a1323b13659bd28b2bfec9f",
+      "bytes": 10071
+    },
+    "icon-transparent-256.png": {
+      "source": "02_icon/sizes/SOS-D001_icon_transparent_256.png",
+      "sha256": "ef6e382712c6fd15b405cb89e0e6d34b3084ecdd3a695f762d2724d10c923d0e",
+      "bytes": 32695
+    },
+    "icon-transparent-512.png": {
+      "source": "02_icon/sizes/SOS-D001_icon_transparent_512.png",
+      "sha256": "713f68518a1fdd4527fb587833d8651c241a3c94172a6ad16cf9e1039521ba01",
+      "bytes": 112661
+    },
+    "favicon.ico": {
+      "source": "03_web/favicon.ico",
+      "sha256": "603e140e217e0eedbd7a42dd09deac0353cffa200f05aaf29cd1c322d6fc6448",
+      "bytes": 4864
+    },
+    "favicon-16.png": {
+      "source": "03_web/favicon-16.png",
+      "sha256": "2fd5c3686df765558c22e31aaf400bd96f3197cbfd0a6c6c1c0f441b308b7dff",
+      "bytes": 680
+    },
+    "favicon-32.png": {
+      "source": "03_web/favicon-32.png",
+      "sha256": "e6d56324851baa8912176d2c6f77afdde450881eea215df716dfb6012460968e",
+      "bytes": 1515
+    },
+    "favicon-48.png": {
+      "source": "03_web/favicon-48.png",
+      "sha256": "db3163667c0398db71c3006d276c044f3f5ba2a4185dd2e1c635bd86ad62f590",
+      "bytes": 2615
+    },
+    "apple-touch-icon-180.png": {
+      "source": "04_app/ios/apple-touch-icon-180.png",
+      "sha256": "673e0e34cb076766133e2947f893858ab1f50dfcb438f2e497286945c55363d3",
+      "bytes": 12037
+    },
+    "pwa-icon-192.png": {
+      "source": "04_app/pwa/icon-192.png",
+      "sha256": "50cf8ce05435d2c34d89ea37d13d60d2b63c7c3e4e32e6399aaeeee29f6926f0",
+      "bytes": 19162
+    },
+    "pwa-icon-512.png": {
+      "source": "04_app/pwa/icon-512.png",
+      "sha256": "b0da36d3308d01d8ce1494b4e3108aebeceec1f8b1594f877deb366379286985",
+      "bytes": 110120
+    },
+    "pwa-icon-maskable-192.png": {
+      "source": "04_app/pwa/icon-maskable-192.png",
+      "sha256": "eaf63784eb7742483274baa004fa2e8ddcf1d42179f04c666e72c83deb1a2fae",
+      "bytes": 14433
+    },
+    "pwa-icon-maskable-512.png": {
+      "source": "04_app/pwa/icon-maskable-512.png",
+      "sha256": "ab13c1771085668bbc071e2f5227260171162759574bf088bc5213c93964274e",
+      "bytes": 75377
+    },
+    "og-image-1200x630.png": {
+      "source": "05_social/og-image-1200x630.png",
+      "sha256": "2579fb9ea4abe8a0915ca81659b85bdf50fecfb89639782a9f9a369ce8202803",
+      "bytes": 92517
+    },
+    "tokens.css": {
+      "source": "10_tokens/tokens.css",
+      "sha256": "677ca133a390cc2f028c8418934cecf86a5e423aa28fda59f0db45c10ef06415",
+      "bytes": 541
+    }
+  }
+}

@@ -19,10 +19,26 @@ def load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+# Pricebook durations are free text ("month", "year", "6months"). Normalise the
+# display form and derive the price unit from it, so a yearly or 6-month price is
+# never rendered as "/ month". The approved BDT amount itself is never changed.
+DURATION_UNITS = {
+    "1 month": ("1 month", "month"), "month": ("1 month", "month"),
+    "6 months": ("6 months", "6 months"), "6months": ("6 months", "6 months"),
+    "1 year": ("1 year", "year"), "year": ("1 year", "year"),
+}
+
+
 def public_plan(plan: dict) -> dict:
+    raw_duration = str(plan.get("duration", "1 month")).strip().lower()
+    if raw_duration not in DURATION_UNITS:
+        raise SystemExit(f"[pricing-v2] unknown plan duration {plan.get('duration')!r} for {plan.get('label')!r}")
+    duration, unit = DURATION_UNITS[raw_duration]
     access_type = plan.get("access_type", "personal")
     access_label = {
         "personal": "Customer-specific access",
+        "shared": "Shared account (multiple users)",
+        "official": "Official plan — setup help",
         "team": "Team / Workspace access",
         "bundle": "Bundle",
         "service": "Setup / Service",
@@ -30,10 +46,10 @@ def public_plan(plan: dict) -> dict:
     out = {
         "label": plan["label"],
         "bdt": int(plan["bdt"]),
-        "duration": plan.get("duration", "1 month"),
+        "duration": duration,
         "type": access_type,
         "access_label": access_label,
-        "billing_unit": plan.get("billing_unit", "month"),
+        "billing_unit": plan.get("billing_unit", unit),
     }
     return out
 

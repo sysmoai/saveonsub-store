@@ -12,6 +12,7 @@ The pass is deterministic and fail-closed.
 """
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import re
 import sys
@@ -93,6 +94,18 @@ if not sitemap.is_file():
     raise SystemExit("TECH SEO ERROR — sitemap.xml missing")
 s = rewrite_same_origin_absolute(sitemap.read_text(encoding="utf-8", errors="strict"))
 s = re.sub(r"<lastmod>\d{4}-\d{2}-\d{2}</lastmod>", f"<lastmod>{MIGRATION_LASTMOD}</lastmod>", s)
+# Product pages whose CEO-approved prices are published changed on the pricebook
+# approval date; give crawlers that real date instead of the migration date.
+policy = json.loads(Path("ops/PRICING-V2-2026-09-17.json").read_text(encoding="utf-8"))
+priced_lastmod = str(policy.get("approved_at", ""))
+if (policy.get("commercial_hold") or {}).get("status") == "SELECTIVE_UNLOCK" and re.fullmatch(r"\d{4}-\d{2}-\d{2}", priced_lastmod):
+    for pid, rule in (policy.get("approved_products") or {}).items():
+        if isinstance(rule, dict) and rule.get("mode") == "fixed" and rule.get("plans"):
+            for prefix in ("p", "bn/p"):
+                s = s.replace(
+                    f"<loc>https://saveonsub.com/{prefix}/{pid}</loc><lastmod>{MIGRATION_LASTMOD}</lastmod>",
+                    f"<loc>https://saveonsub.com/{prefix}/{pid}</loc><lastmod>{priced_lastmod}</lastmod>",
+                )
 sitemap.write_text(s, encoding="utf-8")
 
 robots = SITE / "robots.txt"
