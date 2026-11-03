@@ -1,9 +1,7 @@
 name: SaveOnSub Canonical Deploy
 
 on:
-  push:
-    branches:
-      - main
+  # EXEC-010 emergency freeze: no automatic production publish on main commits.
   workflow_dispatch:
 
 concurrency:
@@ -18,6 +16,9 @@ env:
 
 jobs:
   validate-and-deploy:
+    # Intentionally disabled until a separately CEO-approved, SHA-pinned HOLD
+    # release workflow is installed. This is a production publication freeze.
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: production
