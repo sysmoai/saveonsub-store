@@ -78,6 +78,12 @@ CAPABILITY = {
     "AI Code & Dev": "AI Coding Assistants & IDEs", "AI Writing": "AI Writing, Editing & Copywriting",
     "Workspace & Productivity": "AI Productivity, Documents & Meetings",
 }
+# V13 capability groups plus non-AI storefront groups; anything else is "Unmapped".
+CAPABILITY_GROUPS = set(CAPABILITY.values()) | {
+    "AI Search, Research & Deep Research", "AI Video Editing, Shorts, Avatars & UGC", "AI Marketing, Advertising & SEO",
+    "AI Education, Study & Research", "AI Agents, Automation & Workflows", "AI Presentations, Slides & Knowledge",
+    "AI Data Analytics, BI & Research", "AI Customer Support, CRM & Sales", "AI APIs, Model Platforms & Developer Cloud",
+    "Creative Assets, Design & Learning Subscriptions", "Entertainment, Security & Everyday Subscriptions"}
 EMOJI = re.compile("[\U0001F000-\U0001FAFF☀-➿️]+")
 
 
@@ -127,6 +133,8 @@ def load_seeds(path: Path) -> list[dict]:
                 if name == "tl" and i + 1 < len(names) and names[i + 1] == "dv":
                     name, split = "tl;dv", "rejoined_split_name"
                     i += 1
+                elif len(name) < 3:
+                    split = "suspect_fragment"  # likely a name split on ';'; never forms a family on its own
                 rows.append({"id": f"seed:{len(rows)}", "brand": name, "name": name, "category": legend.get(letter, letter),
                              "accessType": "unknown", "sourceUrl": "", "seed_letter": letter,
                              "review": split, "api_grain": letter == "O"})
@@ -218,14 +226,17 @@ def build(aips_root: Path, catalog: dict, policy: dict, atlas: Path | None = Non
             "family": key, "brand": row.get("brand"), "provider": row.get("provider"),
             "official_url": row.get("sourceUrl"),
             # Seed legends already use capability-group names, so those pass through.
-            "capability_group": CAPABILITY.get(row.get("category"), row.get("category") if row.get("seed_letter") else "Unmapped"),
+            "capability_group": CAPABILITY.get(row.get("category"),
+                                               row.get("category") if row.get("category") in CAPABILITY_GROUPS else "Unmapped"),
             "sos_products": (fam or {}).get("sos_products", []),
-            "sos_sellable": bool((fam or {}).get("access_types")),
+            "sos_fixed_plan_family": bool((fam or {}).get("access_types")),
             "source_records": 0, "classifications": collections.Counter(), "fuzzy_review": review,
             "flags_all": None,
         })
         # A flag holds for the family only when every one of its source records carries it.
-        f["flags_all"] = set(flags) if f["flags_all"] is None else f["flags_all"] & set(flags)
+        # Seeds carry no provenance, so they can neither set nor dilute family flags.
+        if row["_source"] != "research-seeds":
+            f["flags_all"] = set(flags) if f["flags_all"] is None else f["flags_all"] & set(flags)
         f["source_records"] += 1
         f["classifications"][status] += 1
         f["official_url"] = f["official_url"] or row.get("sourceUrl")
@@ -238,7 +249,7 @@ def build(aips_root: Path, catalog: dict, policy: dict, atlas: Path | None = Non
         if key not in families:
             families[key] = {"family": key, "brand": None, "provider": None, "official_url": None,
                              "capability_group": CAPABILITY.get(fam["category"], fam["category"]),
-                             "sos_products": fam["sos_products"], "sos_sellable": bool(fam["access_types"]),
+                             "sos_products": fam["sos_products"], "sos_fixed_plan_family": bool(fam["access_types"]),
                              "source_records": 0,
                              "classifications": {}, "fuzzy_review": [], "sos_only": True}
 
@@ -246,7 +257,7 @@ def build(aips_root: Path, catalog: dict, policy: dict, atlas: Path | None = Non
         f["flags_all"] = sorted(f.get("flags_all") or [])
         f["classifications"] = dict(f["classifications"])
         cls = f["classifications"]
-        f["status"] = ("APPROVED_SELLABLE" if cls.get("APPROVED_SELLABLE") or (f.get("sos_sellable") and not f.get("sos_only")) else
+        f["status"] = ("APPROVED_SELLABLE" if cls.get("APPROVED_SELLABLE") else
                        "INQUIRY_ONLY" if cls.get("INQUIRY_ONLY") else
                        "SOS_ONLY" if f.get("sos_only") else
                        "NEEDS_FACT_VERIFICATION" if cls.get("NEEDS_FACT_VERIFICATION") and not cls.get("RESEARCH_ONLY") else
@@ -265,7 +276,8 @@ def build(aips_root: Path, catalog: dict, policy: dict, atlas: Path | None = Non
                                for src in ("aips-products", "aips-atlas", "research-seeds", "aips-services")},
         "seed_only_families": len({r["family"] for r in records if r["source"] == "research-seeds"}
                                   - {r["family"] for r in records if r["source"] != "research-seeds"}),
-        "review_exceptions": [r["brand"] for r in records if "rejoined_split_name" in (r.get("flags") or [])],
+        "review_exceptions": sum(1 for r in records if {"rejoined_split_name", "suspect_fragment"} & set(r.get("flags") or [])),
+        "sos_fixed_plan_families": sum(1 for f in families.values() if f.get("sos_fixed_plan_family")),
         "atlas_only_families": sorted({r["family"] for r in records if r["source"] == "aips-atlas"}
                                       - {r["family"] for r in records if r["source"] == "aips-products"}),
         "families_total": len(families),
@@ -280,7 +292,8 @@ def build(aips_root: Path, catalog: dict, policy: dict, atlas: Path | None = Non
     }
     public = {"summary": summary,
               "families": sorted(families.values(), key=lambda f: (f["capability_group"], f["family"]))}
-    return public, {"summary": summary, "records": records}
+    review = [r["brand"] for r in records if {"rejoined_split_name", "suspect_fragment"} & set(r.get("flags") or [])]
+    return public, {"summary": summary, "review_exceptions": review, "records": records}
 
 
 def main() -> int:

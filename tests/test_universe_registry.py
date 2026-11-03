@@ -77,9 +77,22 @@ class UniverseRegistryTests(unittest.TestCase):
         self.assertEqual(["ChatGPT", "Kimi", "tl;dv", "Granola"], list(recs))
         self.assertEqual("INQUIRY_ONLY", recs["ChatGPT"]["classification"])
         self.assertEqual("NEEDS_FACT_VERIFICATION", recs["Kimi"]["classification"])
-        self.assertEqual(["tl;dv"], public["summary"]["review_exceptions"])
+        self.assertEqual(1, public["summary"]["review_exceptions"])
+        self.assertEqual(["tl;dv"], private["review_exceptions"])
         chat = next(f for f in public["families"] if f["family"] == "chatgpt")
-        self.assertEqual("APPROVED_SELLABLE", chat["status"])
+        self.assertEqual("APPROVED_SELLABLE", chat["status"])  # from the AIPS personal row, not the seed
+        self.assertTrue(chat["sos_fixed_plan_family"])
+
+    def test_seed_cannot_promote_or_dilute(self):
+        seeds = self.root / "seeds.txt"
+        seeds.write_text("\n".join(["# letters: A Free Text Category", "A: ChatGPT; Zapier; xy"]) + "\n", encoding="utf-8")
+        self.policy["approved_products"]["chatgpt-plus"]["plans"][0]["access_type"] = "official"
+        public, private = build(self.root, self.catalog, self.policy, None, seeds)
+        fams = {f["family"]: f for f in public["families"]}
+        self.assertNotEqual("APPROVED_SELLABLE", fams["chatgpt"]["status"])
+        self.assertEqual("Unmapped", next(r for r in private["records"] if r["brand"] == "xy").get("capability_group", "Unmapped"))
+        self.assertIn("suspect_fragment", next(r for r in private["records"] if r["brand"] == "xy")["flags"])
+        self.assertEqual("Unmapped", fams["xy"]["capability_group"])
 
     def test_source_prices_never_copied(self):
         public, private = build(self.root, self.catalog, self.policy)
