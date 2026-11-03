@@ -123,6 +123,8 @@ def render(shell: str, families: list[dict], names: dict) -> str:
     t = re.sub(r'<link rel="canonical" href="[^"]*">', f'<link rel="canonical" href="{URL}">', t, count=1)
     t = re.sub(r'<link rel="alternate" hreflang="[^"]*" href="[^"]*">\s*', "", t)
     t = re.sub(r'<script type="application/ld\+json">.*?</script>', "", t, flags=re.S)
+    # The shell's own product-grid script targets elements that /tools does not have.
+    t = re.sub(r"<script>\s*let cat0 = .*?</script>", "", t, count=1, flags=re.S)
     ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "AI Tools Explorer",
           "url": URL, "description": DESC, "inLanguage": "en-BD"}
     t = t.replace("</head>", f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n</head>', 1)
@@ -165,6 +167,8 @@ def check() -> list[str]:
         errors.append("tools.html: price/claim language on explorer page")
     if f'<link rel="canonical" href="{URL}">' not in text:
         errors.append("tools.html: canonical missing")
+    if "let cat0 =" in text:
+        errors.append("tools.html: all-products grid script left in page")
     if "aips" in body.lower():
         errors.append("tools.html: other business unit content listed")
     for href in re.findall(r'href="p/([^"]+)"', body):
