@@ -20,6 +20,39 @@ SOURCE = ASSETS / "logo.svg"
 MANIFEST = ASSETS / "site.webmanifest"
 BRAND_LOCK = 'data-brand-lock="2026-08-19-approved"'
 DATA_RE = re.compile(r'href="data:image/png;base64,([A-Za-z0-9+/=]+)"')
+# Icons, OG image and manifest keep stable URLs that browsers and the Cloudflare
+# edge cache for up to 7 days, so a brand-kit change stayed invisible after
+# release. Every HTML reference carries a content hash; new bytes => new URL.
+VERSIONED_FILES = ("favicon-32.png", "apple-touch-icon.png", "og-image.png", "site.webmanifest")
+VERSIONED_REF = re.compile(r"assets/(" + "|".join(re.escape(n) for n in VERSIONED_FILES) + r")(?!\?v=)")
+
+
+LOGO_LINK = re.compile(r'(<a class="logo"[^>]*>)(?=<img src="((?:\.\./)*|/)?assets/logo-)')
+LOCKUP_ICON = ('<img src="{prefix}assets/brand/icon-transparent-128.png?v={v}" alt="" aria-hidden="true" '
+               'data-brand-symbol="kit-v1.0" width="34" height="34" '
+               'style="display:inline-block;width:34px;height:34px;margin-right:8px;vertical-align:middle">')
+
+
+def content_version(path: pathlib.Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:10]
+
+
+def versioned_icon_refs() -> dict[str, str]:
+    """Version manifest icon URLs, then return name -> hash for HTML references."""
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    for icon in manifest.get("icons", []):
+        src = str(icon.get("src", "")).split("?")[0]
+        target = SITE / src.lstrip("/")
+        if target.is_file():
+            icon["src"] = f"{src}?v={content_version(target)}"
+    MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    versions = {}
+    for name in VERSIONED_FILES:
+        path = ASSETS / name
+        if not path.is_file():
+            raise SystemExit(f"CACHE-SAFE BRAND ERROR — {name} missing; cannot version its URL")
+        versions[name] = content_version(path)
+    return versions
 
 
 def transparentize_white_matte(image: Image.Image) -> Image.Image:
@@ -125,6 +158,8 @@ def main() -> int:
     favicon = build_favicon_png()
     normalize_manifest()
     immutable_rel = f"assets/{immutable.name}"
+    versioned = versioned_icon_refs()
+    icon_version = content_version(ASSETS / "brand" / "icon-transparent-128.png")
 
     changed = 0
     referenced = 0
@@ -132,6 +167,12 @@ def main() -> int:
         old = page.read_text(encoding="utf-8", errors="strict")
         new = old.replace("assets/logo.svg", immutable_rel)
         new = re.sub(r'([./]*assets/)favicon\.svg', r'\1favicon-32.png', new)
+        new = VERSIONED_REF.sub(lambda m: m.group(0) + "?v=" + versioned[m.group(1)], new)
+        # Header lockup: the kit's transparent symbol beside the kit wordmark (both
+        # pinned kit files, placed side by side; nothing is redrawn or recoloured).
+        new = LOGO_LINK.sub(lambda m: m.group(1) + LOCKUP_ICON.format(prefix=m.group(2) or "", v=icon_version), new)
+        new = new.replace('data-brand-lock="2026-08-19-approved" style="display:block;width:155px',
+                          'data-brand-lock="2026-08-19-approved" style="display:inline-block;vertical-align:middle;width:155px')
         if new != old:
             page.write_text(new, encoding="utf-8")
             changed += 1
@@ -154,6 +195,11 @@ def main() -> int:
         return 1
     if referenced == 0:
         print("CACHE-SAFE BRAND ERROR — transparent immutable logo is not referenced by staged HTML")
+        return 1
+    unversioned = [p.relative_to(SITE).as_posix() for p in SITE.rglob("*.html")
+                   if VERSIONED_REF.search(p.read_text(encoding="utf-8"))]
+    if unversioned:
+        print(f"CACHE-SAFE BRAND ERROR — {len(unversioned)} page(s) reference an unversioned icon/OG/manifest URL")
         return 1
     if not favicon.is_file():
         print("CACHE-SAFE BRAND ERROR — favicon-32.png was not generated")
