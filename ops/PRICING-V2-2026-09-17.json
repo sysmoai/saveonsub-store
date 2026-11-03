@@ -9,8 +9,19 @@
     "authority": "Founder & CEO Md. Emon Hossain — written approval \"APPROVED ALL\" (2026-11-01 23:14 UTC / 2026-11-02 05:14 Asia/Dhaka, Claude project thread message cmsg_01TSmi8NsZ1znxuFP4UZMMwK9b46czYDvYWbkipfv5SvGu) of the itemized 67-product / 133-plan BDT price list sent to him in the same thread.",
     "rule": "Only plans listed in approved_products with mode=fixed may be published. Every other product stays Price on Request. Prices must match this file exactly; shared plans must be labelled as shared access.",
     "supersedes": "EXEC-010 HOLD (D1 google-ai-pro, D2 chatgpt-plus) for the approved plans only, by the same founder.",
-    "approved_sku_count": 133,
-    "excluded": "aips-* products (other business unit) remain Price on Request."
+    "approved_sku_count": 131,
+    "excluded": "aips-* products (other business unit) remain Price on Request.",
+    "previous_approved_plan_count": 133,
+    "latest_scope_override": {
+      "decision_id": "SOS-PRICE-001",
+      "effective_date": "2026-11-03",
+      "product_id": "chatgpt-plus",
+      "active_plans": 1,
+      "held_plans": 2,
+      "scope": "ChatGPT Plus only; other USD20 products and units unchanged",
+      "authority": "Current CEO instruction supersedes older plan-level unlock for this SKU",
+      "release_state": "REVIEW_NOT_PUBLISHED"
+    }
   },
   "positioning": {
     "personal": "Customer-specific access where the provider supports it; confirm the exact activation method before payment.",
@@ -46,27 +57,50 @@
       "mode": "fixed",
       "plans": [
         {
-          "label": "Starter Shared (6–8 users)",
-          "bdt": 499,
-          "duration": "1 month",
-          "access_type": "shared"
-        },
-        {
-          "label": "Premium Shared (2–3 users)",
-          "bdt": 999,
-          "duration": "1 month",
-          "access_type": "shared"
-        },
-        {
           "label": "Personal (your email)",
-          "bdt": 2990,
+          "bdt": 3390,
           "duration": "1 month",
           "access_type": "personal"
         }
       ],
       "approved_by": "CEO Emon Hossain",
-      "approved_on": "2026-11-02",
-      "official_usd": 20
+      "approved_on": "2026-11-03",
+      "official_usd": 20,
+      "held_plans": [
+        {
+          "label": "Starter Shared (6–8 users)",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "shared",
+          "commercial_status": "HOLD",
+          "hold_reason": "CEO decision A, SOS-PRICE-001; provider-supported multi-user credential access not evidenced",
+          "release_allowed": false
+        },
+        {
+          "label": "Premium Shared (2–3 users)",
+          "bdt": 999,
+          "duration": "1 month",
+          "access_type": "shared",
+          "commercial_status": "HOLD",
+          "hold_reason": "CEO decision A, SOS-PRICE-001; provider-supported multi-user credential access not evidenced",
+          "release_allowed": false
+        }
+      ],
+      "latest_ceo_amendment": {
+        "decision_id": "SOS-PRICE-001",
+        "date": "2026-11-03",
+        "status": "CEO_APPROVED_PRICE_FULFILLMENT_CHECK_REQUIRED",
+        "changed_fields": [
+          "Personal BDT 2990 to BDT 3390",
+          "Starter Shared BDT 499 to HOLD",
+          "Premium Shared BDT 999 to HOLD"
+        ],
+        "authority": "CEO direct instruction in current conversation; option A confirmed",
+        "vat_cost_evidence": "UNVERIFIED_INVOICE_REQUIRED",
+        "profit_evidence": "UNVERIFIED_TOTAL_COSTS_REQUIRED",
+        "provider_permission": "UNVERIFIED",
+        "release_scope": "REVIEW_BRANCH_ONLY_NO_DEPLOY"
+      }
     },
     "chatgpt-business": {
       "mode": "fixed",
