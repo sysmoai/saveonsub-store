@@ -9,17 +9,18 @@
     "authority": "Founder & CEO Md. Emon Hossain — written approval \"APPROVED ALL\" (2026-11-01 23:14 UTC / 2026-11-02 05:14 Asia/Dhaka, Claude project thread message cmsg_01TSmi8NsZ1znxuFP4UZMMwK9b46czYDvYWbkipfv5SvGu) of the itemized 67-product / 133-plan BDT price list sent to him in the same thread.",
     "rule": "Only plans listed in approved_products with mode=fixed may be published. Every other product stays Price on Request. Prices must match this file exactly; shared plans must be labelled as shared access.",
     "supersedes": "EXEC-010 HOLD (D1 google-ai-pro, D2 chatgpt-plus) for the approved plans only, by the same founder.",
-    "approved_sku_count": 131,
+    "approved_sku_count": 133,
     "excluded": "aips-* products (other business unit) remain Price on Request.",
-    "previous_approved_plan_count": 133,
+    "previous_approved_plan_count": 131,
     "latest_scope_override": {
-      "decision_id": "SOS-PRICE-001",
+      "decision_id": "SOS-PRICE-001-REV2",
       "effective_date": "2026-11-03",
       "product_id": "chatgpt-plus",
-      "active_plans": 1,
-      "held_plans": 2,
-      "scope": "ChatGPT Plus only; other USD20 products and units unchanged",
-      "authority": "Current CEO instruction supersedes older plan-level unlock for this SKU",
+      "active_plans": 3,
+      "held_plans": 0,
+      "scope": "Restore CEO-approved two shared local offers; personal BDT3390; other products and business units unchanged",
+      "authority": "Current CEO explicit correction supersedes previous mistaken HOLD interpretation",
+      "provider_terms_status": "CONFLICTED_ACCOUNT_SHARING_NOT_VENDOR_AUTHORIZED",
       "release_state": "REVIEW_NOT_PUBLISHED"
     }
   },
@@ -57,6 +58,18 @@
       "mode": "fixed",
       "plans": [
         {
+          "label": "Starter Shared (6–8 users)",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "label": "Premium Shared (2–3 users)",
+          "bdt": 999,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
           "label": "Personal (your email)",
           "bdt": 3390,
           "duration": "1 month",
@@ -66,41 +79,45 @@
       "approved_by": "CEO Emon Hossain",
       "approved_on": "2026-11-03",
       "official_usd": 20,
-      "held_plans": [
-        {
-          "label": "Starter Shared (6–8 users)",
-          "bdt": 499,
-          "duration": "1 month",
-          "access_type": "shared",
-          "commercial_status": "HOLD",
-          "hold_reason": "CEO decision A, SOS-PRICE-001; provider-supported multi-user credential access not evidenced",
-          "release_allowed": false
-        },
-        {
-          "label": "Premium Shared (2–3 users)",
-          "bdt": 999,
-          "duration": "1 month",
-          "access_type": "shared",
-          "commercial_status": "HOLD",
-          "hold_reason": "CEO decision A, SOS-PRICE-001; provider-supported multi-user credential access not evidenced",
-          "release_allowed": false
-        }
-      ],
       "latest_ceo_amendment": {
-        "decision_id": "SOS-PRICE-001",
+        "decision_id": "SOS-PRICE-001-REV2",
         "date": "2026-11-03",
-        "status": "CEO_APPROVED_PRICE_FULFILLMENT_CHECK_REQUIRED",
+        "status": "CEO_APPROVED_ALL_THREE_LOCAL_OFFERS",
+        "authority": "CEO direct correction in this conversation: Starter Shared BDT499 and Premium Shared BDT999 not HOLD; Personal BDT3390",
+        "supersedes": "SOS-PRICE-001 prior shared HOLD interpretation",
         "changed_fields": [
-          "Personal BDT 2990 to BDT 3390",
-          "Starter Shared BDT 499 to HOLD",
-          "Premium Shared BDT 999 to HOLD"
+          "Starter Shared 499 -> ACTIVE_CEO_APPROVED",
+          "Premium Shared 999 -> ACTIVE_CEO_APPROVED",
+          "Personal remains 3390 per 1 month"
         ],
-        "authority": "CEO direct instruction in current conversation; option A confirmed",
+        "provider_permission": "CONFLICTED_PROVIDER_ACCOUNT_SHARING_POLICY",
+        "provider_evidence_url": "https://help.openai.com/en/articles/10471989-openai-account-sharing-policy",
+        "provider_review_date": "2026-11-03",
+        "commercial_approval_vs_vendor_authorization": "SEPARATE; CEO approves SaveOnSub prices but OpenAI individual account sharing remains not permitted",
         "vat_invoice_status": "UNVERIFIED_INVOICE_REQUIRED",
         "unit_economics_status": "UNVERIFIED_TOTAL_EXPENSES_REQUIRED",
-        "provider_permission": "UNVERIFIED",
         "release_scope": "REVIEW_BRANCH_ONLY_NO_DEPLOY"
-      }
+      },
+      "decision_history": [
+        {
+          "decision_id": "SOS-PRICE-001",
+          "date": "2026-11-03",
+          "status": "CEO_APPROVED_PRICE_FULFILLMENT_CHECK_REQUIRED",
+          "changed_fields": [
+            "Personal BDT 2990 to BDT 3390",
+            "Starter Shared BDT 499 to HOLD",
+            "Premium Shared BDT 999 to HOLD"
+          ],
+          "authority": "CEO direct instruction in current conversation; option A confirmed",
+          "vat_invoice_status": "UNVERIFIED_INVOICE_REQUIRED",
+          "unit_economics_status": "UNVERIFIED_TOTAL_EXPENSES_REQUIRED",
+          "provider_permission": "UNVERIFIED",
+          "release_scope": "REVIEW_BRANCH_ONLY_NO_DEPLOY",
+          "disposition": "SUPERSEDED_BY_CEO_CORRECTION",
+          "superseded_by": "SOS-PRICE-001-REV2",
+          "source": "previous CEO A interpretation / PR100"
+        }
+      ]
     },
     "chatgpt-business": {
       "mode": "fixed",
