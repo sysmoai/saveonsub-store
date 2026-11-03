@@ -106,6 +106,19 @@ if (policy.get("commercial_hold") or {}).get("status") == "SELECTIVE_UNLOCK" and
                     f"<loc>https://saveonsub.com/{prefix}/{pid}</loc><lastmod>{MIGRATION_LASTMOD}</lastmod>",
                     f"<loc>https://saveonsub.com/{prefix}/{pid}</loc><lastmod>{priced_lastmod}</lastmod>",
                 )
+# Indexable informational pages that were never listed. /modes* is deliberately absent:
+# it lists other business units' packages and is pending a CEO isolation decision.
+EXTRA_SITEMAP_PAGES = ("os", "bn/about", "bn/contact", "bn/offers", "bn/os", "bn/quiz", "bn/students")
+for slug in EXTRA_SITEMAP_PAGES:
+    page = SITE / f"{slug}.html"
+    loc = f"https://saveonsub.com/{slug}"
+    if not page.is_file():
+        raise SystemExit(f"TECH SEO ERROR — sitemap page missing: {slug}")
+    if re.search(r'name="robots" content="[^"]*noindex', page.read_text(encoding="utf-8")):
+        raise SystemExit(f"TECH SEO ERROR — {slug} is noindex; remove it from EXTRA_SITEMAP_PAGES")
+    if f"<loc>{loc}</loc>" not in s:
+        s = s.replace("</urlset>", f"  <url><loc>{loc}</loc><lastmod>{MIGRATION_LASTMOD}</lastmod>"
+                      "<changefreq>monthly</changefreq><priority>0.5</priority></url>\n</urlset>", 1)
 sitemap.write_text(s, encoding="utf-8")
 
 robots = SITE / "robots.txt"
