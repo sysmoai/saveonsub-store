@@ -96,8 +96,8 @@
           "Premium Shared BDT 999 to HOLD"
         ],
         "authority": "CEO direct instruction in current conversation; option A confirmed",
-        "vat_cost_evidence": "UNVERIFIED_INVOICE_REQUIRED",
-        "profit_evidence": "UNVERIFIED_TOTAL_COSTS_REQUIRED",
+        "vat_invoice_status": "UNVERIFIED_INVOICE_REQUIRED",
+        "unit_economics_status": "UNVERIFIED_TOTAL_EXPENSES_REQUIRED",
         "provider_permission": "UNVERIFIED",
         "release_scope": "REVIEW_BRANCH_ONLY_NO_DEPLOY"
       }
