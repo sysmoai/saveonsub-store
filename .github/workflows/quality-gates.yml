@@ -94,7 +94,7 @@ jobs:
           ! grep -q '5–15 min' _site/p/chatgpt-plus.html
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
           grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
-          grep -q 'favicon-32.png" type="image/png"' _site/p/chatgpt-plus.html
+          grep -Eq 'favicon-32\.png\?v=[0-9a-f]{10}" type="image/png"' _site/p/chatgpt-plus.html
           ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml
           python audit_commercial_truth_v2.py
 
