@@ -80,7 +80,7 @@ for page in SITE.rglob("*.html"):
     text = rewrite_same_origin_absolute(text)
     text = rewrite_internal_routes(text)
     text = re.sub(
-        r'(<link\s+rel="icon"\s+href="[^"]*favicon-32\.png"\s+type=")image/svg\+xml(")',
+        r'(<link\s+rel="icon"\s+href="[^"]*favicon-32\.png(?:\?v=[0-9a-f]+)?"\s+type=")image/svg\+xml(")',
         r'\1image/png\2', text, flags=re.I,
     )
     if page.name in NOINDEX_BASENAMES:
@@ -126,7 +126,7 @@ for page in SITE.rglob("*.html"):
         errors.append(f"{rel}: HTML navigation still points at .html")
     if re.search(r'(?:p|c|blog|bn)/[^\s\"\'`<>]*\.html', text):
         errors.append(f"{rel}: generated internal .html route survived")
-    if re.search(r'favicon-32\.png"\s+type="image/svg\+xml', text, re.I):
+    if re.search(r'favicon-32\.png(?:\?v=[0-9a-f]+)?"\s+type="image/svg\+xml', text, re.I):
         errors.append(f"{rel}: PNG favicon still declares SVG MIME")
     if page.name in NOINDEX_BASENAMES and not re.search(
         r'<meta\s+name="robots"\s+content="noindex,follow">', text, re.I
