@@ -35,6 +35,7 @@ Preserve existing ranking URLs, search intent, useful content, internal-link equ
 - The older tilted price-tag + `৳` concept is deprecated.
 - Production `assets/logo.svg` and `assets/favicon.svg` must retain `data-brand-lock="2026-08-19-approved"`.
 - `stage_deploy.py` enforces the approved brand assets across staged HTML. Do not bypass it.
+- 2026-11-02 update (pending CEO merge): brand kit v1.0 (decision SOS-CEO-20261102-002) supplies the production files. Source of truth is the private repo `sysmoai/saveonsub-brand-system` (`AUTHORITY.md` records the chain; the 2026-08-19 S-mark concept stays valid, SOS-007 black-corner tile is legacy). Public files live only in `assets/brand/`, are exported by that repo's `scripts/export_web.py`, and are pinned by `assets/brand/brand-export.json`. Never edit them by hand. See `BRAND-INTEGRATION-CHECKPOINT.md`.
 
 ## Brand and business constants
 - Primary WhatsApp / customer contact: **+880 1305 869242**.
