@@ -104,7 +104,7 @@ jobs:
             exit 1
           fi
 
-          for phrase in 'Every subscription is official' '100% customer-owned' 'Price-match guarantee' 'replace dead seats within 1 hour' 'Shared seats work the same as personal on mobile' 'SHARED · LOW RISK' 'SHARED · WARRANTY COVERED' 'enforcement is light but real' 'No official path without a card' 'Netflix has no official taka price' 'regional pricing around ৳239/month'; do
+          for phrase in 'Every subscription is official' '100% customer-owned' 'Price-match guarantee' 'replace dead seats within 1 hour' 'Shared seats work the same as personal on mobile' 'SHARED · LOW RISK' 'SHARED · WARRANTY COVERED' 'enforcement is light but real' 'No official path without a card' 'Netflix has no official taka price' 'regional pricing around ৳239/month' 'other seat-holders can never see your usage'; do
             if grep -R -F -q "$phrase" _site --include='*.html' --include='llms.txt'; then
               echo "::error::Unsafe or stale claim remains in staged public artifact: $phrase"
               exit 1
