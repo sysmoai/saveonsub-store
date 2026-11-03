@@ -1,47 +1,89 @@
 {
- "updated": "2026-11-03",
- "last_cycle": 5,
- "main_sha": "f265c25",
- "live_deployment": "77c20d55 (do not roll back to f7f1e404 or 1c6b91b9)",
- "pricebook_pr": {
-  "number": 91,
-  "head": "27c965a",
-  "state": "open, CI green, awaiting CEO merge"
- },
- "working_branch": "catalog/global-universe-registry-2026-11-03 (stacked on #95 -> #91)",
- "reconcile": {
-  "pricebook_entries": 77,
-  "fixed_products": 67,
-  "approved_plans": 133,
-  "inquiry_entries": 10,
-  "held_without_page": [],
-  "mismatches": 0,
-  "aliases": {
-   "kling-ai": "kling",
-   "pika-labs": "pika",
-   "gamma-pro": "gamma",
-   "mistral": "mistral-pro",
-   "replit": "replit-core"
+  "updated": "2026-11-03",
+  "last_cycle": 5,
+  "main_sha": "ed8926b684a50d563994e8df6cbbffd2fa1681af",
+  "live_deployment": "UNVERIFIED (last dated operator checkpoint: Cloudflare Pages 77c20d55 on 2026-11-02; do not treat as current production or safe rollback)",
+  "pricebook_pr": {
+    "number": 91,
+    "head": "27c965a",
+    "state": "closed / merged 2026-11-03 (integrated in merged PR #97; GitHub verified)"
+  },
+  "working_branch": "HISTORICAL (Cycle 5): catalog/global-universe-registry-2026-11-03. Current review branches are separate draft PR #99 and #100.",
+  "reconcile": {
+    "pricebook_entries": 77,
+    "fixed_products": 67,
+    "approved_plans": 133,
+    "inquiry_entries": 10,
+    "held_without_page": [],
+    "mismatches": 0,
+    "aliases": {
+      "kling-ai": "kling",
+      "pika-labs": "pika",
+      "gamma-pro": "gamma",
+      "mistral": "mistral-pro",
+      "replit": "replit-core"
+    }
+  },
+  "blockers": [
+    "P0: GitHub main remains unprotected and canonical-deploy workflow has an active push: main trigger; PR #99 (draft) proposes fail-closed freeze, no merge",
+    "P0: authenticated Cloudflare Pages production deployment/SHA, Git integration, deploy hooks, Worker routes, and rollback remain UNVERIFIED",
+    "P0: latest canonical deploy run 41573119003 stopped on post-build assertion before Wrangler/Cloudflare; candidate favicon expectation mismatch documented; do not call this run Cloudflare 401",
+    "P0: PR #100 (draft) proposes new ChatGPT Plus prices but is NOT live; provider-side shared access exception remains self-reported and not independently verified",
+    "Review overlapping canonical workflow edits in #99 and #100 before either receives a separate exact-SHA CEO merge approval"
+  ],
+  "next_task": "UNI-002",
+  "gsc_baseline": {
+    "checked": "2026-11-03",
+    "property": "sc-domain:saveonsub.com",
+    "data_from": "2026-10-31",
+    "clicks": 0,
+    "impressions": 0,
+    "indexing_report": "processing",
+    "status": "VERIFIED"
+  },
+  "universe": {
+    "registry": "private, CEO machine 00_CONTROL/saveonsub/ (derived from other units' catalogs)",
+    "explorer": "/tools staged only when the private family file is present; publishing needs CEO decision",
+    "atlas": "Notion ATLAS 231 rows read 2026-11-03 via CEO browser (prices excluded); private export in 00_CONTROL/saveonsub/",
+    "seeds": "557 research seeds (workbook 1xEbrJFl..., 2026-11-03) ingested via --seeds; private copy in 00_CONTROL/saveonsub/"
+  },
+  "release_readiness": {
+    "checkpoint": "ChatGPT SaveOnSub Cycle 003",
+    "checked_date": "2026-11-03",
+    "canonical_repository": "sysmoai/saveonsub-store",
+    "observed_main_sha": "ed8926b684a50d563994e8df6cbbffd2fa1681af",
+    "protected_main": false,
+    "github_rulesets_observed": 0,
+    "last_canonical_run": {
+      "id": 41573119003,
+      "conclusion": "failure_before_cloudflare_preflight",
+      "source_sha": "ed8926b684a50d563994e8df6cbbffd2fa1681af"
+    },
+    "last_main_quality_run": {
+      "id": 41573118863,
+      "conclusion": "success",
+      "source_sha": "ed8926b684a50d563994e8df6cbbffd2fa1681af"
+    },
+    "draft_safety_pr": {
+      "number": 99,
+      "head_sha": "b1d92f814777c29f886f1a2f1214e5624e1781c8",
+      "qa_run": 41587958998,
+      "qa_conclusion": "success",
+      "state": "OPEN_DRAFT_UNMERGED"
+    },
+    "draft_price_pr": {
+      "number": 100,
+      "head_sha": "d113d86a35ebfd95489d6d1601bc5984cf750795",
+      "qa_run": 41626778201,
+      "qa_conclusion": "success",
+      "state": "OPEN_DRAFT_UNMERGED",
+      "provider_authorization": "UNVERIFIED"
+    },
+    "production_live_sha": "UNKNOWN",
+    "cloudflare_git_auto_deploy": "UNKNOWN",
+    "cloudflare_worker_routes": "UNKNOWN",
+    "rollback_verified": false,
+    "editor_scope": "Docs-only proposal; NO merge/deploy/price/secret change",
+    "status": "NO_GO"
   }
- },
- "blockers": [
-  "CEO merge of #91, then manual Cloudflare zip deploy",
-  "Provider-rights review for shared-access plans (private register)"
- ],
- "next_task": "UNI-002",
- "gsc_baseline": {
-  "checked": "2026-11-03",
-  "property": "sc-domain:saveonsub.com",
-  "data_from": "2026-10-31",
-  "clicks": 0,
-  "impressions": 0,
-  "indexing_report": "processing",
-  "status": "VERIFIED"
- },
- "universe": {
-  "registry": "private, CEO machine 00_CONTROL/saveonsub/ (derived from other units' catalogs)",
-  "explorer": "/tools staged only when the private family file is present; publishing needs CEO decision",
-  "atlas": "Notion ATLAS 231 rows read 2026-11-03 via CEO browser (prices excluded); private export in 00_CONTROL/saveonsub/",
-  "seeds": "557 research seeds (workbook 1xEbrJFl..., 2026-11-03) ingested via --seeds; private copy in 00_CONTROL/saveonsub/"
- }
 }
