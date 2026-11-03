@@ -294,7 +294,7 @@ def product_main(product: dict, bn: bool) -> str:
             billing = price_label(plan, bn)
             onclick = js_args(pid, label, price, name)
             cards.append(
-                f'''<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b>{esc(label)}</b><br><span class="tos personal">{esc(access)}</span><span style="font-size:12px;color:var(--muted)"> · {esc(duration_label(plan, bn))}</span></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px;font-weight:900;color:var(--green2)">{esc(billing)}</span><button class="btn btn-primary btn-sm" onclick="cartAdd({onclick})">{'কার্টে যোগ করুন' if bn else 'Add to cart'}</button></div></div>'''
+                f'''<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b>{esc(label)}</b><br><span class="tos {'shared' if plan.get('type') == 'shared' else 'personal'}">{esc(access)}</span><span style="font-size:12px;color:var(--muted)"> · {esc(duration_label(plan, bn))}</span></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px;font-weight:900;color:var(--green2)">{esc(billing)}</span><button class="btn btn-primary btn-sm" onclick="cartAdd({onclick})">{'কার্টে যোগ করুন' if bn else 'Add to cart'}</button></div></div>'''
             )
         plan_html = "\n".join(cards)
         anchor = ("From " if len(plans) > 1 and not bn else "") + money(min(int(p["bdt"]) for p in plans))
@@ -308,9 +308,20 @@ def product_main(product: dict, bn: bool) -> str:
                   "<div class=\"notice mt2\">Google AI Pro is Price on Request. This page has no published price and no checkout.</div>")
     elif request_price:
         caveat = ""
+    elif pid == "chatgpt-plus" and any(p.get("type") == "shared" for p in plans):
+        caveat = ('<div class="notice mt2" data-provider-policy-disclosure="account-sharing">'
+                  'শেয়ার্ড (৬–৮ বা ২–৩ জন) মানে একই ChatGPT credential একাধিক ব্যক্তি ব্যবহার করেন; এটি OpenAI অনুমোদিত individual বা Team seat নয়। '
+                  'OpenAI-এর account-sharing policy অনুযায়ী individual account অন্যের সঙ্গে share করা অনুমোদিত নয়। এতে privacy, account suspension, misuse এবং access interruption ঝুঁকি আছে। '
+                  'কোনো গোপনীয় ডেটা ব্যবহার করবেন না; অর্থপ্রদানের আগে access, risk ও support terms লিখিতভাবে জেনে নিন। '
+                  '<a href="https://help.openai.com/en/articles/10471989-openai-account-sharing-policy" target="_blank" rel="noopener nofollow">Provider policy</a></div>' if bn else
+                  '<div class="notice mt2" data-provider-policy-disclosure="account-sharing">'
+                  'Shared (6–8 or 2–3 users) means multiple people using the same ChatGPT credentials. This is NOT an OpenAI-authorized individual or Team seat. '
+                  'OpenAI does not permit sharing individual accounts. Risks include exposure of account activity/data, misuse, interrupted access and suspension. '
+                  'Avoid sensitive/work data; confirm the exact access method, risks and support terms before paying. '
+                  '<a href="https://help.openai.com/en/articles/10471989-openai-account-sharing-policy" target="_blank" rel="noopener nofollow">Provider account-sharing policy</a></div>')
     elif pid == "chatgpt-business":
         caveat = "<div class=\"notice mt2\">ChatGPT Business is a workspace product and provider minimum-seat/billing rules can apply. Confirm the current seat requirement and workspace role before payment.</div>"
-    elif pid in {"chatgpt-go", "chatgpt-plus", "claude-pro"}:
+    elif pid in {"chatgpt-go", "claude-pro"}:
         caveat = "<div class=\"notice mt2\">This listing is not a credential-sharing offer. Confirm the exact customer-specific activation method before payment.</div>"
     elif pid == "chatgpt-pro":
         caveat = "<div class=\"notice mt2\">Fixed-price sale is paused on this page until the currently available provider tier and checkout amount are reconfirmed.</div>"
@@ -412,7 +423,10 @@ def card_price(product: dict, bn: bool) -> tuple[str, str]:
     if len(plans) > 1:
         label = ("থেকে " if bn else "From ") + label
     kinds = {p.get("type") for p in plans}
-    access = "Team / Workspace" if kinds == {"team"} else ("কাস্টমার-নির্দিষ্ট" if bn else "Customer-specific")
+    if product.get("id") == "chatgpt-plus" and "shared" in kinds:
+        access = "শেয়ার্ড ও পার্সোনাল — প্ল্যান দেখুন" if bn else "Shared + personal — see plans"
+    else:
+        access = "Team / Workspace" if kinds == {"team"} else ("কাস্টমার-নির্দিষ্ট" if bn else "Customer-specific")
     return label, access
 
 
@@ -436,7 +450,8 @@ def patch_listing_cards(text: str, governed: dict, bn: bool) -> str:
                 continue
             price, access = card_price(product, bn)
             chunk = re.sub(r'<div class="price">.*?</div>', f'<div class="price">{esc(price)}</div>', chunk, flags=re.I)
-            chunk = re.sub(r'<span class="tos[^"]*">.*?</span>', f'<span class="tos personal">{esc(access)}</span>', chunk, flags=re.I)
+            style_class = "shared" if product.get("id") == "chatgpt-plus" and any(p.get("type") == "shared" for p in (product.get("plans") or [])) else "personal"
+            chunk = re.sub(r'<span class="tos[^"]*">.*?</span>', f'<span class="tos {style_class}">{esc(access)}</span>', chunk, flags=re.I)
             chunk = re.sub(r'<s>.*?</s>', '', chunk, flags=re.I)
             chunks[j] = chunk
         lines[i] = "".join(chunks)
