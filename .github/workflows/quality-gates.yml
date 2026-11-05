@@ -76,6 +76,9 @@ jobs:
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/logo.svg
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/favicon.svg
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
+          ! grep -qiE 'commercial HOLD|publishes no fixed|not currently offered for sale' _site/llms.txt  # AI-search facts match live prices
+          grep -q '৳499' _site/llms.txt
+          grep -q 'data-sos-org-schema' _site/index.html
           grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/index.html
           ! grep -q '৳3,390' _site/p/chatgpt-plus.html
           ! grep -q '৳3,390' _site/p/google-ai-pro.html
