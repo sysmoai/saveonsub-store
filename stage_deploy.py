@@ -45,7 +45,7 @@ EXCLUDE_EXT = {'.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.to
 EXCLUDE_FILES = {'.replit', '.gitignore', '.env.example', 'catalog.json',
                  'package.json', 'package-lock.json', 'vercel.json', 'AGENTS.md',
                  'aips-live.json'}  # other business unit's price source; never public
-EXCLUDE_PREFIXES = ('assets/social/',)
+EXCLUDE_PREFIXES = ('assets/social/', 'modes/aips-')  # quarantine other-unit legacy mode URLs
 
 
 def runtime_fetched_json():
