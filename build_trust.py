@@ -172,19 +172,17 @@ body = """<span class="pill">ABOUT US</span>
 <h1 style="font-size:clamp(26px,4vw,38px)">Built in Bangladesh, <span class="grad-text">for how Bangladesh actually pays.</span></h1>
 <p class="sub mt2" style="font-size:16px">239 million mobile-money accounts. 3 million credit cards. Every global subscription assumes the card. SAVEONSUB exists for everyone else.</p>
 <h2 class="mt3" style="font-size:21px">The story</h2>
-<p class="sub" style="font-size:15px">We started in 2024 as AI Premium Shop — a WhatsApp-first store helping students and freelancers get ChatGPT without an international card. Bangladesh's Subscription OS and ~1,600 orders later, we learned two things: (1) BD buyers are the world's most price-aware customers, and (2) they've been burned so often that honesty is the only durable advantage. SAVEONSUB is the store rebuilt around those lessons — every plan labeled, every risk disclosed, official prices linked for verification.</p>
+<p class="sub" style="font-size:15px">SaveOnSub is a Dhaka-based subscription store for people who don't have an international card. We learned two things from Bangladeshi buyers: (1) they are among the most price-aware customers anywhere, and (2) they have been burned so often that honesty is the only lasting advantage. So every plan is labeled, every known risk is disclosed, and official prices are linked so you can check them.</p>
 <h2 class="mt3" style="font-size:21px">The family</h2>
 <div class="tbl mt2"><table>
 <tr><th>Brand</th><th>What it does</th></tr>
 <tr><td><a href="https://sysmoai.com" style="color:var(--green2)" rel="noopener">SYSmoAI</a></td><td>Parent company — AI consulting & systems (incorporating as SYSmoAI Private Limited)</td></tr>
-<tr><td><a href="https://aipremiumshop.com" style="color:var(--green2)" rel="noopener">AI Premium Shop</a></td><td>Where it started — the original WhatsApp AI store</td></tr>
-<tr><td><a href="https://aipremium.tools" style="color:var(--green2)" rel="noopener">AI Premium Tools</a></td><td>Sister store</td></tr>
 <tr><td><a href="https://emonhossain.pro" style="color:var(--green2)" rel="noopener">Emon Hossain</a></td><td>Founder — AI systems strategist</td></tr>
 </table></div>
 <h2 class="mt3" style="font-size:21px">The promises</h2>
 <p class="sub" style="font-size:15px">1) Honest labels on every plan — even when it costs us a sale. 2) A human answers WhatsApp — in Bangla or English. 3) If the free tier fits you, we'll say so. 4) Warranty in writing, refunds same-day. 5) Prices verified against official — check them yourself, the links are right there.</p>
 <div class="heroctas mt3"><a class="btn btn-primary" href="all.html">Browse the store →</a><a class="btn btn-wa" href="https://wa.me/8801305869242?text=Hi!">💬 Say hello</a></div>"""
-pages['about'] = dict(title="About — Built for How BD Actually Pays | SAVEONSUB", desc="Started 2024 as AI Premium Shop, Bangladesh's Subscription OS later rebuilt as SAVEONSUB: honest labels, bKash-first, human support. A SYSmoAI venture from Dhaka.", crumb="About", body=body, schema='<script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","name":"About SAVEONSUB","url":"https://saveonsub.com/about.html"}</script>', robots="")
+pages['about'] = dict(title="About — Built for How BD Actually Pays | SAVEONSUB", desc="SaveOnSub: a Dhaka subscription store with honest plan labels, bKash/Nagad payment and human support on WhatsApp. A SYSmoAI venture from Dhaka.", crumb="About", body=body, schema='<script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","name":"About SAVEONSUB","url":"https://saveonsub.com/about.html"}</script>', robots="")
 
 # ---------- How to order ----------
 howto_ld = {"@context":"https://schema.org","@type":"HowTo","name":"How to buy a subscription with bKash on SAVEONSUB","totalTime":"PT3M",
