@@ -411,8 +411,16 @@ def card_price(product: dict, bn: bool) -> tuple[str, str]:
     label = ("৳" + f"{low:,}")
     if len(plans) > 1:
         label = ("থেকে " if bn else "From ") + label
-    kinds = {p.get("type") for p in plans}
-    access = "Team / Workspace" if kinds == {"team"} else ("কাস্টমার-নির্দিষ্ট" if bn else "Customer-specific")
+    kinds = {p.get("type") or p.get("access_type") for p in plans}
+    if kinds == {"team"}:
+        access = "Team / Workspace"
+    elif kinds == {"shared"}:
+        access = "শেয়ার্ড অ্যাকাউন্ট" if bn else "Shared account"
+    elif "shared" in kinds:
+        # The lowest price is usually the shared plan; never label it customer-specific.
+        access = "শেয়ার্ড ও পার্সোনাল প্ল্যান" if bn else "Shared and personal plans"
+    else:
+        access = "কাস্টমার-নির্দিষ্ট" if bn else "Customer-specific"
     return label, access
 
 

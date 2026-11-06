@@ -70,7 +70,9 @@ jobs:
         run: python -m unittest -v tests.test_brand_kit_integration
 
       - name: Only CEO-approved prices in staged HTML (EXEC-010 selective unlock)
-        run: python hold_content_price_guard.py --check
+        run: |
+          python hold_content_price_guard.py --check
+          python site_seo_hygiene.py --check
 
       - name: Verify governed pricing-v2 release boundary
         run: |

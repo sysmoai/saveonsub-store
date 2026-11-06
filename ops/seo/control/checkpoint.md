@@ -41,3 +41,9 @@
 - Keyword seed map: ops/seo/KEYWORD-MAP-2026-11-06.json (tiers A 18 / B 31 / C 18).
 - /prices page dropped: hold_content_price_guard masks prices off product pages (SEO-007, CEO).
 - /prices + /bn/prices staged by prices_page.py as pcard listing cards (guard card rule keeps only approved prices); links from every quick answer; sitemap +2.
+
+## Cycle 7 (2026-11-06, after 542d854d live)
+- Category pages now show approved 'From ৳X' card prices (guard CARD_LINK) with honest access labels
+  (shared/mixed no longer 'Customer-specific'); site_seo_hygiene.py: category titles/meta/ItemList,
+  og:image+twitter tags everywhere, 5 BN pages into sitemap. IndexNow key file + indexnow_submit.py
+  (run only after a CEO-approved deploy).
