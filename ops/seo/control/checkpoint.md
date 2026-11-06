@@ -1,3 +1,21 @@
+# Latest verified release/source checkpoint — 2026-11-03 (ChatGPT Cycle 003; REVIEW ONLY)
+
+> **Supersedes stale first-paragraph merge/live assertions below; historical Cycle 5 notes are retained as dated history.**
+>
+> GitHub `main` is `ed8926b684a50d563994e8df6cbbffd2fa1681af` (**not `f265c25`**). PRs [#91](https://github.com/sysmoai/saveonsub-store/pull/91), [#97](https://github.com/sysmoai/saveonsub-store/pull/97), [#98](https://github.com/sysmoai/saveonsub-store/pull/98) are **merged**. GitHub `main` reports `protected=false` and no repository rulesets were returned.
+>
+> [PR #99](https://github.com/sysmoai/saveonsub-store/pull/99) is a **draft, unmerged** safety freeze and versioned-favicon assertion correction; [Quality Gates 41587958998](https://github.com/sysmoai/saveonsub-store/actions/runs/41587958998) passed on head `b1d92f814777c29f886f1a2f1214e5624e1781c8`. Until an approved merge, automatic `push: main` canonical publishing remains enabled in the source workflow.
+>
+> [PR #100](https://github.com/sysmoai/saveonsub-store/pull/100) is a **different draft, unmerged** CEO-approved ChatGPT Plus local pricing proposal at `d113d86a35ebfd95489d6d1601bc5984cf750795`, [CI 41626778201](https://github.com/sysmoai/saveonsub-store/actions/runs/41626778201) success. It also edits the **same canonical deployment workflow** as #99; compare/rebase before any approvals. Provider authorization for shared credentials is **not established** by CEO price approval or green CI.
+>
+> [Latest canonical deployment 41573119003](https://github.com/sysmoai/saveonsub-store/actions/runs/41573119003) at `ed8926b` failed **after the Python build completed but before Wrangler/Cloudflare steps**. New versioned favicon URL vs old deploy `grep` is a plausible cause, not independently proven as the only cause. An older separate run had Cloudflare HTTP 401; do not conflate them.
+>
+> **Cloudflare production source SHA and topology UNKNOWN:** historical report named Pages deployment `77c20d55` on 2 Nov, but this is not a current authenticated deployment or rollback verification. Dashboard Pages production, custom domains, Git auto-deploy, hooks, Worker routes and restorable deployment require an authorized owner read. Public search snippets/crawls are cacheable and cannot establish a specific production SHA.
+>
+> **Hard stop:** no merge, deployment, billing, DNS, permissions, public prices or account changes without separate narrow CEO authorization and exact-SHA review. Do not mark release GO. Read the current Notion [Cycles 001–003 evidence](https://app.notion.com/p/40d968d91628813a80c4fb477e9920f6) before continuing. The `state.json` release_readiness object is an auditable snapshot, not an automated deployment authorization.
+
+---
+
 # Checkpoint — cycle 5 (2026-11-03)
 
 - main f265c25; live 77c20d55. PR #91 (CEO "APPROVED ALL" pricebook) open, CI green, unmerged.
