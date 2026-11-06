@@ -14,5 +14,5 @@
 {"id": "UNI-004", "status": "todo", "title": "Extend existing quiz.html (Find My AI) to recommend from universe families", "files": ["quiz.html"]}
 {"id": "PUB-001", "status": "ceo", "title": "Approve publishing the cross-unit tool list (/tools) on saveonsub.com", "files": []}
 {"id": "SVC-001", "status": "ceo", "title": "SaveOnSub service menu needs CEO scope/owner/price decisions; other units' services stay research-only", "files": []}
-{"id": "SEO-007", "status": "ceo", "title": "/prices price-list page (AI-citable table of all approved plans) is blocked by hold_content_price_guard (prices only on their own product page); needs CEO policy decision before building", "files": ["hold_content_price_guard.py"]}
+{"id": "SEO-007", "status": "review", "title": "/prices + /bn/prices price list (prices_page.py): listing cards accepted by hold_content_price_guard card rule, no guard change; draft PR 2026-11-06", "files": ["prices_page.py", "tests/test_prices_page.py"]}
 {"id": "SEO-008", "status": "todo", "title": "Bangla keyword seeds missing for 46 products; add Bangla FAQ/guide copy for tier-A products", "files": ["catalog.json", "ops/seo/KEYWORD-MAP-2026-11-06.json"]}

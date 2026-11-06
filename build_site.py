@@ -34,6 +34,7 @@ STEPS = [
     "tools_explorer.py",
     "product_seo_enrich.py",
     "product_rich_results.py",
+    "prices_page.py",
     "sanitize_pricing_v2_legacy.py",
     "hold_content_price_guard.py",
     "audit_commercial_truth_v2.py",
