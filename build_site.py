@@ -33,6 +33,7 @@ STEPS = [
     "bangla_guides.py",
     "tools_explorer.py",
     "product_seo_enrich.py",
+    "product_rich_results.py",
     "sanitize_pricing_v2_legacy.py",
     "hold_content_price_guard.py",
     "ai_search_facts.py",
