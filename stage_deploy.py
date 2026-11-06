@@ -40,11 +40,13 @@ BRAND_LOCK = 'data-brand-lock="2026-08-19-approved"'
 
 EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
                 '__pycache__', 'node_modules', 'marketing', 'reports', '_site',
-                'ops'}  # internal business files (cohort facts, SEO copy); never public
+                'ops',  # internal business files (cohort facts, SEO copy); never public
+                'tests'}  # repo test harness; served publicly in fca3dd7, never needed live
 EXCLUDE_EXT = {'.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml'}
 EXCLUDE_FILES = {'.replit', '.gitignore', '.env.example', 'catalog.json',
                  'package.json', 'package-lock.json', 'vercel.json', 'AGENTS.md',
-                 'aips-live.json'}  # other business unit's price source; never public
+                 'aips-live.json',  # other business unit's price source; never public
+                 'requirements.txt', '.gitattributes'}  # build/dev metadata, not site content
 EXCLUDE_PREFIXES = ('assets/social/',)
 
 
