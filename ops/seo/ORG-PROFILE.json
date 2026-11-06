@@ -1,0 +1,16 @@
+{
+  "_note": "Public facts used by ai_search_facts.py for llms.txt and the home-page Organization JSON-LD. Only verified facts. CEO must confirm sameAs URLs before merge. No reviews, ratings, order counts or partner claims.",
+  "whatsapp": "https://wa.me/8801305869242",
+  "whatsapp_display": "+880 1305 869242",
+  "telephone": "+8801305869242",
+  "logo_path": "/assets/brand/icon-transparent-512.png",
+  "sameAs": [
+    "https://www.facebook.com/saveonsub",
+    "https://www.instagram.com/saveonsub/"
+  ],
+  "provider_facts": [
+    "Google AI Pro: ৳2,500/month and Google AI Plus: ৳600/month on Google's Bangladesh page — https://gemini.google/bd/subscriptions/?hl=bn (verified 2026-10-23).",
+    "Spotify Premium Bangladesh: Individual ৳219/month, Student ৳109, Duo ৳299, Family ৳379 — https://www.spotify.com/bd-en/premium/ (verified 2026-10-23).",
+    "For every other provider, check the provider's own pricing page linked from the SaveOnSub product page; checkout currency and tax can differ."
+  ]
+}
