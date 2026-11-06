@@ -40,3 +40,4 @@
   `--check` gate in quality-gates; 8 tests. AIPS + inquiry pages untouched.
 - Keyword seed map: ops/seo/KEYWORD-MAP-2026-11-06.json (tiers A 18 / B 31 / C 18).
 - /prices page dropped: hold_content_price_guard masks prices off product pages (SEO-007, CEO).
+- /prices + /bn/prices staged by prices_page.py as pcard listing cards (guard card rule keeps only approved prices); links from every quick answer; sitemap +2.

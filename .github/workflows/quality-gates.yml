@@ -62,6 +62,7 @@ jobs:
           set -euo pipefail
           python product_seo_enrich.py --check
           python product_rich_results.py --check
+          python prices_page.py --check
           python -m unittest -v tests.test_product_seo 2>&1 | tee /tmp/product_seo_tests.log
           ! grep -q "skipped" /tmp/product_seo_tests.log
 
