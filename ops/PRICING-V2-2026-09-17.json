@@ -10,7 +10,20 @@
     "rule": "Only plans listed in approved_products with mode=fixed may be published. Every other product stays Price on Request. Prices must match this file exactly; shared plans must be labelled as shared access.",
     "supersedes": "EXEC-010 HOLD (D1 google-ai-pro, D2 chatgpt-plus) for the approved plans only, by the same founder.",
     "approved_sku_count": 133,
-    "excluded": "aips-* products (other business unit) remain Price on Request."
+    "excluded": "aips-* products (other business unit) remain Price on Request.",
+    "previous_approved_plan_count": 131,
+    "latest_scope_override": {
+      "decision_id": "SOS-PRICE-001-REV2",
+      "effective_date": "2026-11-03",
+      "product_id": "chatgpt-plus",
+      "active_plans": 3,
+      "held_plans": 0,
+      "scope": "Restore CEO-approved two shared local offers; personal BDT3390; other products and business units unchanged",
+      "authority": "Current CEO explicit correction supersedes previous mistaken HOLD interpretation",
+      "provider_terms_status": "PUBLIC_POLICY_CONFLICT_WITH_CEO_REPORTED_EXCEPTION_UNVERIFIED",
+      "release_state": "REVIEW_NOT_PUBLISHED",
+      "vendor_exception_claim_status": "SELF_REPORTED_PENDING_PROVIDER_EVIDENCE"
+    }
   },
   "positioning": {
     "personal": "Customer-specific access where the provider supports it; confirm the exact activation method before payment.",
@@ -59,14 +72,81 @@
         },
         {
           "label": "Personal (your email)",
-          "bdt": 2990,
+          "bdt": 3390,
           "duration": "1 month",
           "access_type": "personal"
         }
       ],
       "approved_by": "CEO Emon Hossain",
-      "approved_on": "2026-11-02",
-      "official_usd": 20
+      "approved_on": "2026-11-03",
+      "official_usd": 20,
+      "latest_ceo_amendment": {
+        "decision_id": "SOS-PRICE-001-REV2",
+        "date": "2026-11-03",
+        "status": "CEO_APPROVED_ALL_THREE_LOCAL_OFFERS",
+        "authority": "CEO direct correction in this conversation: Starter Shared BDT499 and Premium Shared BDT999 not HOLD; Personal BDT3390",
+        "supersedes": "SOS-PRICE-001 prior shared HOLD interpretation",
+        "changed_fields": [
+          "Starter Shared 499 -> ACTIVE_CEO_APPROVED",
+          "Premium Shared 999 -> ACTIVE_CEO_APPROVED",
+          "Personal remains 3390 per 1 month"
+        ],
+        "provider_permission": "CONFLICTED_PROVIDER_ACCOUNT_SHARING_POLICY",
+        "provider_evidence_url": "https://help.openai.com/en/articles/10471989-openai-account-sharing-policy",
+        "provider_review_date": "2026-11-03",
+        "commercial_approval_vs_vendor_authorization": "SEPARATE; CEO approves SaveOnSub prices but OpenAI individual account sharing remains not permitted",
+        "vat_invoice_status": "UNVERIFIED_INVOICE_REQUIRED",
+        "unit_economics_status": "UNVERIFIED_TOTAL_EXPENSES_REQUIRED",
+        "release_scope": "REVIEW_BRANCH_ONLY_NO_DEPLOY"
+      },
+      "decision_history": [
+        {
+          "decision_id": "SOS-PRICE-001",
+          "date": "2026-11-03",
+          "status": "CEO_APPROVED_PRICE_FULFILLMENT_CHECK_REQUIRED",
+          "changed_fields": [
+            "Personal BDT 2990 to BDT 3390",
+            "Starter Shared BDT 499 to HOLD",
+            "Premium Shared BDT 999 to HOLD"
+          ],
+          "authority": "CEO direct instruction in current conversation; option A confirmed",
+          "vat_invoice_status": "UNVERIFIED_INVOICE_REQUIRED",
+          "unit_economics_status": "UNVERIFIED_TOTAL_EXPENSES_REQUIRED",
+          "provider_permission": "UNVERIFIED",
+          "release_scope": "REVIEW_BRANCH_ONLY_NO_DEPLOY",
+          "disposition": "SUPERSEDED_BY_CEO_CORRECTION",
+          "superseded_by": "SOS-PRICE-001-REV2",
+          "source": "previous CEO A interpretation / PR100"
+        }
+      ],
+      "vendor_exception_report": {
+        "claim_id": "SOS-PRICE-001-VENDOR-EXCEPTION-CEO-20261103",
+        "reported_on": "2026-11-03T17:18:00+06:00",
+        "reporter_role": "SaveOnSub Founder & CEO",
+        "vendor": "OpenAI",
+        "country": "Bangladesh",
+        "claimed_approval": "CEO states he spoke directly with OpenAI and received special approval for low-cost shared ChatGPT Plus access for users in Bangladesh with limited purchasing power",
+        "source_type": "DIRECT_CEO_STATEMENT_IN_CURRENT_CHAT",
+        "report_status": "SELF_REPORTED",
+        "independent_verification": "UNVERIFIED",
+        "written_authorization_status": "NOT_LOCATED_IN_CONNECTED_SOURCES",
+        "scope_facts_needing_confirmation": [
+          "OpenAI representative authority",
+          "SaveOnSub legal entity or account covered",
+          "specific consumer subscription/access model covered",
+          "maximum users per credential/account",
+          "effective date and expiry",
+          "terms or conditions of exception"
+        ],
+        "evidence_reference": "Current CEO statement 2026-11-03 at 17:18 Asia/Dhaka; original support conversation, ticket or signed exception not supplied",
+        "provider_public_policy_url": "https://help.openai.com/en/articles/10471989-openai-account-sharing-policy",
+        "provider_terms_url": "https://openai.com/policies/terms-of-use/",
+        "public_policy_context": "Published public policy prohibits individual-account credential sharing. A special exception has been reported by CEO, but its existence and terms have not been independently established.",
+        "communications_rule": "Do not present OpenAI's special vendor approval, official partnership, provider-backed shared seats, or policy waiver as VERIFIED_CURRENT without authentic primary provider evidence; keep customer-facing access method disclosure accurate.",
+        "effect_on_approved_skus": "NONE - all 3 SaveOnSub local commercial prices remain CEO_APPROVED",
+        "effect_on_release_state": "NONE - PR100 review branch and separate deployment authorization gates unchanged",
+        "last_evidence_review_date": "2026-11-03"
+      }
     },
     "chatgpt-business": {
       "mode": "fixed",

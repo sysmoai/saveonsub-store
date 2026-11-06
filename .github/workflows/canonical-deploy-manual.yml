@@ -61,15 +61,18 @@ jobs:
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
           grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/index.html
           grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/p/chatgpt-plus.html
-          ! grep -q '৳3,390' _site/p/chatgpt-plus.html
+          grep -q '৳3,390' _site/p/chatgpt-plus.html
           ! grep -q '৳3,390' _site/p/google-ai-pro.html
           ! grep -q '৳1,299' _site/p/chatgpt-go.html
           ! grep -q '৳4,290' _site/p/chatgpt-business.html
           grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
           grep -q 'SELECTIVE_UNLOCK' ops/PRICING-V2-2026-09-17.json
-          grep -q '৳499' _site/p/chatgpt-plus.html  # CEO pricebook 2026-11-02
+          grep -q '৳499' _site/p/chatgpt-plus.html  # CEO-approved shared offer, risks disclosed
           grep -q '৳999' _site/p/chatgpt-plus.html
           grep -q 'Shared account (multiple users)' _site/p/chatgpt-plus.html
+          grep -q 'data-provider-policy-disclosure="account-sharing"' _site/p/chatgpt-plus.html
+          grep -q 'data-provider-policy-disclosure="account-sharing"' _site/bn/p/chatgpt-plus.html
+          ! grep -q '৳2,990' _site/p/chatgpt-plus.html
           grep -q '৳500' _site/p/google-ai-pro.html
           grep -q '"bdt"' _site/assets/catalog.js
           python catalog_hold_gate.py
@@ -141,9 +144,10 @@ jobs:
             curl -fsSL --max-time 20 https://saveonsub.com/checkout -o /tmp/checkout.html || true
             if grep -q 'User-agent: OAI-SearchBot' /tmp/robots.txt 2>/dev/null \
               && grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' /tmp/home.html 2>/dev/null \
-              && grep -q '৳499' /tmp/chatgpt-plus.html 2>/dev/null \
-              && ! grep -q '৳3,390' /tmp/chatgpt-plus.html 2>/dev/null \
+              && grep -q '৳3,390' /tmp/chatgpt-plus.html 2>/dev/null \
+              && ! grep -q '৳2,990' /tmp/chatgpt-plus.html 2>/dev/null \
               && grep -q 'Shared account (multiple users)' /tmp/chatgpt-plus.html 2>/dev/null \
+              && grep -q 'data-provider-policy-disclosure="account-sharing"' /tmp/chatgpt-plus.html 2>/dev/null \
               && ! grep -q '৳1,299' /tmp/chatgpt-go.html 2>/dev/null \
               && ! grep -q '৳4,290' /tmp/chatgpt-business.html 2>/dev/null \
               && grep -q '৳4,500' /tmp/chatgpt-pro.html 2>/dev/null \
@@ -151,6 +155,7 @@ jobs:
               && ! grep -q '৳3,390' /tmp/google-ai.html 2>/dev/null \
               && grep -q 'cartAdd' /tmp/google-ai.html 2>/dev/null \
               && grep -q '৳999' /tmp/chatgpt-plus.html 2>/dev/null \
+              && grep -q '৳499' /tmp/chatgpt-plus.html 2>/dev/null \
               && ! grep -q 'SHARED · POLICY RISK' /tmp/chatgpt-plus.html 2>/dev/null \
               && grep -q '<meta name="robots" content="noindex,follow">' /tmp/checkout.html 2>/dev/null \
               && ! grep -q 'https://saveonsub.com/.*\.html' /tmp/sitemap.xml 2>/dev/null; then

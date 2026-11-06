@@ -113,7 +113,9 @@ def patch_guide(path: Path):
     text = text.replace('ChatGPT Plus costs $20/mo officially (~৳2,200, card required). Real BD options compared: shared ৳499, personal ৳2,990, bKash payment — honest guide with risks.', 'ChatGPT Plus is $20/month as OpenAI’s published reference and BDT web billing is supported. Compare SaveOnSub options, payment paths, and shared-access policy/privacy risks.')
     text = re.sub(r'<h2 class="mt3" style="font-size:22px">The official price</h2>.*?</p>', '<h2 class="mt3" style="font-size:22px">The official reference</h2><p class="sub" style="font-size:15px">OpenAI publishes ChatGPT Plus at <b>$20/month</b>. BDT is supported for ChatGPT web billing, so the exact Bangladesh checkout amount should be read from your own OpenAI checkout rather than calculated with a fixed exchange rate. API usage is separate.</p>', text, count=1, flags=re.S)
     if 'data-chatgpt-facts=' not in text:
-        marker = '<h2 class="mt3" style="font-size:22px">Your real options in BD</h2>'
+        marker = ('<h2 class="mt3" style="font-size:22px">SaveOnSub personal subscription</h2>'
+                  if '<h2 class="mt3" style="font-size:22px">SaveOnSub personal subscription</h2>' in text
+                  else '<h2 class="mt3" style="font-size:22px">Your real options in BD</h2>')
         if marker not in text:
             raise SystemExit('ERROR: ChatGPT guide insert marker missing')
         text = text.replace(marker, plus_panel('en') + '\n' + marker, 1)
@@ -154,11 +156,20 @@ for rel in [
 plus = (SITE / 'p/chatgpt-plus.html').read_text(encoding='utf-8')
 if f'data-chatgpt-facts="{VERIFIED}"' not in plus or 'BDT is a supported currency' not in plus:
     raise SystemExit('ERROR: verified ChatGPT Plus fact panel missing')
-# Pricing V2 retired shared ChatGPT Plus seats (personal-only). The label is
-# still mandatory if a shared plan ever reappears, but must not be demanded
-# when none exists (quality-gates.yml asserts it is absent in that case).
-if 'class="tos shared' in plus and 'SHARED · POLICY RISK' not in plus:
-    raise SystemExit('ERROR: shared ChatGPT plans are not policy-risk labeled')
+# SOS-PRICE-001 REV2: both shared plans are CEO-approved as local offers.
+# Provider authorization is separate. Check that the generated product page
+# explains the actual credential-sharing restriction, risk, and supplier policy
+# link; a badge such as "SHARED · POLICY RISK" alone is insufficient evidence.
+if 'class="tos shared' in plus:
+    if 'data-provider-policy-disclosure="account-sharing"' not in plus:
+        raise SystemExit('ERROR: shared ChatGPT offers lack provider-policy disclosure')
+    if 'OpenAI does not permit sharing individual accounts' not in plus:
+        raise SystemExit('ERROR: shared ChatGPT policy restriction absent on EN page')
+    if 'https://help.openai.com/en/articles/10471989-openai-account-sharing-policy' not in plus:
+        raise SystemExit('ERROR: official provider account-sharing link missing')
+    bn_plus = (SITE / 'bn/p/chatgpt-plus.html').read_text(encoding='utf-8', errors='replace')
+    if 'data-provider-policy-disclosure="account-sharing"' not in bn_plus:
+        raise SystemExit('ERROR: shared ChatGPT policy restriction absent on BN page')
 
 go = (SITE / 'p/chatgpt-go.html').read_text(encoding='utf-8')
 if f'data-chatgpt-go-facts="{VERIFIED}"' not in go:
