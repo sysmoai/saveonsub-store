@@ -239,7 +239,6 @@ def product_main(product: dict, bn: bool) -> str:
     plans = product.get("plans") or []
     request_price = bool(product.get("request_price")) or not plans
     official_url = product.get("official_url") or product.get("url") or ""
-    official_usd = product.get("official_usd")
     prefix = "../.." if bn else ".."
     home = f"{prefix}/bn.html" if bn else f"{prefix}/index.html"
     all_link = f"{prefix}/all.html"
@@ -275,8 +274,10 @@ def product_main(product: dict, bn: bool) -> str:
     provider_ref = ""
     if official_url:
         ref = f"{provider_text} ↗"
-        usd = f" · provider list reference: ${official_usd:g}" if isinstance(official_usd, (int, float)) else ""
-        provider_ref = f'<a href="{esc(official_url)}" target="_blank" rel="noopener nofollow" style="font-size:13px;color:var(--muted);text-decoration:underline">{esc(ref)}</a>{esc(usd)}'
+        # R13: catalog official_usd is historical, unverified by SKU/market/tier.
+        # During commercial HOLD link to the provider without inventing a
+        # current USD subscription or converting an API token rate to a plan.
+        provider_ref = f'<a href="{esc(official_url)}" target="_blank" rel="noopener nofollow" style="font-size:13px;color:var(--muted);text-decoration:underline">{esc(ref)}</a>'
 
     if request_price:
         # The query value needs percent-encoding (it's a URL, not HTML body
