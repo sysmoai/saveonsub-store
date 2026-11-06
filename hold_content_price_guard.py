@@ -130,6 +130,8 @@ def _amount(token: str) -> int:
 
 
 CARD = re.compile(r'<div class="pcard">(?:(?!<div class="pcard">).)*?href="/?(?:bn/)?p/([a-z0-9-]+)(?:\.html)?"', re.S)
+# Category/home listing cards are whole links: <a class="pcard" href="../p/<id>">…<div class="price">…</a>
+CARD_LINK = re.compile(r'<a class="pcard" href="(?:\.\./|/)?(?:bn/)?p/([a-z0-9-]+)(?:\.html)?"[^>]*>.*?</a>', re.S)
 CARD_PRICE = re.compile(r'(<div class="price">)([^<]*)(</div>)')
 
 
@@ -147,7 +149,7 @@ def _mask_cards(text: str, book: dict[str, set[int]], kept: list[str]) -> str:
 
         return CARD_PRICE.sub(price, m.group(0))
 
-    return CARD.sub(card, text)
+    return CARD_LINK.sub(card, CARD.sub(card, text))
 
 
 def sanitize(text: str, approved: set[int] | None = None, unlock: bool = False,
