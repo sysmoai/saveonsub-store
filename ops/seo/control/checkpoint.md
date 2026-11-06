@@ -33,3 +33,10 @@
   APPROVED_SELLABLE even when the research row carries no access type.
 - Seed-only families have no official URL yet, so they stay NEEDS_FACT_VERIFICATION and off the explorer.
 - Next: fuzzy-duplicate review of seed families (e.g. google gemini/google, kimi/moonshot, llama/meta).
+
+## Cycle 6 (2026-11-06)
+- New build step `product_rich_results.py` (after product_seo_enrich): price in title, price/payment meta,
+  visible "Quick answer" + price & ordering FAQ, Product/Offer + FAQPage JSON-LD on 134 priced EN/BN pages.
+  `--check` gate in quality-gates; 8 tests. AIPS + inquiry pages untouched.
+- Keyword seed map: ops/seo/KEYWORD-MAP-2026-11-06.json (tiers A 18 / B 31 / C 18).
+- /prices page dropped: hold_content_price_guard masks prices off product pages (SEO-007, CEO).
