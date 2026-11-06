@@ -171,3 +171,14 @@ The user-confirmed current incoming channels are personal bKash, Nagad, Rocket a
 The checkout creates a passive P3 payment_review order; it sends no urgent operator webhook. The owner-only payment-verification endpoint checks exact amount/currency, duplicate provider reference, staff identity, private evidence reference and receipt-source attestation, then atomically updates status to payment_confirmed/P0, records the audit event and queues one sanitized paid_order_priority alert. This backend does not call any wallet API or check balances automatically.
 
 The pre-existing scheduled Worker at workers/order-notifications uses the paid-only dispatch module workers/sos-paid-alerts.mjs. It sends only minimal order ID/amount/provider, skips delivery when a secret webhook is absent, retries failed messages, and creates an owner escalation after the configured interval if status is still payment_confirmed/unclaimed. Delivery is at least once; downstream services should deduplicate by stable delivery_key. No public site, DNS, account destination or live Cloudflare deployment is changed by this branch. See PERSONAL-PAYMENT-RAILS-2026-10-28.md for operator checklist and acceptance gates.
+
+## Lifecycle and finance extension (2026-11-06, Claude, stacked on #75)
+
+CEO decision 2026-11-06: EMON = `owner`, Ripon = `fulfillment`. Schema: `lifecycle-finance-schema.sql` (apply after `schema.sql`).
+
+- **Storefront → API (G1):** `functions/api/orders/_middleware.ts` allows only `https://saveonsub.com` / `https://www.saveonsub.com` cross-origin on `/api/orders*`; other browser origins get 403 before the handler. Access must Bypass exactly those paths (`ACCESS-SETUP.md`).
+- **Fulfillment phone (G2):** a fulfiller sees `customer_phone` only on orders assigned to them (WhatsApp delivery). Unclaimed/other orders stay redacted.
+- **Order costs (G3):** `POST/GET /api/ops/orders/:id/costs` (owner writes, owner/manager read), append-only `order_costs`, corrections as signed rows. `GET /api/ops/finance/margin?month=YYYY-MM` = verified receipts − refunds sent − order costs, Dhaka month, flags paid orders without cost.
+- **Renewals (G4):** `POST /api/ops/orders/:id/service-period` (owner/manager/assigned fulfiller, delivered states only); `GET /api/ops/renewals?days=N` lists subscriptions ending soon (plus 14 days overdue).
+- **Refund evidence (G6):** `status=refunded` requires `refund {amount_bdt ≤ total, channel, evidence_ref stmt:/r2:sos/private/}`; `order_refunds` row is written in the same compare-and-set batch. Refund ledger is immutable.
+- Staff UI screens for costs/renewals/refund form are not built yet (API only).

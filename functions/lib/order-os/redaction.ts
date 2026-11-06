@@ -27,8 +27,10 @@ export function shapeOrderRow(role: Role, operatorId: string, row: OrderRow): Or
   if (role === "owner" || role === "manager") return out;
 
   if (role === "fulfillment") {
-    // Needs a name and an email to deliver access; never the phone number.
-    out.customer_phone = null;
+    // Needs a name and an email to deliver access. The phone number (used for
+    // WhatsApp delivery) is visible only on orders this operator has claimed.
+    // CEO decision 2026-11-06: Ripon = fulfillment and delivers on WhatsApp.
+    if (row.assigned_operator_id !== operatorId) out.customer_phone = null;
     return out;
   }
 
