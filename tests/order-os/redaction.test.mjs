@@ -45,13 +45,17 @@ test("C: viewer gets the queue shape only - no name, phone, email or assignee an
   }
 });
 
-test("C: fulfillment gets name and email for delivery but never the phone number", async () => {
+test("C: fulfillment sees name and email; phone only on orders it has claimed (CEO 2026-11-06)", async () => {
   const o = seedAll();
-  const row = rowFor((await w.api.list("fulfillA")).body, o.delivered.pub);
-  assert.equal(row.customer_name, NAME);
-  assert.equal(row.customer_email, EMAIL);
-  assert.equal(row.customer_phone, null);
-  assert.ok(!JSON.stringify(await w.api.list("fulfillA")).includes(PHONE));
+  const a = (await w.api.list("fulfillA")).body;
+  const own = rowFor(a, o.delivered.pub);
+  assert.equal(own.customer_name, NAME);
+  assert.equal(own.customer_email, EMAIL);
+  assert.equal(own.customer_phone, PHONE, "assigned fulfiller needs the phone for WhatsApp delivery");
+  assert.equal(rowFor(a, o.review.pub).customer_phone, null, "unclaimed order: no phone");
+  assert.equal(rowFor(a, o.mine.pub).customer_phone, null, "someone else's order: no phone");
+  const b = (await w.api.list("fulfillB")).body;
+  assert.ok(!JSON.stringify(b).includes(PHONE), "a different fulfiller never sees the phone");
 });
 
 test("C: support sees contact details only for post-delivery or self-assigned orders", async () => {
@@ -81,7 +85,7 @@ test("C: event history is redacted per role on the server", async () => {
   const { pub, id } = w.seedOrder({ status: "payment_review" });
   assert.equal((await w.api.verify("owner", pub, { provider: "bkash", transaction_id: "9ABC12XYZ0", amount_bdt: 1500, evidence_note: "stmt", evidence_ref: "stmt:redaction-0001", receipt_confirmed: true, receipt_source: "receiving_account_history" })).status, 200);
   await w.api.claim("fulfillA", pub);
-  await w.api.status("manager", pub, { status: "refunded", note: NOTE });
+  assert.equal((await w.api.status("manager", pub, { status: "refunded", note: NOTE, refund: { amount_bdt: 1500, channel: "bkash", evidence_ref: "stmt:refund-test-0001" } })).status, 200);
 
   const owner = (await w.api.events("owner", pub)).body.events;
   const refund = owner.find(e => e.payload && e.payload.note);

@@ -78,7 +78,7 @@ test("A: support may only reopen and close support cases on delivered work", asy
 test("A: refunds and cancellations are manager-only; fulfillment cannot refund or cancel", async () => {
   const a = w.seedOrder({ status: "fulfilling", assignee: OPERATORS.fulfillA.id });
   assert.equal((await w.api.status("fulfillA", a.pub, { status: "refunded" })).status, 403);
-  assert.equal((await w.api.status("manager", a.pub, { status: "refunded" })).status, 200);
+  assert.equal((await w.api.status("manager", a.pub, { status: "refunded", refund: { amount_bdt: 1500, channel: "bkash", evidence_ref: "stmt:refund-test-0001" } })).status, 200);
   const b = w.seedOrder({ status: "payment_review" });
   assert.equal((await w.api.status("fulfillA", b.pub, { status: "cancelled" })).status, 403);
   assert.equal((await w.api.status("manager", b.pub, { status: "cancelled" })).status, 200);
@@ -334,7 +334,7 @@ test("D: a stale status update (state changed under the caller) is refused and w
 test("D: simultaneous conflicting transitions - exactly one applies, one audit event", async () => {
   const { pub, id } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
   const [a, b] = await Promise.all([
-    w.api.status("manager", pub, { status: "refunded" }),
+    w.api.status("manager", pub, { status: "refunded", refund: { amount_bdt: 1500, channel: "bkash", evidence_ref: "stmt:refund-test-0001" } }),
     w.api.status("fulfillA", pub, { status: "completed" }),
   ]);
   assert.equal([a.status, b.status].filter(s => s === 200).length >= 1, true);
