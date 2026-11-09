@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-10-23",
+  "verified_on": "2026-11-07",
   "verification_log": [
     {
       "date": "2026-10-23",
@@ -13,6 +13,12 @@
       "business_reverified": "ChatGPT Business Standard seat: $25/month billed monthly, or $20/month if billed annually. 2-seat minimum per workspace, 200-seat cap on subscriptions started after 2026-08-24. OpenAI cut this price from $25 annual/$30 monthly on 2026-04-02 to the current $20/$25. Pricing V2's approved official_usd=25 / BDT 4,290 matches the $25/month (monthly-billing) reference exactly — RECONFIRMED, no discrepancy. Note: a separate 'Premium seat' tier now also exists ($100/mo annual, $125/mo monthly, 5x usage) that Pricing V2 does not currently price — not acted on, flagged as an optional future SKU only.",
       "pro_reverified": "ChatGPT Pro remains $200/month (now marketed as the 'Pro 200' tier alongside newer 'Pro 100'/$100 and 'Pro 500'/$500 tiers OpenAI introduced in 2026). Matches this file's existing $200 reference. chatgpt-pro is already inquiry-only in Pricing V2 (no fixed price published), which is the correct treatment given the now-multi-tier Pro structure.",
       "confidence": "Business figures cross-confirmed by two independent searches with identical numbers and a consistent narrative (the 2026-04-02 price cut). Pro figure is single-source-pattern but consistent with this file's prior verification and widely-established history; moderate-high confidence. verified_on bumped to 2026-10-23 on this basis — all four consumer tiers (Go/Plus/Business/Pro) and the account-sharing policy are now reconfirmed."
+    },
+    {
+      "date": "2026-11-07",
+      "method": "direct fetch of the official Plus help article + third-party guide (paretotalent.com, 'prices last checked 2026-10-26') + web search",
+      "findings": "Plus $20/month (official help.openai.com article 6950777). Business standard seat $25/month monthly or $20 annual; Premium seat $125/$100. Pro tiers $100/$200/$500. Go $8/month (consistent across many 2026 news sources incl. openai.com launch post; localized checkout remains the authority). All match this file — no change.",
+      "not_reverified": "chatgpt.com/pricing did not render the Go/Pro/Business tables to the automated fetcher, and the Go help article returned an HTTP error; those three figures rest on third-party/secondary sources this pass. Account-sharing policy page not re-fetched; carried forward."
     }
   ],
   "market": "Bangladesh",

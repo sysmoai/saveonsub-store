@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-10-23",
+  "verified_on": "2026-11-07",
   "verification_log": [
     {
       "date": "2026-10-23",
@@ -24,6 +24,12 @@
       "method": "direct fetch of https://www.netflix.com/bd/ (the actual Bangladesh-scoped official URL, not a help-center article or aggregator) plus two further Bangladesh-scoped web searches",
       "decision": "RESTORED the original four-tier Mobile $2.99 / Basic $3.99 / Standard $7.99 / Premium $9.99 structure (480p/720p/1080p/4K+HDR, 1/1/2/4 simultaneous streams respectively). The direct fetch of netflix.com/bd itself states 'Starts at USD 2.99... Plans range from USD 2.99 to USD 9.99/month' — a primary source, correctly scoped to Bangladesh, confirming this range. Multiple independent searches scoped to Bangladesh specifically (not the US) consistently name all four tiers and prices. Netflix charges Bangladesh accounts in USD (no local BDT price list) and uses a lower-tier structure retained in Bangladesh/South-Asia-class markets, distinct from the higher 3-tier US structure reported in the prior (incorrect) pass. verified_on bumped on this corrected, properly country-scoped basis.",
       "lesson": "Provider pricing must be scoped by country, currency and effective date before being treated as a reference — the same provider can legitimately show different structures in different markets at the same time. Do not substitute one market's reporting for another's without an explicit same-country source."
+    },
+    {
+      "date": "2026-11-07",
+      "method": "direct fetch of the Spotify Bangladesh Premium page + netflixindex.com/country/bangladesh (third-party, 'as of October 2026') + direct fetch of netflix.com/bd (served US content to the US-located fetcher)",
+      "findings": "Spotify Bangladesh: Individual BDT 219, Student 109, Duo 299, Family 379/month — unchanged. Netflix Bangladesh: Mobile $2.99, Basic $3.99, Standard $7.99, Premium $9.99 (USD-billed), 'prices have not changed in the past year' — matches this file. YouTube: no price is published by this cohort (checkout is the authority); availability/household rules carried forward.",
+      "not_reverified": "netflix.com/bd geo-served US prices ($8.99–$26.99) to the automated fetcher, so the Bangladesh figures rest on a third-party index this pass. YouTube help pages not re-fetched; carried forward from 2026-10-23."
     }
   ],
   "netflix": {
