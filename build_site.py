@@ -40,6 +40,7 @@ STEPS = [
     "hold_content_price_guard.py",
     "blog_copy_polish.py",
     "site_seo_hygiene.py",
+    "link_hygiene.py",
     "ai_search_facts.py",
     "audit_commercial_truth_v2.py",
     "exec003_claims_guard.py",
