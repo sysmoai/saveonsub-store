@@ -16,7 +16,7 @@
 | SOS CEO Private Finance SETTLEMENTS, SUPPLIER_COSTS, ORDER_PROFIT, APPROVALS, TOP10_COSTS | Header only | NO VERIFIED RECORDS |
 | SOS CEO Private Payment & Approval Verification | PAYMENT CHECK two rows, both Data Class DEMO and not verified; FINANCE CHECK one DEMO, APPROVALS one DEMO HOLD | DEMO ONLY |
 | SOS synthetic CRM | Three DEMO leads and two DEMO orders | EXCLUDED |
-| Supermetrics Facebook Ads (FA) | Data source configured but NOT_AUTHENTICATED; accounts_discovery returned no Facebook Ads connection for connected team | NO LIVE META DETAIL |
+| Supermetrics Facebook Ads (FA) | Initially unconnected; later on 2026-11-10 authenticated and confirmed the historical campaign's spend, messaging conversations, targeting objective and placement breakdown. CEO-private audit contains account-scoped metrics. The website-purchases field was **NULL**, not a measured zero. | ACCOUNT PERFORMANCE VERIFIED; PAID-ORDER MATCH STILL UNKNOWN |
 
 **Conclusion:** Zero **verifiable linked** paid orders among 46 **reported** started conversations with currently accessible evidence. **This is not proof of zero actual sales, nor proof that all 46 were unique customers.** Actual paid count, qualified share, conversion rate, first-sale CAC, order ROAS and profitable campaigns are **UNKNOWN**. Do not report them as zero or invent 46 conversation records.
 
@@ -70,7 +70,7 @@ Commercially relevant supported angle may be an independent **AI workflow diagno
 1. **Provider / SKU:** one legitimate, explicitly approved SaveOnSub offer with exact plan, access path, duration, Bangladesh eligibility, legal/contractual rights, disclosure and customer-owned or authorized workspace conditions.
 2. **Unit economics:** genuine supplier invoice/contract, BDT landed cost, variable fees/support/reserve, written approved sale price, conservative max CAC, refund and delivery handling.
 3. **Tracking release:** Cloudflare exact-SHA, rollback, post-deployment smoke tests and website asset 200 responses; PR #116 browser and security QA, consent flow, Events Manager Test Events, GA4 DebugView and payment-confirmed order-to-Purchase CAPI (not checkout click).
-4. **Meta actual account:** authenticate Facebook Ads in Supermetrics or provide a restricted export; verify page, Instagram, WhatsApp destination, campaign/adset/ad breakdown, status, currency, attribution and policy restrictions. Never confuse OpenAI's ChatGPT Ads Manager with Meta.
+4. **Meta actual account:** Supermetrics FA was authenticated; confirm authorized payer/owner, Instagram/WhatsApp asset linkage, permission for SaveOnSub paid spend, account policy/restrictions, and correct launch destination. Historical campaign/ad set/ad, spend, placement and objective were read, but no paid-order attribution was established. Never confuse OpenAI's ChatGPT Ads Manager with Meta.
 5. **Sales reconciliation:** join old 46 conversation outcomes (including UNKNOWN/unmatched) to qualified leads and verified orders using SaveOnSub-only private sources.
 6. **CEO written cap:** exact total/daily budget, duration, stop-loss conditions, owner, account, approved creatives/claims and explicit spend authorization.
 
