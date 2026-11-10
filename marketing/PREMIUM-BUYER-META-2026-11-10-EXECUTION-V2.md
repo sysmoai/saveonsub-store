@@ -12,7 +12,7 @@ Reach Bangladeshi adults who voluntarily identify that they need and can budget 
 - [CEO pricing PR #117](https://github.com/sysmoai/saveonsub-store/pull/117): proposed ChatGPT Plus Personal and Claude Pro Personal BDT 3,390 each. **CEO price approval claimed in PR, but PR remains DRAFT/UNMERGED. It is NOT a production price or proof of resale/fulfillment rights.**
 - [Release-safety PR #99](https://github.com/sysmoai/saveonsub-store/pull/99) merged, preserving manual production release gate.
 - Prior ad: campaign shown as 'SOS | Messages | AI tools BD | 2611' in founder screenshot; 8,866 impressions, 6,406 reach, $14.85 spent, 46 reported conversations (~$0.323 per reported conversation). Actual qualifying/paid count, real Meta channel (the tracker says 'Messenger'), and contribution UNKNOWN.
-- Supermetrics FA discovery 2026-11-10: NOT_AUTHENTICATED. No Meta account insight/placement/conversion can be claimed. Connected Metricool brand belongs to personal LinkedIn, **not** a SaveOnSub Meta data source.
+- **10 Nov 2026 fresh read-only update:** Supermetrics FA authenticated successfully, and the intended campaign's objective, targeting, delivery, creative and placement breakdown were independently verified. Account-specific diagnostics are in the CEO-private Google Doc; do not publish linked account identifiers or business intelligence in this public repo. Conversation counts were reconciled to platform reporting, but real purchases and net CAC remain unverified. Connected Metricool brand belongs to personal LinkedIn, **not** a SaveOnSub Meta data source.
 - Other business unit records never count as SaveOnSub outcomes or buyer datasets. No account passwords, raw chat transcripts, payment IDs, supplier private costs or customer PII may be committed to GitHub.
 
 ## Meta 2026 evidence and what it does not mean
@@ -99,14 +99,14 @@ If CEO requires at least BDT 500 net contribution **after ads**, maximum afforda
 - Avoid treating an anecdotal first 46-message dataset as a sufficient lookalike seed; validate its quality and consent first.
 
 ## Required release/launch approvals
-*Account* Meta administrator authorizes scoped analytics connection to correct SaveOnSub ad account (Supermetrics Facebook Ads or read-only Meta export); do not share login with agents.
+*Account* Confirm the newly authenticated Meta analytics connection's advertiser ownership, authorized payer, SaveOnSub page/Instagram/WhatsApp linking and spend/write authority; read access alone grants **no** permission to edit or spend. Do not share login with agents.
 *Commercial* approve exactly one sellable, permitted SKU/service, own landed cost/fees, final price, delivery and refund and CEO protected margin.
 *Campaign* explicit owner agreement to exact ad account, Page, messaging destination, creatives, dates, total/daily BDT cap, stop rules.
 *Measurement* for WhatsApp native path, source+qualifying+paid attribution with true order ledger; for website path, live consent-aware Pixel/GA4 + Events Manager Test Events/confirmed-Purchase CAPI. PR #116 remains unmerged.
 *Publishing* requires separate exact CEO approval. This document does not make any changes to Meta, Cloudflare, billing, GitHub main, website, public price pages or customer data.
 
 ## Truth and evidence checks (as of 2026-11-10)
-- Supermetrics FA shows NOT_AUTHENTICATED; Metricool connected brand is LinkedIn-only. Current Meta campaign raw insights cannot be asserted.
+- Supermetrics FA is now authenticated with read-only account insights verified; buyer payments/CRM matching remain **UNKNOWN**. Metricool connected brand is LinkedIn-only. A generic CONVERSATIONS objective and single inexpensive messaging ad explain what was optimized, not why individual people failed to purchase. No performance or income-based targeting guarantees.
 - PR #115 refund wording and PR #117 personal pricing are separate DRAFTs; neither is live solely from source PR.
 - Meta Ads Manager app for ChatGPT ads is **NOT Meta/Facebook Ads Manager** and must never be used as substitute for Meta campaign metrics.
 - Prior Phase 3 fresh public fetch reported /assets/meta-pixel.js and /assets/ga4.js 404. The current phase's general web crawler supplied stale cached homepage content; therefore treat latest exact live assets as **REQUIRES FRESH CHECK** rather than claim a new result.
