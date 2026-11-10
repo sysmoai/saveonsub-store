@@ -18,7 +18,8 @@ function makeBrowser(initialConsent, privacy = {}) {
   const emit = evt => { for (const fn of events.get(evt.type) || []) fn(evt); };
   const createElement = tag => ({
     tagName: tag.toUpperCase(), id: '', className: '', style: {},
-    textContent: '', innerHTML: '', children: [],
+    textContent: '', innerHTML: '', children: [], attributes: {},
+    setAttribute(name, value) { this.attributes[name] = String(value); },
     appendChild(node) { this.children.push(node); },
     remove() { if (this.id) elements.delete(this.id); }
   });
