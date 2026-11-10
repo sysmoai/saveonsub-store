@@ -1,7 +1,9 @@
 # SaveOnSub — Professional AI Buyer Pilot | REVIEW ONLY
 Date: 2026-11-10 (Asia/Dhaka)  
 Owner: SaveOnSub, not SYSmoAI/AIPS/AIPT/AITP  
-Status: UNAPPROVED PROPOSAL; NO LIVE ADS, NO SPEND, NO PRODUCTION CHANGE
+Status: PHASE 3 NO-GO (UNAPPROVED); NO LIVE ADS, NO SPEND, NO PRODUCTION CHANGE
+
+> **2026-11-10 Phase 3 update:** Review the source-backed evidence and verified blockers in [PHASE3-RECONCILIATION-POLICY-LIVE-GATE-2026-11-10.md](PHASE3-RECONCILIATION-POLICY-LIVE-GATE-2026-11-10.md). Live Meta Pixel/GA4 asset URLs return 404; the first 46 chats have no verifiable linked paid orders in accessible SaveOnSub records; provider resale rights and actual supplier costs are not proven; Supermetrics Facebook Ads has no authenticated account. All proposed spend remains on HOLD.
 
 ## Decision and evidence
 - Previous first Meta test: $14.85 spent; 46 conversations; 8,866 impressions, 6,406 reach. Approx $0.323 per conversation. **Qualified leads, paid orders, attributable revenue and CAC are unverified.**
