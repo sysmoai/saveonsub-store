@@ -1174,3 +1174,105 @@ td a:not(.btn) {
     white-space: normal;
   }
 }
+
+/* ==== motion v1 2026-11-10: hero aurora, reveal, hover depth, product rail, facts band ==== */
+.hero > .wrap { position: relative; z-index: 1; }
+.hero-fx { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.hero-fx i { position: absolute; width: 46vmax; height: 46vmax; border-radius: 50%; filter: blur(70px); opacity: .32; will-change: transform; }
+.hero-fx i:nth-child(1) { background: #14d4b8; top: -22vmax; right: -10vmax; animation: orbA 22s ease-in-out infinite alternate; }
+.hero-fx i:nth-child(2) { background: #3b82f6; bottom: -28vmax; left: -14vmax; opacity: .22; animation: orbB 26s ease-in-out infinite alternate; }
+.hero-fx i:nth-child(3) { background: #a78bfa; top: 20%; left: 38%; width: 24vmax; height: 24vmax; opacity: .14; animation: orbC 18s ease-in-out infinite alternate; }
+.hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(147,189,183,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(147,189,183,.07) 1px, transparent 1px); background-size: 44px 44px; -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%); mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%); }
+@keyframes orbA { to { transform: translate(-12vmax, 10vmax) scale(1.15); } }
+@keyframes orbB { to { transform: translate(14vmax, -8vmax) scale(1.1); } }
+@keyframes orbC { to { transform: translate(-10vmax, 6vmax) scale(.85); } }
+.hero h1 .hl { background: linear-gradient(90deg, #2ef0d2, #7cc7ff, #c4b5fd, #2ef0d2); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 8s linear infinite; }
+@keyframes shimmer { to { background-position: 300% 0; } }
+.hero .pill, section .pill { position: relative; }
+
+/* entrance + scroll reveal (only when JS has marked the page; no-JS stays visible) */
+.mo .rv { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); transition-delay: var(--d, 0s); }
+.mo .rv.in { opacity: 1; transform: none; }
+.mo .hero h1, .mo .hero .sub, .mo .hero .heroctas, .mo .hero .pill { animation: rise .8s var(--ease) both; }
+.mo .hero .sub { animation-delay: .12s; } .mo .hero .heroctas { animation-delay: .22s; }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } }
+
+/* depth on hover / focus */
+.pcard, .cattile, .whyg > div, .step, .fcell { transition: transform .35s var(--ease-spring), border-color .25s var(--ease), box-shadow .35s var(--ease); }
+.pcard:hover, .cattile:hover, .whyg > div:hover, .step:hover, .cattile:focus-visible { transform: translateY(-5px); border-color: rgba(46, 240, 210, .45); box-shadow: 0 18px 44px rgba(0, 0, 0, .45), 0 0 0 1px rgba(46, 240, 210, .12), 0 10px 40px -12px rgba(46, 240, 210, .35); }
+.pcard .ptile { transition: transform .45s var(--ease-spring); }
+.pcard:hover .ptile { transform: rotate(-6deg) scale(1.08); }
+.cattile .icon { display: inline-block; transition: transform .45s var(--ease-spring); }
+.cattile:hover .icon { transform: scale(1.25) rotate(-8deg); }
+
+/* primary button: light sweep */
+.btn-primary { position: relative; overflow: hidden; isolation: isolate; }
+.btn-primary::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.45) 50%, transparent 70%); transform: translateX(-120%); transition: transform .8s var(--ease); z-index: -1; }
+.btn-primary:hover::after { transform: translateX(120%); }
+.heroctas .btn-primary { animation: glowPulse 3.2s ease-in-out infinite; }
+@keyframes glowPulse { 50% { box-shadow: 0 0 0 6px rgba(46, 240, 210, .12), 0 12px 34px -8px rgba(46, 240, 210, .55); } }
+
+/* product rail */
+.brandrail { padding: 18px 0; border-block: 1px solid var(--line); background: linear-gradient(180deg, rgba(13,41,45,.6), rgba(6,24,26,.6)); overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.rtrack { display: flex; width: max-content; animation: rail 70s linear infinite; }
+.brandrail:hover .rtrack, .brandrail:focus-within .rtrack { animation-play-state: paused; }
+.rset { display: flex; gap: 10px; padding-right: 10px; }
+.rchip { white-space: nowrap; border: 1px solid var(--line); border-radius: 99px; padding: 8px 16px; font-weight: 800; font-size: 14px; color: var(--ink); background: var(--card); transition: border-color .2s, color .2s, transform .3s var(--ease-spring); }
+.rchip:hover, .rchip:focus-visible { border-color: var(--green2); color: var(--green2); transform: translateY(-2px); }
+@keyframes rail { to { transform: translateX(-50%); } }
+
+/* facts band */
+.factband { padding: 34px 0 6px; }
+.fgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.fcell { background: linear-gradient(160deg, rgba(15,51,55,.95), rgba(9,31,34,.95)); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 18px; }
+.fnum { display: block; font-size: 38px; line-height: 1.05; font-weight: 900; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.fcell span { display: block; color: var(--muted); font-size: 14px; margin-top: 6px; }
+@media (max-width: 900px) { .fgrid { grid-template-columns: 1fr 1fr; } .fnum { font-size: 30px; } }
+
+/* how-it-works: numbered rail */
+.steps .step { position: relative; }
+.steps .step::before { content: ""; position: absolute; left: 0; top: 0; height: 3px; width: 0; border-radius: 3px; background: var(--grad); transition: width 1s var(--ease) .2s; }
+.mo .steps .step.in::before, .steps .step:hover::before { width: 100%; }
+
+/* scroll progress */
+.scrollbar-top { position: fixed; top: 0; left: 0; height: 3px; width: 100%; transform-origin: 0 50%; transform: scaleX(0); background: var(--grad); z-index: 200; pointer-events: none; }
+
+/* mobile: header must not collide, hero starts higher, hero cards swipe */
+@media (max-width: 760px) {
+  .hero { padding: 34px 0 34px; }
+  .navin { gap: 10px; }
+  .navin .logo { flex-shrink: 1; min-width: 0; }
+  .navin .logo img[data-brand-lock] { width: 128px !important; }
+  .navtrack { padding: 6px 9px; }
+  .hgrid .grid.g3 { display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px !important; padding: 4px 2px 14px; margin-inline: -2px; scrollbar-width: none; }
+  .hgrid .grid.g3::-webkit-scrollbar { display: none; }
+  .hgrid .pcard { flex: 0 0 62%; scroll-snap-align: start; }
+  .trustbar span { transition: opacity .4s var(--ease); }
+}
+@media (max-width: 420px) {
+  .navtrack .lbl, .navtrack span:not(:first-child) { display: none; }
+  .navin .logo img[data-brand-lock] { width: 108px !important; }
+  .navin .logo img[data-brand-symbol] { width: 28px !important; height: 28px !important; margin-right: 6px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-fx i, .hero h1 .hl, .rtrack, .heroctas .btn-primary { animation: none !important; }
+  .mo .rv { opacity: 1; transform: none; transition: none; }
+  .mo .hero h1, .mo .hero .sub, .mo .hero .heroctas, .mo .hero .pill { animation: none; }
+  .pcard:hover, .cattile:hover, .whyg > div:hover, .step:hover { transform: none; }
+  .brandrail .rtrack { flex-wrap: wrap; width: auto; }
+  .brandrail .rset[aria-hidden] { display: none; }
+  .scrollbar-top { display: none; }
+}
+.hgrid > div { min-width: 0; }
+.hgrid .pcard .price { white-space: nowrap; font-size: clamp(16px, 1.5vw, 21px); }
+.hgrid .pcard .tos { line-height: 1.35; }
+@media (max-width: 760px) { .trustbar { font-size: 12px; padding: 8px 0; } .trustbar span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; } }
+/* category / listing grids: two cards per row on phones instead of one long column */
+@media (max-width: 760px) {
+  main .grid.g4 { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  main .grid.g4 .pcard { padding: 14px; }
+  main .grid.g4 .pcard h3 { font-size: 15px; }
+  main .grid.g4 .pcard .price { font-size: 17px; }
+  main .grid.g4 .pcard .tos { font-size: 9.5px; letter-spacing: .2px; }
+}

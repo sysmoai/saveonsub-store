@@ -75,3 +75,10 @@
   from the warranty swap is collapsed in commercial_truth_v2. Bangla order page lost a "5–15 minutes"
   delivery promise; students.html description lost an unverified "student discount" claim.
 - Google AI BD prices re-fetched 2026-11-10: unchanged (600 / 2,500 / 8,100 / 25,000 BDT).
+- Motion v1 (CEO: "site looks boring"): `motion_polish.py` (after a11y_polish, `--check`) adds hero aurora,
+  h1 highlight, a product-name rail (no prices) and a facts band counted from the catalog to EN/BN home,
+  and versions `sw.js` CACHE from style/app/catalog content. CSS block "motion v1" + app.js reveal/count-up/
+  ticker/scroll-progress; all off under prefers-reduced-motion. Mobile: logo/Track collision fixed, hero
+  cards swipe, listing grids 2-up. `category_copy_polish.py` replaces 26 category intros that carried
+  unverified numbers/stale "from ৳" prices and the unused official/shared·covered legend; BN cards read
+  "৳X থেকে". BN home copy and ticker fully Bangla.

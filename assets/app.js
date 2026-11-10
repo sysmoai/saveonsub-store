@@ -65,10 +65,16 @@ function waOrder(extra){
 }
 
 /* ---------- Real-facts ticker (honest — lifetime records, no fake timestamps) ---------- */
-const TICKS=[
+const TICKS=((typeof document!=='undefined'&&document.documentElement&&document.documentElement.lang)||'').indexOf('bn')===0?[
+  "পেমেন্টের আগে প্রতিটি প্ল্যানের অ্যাক্সেস টাইপ দেখানো হয়",
+  "সব দাম টাকায় দেখানো হয়",
+  "প্রতিটি প্ল্যানের সাপোর্ট শর্ত দেখানো থাকে",
+  "SaveOnSub-এর হোয়াটসঅ্যাপে মানুষের সাপোর্ট পাবেন",
+  "শেয়ার্ড অ্যাক্সেসে প্রাইভেসি ও ধারাবাহিকতার বাড়তি ঝুঁকি থাকতে পারে"
+]:[
   "Plans are labeled by access type before payment",
   "Prices are shown in BDT",
-  "Warranty terms are shown by plan",
+  "Support terms are shown by plan",
   "Support is available through the SaveOnSub WhatsApp channel",
   "Shared-access products can carry additional privacy and continuity risk"
 ];
@@ -165,3 +171,61 @@ function setupNewsletterForm(){
 
 /* ---------- Init ---------- */
 document.addEventListener('DOMContentLoaded', ()=>{ cartBadge(); startTicker(); suggestBangla(); setupNewsletterForm(); });
+
+/* motion v1 2026-11-10: scroll reveal, count-up, trust-bar rotation, scroll progress.
+   Respects prefers-reduced-motion; without JS everything stays visible. */
+(function () {
+  if (window.__sosMotion) return; window.__sosMotion = 1;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function ready(fn) { document.readyState !== 'loading' ? fn() : document.addEventListener('DOMContentLoaded', fn); }
+  ready(function () {
+    var root = document.documentElement;
+    if (reduce || !('IntersectionObserver' in window)) return;
+    root.classList.add('mo');
+    var sel = 'main section h2, section > .wrap > h2, .pcard, .cattile, .step, .whyg > div, .fcell, .notice, details, .box, .tbl, article h2';
+    var els = [].slice.call(document.querySelectorAll(sel)).filter(function (el) { return !el.closest('.hero'); });
+    var groups = new Map();
+    els.forEach(function (el) {
+      var p = el.parentElement, i = groups.get(p) || 0; groups.set(p, i + 1);
+      el.classList.add('rv'); el.style.setProperty('--d', Math.min(i, 8) * 0.06 + 's');
+    });
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    els.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0) el.classList.add('in'); else io.observe(el);
+    });
+    // count-up for the facts band
+    var bn = '০১২৩৪৫৬৭৮৯';
+    var cio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return; cio.unobserve(e.target);
+        var el = e.target, to = +el.getAttribute('data-count'), isBn = el.hasAttribute('data-bn'), t0 = null;
+        function fmt(n) { var s = String(n); return isBn ? s.replace(/\d/g, function (d) { return bn[d]; }) : s; }
+        function step(ts) { if (!t0) t0 = ts; var k = Math.min(1, (ts - t0) / 1100); el.textContent = fmt(Math.round(to * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.4 });
+    [].forEach.call(document.querySelectorAll('.fnum[data-count]'), function (el) { cio.observe(el); });
+    // trust bar: on phones show one message at a time
+    var tb = document.querySelector('.trustbar .wrap');
+    if (tb && matchMedia('(max-width: 760px)').matches) {
+      var spans = [].slice.call(tb.children); var k = 0;
+      if (spans.length > 1) setInterval(function () {
+        spans[k].style.display = 'none'; k = (k + 1) % spans.length; spans[k].style.display = 'inline'; spans[k].style.opacity = 0;
+        requestAnimationFrame(function () { spans[k].style.opacity = 1; });
+      }, 3800);
+    }
+    // thin scroll-progress line
+    var bar = document.createElement('div'); bar.className = 'scrollbar-top'; bar.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(bar);
+    var ticking = false;
+    addEventListener('scroll', function () {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(function () {
+        var h = root.scrollHeight - innerHeight; bar.style.transform = 'scaleX(' + (h > 0 ? scrollY / h : 0) + ')'; ticking = false;
+      });
+    }, { passive: true });
+  });
+})();
