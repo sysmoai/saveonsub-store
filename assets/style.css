@@ -1064,3 +1064,92 @@ summary:focus-visible {
     -webkit-text-fill-color: #000;
   }
 }
+
+/* ==== Conversion & SEO upgrade 2026-11-10 (conversion_upgrade.py) ==== */
+/* Product pages nest <section> inside <main>; the global 80px section padding
+   produced ~160px empty gaps between blocks. */
+main[data-commercial-truth] section { padding: 0; }
+main[data-commercial-truth] section + section,
+main[data-commercial-truth] .notice + section { margin-top: 36px; }
+/* Monogram tile: replaces the generic sparkle emoji with a branded initial tile. */
+.ptile {
+  --h: 172;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px; border-radius: 18px; flex: none;
+  font-weight: 900; font-size: 24px; letter-spacing: -0.5px; color: #fff;
+  background: linear-gradient(140deg, hsl(var(--h) 70% 42%), hsl(calc(var(--h) + 40) 75% 30%));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 6px 18px rgba(0,0,0,.25);
+}
+.pcard .ptile { width: 46px; height: 46px; border-radius: 13px; font-size: 18px; }
+/* Key facts (answer-first box for shoppers and AI search). */
+.kfacts { background: var(--bg3); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; }
+.kfacts h2 { font-size: 20px; margin-bottom: 10px; }
+.kfacts dl { display: grid; grid-template-columns: minmax(130px, 34%) 1fr; gap: 8px 16px; margin: 0; }
+.kfacts dt { color: var(--muted); font-size: 13.5px; font-weight: 700; }
+.kfacts dd { margin: 0; font-size: 14.5px; }
+@media (max-width: 520px) { .kfacts dl { grid-template-columns: 1fr; gap: 2px; } .kfacts dd { margin-bottom: 8px; } }
+/* Plan comparison table. */
+.plancmp { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px; }
+.plancmp th, .plancmp td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.plancmp th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+.plancmp td b { color: var(--green2); white-space: nowrap; }
+.tblwrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+/* Order steps. */
+.osteps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px; counter-reset: os; }
+.osteps li { list-style: none; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; font-size: 14px; counter-increment: os; }
+.osteps li::before { content: counter(os); display: inline-flex; width: 26px; height: 26px; border-radius: 8px; align-items: center; justify-content: center; background: var(--grad); color: #04231a; font-weight: 900; margin-bottom: 8px; }
+.osteps b { display: block; margin-bottom: 4px; }
+@media (max-width: 760px) { .osteps { grid-template-columns: 1fr 1fr; } }
+/* Related product cards. */
+.relgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin-top: 12px; }
+.relgrid .pcard { padding: 16px; gap: 6px; color: inherit; text-decoration: none; }
+.relgrid .pcard h3 { font-size: 15px; }
+.relgrid .pcard .price { font-size: 17px; }
+/* Mobile sticky buy bar on product pages. */
+.buybar { display: none; }
+@media (max-width: 760px) {
+  .buybar {
+    display: flex; align-items: center; gap: 10px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom)); background: rgba(6, 24, 26, .96);
+    border-top: 1px solid var(--line); backdrop-filter: blur(8px);
+  }
+  .buybar .bb-price { flex: 1; font-weight: 900; color: var(--green2); font-size: 17px; line-height: 1.1; }
+  .buybar .bb-price small { display: block; color: var(--muted); font-weight: 600; font-size: 11.5px; }
+  .buybar .btn { padding: 11px 14px; font-size: 14px; }
+  body.has-buybar .fab { display: none; }
+  body.has-buybar footer { padding-bottom: 110px; }
+}
+/* Home: trust bar on one line on phones, 2-up product cards, payment row. */
+@media (max-width: 760px) {
+  .trustbar span + span { display: none; }
+  .trustbar .wrap { justify-content: center; }
+  .hgrid .grid.g3 { grid-template-columns: 1fr 1fr !important; }
+  .hgrid .pcard { padding: 14px; gap: 6px; }
+  .hgrid .pcard h3 { font-size: 14.5px; }
+  .hgrid .pcard .price { font-size: 17px; }
+  .hgrid .pcard .tos { font-size: 10px; }
+}
+.whyg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.whyg div { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+.whyg b { display: block; font-size: 16px; margin: 6px 0 4px; }
+.whyg p { font-size: 14px; color: var(--muted); margin: 0; }
+@media (max-width: 900px) { .whyg { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .whyg { grid-template-columns: 1fr; } }
+.payrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.payrow span { border: 1px solid var(--line); border-radius: 99px; padding: 6px 12px; font-size: 13px; font-weight: 800; background: var(--bg3); }
+.homefaq details { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; background: var(--card); margin-top: 10px; }
+.homefaq summary { cursor: pointer; font-weight: 800; }
+.homefaq details p { margin: 8px 0 0; color: var(--muted); }
+.navtrack { white-space: nowrap; }
+@media (max-width: 600px) {
+  .plancmp thead { display: none; }
+  .plancmp, .plancmp tbody, .plancmp tr, .plancmp td { display: block; width: 100%; }
+  .plancmp tr { border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; margin-bottom: 10px; background: var(--card); }
+  .plancmp td { border: 0; padding: 4px 0; display: grid; grid-template-columns: 92px 1fr; gap: 8px; }
+  .plancmp td::before { content: attr(data-l); color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; }
+  section .grid.g4 .cattile, .grid.g4 > .cattile { padding: 16px 10px; }
+}
+@media (max-width: 480px) {
+  .grid.g4:has(> .cattile) { grid-template-columns: 1fr 1fr; }
+}
+main[data-commercial-truth] section.kfacts { padding: 20px 22px; }

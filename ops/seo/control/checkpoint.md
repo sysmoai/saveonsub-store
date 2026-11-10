@@ -47,3 +47,17 @@
   (shared/mixed no longer 'Customer-specific'); site_seo_hygiene.py: category titles/meta/ItemList,
   og:image+twitter tags everywhere, 5 BN pages into sitemap. IndexNow key file + indexnow_submit.py
   (run only after a CEO-approved deploy).
+
+## Cycle 8 (2026-11-10, design/conversion-seo-upgrade-2026-11-10)
+- New build step `conversion_upgrade.py` (after prices_page, before price/claims guards; `--check` in quality-gates):
+  134 priced product pages get a monogram tile, Key facts box, Compare plans table, How-ordering steps,
+  related-product cards (no amounts: a product page may only show its own prices) and a mobile sticky
+  buy bar reusing the page's WhatsApp prefill. Home (/ and /bn): shopper headline, trust bar now lists
+  Shared, monogram cards, Why SaveOnSub, payment row, 5-question FAQ + matching FAQPage JSON-LD.
+- Fixed: 80px global `section` padding left ~160px blank gaps on product pages; chatgpt-plus/claude-pro
+  pages said "not a credential-sharing offer" directly under disclosed shared plans; "CEO-approved
+  pricebook" internal wording shown to customers.
+- CI: `! grep` lines never failed under `set -e` (bash exempts `!`); now `|| exit 1`. Stale
+  "chatgpt-plus must not show ৳3,390" assertions flipped after CEO APPROVE PRICE 3390 (PR #117).
+- Blog repair (same PR): hold_content_price_guard turned every legacy blog price into the phrase "current price on the product page" (up to 11x a page, titles like "Google AI Pro at current price on the product page — how is it possible?"). Source sentences rewritten without prices; table cells -> "See product page"; new step `blog_copy_polish.py` (after the guard, `--check`-able) collapses leftovers; Google AI Pro guide lost unverifiable claims (#1 seller, 211+ orders, "lowest-risk", "legitimate regional channels", 30-day guarantee). Bangla guide titles drop the brand suffix when over 60 chars. BN product-page template strings are now Bangla.
+- Still open (CEO/facts): netflix-spotify-youtube-premium-price-bd and shared-vs-personal guides still carry 2026-09 era facts (Spotify/YouTube official prices, "Netflix has no official taka price", warranty wording) that need a fresh source check before they are rewritten.

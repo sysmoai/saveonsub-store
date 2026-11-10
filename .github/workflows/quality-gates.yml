@@ -63,8 +63,9 @@ jobs:
           python product_seo_enrich.py --check
           python product_rich_results.py --check
           python prices_page.py --check
+          python conversion_upgrade.py --check
           python -m unittest -v tests.test_product_seo 2>&1 | tee /tmp/product_seo_tests.log
-          ! grep -q "skipped" /tmp/product_seo_tests.log
+          ! grep -q "skipped" /tmp/product_seo_tests.log || exit 1  # bash ignores set -e for '!' commands
 
       - name: Brand kit pinned files match staged output
         run: python -m unittest -v tests.test_brand_kit_integration
@@ -80,14 +81,14 @@ jobs:
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/logo.svg
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/favicon.svg
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
-          ! grep -qiE 'commercial HOLD|publishes no fixed|not currently offered for sale' _site/llms.txt  # AI-search facts match live prices
+          ! grep -qiE 'commercial HOLD|publishes no fixed|not currently offered for sale' _site/llms.txt || exit 1  # bash ignores set -e for '!' commands # AI-search facts match live prices
           grep -q '৳499' _site/llms.txt
           grep -q 'data-sos-org-schema' _site/index.html
           grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/index.html
-          ! grep -q '৳3,390' _site/p/chatgpt-plus.html
-          ! grep -q '৳3,390' _site/p/google-ai-pro.html
-          ! grep -q '৳1,299' _site/p/chatgpt-go.html
-          ! grep -q '৳4,290' _site/p/chatgpt-business.html
+          grep -q '৳3,390' _site/p/chatgpt-plus.html  # CEO APPROVE PRICE 3390 (PR #117)
+          ! grep -q '৳3,390' _site/p/google-ai-pro.html || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q '৳1,299' _site/p/chatgpt-go.html || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q '৳4,290' _site/p/chatgpt-business.html || exit 1  # bash ignores set -e for '!' commands
           grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
           grep -q 'SELECTIVE_UNLOCK' ops/PRICING-V2-2026-09-17.json
           grep -q '৳499' _site/p/chatgpt-plus.html  # CEO pricebook 2026-11-02
@@ -96,13 +97,13 @@ jobs:
           grep -q '৳500' _site/p/google-ai-pro.html
           grep -q '"bdt"' _site/assets/catalog.js
           python catalog_hold_gate.py
-          ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
-          ! grep -q 'SHARED · WARRANTY COVERED' _site/p/chatgpt-plus.html
-          ! grep -q '5–15 min' _site/p/chatgpt-plus.html
+          ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q 'SHARED · WARRANTY COVERED' _site/p/chatgpt-plus.html || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q '5–15 min' _site/p/chatgpt-plus.html || exit 1  # bash ignores set -e for '!' commands
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
           grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
           grep -Eq 'favicon-32\.png\?v=[0-9a-f]{10}" type="image/png"' _site/p/chatgpt-plus.html
-          ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml
+          ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml || exit 1  # bash ignores set -e for '!' commands
           python audit_commercial_truth_v2.py
 
           if grep -R -q '<meta name="keywords"' _site --include='*.html'; then

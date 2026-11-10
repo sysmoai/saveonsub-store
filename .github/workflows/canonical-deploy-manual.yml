@@ -61,10 +61,10 @@ jobs:
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
           grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/index.html
           grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/p/chatgpt-plus.html
-          ! grep -q '৳3,390' _site/p/chatgpt-plus.html
-          ! grep -q '৳3,390' _site/p/google-ai-pro.html
-          ! grep -q '৳1,299' _site/p/chatgpt-go.html
-          ! grep -q '৳4,290' _site/p/chatgpt-business.html
+          grep -q '৳3,390' _site/p/chatgpt-plus.html  # CEO APPROVE PRICE 3390 (PR #117)
+          ! grep -q '৳3,390' _site/p/google-ai-pro.html || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q '৳1,299' _site/p/chatgpt-go.html || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q '৳4,290' _site/p/chatgpt-business.html || exit 1  # bash ignores set -e for '!' commands
           grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
           grep -q 'SELECTIVE_UNLOCK' ops/PRICING-V2-2026-09-17.json
           grep -q '৳499' _site/p/chatgpt-plus.html  # CEO pricebook 2026-11-02
@@ -73,14 +73,14 @@ jobs:
           grep -q '৳500' _site/p/google-ai-pro.html
           grep -q '"bdt"' _site/assets/catalog.js
           python catalog_hold_gate.py
-          ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
-          ! grep -q '5–15 min' _site/p/chatgpt-plus.html
+          ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q '5–15 min' _site/p/chatgpt-plus.html || exit 1  # bash ignores set -e for '!' commands
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
           grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
           grep -Eq 'favicon-32\.png\?v=[0-9a-f]{10}" type="image/png"' _site/p/chatgpt-plus.html
-          ! grep -R -q 'Commonly searched as' _site --include='*.html'
-          ! grep -R -q '<meta name="keywords"' _site --include='*.html'
-          ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml
+          ! grep -R -q 'Commonly searched as' _site --include='*.html' || exit 1  # bash ignores set -e for '!' commands
+          ! grep -R -q '<meta name="keywords"' _site --include='*.html' || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml || exit 1  # bash ignores set -e for '!' commands
           python audit_commercial_truth_v2.py
 
       - name: Setup Node
@@ -142,7 +142,7 @@ jobs:
             if grep -q 'User-agent: OAI-SearchBot' /tmp/robots.txt 2>/dev/null \
               && grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' /tmp/home.html 2>/dev/null \
               && grep -q '৳499' /tmp/chatgpt-plus.html 2>/dev/null \
-              && ! grep -q '৳3,390' /tmp/chatgpt-plus.html 2>/dev/null \
+              && grep -q '৳3,390' /tmp/chatgpt-plus.html 2>/dev/null \
               && grep -q 'Shared account (multiple users)' /tmp/chatgpt-plus.html 2>/dev/null \
               && ! grep -q '৳1,299' /tmp/chatgpt-go.html 2>/dev/null \
               && ! grep -q '৳4,290' /tmp/chatgpt-business.html 2>/dev/null \
