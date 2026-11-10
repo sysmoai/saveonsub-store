@@ -1153,3 +1153,22 @@ main[data-commercial-truth] .notice + section { margin-top: 36px; }
   .grid.g4:has(> .cattile) { grid-template-columns: 1fr 1fr; }
 }
 main[data-commercial-truth] section.kfacts { padding: 20px 22px; }
+
+/* ---- a11y polish 2026-11-10 (axe WCAG 2 AA: link-in-text-block, scrollable regions, 375px overflow) ---- */
+p a:not(.btn):not(.pcard),
+.sub a:not(.btn),
+td a:not(.btn) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.tbl:focus-visible {
+  outline: 2px solid var(--green2, #14d4b8);
+  outline-offset: 2px;
+}
+@media (max-width: 480px) {
+  .btn {
+    max-width: 100%;
+    white-space: normal;
+  }
+}

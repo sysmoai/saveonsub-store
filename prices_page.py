@@ -26,10 +26,29 @@ BASE = rr.BASE
 MARK = "prices-page-2026-11-06"
 
 
+# Display-only Bangla for /bn/prices (catalog labels stay English everywhere else).
+BN_CAT = {"AI Assistants": "AI অ্যাসিস্ট্যান্ট", "AI Image & Design": "AI ইমেজ ও ডিজাইন", "AI Video": "AI ভিডিও",
+          "AI Voice & Music": "AI ভয়েস ও মিউজিক", "AI Code & Dev": "AI কোড ও ডেভ", "AI Writing": "AI লেখালেখি",
+          "Workspace & Productivity": "ওয়ার্কস্পেস ও প্রোডাক্টিভিটি", "Entertainment": "বিনোদন",
+          "Education & Career": "শিক্ষা ও ক্যারিয়ার", "VPN & Security": "VPN ও সিকিউরিটি", "Bundles": "বান্ডেল",
+          "BD Lifestyle": "বাংলাদেশ লাইফস্টাইল", "Other": "অন্যান্য"}
+BN_WORDS = [(r"\(your email\)", "(আপনার ইমেইল)"), (r"\(your Gmail\)", "(আপনার জিমেইল)"),
+            (r"\(your login\)", "(আপনার লগইন)"), (r"\(own account\)", "(নিজের অ্যাকাউন্ট)"),
+            (r"\bShared\b", "শেয়ার্ড"), (r"\bPersonal\b", "পার্সোনাল"), (r"\bPremium\b", "প্রিমিয়াম"),
+            (r"\bStarter\b", "স্টার্টার"), (r"\bTeam [Ss]eat\b", "টিম সিট"), (r"\bseats?\b", "সিট"),
+            (r"\busers\b", "জন"), (r"\bmax\b", "সর্বোচ্চ"), (r"\(budget\)", "(বাজেট)")]
+
+
+def bn_label(label: str) -> str:
+    for pat, rep in BN_WORDS:
+        label = re.sub(pat, rep, label)
+    return label
+
+
 def card(pid: str, p: dict, bn: bool) -> str:
     rows = "".join(
         f'<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:6px 0;'
-        f'border-top:1px solid var(--line,rgba(127,127,127,.2))"><span>{rr.esc(pl.get("label", "Plan"))}'
+        f'border-top:1px solid var(--line,rgba(127,127,127,.2))"><span>{rr.esc(bn_label(pl.get("label", "Plan")) if bn else pl.get("label", "Plan"))}'
         f'<br><small style="color:var(--muted)">{rr.access_text(pl, bn)}</small></span>'
         f'<div class="price">{rr.price_text(pl, bn)}</div></div>'
         for pl in p["plans"])
@@ -62,10 +81,10 @@ def page(template: str, products: dict[str, dict], policy: dict, bn: bool) -> st
     for pid, p in products.items():
         by_cat.setdefault(p.get("category", "Other"), []).append(card(pid, p, bn))
     sections = "".join(
-        f'<h2 class="mt3" style="font-size:20px">{rr.esc(cat)}</h2>'
+        f'<h2 class="mt3" style="font-size:20px">{rr.esc(BN_CAT.get(cat, cat) if bn else cat)}</h2>'
         f'<div class="grid mt2" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">'
         f'{"".join(cards)}</div>' for cat, cards in by_cat.items())
-    main = (f'<main id="main" data-sos="{MARK}"><div class="wrap"><h1>{h1}</h1><p>{intro}</p>'
+    main = (f'<main id="main" data-sos="{MARK}"><div class="wrap" style="padding-top:28px"><h1>{h1}</h1><p>{intro}</p>'
             f'{sections}</div></main>')
     t = re.sub(r"<main\b.*?</main>", lambda _m: main, template, count=1, flags=re.S)
     t = re.sub(r'<script type="application/ld\+json">.*?</script>\s*', "", t, flags=re.S)

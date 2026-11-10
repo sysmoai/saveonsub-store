@@ -74,6 +74,24 @@ def process(page: Path) -> tuple[str, int]:
     return HREF.sub(sub, text), count
 
 
+# 404.html is served at whatever path was missing (/p/x/y), so its relative
+# links and assets break below the root. Make them root-absolute.
+REL = re.compile(r'(\b(?:href|src)=)(["\'])(?![a-z][a-z0-9+.-]*:|/|#|\$\{)([^"\']*)\2', re.I)
+
+
+def root_absolute(text: str) -> tuple[str, int]:
+    count = 0
+
+    def sub(m: re.Match) -> str:
+        nonlocal count
+        url = m.group(3)
+        url = url[2:] if url.startswith("./") else url
+        count += 1
+        return f"{m.group(1)}{m.group(2)}/{url}{m.group(2)}"
+
+    return REL.sub(sub, text), count
+
+
 BASE = HOSTS[0]
 ALT = re.compile(r'(<link[^>]+rel=["\']alternate["\'][^>]+hreflang=["\'])([^"\']+)(["\'][^>]+href=["\'])([^"\']+)(["\'])', re.I)
 
@@ -119,6 +137,9 @@ def main(argv: list[str]) -> int:
     for page in pages:
         new, n = process(page)
         new, k = pair_fix(page, new)
+        if page == SITE / "404.html":
+            new, r = root_absolute(new)
+            n += r
         if n or k:
             total += n
             pairs += k

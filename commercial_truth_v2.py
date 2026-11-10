@@ -144,6 +144,9 @@ def sanitize_common(text: str) -> str:
     text = re.sub(r'\b(?:href|src|action)\s*=\s*(?:"[^"]*"|\'[^\']*\')|https?://[^\s"\'<>]+', _mask, text, flags=re.I)
     for old, new in replacements.items():
         text = text.replace(old, new)
+    # "Warranty terms" / "1-hour replacement warranty" become doubled phrases
+    # after the swap above ("Support terms terms"); collapse them.
+    text = re.sub(r"\b(support terms)(?:\s+(?:support\s+)?terms)+\b", r"\1", text, flags=re.I)
     text = re.sub(r"\x00URL(\d+)\x00", lambda m: masked[int(m.group(1))], text)
 
     text = re.sub(r"(?:·|&middot;)\s*A SYSmoAI venture\.\s*", "· ", text)

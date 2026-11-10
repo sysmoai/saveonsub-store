@@ -77,6 +77,19 @@ class FixtureSite(unittest.TestCase):
         self.assertIn('href="nope.html"', text)
         self.assertIn('https://www.adobe.com/a.html', text)
 
+    def test_404_links_become_root_absolute(self):
+        (self.site / "404.html").write_text(
+            page(B + "/404", '<a href="./">h</a><a href="c/x.html">c</a><img src="assets/i.png">'
+                 '<a href="#m">m</a><a href="https://wa.me/8801305869242">w</a>'), encoding="utf-8")
+        (self.site / "c").mkdir()
+        (self.site / "c" / "x.html").write_text(page(B + "/c/x"), encoding="utf-8")
+        self.assertEqual(lh.main(["--check"]), 1)
+        self.fix()
+        t = (self.site / "404.html").read_text()
+        for frag in ('href="/"', 'href="/c/x"', 'src="/assets/i.png"', 'href="#m"', 'href="https://wa.me/'):
+            self.assertIn(frag, t)
+        self.assertEqual(lh.main(["--check"]), 0)
+
     # release_truth_audit: clean fixture passes -----------------------------
     def test_clean_site_passes(self):
         self.fix()
