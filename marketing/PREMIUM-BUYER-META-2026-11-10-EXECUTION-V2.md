@@ -22,6 +22,12 @@ Reach Bangladeshi adults who voluntarily identify that they need and can budget 
 - Meta Ad Library exposes ad examples but does not prove a competitor's ROAS, CPA or real sales: https://business.facebook.com/ads/library .
 - Do not assume all named AI brands exist as Meta detailed-targeting interests, and do not claim a reliable 'paid subscriber' filter.
 
+## Existing SaveOnSub operator intelligence (historical, source-limited)
+- A SaveOnSub-only report from Ripon dated 2026-10-23 examined an authorized small sample of inquiries; its supplier/purchase evidence was explicitly **not** merchant-verified. It mentioned a real buyer asking about Lovable credits and Google AI Studio vs Gemini, and an advance-payment trust objection. These are **qualitative customer themes**, not proof of premium buyers, paid sales or CAC.
+- Creative and sales response should emphasize **fit-to-work**, precise included credits/tokens, source-backed subscription vs API differences, exact plan/access/expiry, verified price and a factual payment/activation procedure; no 'unlimited' claims without provider support.
+- A historical checkout-cart bug (WhatsApp message could show TOTAL 0 after cart clear) was reported in the old operator audit. The inspected **current GitHub main checkout.html** now computes `orderLink = waOrder(...)` **before** `recordOrder(...)`, addressing that specific source-level sequence. Actual production deployment and real checkout delivery remain separately unverified. Do not describe this historical defect as still active or treat source repair as live proof.
+- Founder/operator historic USD 5/day suggestion was a **proposal**, not approval. Revenue figures and customer-facing outcomes stay UNKNOWN unless independently reconciled.
+
 ## Audience hypotheses, not facts about Meta users
 | Segment | Work and purchase trigger | Differentiating ad | Qualification |
 | --- | --- | --- | --- |
