@@ -59,11 +59,17 @@ class ClaimsGuardTest(unittest.TestCase):
         self.assertIn("rewritten_link_target", scan('<a href="support terms.html">x</a>'))
 
     def test_refund_exemption_is_exact_cell_only(self):
-        rights = "<table><tr><td>Same day</td><td>Same day, to your bKash/Nagad</td></tr></table>"
+        rights = "<table><tr><td>Within 1 hour</td><td>Within 24h of failed replacement</td></tr></table>"
         self.assertEqual(scan(rights, "refund.html"), [])
         self.assertIn("same_day", scan("<table><tr><td>Same day refunds always</td></tr></table>", "refund.html"))
+
+    def test_same_day_refund_promise_is_no_longer_exempt(self):
+        # Refund draft (2026-11-10): timing is confirmed in writing per order.
+        old = "<table><tr><td>Same day</td><td>Same day, to your bKash/Nagad</td></tr></table>"
+        self.assertIn("same_day", scan(old, "refund.html"))
+        self.assertIn("same_day", scan("<td><b>পূর্ণ রিফান্ড</b>, একই দিনে</td>", "bn/refund.html"))
         self.assertIn("same_day", scan("<p>Same day</p>", "refund.html"))
-        self.assertIn("same_day", scan(rights, "faq.html"))
+        self.assertIn("same_day", scan(old, "faq.html"))
 
 
 if __name__ == "__main__":
