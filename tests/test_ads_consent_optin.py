@@ -31,6 +31,7 @@ class AdsConsentOptInTests(unittest.TestCase):
 
     def test_ga4_needs_grant_and_can_regrant_after_revocation(self):
         self.assertIn("if(getConsent() === 'granted') loadGa();", self.ga4)
+        self.assertIn("if(!loaded || getConsent() !== 'granted') return;", self.ga4)
         self.assertIn("if(loaded) gtag('consent', 'update', {analytics_storage: 'granted'});", self.ga4)
         self.assertIn("gtag('consent', 'update', {analytics_storage: 'denied'})", self.ga4)
 
