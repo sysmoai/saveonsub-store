@@ -47,7 +47,7 @@ def page(template: str, products: dict[str, dict], policy: dict, bn: bool) -> st
         desc = (f"ChatGPT, Gemini, Claude, Canva, Netflix সহ {n}টি সাবস্ক্রিপশনের বর্তমান দাম টাকায়, "
                 "অ্যাক্সেস টাইপসহ। bKash, Nagad বা Rocket-এ পেমেন্ট।")
         h1 = "AI ও ডিজিটাল সাবস্ক্রিপশনের দাম — বাংলাদেশ"
-        intro = (f"নিচের সব দাম SaveOnSub-এর CEO-অনুমোদিত প্রাইসবুক থেকে তৈরি (সর্বশেষ অনুমোদন {latest})। "
+        intro = (f"SaveOnSub-এর সব দাম এক তালিকায় (সর্বশেষ হালনাগাদ {latest})। "
                  "শেয়ার্ড প্ল্যানে একাধিক ব্যবহারকারী একই অ্যাকাউন্ট ব্যবহার করেন; কাজ বা গোপন তথ্যের জন্য "
                  "কাস্টমার-নির্দিষ্ট প্ল্যান নিন। পেমেন্টের আগে WhatsApp-এ চূড়ান্ত দাম নিশ্চিত করা হয়।")
     else:
@@ -55,7 +55,7 @@ def page(template: str, products: dict[str, dict], policy: dict, bn: bool) -> st
         desc = (f"Current BDT prices for {n} subscriptions incl. ChatGPT, Gemini, Claude, Canva and Netflix, "
                 "with access type. Pay by bKash, Nagad or Rocket.")
         h1 = "AI and digital subscription prices in Bangladesh"
-        intro = (f"Every price below comes from SaveOnSub's CEO-approved pricebook (last approved {latest}). "
+        intro = (f"Every SaveOnSub price in one list (last updated {latest}). "
                  "On a shared plan several people use one account; choose a customer-specific plan for work or "
                  "private data. The final price is confirmed on WhatsApp before payment.")
     by_cat: dict[str, list[str]] = {}

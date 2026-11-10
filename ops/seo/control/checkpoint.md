@@ -47,3 +47,15 @@
   (shared/mixed no longer 'Customer-specific'); site_seo_hygiene.py: category titles/meta/ItemList,
   og:image+twitter tags everywhere, 5 BN pages into sitemap. IndexNow key file + indexnow_submit.py
   (run only after a CEO-approved deploy).
+
+## Cycle 8 (2026-11-10, design/conversion-seo-upgrade-2026-11-10)
+- New build step `conversion_upgrade.py` (after prices_page, before price/claims guards; `--check` in quality-gates):
+  134 priced product pages get a monogram tile, Key facts box, Compare plans table, How-ordering steps,
+  related-product cards (no amounts: a product page may only show its own prices) and a mobile sticky
+  buy bar reusing the page's WhatsApp prefill. Home (/ and /bn): shopper headline, trust bar now lists
+  Shared, monogram cards, Why SaveOnSub, payment row, 5-question FAQ + matching FAQPage JSON-LD.
+- Fixed: 80px global `section` padding left ~160px blank gaps on product pages; chatgpt-plus/claude-pro
+  pages said "not a credential-sharing offer" directly under disclosed shared plans; "CEO-approved
+  pricebook" internal wording shown to customers.
+- CI: `! grep` lines never failed under `set -e` (bash exempts `!`); now `|| exit 1`. Stale
+  "chatgpt-plus must not show ৳3,390" assertions flipped after CEO APPROVE PRICE 3390 (PR #117).

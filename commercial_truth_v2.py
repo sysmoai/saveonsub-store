@@ -249,7 +249,7 @@ def product_main(product: dict, bn: bool) -> str:
 
     if bn:
         heading = f"{name} — বাংলাদেশে মূল্য ও অ্যাক্সেস"
-        intro = "SaveOnSub-এর বর্তমান পাবলিক অফারটি নিচে দেখুন। পেমেন্টের আগে exact provider tier, access method, availability এবং order-specific support terms নিশ্চিত করুন।"
+        intro = "bKash, Nagad বা Rocket-এ টাকায় পেমেন্ট করুন। প্রতিটি প্ল্যানের পাশে অ্যাক্সেস টাইপ লেখা আছে; পেমেন্টের আগে WhatsApp-এ প্ল্যান, অ্যাক্সেস পদ্ধতি ও সময় নিশ্চিত করা হয়।"
         access_heading = "অ্যাক্সেস আগে নিশ্চিত করুন"
         access_copy = "SaveOnSub credential-sharing ব্যবস্থাকে provider-supported personal বা team access হিসেবে দেখায় না। Exact access method পেমেন্টের আগে লিখিতভাবে জানানো হয়; provider checkout price আলাদা হতে পারে।"
         how_heading = "অর্ডার করার আগে"
@@ -259,7 +259,7 @@ def product_main(product: dict, bn: bool) -> str:
         provider_text = "Provider pricing/terms যাচাই করুন"
     else:
         heading = f"{name} Price in Bangladesh"
-        intro = "Review the current SaveOnSub public offer below. Before payment, confirm the exact provider tier, access method, availability and order-specific support terms."
+        intro = "Pay in taka with bKash, Nagad or Rocket. Every plan below shows its access type, and we confirm the exact plan, access method and timing on WhatsApp before you pay."
         access_heading = "Confirm the access model before payment"
         access_copy = "SaveOnSub does not present credential-sharing arrangements as provider-supported personal or team access. The exact access method is disclosed in writing before payment; the provider checkout price can be different."
         how_heading = "Before you order"
@@ -310,7 +310,10 @@ def product_main(product: dict, bn: bool) -> str:
         caveat = ""
     elif pid == "chatgpt-business":
         caveat = "<div class=\"notice mt2\">ChatGPT Business is a workspace product and provider minimum-seat/billing rules can apply. Confirm the current seat requirement and workspace role before payment.</div>"
-    elif pid in {"chatgpt-go", "chatgpt-plus", "claude-pro"}:
+    elif pid in {"chatgpt-go", "chatgpt-plus", "claude-pro"} and not any(
+            (pl.get("type") or pl.get("access_type")) == "shared" for pl in plans):
+        # Only true when no shared plan is listed on this page; a page that
+        # also lists disclosed shared plans must not claim the opposite.
         caveat = "<div class=\"notice mt2\">This listing is not a credential-sharing offer. Confirm the exact customer-specific activation method before payment.</div>"
     elif pid == "chatgpt-pro":
         caveat = "<div class=\"notice mt2\">Fixed-price sale is paused on this page until the currently available provider tier and checkout amount are reconfirmed.</div>"

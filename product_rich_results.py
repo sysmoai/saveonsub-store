@@ -144,7 +144,7 @@ def faq_items(name: str, plans: list[dict], date: str, bn: bool) -> list[tuple[s
     if bn:
         items = [
             (f"বাংলাদেশে {name}-এর দাম কত?",
-             f"SaveOnSub-এ {name}: {plan_list(plans, True)}। দাম CEO-অনুমোদিত প্রাইসবুক থেকে (সর্বশেষ অনুমোদন {date})। পেমেন্টের আগে WhatsApp-এ চূড়ান্ত দাম ও প্ল্যান নিশ্চিত করা হয়।"),
+             f"SaveOnSub-এ {name}: {plan_list(plans, True)}। দাম সর্বশেষ হালনাগাদ {date}। পেমেন্টের আগে WhatsApp-এ চূড়ান্ত দাম ও প্ল্যান নিশ্চিত করা হয়।"),
             (f"{name} কীভাবে কিনব ও পেমেন্ট করব?",
              "প্ল্যান বেছে কার্টে যোগ করুন অথবা WhatsApp-এ মেসেজ দিন। bKash, Nagad বা Rocket-এ পেমেন্ট করুন; ট্রানজ্যাকশন আইডি দিলে অর্ডার নিশ্চিত হয়।"),
         ]
@@ -157,7 +157,7 @@ def faq_items(name: str, plans: list[dict], date: str, bn: bool) -> list[tuple[s
         return items
     items = [
         (f"How much is {name} in Bangladesh?",
-         f"At SaveOnSub, {name} costs {plan_list(plans, False)}. Prices come from the CEO-approved pricebook (last approved {date}); the final price and plan are confirmed on WhatsApp before payment."),
+         f"At SaveOnSub, {name} costs {plan_list(plans, False)}. Prices were last updated on {date}; your final plan and price are confirmed on WhatsApp before you pay."),
         (f"How do I buy {name} and pay in Bangladesh?",
          "Pick a plan and add it to the cart, or message SaveOnSub on WhatsApp. Pay by bKash, Nagad or Rocket and share the transaction ID to confirm the order."),
     ]

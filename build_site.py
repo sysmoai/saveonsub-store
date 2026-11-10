@@ -35,6 +35,7 @@ STEPS = [
     "product_seo_enrich.py",
     "product_rich_results.py",
     "prices_page.py",
+    "conversion_upgrade.py",
     "sanitize_pricing_v2_legacy.py",
     "hold_content_price_guard.py",
     "site_seo_hygiene.py",
