@@ -1,7 +1,7 @@
 ---
 slug: ai-diye-video-banano-bangla-guide
 lang: bn
-title: AI দিয়ে ভিডিও বানানো — বাংলায় সহজ গাইড (Veo, Kling, CapCut, Runway)
+title: AI দিয়ে ভিডিও বানানো — বাংলায় সহজ গাইড
 description: টেক্সট বা ছবি থেকে AI ভিডিও, ইউটিউব শর্টস ও রিলস এডিটিং: কোন কাজে কোন টুল, ভালো প্রম্পট লেখার নিয়ম, আর কপিরাইট ও লেবেলিং নিয়ে জরুরি সতর্কতা।
 related: [google-ai-pro, kling, capcut-pro, runway, invideo, heygen]
 source: Written by Claude for SaveOnSub 2026-11-06 from the tools' public product pages; capabilities and limits change often, readers are told to verify on each provider's site.

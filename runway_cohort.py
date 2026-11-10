@@ -123,7 +123,7 @@ patch_product("p/runway.html")
 patch_product("bn/p/runway.html", True)
 
 path, guide = load("blog/ai-video-tools-price-comparison-bd-2026.html")
-guide_desc = f"AI video tools in Bangladesh: current SaveOnSub prices plus provider-plan caveats. Runway facts verified {VERIFIED}; compare access type, credits and current provider pricing before buying."
+guide_desc = f"AI video tools in Bangladesh compared. Runway facts verified {VERIFIED}; check access type, credits and current provider pricing before buying."
 guide = replace_meta(guide, "name", "description", guide_desc)
 guide = replace_meta(guide, "property", "og:description", guide_desc)
 guide = re.sub(r'("@type":\s*"Article".*?"description":\s*")[^"]*(")', lambda m: m.group(1) + guide_desc + m.group(2), guide, count=1, flags=re.S)

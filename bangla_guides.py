@@ -132,7 +132,9 @@ def render(meta: dict, body: str, shell: str, products: dict) -> str:
     )
     t = shell
     t = re.sub(r'<html lang="[^"]*"', '<html lang="bn"', t, count=1)
-    t = set_once(t, r"<title>.*?</title>", f"<title>{esc(title)} | SAVEONSUB</title>")
+    # Brand suffix only when the whole title stays within 60 characters.
+    page_title = f"{title} | SAVEONSUB" if len(title) + 12 <= 60 else title
+    t = set_once(t, r"<title>.*?</title>", f"<title>{esc(page_title)}</title>")
     t = set_once(t, r'<meta name="description" content="[^"]*">', f'<meta name="description" content="{esc(desc)}">')
     t = set_once(t, r'<meta property="og:title" content="[^"]*">', f'<meta property="og:title" content="{esc(title)}">')
     t = set_once(t, r'<meta property="og:description" content="[^"]*">', f'<meta property="og:description" content="{esc(desc)}">')

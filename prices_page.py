@@ -45,7 +45,7 @@ def page(template: str, products: dict[str, dict], policy: dict, bn: bool) -> st
     if bn:
         title = "AI সাবস্ক্রিপশনের দাম বাংলাদেশে — প্রাইস লিস্ট | SAVEONSUB"
         desc = (f"ChatGPT, Gemini, Claude, Canva, Netflix সহ {n}টি সাবস্ক্রিপশনের বর্তমান দাম টাকায়, "
-                "অ্যাক্সেস টাইপসহ। bKash, Nagad বা Rocket-এ পেমেন্ট।")
+                "অ্যাক্সেস টাইপসহ। বিকাশ, নগদ বা রকেটে পেমেন্ট।")
         h1 = "AI ও ডিজিটাল সাবস্ক্রিপশনের দাম — বাংলাদেশ"
         intro = (f"SaveOnSub-এর সব দাম এক তালিকায় (সর্বশেষ হালনাগাদ {latest})। "
                  "শেয়ার্ড প্ল্যানে একাধিক ব্যবহারকারী একই অ্যাকাউন্ট ব্যবহার করেন; কাজ বা গোপন তথ্যের জন্য "

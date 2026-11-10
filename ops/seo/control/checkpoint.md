@@ -59,3 +59,5 @@
   pricebook" internal wording shown to customers.
 - CI: `! grep` lines never failed under `set -e` (bash exempts `!`); now `|| exit 1`. Stale
   "chatgpt-plus must not show ৳3,390" assertions flipped after CEO APPROVE PRICE 3390 (PR #117).
+- Blog repair (same PR): hold_content_price_guard turned every legacy blog price into the phrase "current price on the product page" (up to 11x a page, titles like "Google AI Pro at current price on the product page — how is it possible?"). Source sentences rewritten without prices; table cells -> "See product page"; new step `blog_copy_polish.py` (after the guard, `--check`-able) collapses leftovers; Google AI Pro guide lost unverifiable claims (#1 seller, 211+ orders, "lowest-risk", "legitimate regional channels", 30-day guarantee). Bangla guide titles drop the brand suffix when over 60 chars. BN product-page template strings are now Bangla.
+- Still open (CEO/facts): netflix-spotify-youtube-premium-price-bd and shared-vs-personal guides still carry 2026-09 era facts (Spotify/YouTube official prices, "Netflix has no official taka price", warranty wording) that need a fresh source check before they are rewritten.

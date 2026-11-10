@@ -38,6 +38,7 @@ STEPS = [
     "conversion_upgrade.py",
     "sanitize_pricing_v2_legacy.py",
     "hold_content_price_guard.py",
+    "blog_copy_polish.py",
     "site_seo_hygiene.py",
     "ai_search_facts.py",
     "audit_commercial_truth_v2.py",
