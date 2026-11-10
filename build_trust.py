@@ -124,18 +124,18 @@ body = """<span class="pill">↩️ REFUND POLICY</span>
 <h1 style="font-size:clamp(26px,4vw,38px)">Clear refunds. <span class="grad-text">No fine-print games.</span></h1>
 <div class="tbl mt3"><table>
 <tr><th>Situation</th><th>What you get</th><th>Timeline</th></tr>
-<tr><td>Not delivered within 24h of payment</td><td><b>Full refund</b></td><td>Same day, to your bKash/Nagad</td></tr>
-<tr><td>Cancelled before delivery</td><td><b>Full refund</b></td><td>Same day</td></tr>
-<tr><td>Seat died in warranty, replacement failed</td><td><b>Refund for unused days</b></td><td>Within 24h of failed replacement</td></tr>
-<tr><td>Wrong product delivered</td><td>Correct product or <b>full refund</b> — your choice</td><td>Within 1 hour</td></tr>
-<tr><td>Changed mind after successful delivery</td><td>Replacement-first policy; refund case-by-case</td><td>Within 48h</td></tr>
+<tr><td>Not delivered within 24h of payment</td><td><b>Full refund</b></td><td>Confirmed in writing for your order</td></tr>
+<tr><td>Cancelled before delivery</td><td><b>Full refund</b></td><td>Confirmed in writing for your order</td></tr>
+<tr><td>Seat died in warranty, replacement failed</td><td><b>Refund for unused days</b></td><td>Confirmed in writing for your order</td></tr>
+<tr><td>Wrong product delivered</td><td>Correct product or <b>full refund</b> — your choice</td><td>Confirmed in writing for your order</td></tr>
+<tr><td>Changed mind after successful delivery</td><td>Replacement-first policy; refund case-by-case</td><td>Confirmed in writing for your order</td></tr>
 </table></div>
 <h2 class="mt3" style="font-size:21px">How refunds are paid</h2>
 <p class="sub" style="font-size:15px">Back to the same bKash/Nagad/Rocket number you paid from — send-money, no fees deducted. We don't do store-credit-only games.</p>
 <h2 class="mt3" style="font-size:21px">How to request</h2>
-<p class="sub" style="font-size:15px">WhatsApp your order ID + reason. Refunds are approved by a human (usually within the hour), not a bot maze.</p>
+<p class="sub" style="font-size:15px">WhatsApp your order ID + reason. Every refund is approved by a person, and we tell you the amount and date in writing before it is paid.</p>
 <div class="notice green mt3">🤝 Still deciding? Ask whether <b>pay-after-testing</b> is explicitly available for your selected product/order; otherwise use the standard checkout and written refund terms.</div>"""
-pages['refund'] = dict(title="Refund Policy — Same-Day, No Games | SAVEONSUB", desc="Full refund if not delivered in 24h. Unused-days refund on warranty failures. Paid back to your bKash same day. The whole policy in one table.", crumb="Refund Policy", body=body, schema="", robots="")
+pages['refund'] = dict(title="Refund Policy — Clear Rules, In Writing | SaveOnSub", desc="Full refund if not delivered in 24h. Unused-days refund on warranty failures. Amount and date confirmed in writing, paid to the number you paid from.", crumb="Refund Policy", body=body, schema="", robots="")
 
 # ---------- Privacy ----------
 body = """<span class="pill">🔒 PRIVACY</span>

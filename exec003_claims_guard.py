@@ -63,14 +63,11 @@ LINK_TARGET = re.compile(r'\b(?:href|src|action)\s*=\s*"[^"]*support terms', re.
 REFUND_PAGES: dict[str, frozenset[str]] = {
     "refund.html": frozenset({
         "Not delivered within 24h of payment",
-        "Same day, to your bKash/Nagad",
-        "Same day",
         "Within 24h of failed replacement",
         "Within 1 hour",
     }),
     "bn/refund.html": frozenset({
         "পেমেন্টের ২৪ ঘণ্টায় ডেলিভারি না হলে",
-        "পূর্ণ রিফান্ড, একই দিনে",
     }),
 }
 
@@ -79,16 +76,7 @@ REFUND_PAGES: dict[str, frozenset[str]] = {
 # until Emon approves a narrow refund draft, so these exact head strings are
 # skipped on these two pages only. Delete this table in the same change that
 # applies the approved refund draft.
-REFUND_D3_PENDING_HEAD: dict[str, tuple[str, ...]] = {
-    "refund.html": (
-        "Refund Policy — Same-Day, No Games | SAVEONSUB",
-        "Paid back to your bKash same day.",
-    ),
-    "bn/refund.html": (
-        "রিফান্ড নীতি — একই দিনে, কোনো ফাইন-প্রিন্ট নয় | SAVEONSUB",
-        "একই দিনে আপনার বিকাশ/নগদে ফেরত।",
-    ),
-}
+REFUND_D3_PENDING_HEAD: dict[str, tuple[str, ...]] = {}
 
 CELL = re.compile(r"<td\b[^>]*>(.*?)</td>", re.I | re.S)
 
