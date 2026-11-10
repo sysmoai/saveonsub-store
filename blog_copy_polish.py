@@ -28,6 +28,12 @@ def polish(text: str) -> str:
     return text
 
 
+# Claims removed from the shared-vs-personal guide on 10 Nov 2026 (gap T59): they
+# contradicted the product pages (shared users can see activity) or promised SLAs.
+BANNED = re.compile(r"bulletproof|zero risk|stays private|Private per-user|replaces in 1h|1-hour hiccup|"
+                    r"Google is tolerant|most tolerant|officially supported", re.I)
+
+
 def main(argv: list[str]) -> int:
     check = "--check" in argv
     bad = []
@@ -35,6 +41,8 @@ def main(argv: list[str]) -> int:
     for path in sorted((SITE / "blog").glob("*.html")):
         text = path.read_text(encoding="utf-8")
         new = polish(text)
+        if BANNED.search(new):
+            bad.append(f"{path.name} (banned claim: {BANNED.search(new).group(0)})")
         if check:
             if CELL.search(text) or DOUBLE.search(text):
                 bad.append(path.name)
@@ -42,7 +50,7 @@ def main(argv: list[str]) -> int:
             path.write_text(new, encoding="utf-8")
             changed += 1
     if bad:
-        print("[blog-polish] FAIL — doubled/cell placeholders remain: " + ", ".join(bad))
+        print("[blog-polish] FAIL — doubled/cell placeholders or banned claims: " + ", ".join(bad))
         return 1
     print(f"[blog-polish] PASS — {changed} blog page(s) polished; no doubled price placeholders")
     return 0
