@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-11-07",
+  "verified_on": "2026-11-10",
   "verification_log": [
     {
       "date": "2026-10-23",
@@ -14,6 +14,12 @@
       "source": "https://gemini.google/bd/subscriptions/?hl=en",
       "findings": "Google AI Plus BDT 600/month, Google AI Pro BDT 2,500/month, Google AI Ultra from BDT 8,100/month — unchanged from 2026-10-23.",
       "not_reverified": "Ultra higher tier (BDT 25,000) and plan-feature details were not re-checked this pass; carried forward from 2026-10-23."
+    },
+    {
+      "date": "2026-11-10",
+      "method": "direct fetch",
+      "source": "https://gemini.google/bd/subscriptions/?hl=en (served in Bangla)",
+      "findings": "Google AI Plus BDT 600/month, Google AI Pro BDT 2,500/month, Google AI Ultra from BDT 8,100/month (5x Pro limits) and BDT 25,000/month (20x Pro limits). Unchanged from 2026-11-07. No explicit consumer free-trial wording on the page."
     }
   ],
   "market": "Bangladesh",

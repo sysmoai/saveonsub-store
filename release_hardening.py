@@ -131,6 +131,14 @@ if robots.exists():
         addition = 'User-agent: OAI-SearchBot\nAllow: /\n\n'
         r = r.replace(marker, marker + addition) if marker in r else r + '\n' + addition
         robots.write_text(r, encoding='utf-8')
+    # AI answer engines fetch with search/user agents distinct from training bots;
+    # name them so assistants that cite live pages are explicitly allowed.
+    extra = [a for a in ('Claude-SearchBot', 'Claude-User', 'ChatGPT-User', 'Perplexity-User', 'Bingbot')
+             if f'User-agent: {a}\n' not in r]
+    if extra:
+        block = ''.join(f'User-agent: {a}\nAllow: /\n' for a in extra) + '\n'
+        r = r.replace('\nSitemap:', '\n' + block + 'Sitemap:', 1) if '\nSitemap:' in r else r + '\n' + block
+        robots.write_text(r, encoding='utf-8')
 
 llms = SITE / 'llms.txt'
 if llms.exists():

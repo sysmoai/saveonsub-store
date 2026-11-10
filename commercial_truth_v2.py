@@ -144,6 +144,9 @@ def sanitize_common(text: str) -> str:
     text = re.sub(r'\b(?:href|src|action)\s*=\s*(?:"[^"]*"|\'[^\']*\')|https?://[^\s"\'<>]+', _mask, text, flags=re.I)
     for old, new in replacements.items():
         text = text.replace(old, new)
+    # "Warranty terms" / "1-hour replacement warranty" become doubled phrases
+    # after the swap above ("Support terms terms"); collapse them.
+    text = re.sub(r"\b(support terms)(?:\s+(?:support\s+)?terms)+\b", r"\1", text, flags=re.I)
     text = re.sub(r"\x00URL(\d+)\x00", lambda m: masked[int(m.group(1))], text)
 
     text = re.sub(r"(?:·|&middot;)\s*A SYSmoAI venture\.\s*", "· ", text)
@@ -499,11 +502,11 @@ def home_body(governed: dict, bn: bool) -> str:
     if bn:
         eyebrow = "🇧🇩 বাংলাদেশ সাবস্ক্রিপশন স্টোর"
         h1 = "সঠিক সাবস্ক্রিপশন বেছে নিন। BDT-তে পেমেন্ট করুন। অ্যাক্সেস আগে বুঝে নিন।"
-        sub = "AI, productivity, streaming ও অন্যান্য subscription তুলনা করুন। Fixed price কেবল approved plan-এ দেখানো হয়; dynamic plan-এ payment-এর আগে exact tier, access method এবং বর্তমান price নিশ্চিত করা হয়।"
-        how = [("১. প্রোডাক্ট বাছুন", "আপনার কাজ অনুযায়ী tool/plan নির্বাচন করুন।"), ("২. অ্যাক্সেস নিশ্চিত করুন", "Personal/customer-specific, provider-supported Team/Workspace, Bundle বা Setup/Service—exact method আগে জানুন।"), ("৩. মূল্য নিশ্চিত করুন", "Fixed approved price থাকলে page-এ দেখবেন; অন্যথায় WhatsApp-এ current checkout reconfirm করা হবে।"), ("৪. তারপর পেমেন্ট", "Availability, delivery timing ও support terms নিশ্চিত হওয়ার পর দেখানো local method ব্যবহার করুন।")]
-        note = "SaveOnSub credential-sharing ব্যবস্থাকে provider-supported personal/team plan হিসেবে দেখায় না। SaveOnSub স্বাধীন local subscription/payment assistance store; provider plans ও terms পরিবর্তিত হতে পারে।"
+        sub = "AI, প্রোডাক্টিভিটি, স্ট্রিমিং সহ নানা সাবস্ক্রিপশন তুলনা করুন। নির্দিষ্ট দাম শুধু অনুমোদিত প্ল্যানে দেখানো হয়; বাকিগুলোতে পেমেন্টের আগে সঠিক প্ল্যান, অ্যাক্সেস পদ্ধতি ও বর্তমান দাম নিশ্চিত করা হয়।"
+        how = [("১. প্রোডাক্ট বাছুন", "আপনার কাজ অনুযায়ী টুল বা প্ল্যান বেছে নিন।"), ("২. অ্যাক্সেস নিশ্চিত করুন", "পার্সোনাল, প্রোভাইডারের টিম/ওয়ার্কস্পেস সিট, বান্ডেল নাকি সেটআপ সার্ভিস, অ্যাক্সেসের সঠিক পদ্ধতি আগে জেনে নিন।"), ("৩. মূল্য নিশ্চিত করুন", "অনুমোদিত নির্দিষ্ট দাম থাকলে পেইজেই দেখবেন; না থাকলে হোয়াটসঅ্যাপে বর্তমান দাম আবার নিশ্চিত করা হবে।"), ("৪. তারপর পেমেন্ট", "প্রাপ্যতা, ডেলিভারির সময় ও সাপোর্ট শর্ত নিশ্চিত হওয়ার পর দেখানো লোকাল পদ্ধতিতে পেমেন্ট করুন।")]
+        note = "SaveOnSub লগইন শেয়ার করার ব্যবস্থাকে প্রোভাইডার-সমর্থিত পার্সোনাল বা টিম প্ল্যান হিসেবে দেখায় না। SaveOnSub একটি স্বাধীন লোকাল সাবস্ক্রিপশন ও পেমেন্ট সহায়তা স্টোর; প্রোভাইডারের প্ল্যান ও শর্ত বদলাতে পারে।"
         browse = "সব সাবস্ক্রিপশন দেখুন"
-        ask = "WhatsApp-এ সাহায্য নিন"
+        ask = "হোয়াটসঅ্যাপে সাহায্য নিন"
     else:
         eyebrow = "🇧🇩 BANGLADESH SUBSCRIPTION STORE"
         h1 = "Choose the right subscription. Pay in BDT. Know the access model first."

@@ -74,6 +74,13 @@ jobs:
         run: |
           python hold_content_price_guard.py --check
           python site_seo_hygiene.py --check
+          python link_hygiene.py --check
+          python a11y_polish.py --check
+          python motion_polish.py --check
+          python category_copy_polish.py --check
+          python blog_copy_polish.py --check
+          python buyer_intent_polish.py --check
+          python release_truth_audit.py
 
       - name: Verify governed pricing-v2 release boundary
         run: |

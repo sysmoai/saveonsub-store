@@ -146,8 +146,8 @@
     const text = document.createElement('span');
     text.style.flex = '1 1 240px';
     text.innerHTML = bn
-      ? 'আমাদের বিজ্ঞাপন ও ওয়েবসাইট কতটা কাজ করছে তা মাপতে আমরা Meta Pixel ও Google Analytics ব্যবহার করি। <a href="/privacy.html" style="color:var(--green2,#14d4b8)">বিস্তারিত</a>'
-      : 'We use the Meta Pixel and Google Analytics to measure our ads and website. <a href="/privacy.html" style="color:var(--green2,#14d4b8)">Details</a>';
+      ? 'আমাদের বিজ্ঞাপন ও ওয়েবসাইট কতটা কাজ করছে তা মাপতে আমরা Meta Pixel ও Google Analytics ব্যবহার করি। <a href="/privacy" style="color:var(--green2,#14d4b8);text-decoration:underline">বিস্তারিত</a>'
+      : 'We use the Meta Pixel and Google Analytics to measure our ads and website. <a href="/privacy" style="color:var(--green2,#14d4b8);text-decoration:underline">Details</a>';
     const ok = document.createElement('button');
     ok.className = 'btn btn-primary btn-sm';
     ok.textContent = bn ? 'ঠিক আছে' : 'OK';
