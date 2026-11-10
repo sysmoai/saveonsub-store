@@ -44,6 +44,7 @@ STEPS = [
     "a11y_polish.py",
     "motion_polish.py",
     "category_copy_polish.py",
+    "buyer_intent_polish.py",
     "ai_search_facts.py",
     "audit_commercial_truth_v2.py",
     "exec003_claims_guard.py",

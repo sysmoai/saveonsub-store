@@ -101,11 +101,15 @@ def approved_on(pid: str, policy: dict) -> str:
 def make_title(name: str, low: int, many: bool, bn: bool) -> str | None:
     p = money(low)
     if bn:
-        options = [f"{name} দাম বাংলাদেশে — {p}{' থেকে' if many else ''} | SAVEONSUB",
+        options = [f"{name} সাবস্ক্রিপশন দাম বাংলাদেশে — {p}{' থেকে' if many else ''} | SAVEONSUB",
+                   f"{name} দাম বাংলাদেশে — {p}{' থেকে' if many else ''} | SAVEONSUB",
                    f"{name} দাম — {p}{' থেকে' if many else ''} | SAVEONSUB",
                    f"{name} দাম বাংলাদেশে — {p}{' থেকে' if many else ''}"]
     else:
-        options = [f"{name} Price in Bangladesh — {'from ' if many else ''}{p} | SAVEONSUB",
+        # "<x> subscription bd" out-searches "<x> price in bd" ~6:1 in BD (Semrush, 23 Oct 2026);
+        # the H1 keeps "Price in Bangladesh", so the title carries the BD + subscription variant.
+        options = [f"{name} Subscription Price in BD — {'from ' if many else ''}{p} | SAVEONSUB",
+                   f"{name} Price in Bangladesh — {'from ' if many else ''}{p} | SAVEONSUB",
                    f"{name} Price in BD — {'from ' if many else ''}{p} | SAVEONSUB",
                    f"{name} Price in Bangladesh — {'from ' if many else ''}{p}",
                    f"{name} Price in BD — {'from ' if many else ''}{p}"]

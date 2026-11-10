@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', ()=>{ cartBadge(); startTicker(); 
     var root = document.documentElement;
     if (reduce || !('IntersectionObserver' in window)) return;
     root.classList.add('mo');
-    var sel = 'main section h2, section > .wrap > h2, .pcard, .cattile, .step, .whyg > div, .fcell, .notice, details, .box, .tbl, article h2';
+    var sel = 'main section h2, section > .wrap > h2, .pcard, .cattile, .step, .whyg > div, .fcell, .notice, .box, .tbl, article h2';
     var els = [].slice.call(document.querySelectorAll(sel)).filter(function (el) { return !el.closest('.hero'); });
     var groups = new Map();
     els.forEach(function (el) {
