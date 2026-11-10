@@ -55,7 +55,7 @@
   }
 
   function send(name, params){
-    if(!loaded) return;
+    if(!loaded || getConsent() !== 'granted') return;
     gtag('event', name, params || {});
   }
 
