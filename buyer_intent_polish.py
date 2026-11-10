@@ -119,8 +119,13 @@ def process(text: str, pid: str, p: dict, bn: bool) -> tuple[str, bool]:
         return text, False
     pairs = qa(pid, p, bn)
     block = section(pairs, rr.clean_name(p["name"]), bn)
+    # before the price FAQ, after (never inside) the product-seo section, whose
+    # forbidden-claim scan must not see these catalog prices
     first, faq = ANCHORS[bn]
-    if first in text:
+    pos = text.find('<section data-sos="rich-results-2026-11-06" class="price-faq')
+    if pos >= 0:
+        text = text[:pos] + block + text[pos:]
+    elif first in text and 'data-product-seo=' not in text:
         text = text.replace(first, block + first, 1)
     else:
         m = re.search(r'<h2[^>]*>[^<]*' + re.escape(faq), text)

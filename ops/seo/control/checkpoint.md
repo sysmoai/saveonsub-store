@@ -82,3 +82,8 @@
   cards swipe, listing grids 2-up. `category_copy_polish.py` replaces 26 category intros that carried
   unverified numbers/stale "from ৳" prices and the unused official/shared·covered legend; BN cards read
   "৳X থেকে". BN home copy and ticker fully Bangla.
+
+## Cycle 10 (2026-11-10) — buyer-phrase SEO
+- Titles: "<X> Subscription Price in BD — from ৳N | SAVEONSUB" when it fits 60 chars (BD "subscription bd" phrasing out-searches "price in bd"); H1 unchanged.
+- buyer_intent_polish.py: 3 answers per EN/BN product page from catalog only + FAQPage JSON-LD; `--check` in CI.
+- Off-site gaps (owner actions): GSC request indexing for top product URLs, Google Business Profile, real customer reviews, BD backlinks/mentions.
