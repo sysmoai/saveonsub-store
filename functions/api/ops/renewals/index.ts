@@ -4,7 +4,7 @@
 // All contact details are intentionally omitted until a separate consent gate exists.
 import { requireOperator, authFailure, type OpsEnv } from "../../../lib/order-os/ops-auth";
 import { json } from "../../../lib/order-os/http";
-import { addDays, dhakaToday } from "../../../lib/order-os/money";
+import { addDays, addCalendarMonthsClamped, dhakaToday } from "../../../lib/order-os/money";
 
 const VERIFIED_SOURCES = new Set(["provider_dashboard", "provider_confirmation"]);
 
@@ -56,6 +56,20 @@ export const onRequestGet: PagesFunction<OpsEnv> = async ({ request, env }) => {
       && typeof evidence.expiry_source === "string" && VERIFIED_SOURCES.has(evidence.expiry_source)
       && typeof evidence.expiry_evidence_ref === "string"
       && evidence.expiry_evidence_ref.startsWith("r2:sos/private/");
+    const estimated = datesMatch
+      && evidence.expiry_verified === false
+      && evidence.expiry_source === "calculated_from_activation"
+      && evidence.expiry_calculation_basis === "activation_date"
+      && evidence.expiry_calculated_ends_on === r.service_ends_on
+      && Number.isInteger(evidence.expiry_duration_value)
+      && (
+        (evidence.expiry_duration_unit === "days"
+          && evidence.expiry_duration_value >= 1 && evidence.expiry_duration_value <= 400
+          && addDays(r.service_starts_on, evidence.expiry_duration_value) === r.service_ends_on)
+        || (evidence.expiry_duration_unit === "calendar_months"
+          && evidence.expiry_duration_value >= 1 && evidence.expiry_duration_value <= 12
+          && addCalendarMonthsClamped(r.service_starts_on, evidence.expiry_duration_value) === r.service_ends_on)
+      );
     const row = {
       public_order_id: r.public_order_id,
       status: r.status,
@@ -66,7 +80,13 @@ export const onRequestGet: PagesFunction<OpsEnv> = async ({ request, env }) => {
         Date.parse(`${today}T00:00:00Z`)) / 86400000),
       expiry_source: datesMatch && typeof evidence.expiry_source === "string"
         ? evidence.expiry_source : "unknown",
-      expiry_evidence_state: confirmed ? "provider_confirmed" : "needs_review",
+      expiry_evidence_state: confirmed ? "provider_confirmed" : estimated ? "estimated" : "needs_review",
+      expiry_date_is_estimate: estimated,
+      ...(estimated ? {
+        expiry_calculation_basis: "activation_date",
+        expiry_duration_unit: evidence.expiry_duration_unit,
+        expiry_duration_value: evidence.expiry_duration_value,
+      } : {}),
       renewal_contact_consent: "not_verified",
       outreach_allowed: false,
     };
