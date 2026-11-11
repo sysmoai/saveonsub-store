@@ -14,7 +14,7 @@ Per priced product page (EN /p and BN /bn/p, AIPS excluded) it:
   access type and price, plus the pricebook approval date (quotable by AI
   search engines);
 - adds a visible price & ordering FAQ (3 questions, facts from the catalog);
-- adds Product JSON-LD with one Offer per approved plan (BDT, InStock) and a
+- adds Product JSON-LD with one Offer per approved plan (BDT, no availability claim) and a
   FAQPage JSON-LD built only from FAQ text that is visible on the page.
 
 No ratings, reviews, rankings, delivery-time or guarantee claims are added.
@@ -210,7 +210,9 @@ def product_ld(pid: str, p: dict, name: str, url: str, desc: str, image: str | N
             "name": f"{name} — {pl.get('label', 'Plan')}",
             "price": str(int(pl["bdt"])),
             "priceCurrency": "BDT",
-            "availability": "https://schema.org/InStock",
+            # No "availability": pages say availability is confirmed on WhatsApp
+            # before payment, so a blanket InStock would contradict the visible copy
+            # (SOS-P0-009). Add it back per plan only from verified supply data.
             "url": url,
             "seller": {"@type": "Organization", "name": "SaveOnSub", "url": BASE + "/"},
             "description": f"{access_text(pl, False)} · {pl.get('duration', '1 month')}",
@@ -298,6 +300,8 @@ def check(site: Path, products: dict[str, dict]) -> list[str]:
                 errors.append(f"{rel}: Offer prices {sorted(prices)} != approved {sorted(allowed)}")
             if any(o.get("priceCurrency") != "BDT" for o in prod[0]["offers"]):
                 errors.append(f"{rel}: Offer currency not BDT")
+            if any("availability" in o for o in prod[0]["offers"]):
+                errors.append(f"{rel}: Offer availability claimed without verified supply data")
             text = html.unescape(re.sub(r"<[^>]+>", " ", t))
             text = re.sub(r"\s+", " ", text)
             for q in faq[0]["mainEntity"]:
