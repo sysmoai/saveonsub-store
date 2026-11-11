@@ -221,6 +221,119 @@ test("G4 safety: only owner with private provider evidence can attest verified e
   assert.ok(w.events(id).some(e => e.event_type === "service_period_set"));
 });
 
+test("G4: explicit fixed-day calculated expiry remains estimated and blocks outreach", async () => {
+  const { pub, id } = w.seedOrder({
+    status: "delivered", assignee: OPERATORS.fulfillA.id, phone: "+8801999000111"
+  });
+  const input = {
+    service_starts_on: plus(-27), service_ends_on: plus(3),
+    expiry_source: "calculated_from_activation",
+    expiry_duration_unit: "days", expiry_duration_value: 30
+  };
+  const p = await period("owner", pub, input);
+  assert.equal(p.status, 200);
+  assert.equal(p.body.expiry_evidence_state, "estimated");
+  assert.equal(p.body.expiry_date_is_estimate, true);
+  assert.equal(p.body.renewal_outreach_allowed, false);
+  const event = w.events(id).find(e => e.event_type === "service_period_set");
+  const recorded = JSON.parse(event.payload_json);
+  assert.equal(recorded.expiry_calculation_basis, "activation_date");
+  assert.equal(recorded.expiry_duration_unit, "days");
+  assert.equal(recorded.expiry_duration_value, 30);
+  assert.equal(recorded.expiry_calculated_ends_on, plus(3));
+  assert.equal(recorded.expiry_verified, false);
+
+  const review = await renewals("owner", "?days=7");
+  assert.equal(review.status, 200);
+  assert.deepEqual(review.body.renewals, [], "estimate cannot join provider-confirmed list");
+  assert.deepEqual(review.body.needs_review.map(r => r.public_order_id), [pub]);
+  const row = review.body.needs_review[0];
+  assert.equal(row.expiry_evidence_state, "estimated");
+  assert.equal(row.expiry_date_is_estimate, true);
+  assert.equal(row.expiry_calculation_basis, "activation_date");
+  assert.equal(row.expiry_duration_unit, "days");
+  assert.equal(row.expiry_duration_value, 30);
+  assert.equal(row.outreach_allowed, false);
+  assert.equal(row.customer_phone, undefined);
+  assert.equal(row.customer_name, undefined);
+  assert.equal(row.customer_email, undefined);
+  assert.equal((await renewals("support")).status, 403);
+});
+
+test("G4: month-end, leap-year and 30-day methods are explicitly different", async () => {
+  const a = w.seedOrder({ status: "delivered" });
+  const b = w.seedOrder({ status: "delivered" });
+  const c = w.seedOrder({ status: "delivered" });
+  const month = {
+    expiry_source: "calculated_from_activation",
+    expiry_duration_unit: "calendar_months", expiry_duration_value: 1
+  };
+  const days = {
+    expiry_source: "calculated_from_activation",
+    expiry_duration_unit: "days", expiry_duration_value: 30
+  };
+  assert.equal((await period("owner", a.pub, {
+    service_starts_on: "2027-01-31", service_ends_on: "2027-02-28", ...month
+  })).body.expiry_evidence_state, "estimated");
+  assert.equal((await period("owner", b.pub, {
+    service_starts_on: "2028-01-31", service_ends_on: "2028-02-29", ...month
+  })).status, 200);
+  assert.equal((await period("owner", c.pub, {
+    service_starts_on: "2027-01-31", service_ends_on: "2027-03-02", ...days
+  })).status, 200);
+});
+
+test("G4: calculated expiry rejects missing, ambiguous, inconsistent or excessive duration", async () => {
+  const { pub, id } = w.seedOrder({ status: "delivered" });
+  const base = {
+    service_starts_on: "2027-01-31",
+    service_ends_on: "2027-02-28",
+    expiry_source: "calculated_from_activation",
+    expiry_duration_unit: "calendar_months",
+    expiry_duration_value: 1
+  };
+  const invalid = [
+    { ...base, expiry_duration_unit: undefined },
+    { ...base, expiry_duration_unit: "months" },
+    { ...base, expiry_duration_value: undefined },
+    { ...base, expiry_duration_value: "1" },
+    { ...base, expiry_duration_value: 0 },
+    { ...base, expiry_duration_value: 1.5 },
+    { ...base, expiry_duration_value: 13 },
+    { ...base, expiry_duration_unit: "days", expiry_duration_value: 30 },
+    { ...base, service_ends_on: "2027-03-01" },
+    { ...base, expiry_source: "whatsapp_note" },
+    { ...base, expiry_source: "provider_dashboard", expiry_evidence_ref: "r2:sos/private/example-001" },
+    { ...base, expiry_source: "calculated_from_purchase" }
+  ];
+  for (const data of invalid) {
+    const r = await period("owner", pub, data);
+    assert.equal(r.status, 400, JSON.stringify(data));
+    assert.equal(w.db.one("SELECT COUNT(*) n FROM order_service_periods WHERE order_id=?", id).n, 0);
+  }
+  assert.equal(w.events(id).filter(e => e.event_type === "service_period_set").length, 0);
+});
+
+test("G4: a later calculated date revokes a prior provider confirmation even if dates match", async () => {
+  const { pub } = w.seedOrder({ status: "delivered" });
+  const base = { service_starts_on: plus(-27), service_ends_on: plus(3) };
+  const initial = await period("owner", pub, {
+    ...base, expiry_source: "provider_dashboard",
+    expiry_evidence_ref: "r2:sos/private/real-provider-check-needed"
+  });
+  assert.equal(initial.status, 200);
+  assert.deepEqual((await renewals("owner")).body.renewals.map(r => r.public_order_id), [pub]);
+  const calc = await period("owner", pub, {
+    ...base, expiry_source: "calculated_from_activation",
+    expiry_duration_unit: "days", expiry_duration_value: 30
+  });
+  assert.equal(calc.status, 200);
+  const q = await renewals("owner");
+  assert.deepEqual(q.renewals ?? q.body.renewals, []);
+  assert.deepEqual(q.body.needs_review.map(r => r.public_order_id), [pub]);
+  assert.equal(q.body.needs_review[0].expiry_evidence_state, "estimated");
+});
+
 // ---------- G1 storefront CORS middleware ----------
 async function mw(method, origin, url = "https://ops.saveonsub.com/api/orders") {
   const onRequest = await handler("api/orders/_middleware.ts", "onRequest");
