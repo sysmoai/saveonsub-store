@@ -87,3 +87,15 @@
 - Titles: "<X> Subscription Price in BD — from ৳N | SAVEONSUB" when it fits 60 chars (BD "subscription bd" phrasing out-searches "price in bd"); H1 unchanged.
 - buyer_intent_polish.py: 3 answers per EN/BN product page from catalog only + FAQPage JSON-LD; `--check` in CI.
 - Off-site gaps (owner actions): GSC request indexing for top product URLs, Google Business Profile, real customer reviews, BD backlinks/mentions.
+
+## Cycle 11 (2026-11-11, CORTEX V3.0 Phase 10) — admin + Order OS on current main
+- Branch `claude/sos-admin-orderos-on-main-2026-11-11` = main f5ee660 + the whole draft stack #50/#51/#53/#65/#67/#71/#75/#106
+  (head of stack 6dc7a2b). 2 conflicts (.gitignore, stage_deploy.py excludes: union kept). Details and gaps C1–C12:
+  `ops/order-os/INTEGRATION-2026-11-11.md`. Not merged, not deployed.
+- Pricebook got stable `plan_id` on all 133 plans (prices unchanged). Server orders: allow-list personal/team = 71 plans;
+  59 shared + 3 official-guide stay WhatsApp-only (provider-rights HOLD).
+- `assets/order-v2.js` inert while server checkout is off; live checkout behaviour identical to main (browser test).
+- Cloudflare read-only: D1 `saveonsub-order-os` exists with 0 tables; no SaveOnSub R2 bucket.
+- Finance (Profit Tracker 1YlQf047…, read-only): ORDERS and REFUNDS header-only; ADS 1 row ($14.85, 46 chats,
+  paid orders blank); MARGIN has 0 actual buy costs (133/133 blank) → every margin is an estimate.
+- Next: CEO decision on the integration PR, then C2–C7 on staging with synthetic data.

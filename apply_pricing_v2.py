@@ -44,6 +44,7 @@ def public_plan(plan: dict) -> dict:
         "service": "Setup / Service",
     }.get(access_type, "Confirm access method")
     out = {
+        "plan_id": plan.get("plan_id"),
         "label": plan["label"],
         "bdt": int(plan["bdt"]),
         "duration": duration,
@@ -51,6 +52,8 @@ def public_plan(plan: dict) -> dict:
         "access_label": access_label,
         "billing_unit": plan.get("billing_unit", unit),
     }
+    if not out["plan_id"]:
+        raise RuntimeError(f"Approved pricing plan is missing stable plan_id: {plan.get('label', '<unknown>')}")
     return out
 
 

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>SaveOnSub | Paid Order Desk — Private Staging</title>
+  <link rel="stylesheet" href="./catalog.css">
+  <script defer src="./orders.js"></script>
+  <style>
+    .desk-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(290px,.9fr);gap:20px;margin:21px 0}
+    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .controls select{min-width:165px}
+    .order-row-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .order-row-actions button{padding:7px 10px;font-size:12px}
+    .attention{font-size:13px;color:#f7d9aa;line-height:1.6}
+    .field-note{font-size:12px;color:#a6cdc8;line-height:1.6}
+    .secondary{color:#acc9c5;font-size:13px}
+    .selected-order{font-size:16px;font-weight:700;overflow-wrap:anywhere}
+    .status-pending{color:#f0cc84}.status-paid{color:#69e4bd}
+    .desk-hidden{display:none!important}
+    .results{margin-top:20px}
+    @media(max-width:860px){.desk-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to orders</a>
+  <header class="header">
+    <div class="brand"><img src="/assets/logo.svg" alt="SaveOnSub approved brand logo" height="40"><span class="brand-label">Private Order Desk · Staging</span></div>
+    <span class="header-status">Cloudflare Access required</span>
+  </header>
+  <main class="page" id="main">
+    <section class="intro">
+      <p class="eyebrow">SAVEONSUB / PAYMENT-FIRST OPERATIONS</p>
+      <h1>Payment & Fulfillment Desk</h1>
+      <p>Four personal receiving rails: bKash, Nagad, Rocket, Bank transfer. Customer references are claims, not evidence of received funds. Only an authorized human can attest to an actual incoming credit.</p>
+      <div class="top-bar">
+        <span class="pill" id="operator">Checking protected operator identity…</span>
+        <a href="./catalog.html" class="pill">Catalog & Media drafts</a>
+      </div>
+    </section>
+    <div id="message" class="message" aria-live="polite" role="status">Connecting to protected staging backend…</div>
+    <div class="desk-grid">
+      <section class="panel" aria-labelledby="review-title">
+        <div class="panel-head"><span class="step">01</span><div><h2 id="review-title">Review actual received payment</h2><p>Owner-only by default. Check the recipient's account history or bank statement yourself.</p></div></div>
+        <div id="review-lock" class="attention">Loading role permissions…</div>
+        <form id="verifyForm" class="desk-hidden">
+          <p class="attention">Do not verify using customer screenshots, forwarded SMS or a typed reference alone. Never type wallet PINs, OTPs, passwords, account numbers or personal statement contents here.</p>
+          <label>Selected pending order <span id="selectedOrder" class="selected-order">Choose an unpaid order below</span></label>
+          <input type="hidden" name="order_id" id="order_id">
+          <label>Received on which channel?
+            <select name="provider" id="provider" required>
+              <option value="bkash">bKash personal</option>
+              <option value="nagad">Nagad personal</option>
+              <option value="rocket">Rocket personal</option>
+              <option value="bank_transfer">Bank transfer / personal account</option>
+            </select>
+          </label>
+          <label>Exact transaction reference from recipient account
+            <input name="transaction_id" id="transaction_id" autocomplete="off" maxlength="40" required placeholder="Use reference shown in receiving account" pattern="[A-Za-z0-9][A-Za-z0-9_-]{5,39}">
+          </label>
+          <label>Exact received amount in BDT (from recipient account)
+            <input name="amount_bdt" id="amount_bdt" type="number" inputmode="decimal" step="0.01" min="0.01" max="10000000" required placeholder="Enter independently checked amount">
+          </label>
+          <label>Private evidence pointer (not a screenshot or URL)
+            <input name="evidence_ref" id="evidence_ref" maxlength="124" autocomplete="off" required placeholder="stmt:bank-or-wallet-record-id">
+          </label>
+          <label><input type="checkbox" id="receipt_confirmed" required> I personally checked an incoming credit on the receiving account, matched the actual amount and reference to this order, and am authorized to attest.</label>
+          <button class="primary" type="submit" id="verifyButton">Confirm received funds & queue Ripon priority alert</button>
+        </form>
+      </section>
+      <section class="panel" aria-labelledby="queue-title">
+        <div class="panel-head"><span class="step">02</span><div><h2 id="queue-title">Paid fulfillment control</h2><p>Ripon/owner can claim or advance only where their server-side role permits it.</p></div></div>
+        <p class="field-note">Pending orders remain visible for owner review without urgent human notification. Paid orders receive a queued alert; dispatch requires configured, tested SaveOnSub-only webhooks.</p>
+        <p class="field-note" id="claim-role">Checking claim permissions…</p>
+        <p class="attention">If Ripon's current server role is <code>support</code>, he cannot claim fulfillment. Role changes require explicit CEO security review; this screen never changes roles.</p>
+        <div class="controls">
+          <label>Order list filter
+            <select id="filter">
+              <option value="payment_confirmed">Verified paid / unclaimed</option>
+              <option value="assigned">Assigned</option>
+              <option value="fulfilling">Fulfilling</option>
+              <option value="payment_review">Unpaid / needs receipt review</option>
+              <option value="">All statuses</option>
+            </select>
+          </label>
+          <button type="button" id="refresh">Refresh order queue</button>
+        </div>
+      </section>
+    </div>
+    <section class="panel results" aria-labelledby="table-title">
+      <div class="results-header"><div><h2 id="table-title">Protected Order Queue</h2><p>Orders shown by protected server API. No local wallet scraping or customer data export.</p></div><span class="pill" id="count">0 orders</span></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Order</th><th>Status</th><th>Amount</th><th>Payment rail</th><th>Assigned</th><th>Actions</th></tr></thead>
+          <tbody id="orderRows"><tr><td colspan="6">Waiting for protected backend…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    <footer>This interface is staging-only. A received-funds attestation is manual, not an automated bKash/Nagad/Rocket/Bank API receipt. No changes to personal payment account destinations or customer data happen from this page.</footer>
+  </main>
+</body>
+</html>

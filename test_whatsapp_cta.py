@@ -65,7 +65,7 @@ def test_positive_rewrite_fixed_price():
             "id": "chatgpt-plus",
             "name": "ChatGPT Plus",
             "category": "AI Assistants",
-            "plans": [{"label": "Plus — 1 Month", "bdt": 3390, "type": "personal", "duration": "1 month"}],
+            "plans": [{"plan_id": "plus-1m", "label": "Plus — 1 Month", "bdt": 3390, "type": "personal", "duration": "1 month"}],
         }
         ct.rewrite_product_page(path, product, bn=False)
         text = path.read_text(encoding="utf-8")
@@ -110,7 +110,7 @@ def test_product_main_inquiry_cta_is_also_percent_encoded():
 def test_negative_missing_cta_fails_closed():
     with tempfile.TemporaryDirectory() as d:
         path = make_page(Path(d), "<!-- no fab button on this page -->")
-        product = {"id": "claude-pro", "name": "Claude Pro", "category": "AI Assistants", "plans": [{"label": "Claude Pro — 1 Month", "bdt": 3390, "type": "personal"}]}
+        product = {"id": "claude-pro", "name": "Claude Pro", "category": "AI Assistants", "plans": [{"plan_id": "pro-1m", "label": "Claude Pro — 1 Month", "bdt": 3390, "type": "personal"}]}
         try:
             ct.rewrite_product_page(path, product, bn=False)
             raise AssertionError("expected SystemExit when the floating WhatsApp CTA is missing, got silent success")
@@ -123,7 +123,7 @@ def test_negative_unrecognized_cta_markup_fails_closed():
         # Right-looking button, wrong WhatsApp number — must not be silently accepted.
         wrong_number_fab = GOOD_FAB.replace(WA_NUMBER, "8800000000000")
         path = make_page(Path(d), wrong_number_fab)
-        product = {"id": "claude-pro", "name": "Claude Pro", "category": "AI Assistants", "plans": [{"label": "Claude Pro — 1 Month", "bdt": 3390, "type": "personal"}]}
+        product = {"id": "claude-pro", "name": "Claude Pro", "category": "AI Assistants", "plans": [{"plan_id": "pro-1m", "label": "Claude Pro — 1 Month", "bdt": 3390, "type": "personal"}]}
         try:
             ct.rewrite_product_page(path, product, bn=False)
             raise AssertionError("expected SystemExit for a CTA pointing at the wrong WhatsApp number")
@@ -138,7 +138,7 @@ def test_encoding_apostrophe_ampersand_bengali_emoji():
             "id": "weird-name",
             "name": "Tom & Jerry's Ultimate \U0001f680 অ্যাপ",
             "category": "AI Assistants",
-            "plans": [{"label": "Standard's Plan — 1 Month", "bdt": 1234, "type": "personal"}],
+            "plans": [{"plan_id": "std-1m", "label": "Standard's Plan — 1 Month", "bdt": 1234, "type": "personal"}],
         }
         ct.rewrite_product_page(path, product, bn=False)
         text = path.read_text(encoding="utf-8")
@@ -192,7 +192,7 @@ def test_pipeline_order_sanitize_then_rewrite_stays_idempotent_and_correct():
         path = make_page(Path(d), GOOD_FAB)
         path.write_text(ct.sanitize_common(path.read_text(encoding="utf-8")), encoding="utf-8")
         product = {"id": "chatgpt-plus", "name": "ChatGPT Plus", "category": "AI Assistants",
-                   "plans": [{"label": "Plus — 1 Month", "bdt": 3390, "type": "personal"}]}
+                   "plans": [{"plan_id": "plus-1m", "label": "Plus — 1 Month", "bdt": 3390, "type": "personal"}]}
         ct.rewrite_product_page(path, product, bn=False)
         href = extract_fab_href(path.read_text(encoding="utf-8"))
         assert href is not None and "3%2C390" in href or "3390" in (href or ""), \
