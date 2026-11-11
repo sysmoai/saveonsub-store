@@ -20,8 +20,8 @@ class ReconcileTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.site = Path(self.tmp.name)
-        self.plans = [{"label": "Monthly", "bdt": 299, "duration": "month", "access_type": "personal"},
-                      {"label": "Yearly", "bdt": 1499, "duration": "year", "access_type": "personal"}]
+        self.plans = [{"plan_id": "monthly-month", "label": "Monthly", "bdt": 299, "duration": "month", "access_type": "personal"},
+                      {"plan_id": "yearly-year", "label": "Yearly", "bdt": 1499, "duration": "year", "access_type": "personal"}]
         self.policy = {"revision": "t", "approved_products": {
             "demo": {"mode": "fixed", "plans": self.plans},
             "held": {"mode": "inquiry", "plans": []}}}
@@ -97,10 +97,10 @@ class ReconcileTests(unittest.TestCase):
 
     def test_period_unit_follows_duration(self):
         self.assertEqual(("1 year", "year"), (public_plan(self.plans[1])["duration"], public_plan(self.plans[1])["billing_unit"]))
-        six = public_plan({"label": "6M", "bdt": 1, "duration": "6months"})
+        six = public_plan({"plan_id": "6m", "label": "6M", "bdt": 1, "duration": "6months"})
         self.assertEqual(("6 months", "6 months"), (six["duration"], six["billing_unit"]))
         with self.assertRaises(SystemExit):
-            public_plan({"label": "x", "bdt": 1, "duration": "fortnight"})
+            public_plan({"plan_id": "x", "label": "x", "bdt": 1, "duration": "fortnight"})
 
 
 if __name__ == "__main__":

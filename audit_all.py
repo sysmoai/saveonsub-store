@@ -18,8 +18,11 @@ class V(HTMLParser):
         if self.stack and self.stack[-1]==t: self.stack.pop()
         else: self.errs.append(t)
 
+from stage_deploy import EXCLUDE_DIRS  # audit only what can be published
+
 pages = []
 for root, dirs, files in os.walk('.'):
+    dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
     if '.git' in root: continue
     for f in files:
         if f.endswith('.html'): pages.append(os.path.join(root, f).replace('./',''))

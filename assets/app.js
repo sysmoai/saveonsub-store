@@ -12,7 +12,7 @@ function cartPlanOk(id, planLabel, bdt, planId){
   const p=CATALOG.products.find(x=>x && x.id===id);
   if(!p || p.request_price || !Array.isArray(p.plans)) return false;
   return p.plans.some(pl=>pl && pl.label===planLabel && Number(pl.bdt)===Number(bdt) && Number(bdt)>0
-    && (planId===undefined || planId===null || pl.plan_id===undefined || pl.plan_id===planId));
+    && (!planId || pl.plan_id===undefined || pl.plan_id===planId));
 }
 function cartGet(){
   let c; try{c=JSON.parse(localStorage.getItem('sos_cart')||'[]')}catch(e){c=[]}
@@ -20,11 +20,12 @@ function cartGet(){
   return c.filter(i=>i && cartPlanOk(i.id, i.plan, i.bdt, i.plan_id) && Number.isInteger(i.qty) && i.qty>0);
 }
 function cartSet(c){ localStorage.setItem('sos_cart', JSON.stringify(c)); cartBadge(); }
-function cartAdd(id, planLabel, bdt, name){
-  if(!cartPlanOk(id, planLabel, bdt)){ toast('This plan is price on request — please confirm on WhatsApp'); return; }
+function cartAdd(id, planLabel, bdt, name, planId){
+  if(!cartPlanOk(id, planLabel, bdt, planId)){ toast('This plan is price on request — please confirm on WhatsApp'); return; }
   const c = cartGet();
-  const ex = c.find(i=>i.id===id && i.plan===planLabel);
-  if(ex){ ex.qty++; } else { c.push({id, plan:planLabel, bdt:Number(bdt), name, qty:1}); }
+  const stablePlanId = planId || '';
+  const ex = c.find(i=>i.id===id && i.plan===planLabel && (i.plan_id||'')===stablePlanId);
+  if(ex){ ex.qty++; } else { c.push({id, plan:planLabel, plan_id:stablePlanId, bdt:Number(bdt), name, qty:1}); }
   cartSet(c); toast(`✅ ${name} added — ৳${bdt}`);
 }
 function cartRemove(idx){ const c=cartGet(); c.splice(idx,1); cartSet(c); if(window.renderCart)renderCart(); }
