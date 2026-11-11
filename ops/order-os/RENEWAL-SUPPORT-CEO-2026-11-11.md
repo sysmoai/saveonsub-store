@@ -78,3 +78,41 @@ When EMON writes an expiry date in WhatsApp or personal notes, was the date **co
 ## Release authority
 
 **No merge, no deployment, no live pricing/content/permission changes, no customer data import, no real messages, no schema change, and no automatic subscription actions** from this draft. Approval requires exact reviewed SHA, passing synthetic CI and acceptance tests, a staging source-to-deploy parity check, support/consent review, release rollback and explicit CEO decision.
+
+
+## 8. CEO fact update — expiry is tracked by TWO distinct methods (2026-11-11)
+
+EMON confirmed that, depending on the product, he records either a **provider-shown expiry date** or a **date calculated from the subscription period**, and later consults WhatsApp conversations or his own notes.
+
+Never classify the date by its location (chat/note) alone: the **underlying derivation** matters. An expiry written in WhatsApp may be provider-sourced OR calculated. The existing notes are historical evidence of what was said, not independent verification of the source.
+
+**Decision hierarchy:**
+1. `provider_dashboard` or `provider_confirmation` → `provider_confirmed` only when the authorized owner independently attests a provider source plus a real private evidence locator. The code checks syntax/role, not the truth or availability of that object; this remains an acceptance gate. No customer outreach without separate consent.
+2. `calculated_from_activation` → `estimated` after an explicit activation/service-start date and duration method are recorded and the requested end date matches the backend calculation exactly. It remains in `needs_review`, NEVER the provider-confirmed queue.
+3. `whatsapp_note`, `manual_note`, `unknown`, and historical records without source metadata → `needs_review`. Preserve the original notes in their authorized context. Do not infer an activation date from a screenshot or receipt.
+4. If the only available date is **purchase/payment date**, NOT verified service activation: do not substitute purchase date into `service_starts_on` automatically. Treat as unknown/review until activation start is established. No fake expiry dates or promotional reminders.
+
+**Explicit estimated-date fields accepted in the draft API:**
+- `expiry_source: "calculated_from_activation"`
+- `service_starts_on`: real recorded activation/service-start calendar date in `YYYY-MM-DD`
+- `service_ends_on`: calculated *candidate* end date in `YYYY-MM-DD`, checked by the server
+- `expiry_duration_unit`: **`"days"`** for fixed-day subscriptions or **`"calendar_months"`** for anniversary-month arithmetic
+- `expiry_duration_value`: positive integer, 1–400 days or 1–12 months. Do not infer the duration from the product name unless it is a confirmed plan-specific term.
+
+**Date interpretation examples:**
+- 2027-01-31 + 1 calendar month → estimated 2027-02-28.
+- 2028-01-31 + 1 calendar month → estimated 2028-02-29 (leap year).
+- 2027-01-31 + 30 days → estimated 2027-03-02.
+
+Actual provider entitlement expiry may differ because of renewal billing rules, trial time, timezone, grace period, early activation, or account status. The date is therefore always flagged **estimated** until independently checked against the provider.
+
+**Validation and privacy:**
+- Missing/invalid duration, monthly-vs-day ambiguity, an end-date mismatch, or a formula injected into a provider/WhatsApp note record results in HTTP 400, with no order-period write.
+- Replacing a provider-confirmed period by a calculated period **revokes the prior provenance state**, even when the start/end dates are unchanged; newest audited source wins.
+- Audit event stores only calculation basis, unit, numeric duration and derived end date. It stores no WhatsApp screenshot, message body, credentials, customer contact details, account logins or provider secrets.
+- Renewal GET returns estimated records in the `needs_review` worklist with `expiry_evidence_state: "estimated"` and `expiry_date_is_estimate: true`. Confirmed records remain separate. Both exclude customer contact fields and have `outreach_allowed:false`.
+- Existing staff front end does NOT yet have a distinct calculation/evidence form. Support operators must not type date guesses into the provider-confirmed path. A subsequent UI patch should explicitly label `ESTIMATE, VERIFY PROVIDER` before a customer-facing date is asserted.
+
+**Synthetic acceptance tests:** fixed-day estimate; calendar-month leap and non-leap month-end; bad/missing duration; mismatched end; role and contact protection; provider proof demoted by later calculation; original tests must continue to pass.
+
+**Release status:** Draft PR #125 only. No database migration, real WhatsApp import, automated calculation from historical messages, provider activation, staff access change, schedule, outbound reminder, deployment, merge or production action.
