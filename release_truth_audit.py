@@ -50,6 +50,8 @@ SCRIPT_STYLE = re.compile(r"<(script|style)\b.*?</\1>", re.S | re.I)
 TAGS = re.compile(r"<[^>]+>")
 BDT = re.compile(r"৳\s?([\d,]+)")
 BN_DIGITS = str.maketrans("০১২৩৪৫৬৭৮৯", "0123456789")
+# A displayed Bangladesh mobile number (Latin or Bangla digits, +880/880/0 prefix).
+BD_PHONE = re.compile(r"(?<!\d)(?:\+?880[\s-]?|0)(1[3-9]\d{2})[\s-]?(\d{6})(?!\d)")
 
 
 def url_of(page: Path) -> str:
@@ -153,6 +155,10 @@ def audit(manifest_path: Path | None = None, warnings: list[str] | None = None) 
         for num in WA.findall(text):
             if num != WA_NUMBER:
                 errors.append(f"whatsapp: {rel} links to {num}")
+        # Displayed numbers too (incl. meta/OG text): SaveOnSub shows one contact number only.
+        for a, b in set(BD_PHONE.findall(text.translate(BN_DIGITS))):
+            if "880" + a + b != WA_NUMBER:
+                errors.append(f"contact-display: {rel} shows 0{a}{b}")
         for _q, href in HREF.findall(text):
             if href.startswith(("mailto:", "tel:", "javascript:", "data:", "#")):
                 continue
