@@ -52,6 +52,7 @@ STEPS = [
     "shared_copy_check.py",
     "audit_policy.py",
     "catalog_reconcile.py",
+    "cross_unit_quarantine.py",
 ]
 
 

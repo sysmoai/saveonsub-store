@@ -92,6 +92,7 @@ jobs:
           python category_copy_polish.py --check
           python blog_copy_polish.py --check
           python buyer_intent_polish.py --check
+          python cross_unit_quarantine.py --check
           python release_truth_audit.py
 
       - name: Verify governed pricing-v2 release boundary

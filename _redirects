@@ -3,6 +3,11 @@
 /products /all.html 301
 /subscriptions.html /all.html 301
 
+# SOS-P0-003 (CEO 2026-11-11): other business units' pages are not part of SaveOnSub
+/p/aips-* /all 301
+/bn/p/aips-* /bn/all 301
+/modes/aips-* /all 301
+
 # Block build-source files if they ever get deployed (internal price_source/survey data)
 /catalog.json /404.html 404
 /*.py /404.html 404
