@@ -87,3 +87,13 @@
 - Titles: "<X> Subscription Price in BD — from ৳N | SAVEONSUB" when it fits 60 chars (BD "subscription bd" phrasing out-searches "price in bd"); H1 unchanged.
 - buyer_intent_polish.py: 3 answers per EN/BN product page from catalog only + FAQPage JSON-LD; `--check` in CI.
 - Off-site gaps (owner actions): GSC request indexing for top product URLs, Google Business Profile, real customer reviews, BD backlinks/mentions.
+
+## Cycle 11 (2026-11-11, Dhaka evening) — CORTEX V2.0 Missions A-E
+- Source/live: main f5ee660 is live (Cloudflare 247a3457, rollback 50c57f6e). The cloud container cannot fetch saveonsub.com, so live checks need the CEO's Chrome (Remote Control).
+- Draft PR #121: removes unsupported order-count/#1-seller claims from catalog.json (they were only stripped at build time) + tests/test_source_catalog_claims.py. Built _site identical except date stamps. 127 unit tests OK. Awaiting CEO merge phrase.
+- Counts reconciled: catalog.json 72 entries (5 aips-* isolated); pricebook 77 = 67 priced products / 133 plans + 10 inquiry. "134" = 133 MARGIN rows + header; "281" = backlog/universe names, not pages.
+- Cloudflare Bot Preference Sync switched OFF on CEO order; robots.txt now only our rules (verified in Chrome).
+- GSC: 11 indexing requests accepted 2026-11-11. Spotify/YouTube Premium still show old Oct-16 .html canonical crawl.
+- OPEN: Canva Pro "Team seat (your login)" label vs access_type=shared contradiction (needs CEO decision on the real fulfilment model); 1 invalid Merchant item.
+- Financial baseline: Profit Tracker ORDERS/REFUNDS sheets are EMPTY; only ads row exists ($14.85, 46 chats). Revenue, margin, CAC = UNKNOWN until orders are logged.
+- No recurring scheduler is verified; only the one-off GSC retry trigger existed.
