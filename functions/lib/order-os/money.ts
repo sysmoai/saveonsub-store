@@ -29,6 +29,22 @@ export function addDays(isoDate: string, days: number) {
   return d.toISOString().slice(0, 10);
 }
 
+// Product-specific anniversary-month arithmetic for REVIEW-ONLY expiry estimates.
+// Clamps dates near a month end (e.g. Jan 31 + 1 calendar month = Feb 28/29).
+// Never use an estimate as provider-confirmed entitlement evidence.
+export function addCalendarMonthsClamped(isoDate: string, months: number): string | null {
+  if (!isIsoDate(isoDate) || !Number.isInteger(months) || months < 1 || months > 12) return null;
+  const target = new Date(`${isoDate}T00:00:00Z`);
+  const originalDay = target.getUTCDate();
+  target.setUTCDate(1);
+  target.setUTCMonth(target.getUTCMonth() + months);
+  const endOfTargetMonth = new Date(target.getTime());
+  endOfTargetMonth.setUTCMonth(endOfTargetMonth.getUTCMonth() + 1);
+  endOfTargetMonth.setUTCDate(0);
+  target.setUTCDate(Math.min(originalDay, endOfTargetMonth.getUTCDate()));
+  return target.toISOString().slice(0, 10);
+}
+
 // UTC instant bounds of a Dhaka calendar month "YYYY-MM".
 export function dhakaMonthBounds(month: string): { start: string; end: string } | null {
   if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) return null;
