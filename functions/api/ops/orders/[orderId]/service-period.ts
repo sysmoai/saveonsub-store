@@ -4,6 +4,9 @@ import { json, nowIso, readJson } from "../../../../lib/order-os/http";
 import { addDays, isIsoDate } from "../../../../lib/order-os/money";
 
 const SERVICE_STATUSES = new Set(["delivered", "support_open", "completed"]);
+const EXPIRY_SOURCES = new Set(["unknown", "whatsapp_note", "manual_note", "provider_dashboard", "provider_confirmation"]);
+const VERIFIED_EXPIRY_SOURCES = new Set(["provider_dashboard", "provider_confirmation"]);
+const PRIVATE_PROVIDER_REF = /^r2:sos\/private\/[A-Za-z0-9][A-Za-z0-9._/-]{0,199}$/;
 const MAX_PERIOD_DAYS = 400;
 
 export const onRequestPost: PagesFunction<OpsEnv> = async ({ request, env, params }) => {
@@ -20,6 +23,19 @@ export const onRequestPost: PagesFunction<OpsEnv> = async ({ request, env, param
   const ends = body.service_ends_on;
   if (!isIsoDate(starts) || !isIsoDate(ends) || ends <= starts) return json({ error: "INVALID_SERVICE_PERIOD" }, 400);
   if (ends > addDays(starts, MAX_PERIOD_DAYS)) return json({ error: "SERVICE_PERIOD_TOO_LONG" }, 400);
+
+  // Missing or conversation-derived evidence is never upgraded silently.
+  // Provider-attested dates require an owner confirmation and a private evidence pointer.
+  // The pointer must identify a real, protected provider record in the release workflow.
+  const expirySource = typeof body.expiry_source === "string" ? body.expiry_source : "unknown";
+  const expiryEvidenceRef = typeof body.expiry_evidence_ref === "string" ? body.expiry_evidence_ref.trim() : "";
+  if (!EXPIRY_SOURCES.has(expirySource)) return json({ error: "INVALID_EXPIRY_SOURCE" }, 400);
+  const providerVerified = VERIFIED_EXPIRY_SOURCES.has(expirySource);
+  if (providerVerified && operator.role !== "owner") return json({ error: "EXPIRY_VERIFICATION_FORBIDDEN" }, 403);
+  if (providerVerified && (!PRIVATE_PROVIDER_REF.test(expiryEvidenceRef) || expiryEvidenceRef.includes(".."))) {
+    return json({ error: "PROVIDER_EXPIRY_EVIDENCE_REQUIRED" }, 400);
+  }
+  if (!providerVerified && expiryEvidenceRef) return json({ error: "UNVERIFIED_EXPIRY_EVIDENCE_FORBIDDEN" }, 400);
 
   let order;
   try {
@@ -42,11 +58,19 @@ export const onRequestPost: PagesFunction<OpsEnv> = async ({ request, env, param
         .bind(order.id, starts, ends, operator.id, ts),
       env.DB.prepare(`INSERT INTO order_events(order_id,event_type,actor_type,actor_id,payload_json,created_at)
         VALUES (?,'service_period_set','operator',?,?,?)`)
-        .bind(order.id, operator.id, JSON.stringify({ from: starts, to: ends }), ts),
+        .bind(order.id, operator.id, JSON.stringify({
+          from: starts, to: ends, expiry_source: expirySource,
+          expiry_verified: providerVerified, ...(providerVerified ? { expiry_evidence_ref: expiryEvidenceRef } : {})
+        }), ts),
     ]);
   } catch {
     console.error("service_period_write_failed");
     return json({ error: "WRITE_FAILED" }, 503);
   }
-  return json({ ok: true, order_id: String(params.orderId), service_starts_on: starts, service_ends_on: ends });
+  return json({
+    ok: true, order_id: String(params.orderId),
+    service_starts_on: starts, service_ends_on: ends,
+    expiry_evidence_state: providerVerified ? "provider_confirmed" : "needs_review",
+    renewal_outreach_allowed: false,
+  });
 };
