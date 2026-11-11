@@ -116,6 +116,19 @@ class FixtureSite(unittest.TestCase):
         (self.site / "refund.html").write_text(page(B + "/refund", '<a href="https://wa.me/8801314773344">x</a>'))
         self.assertFails("whatsapp")
 
+    def test_stale_displayed_number_fails(self):
+        self.fix()
+        # Bangla-digit display of a non-SaveOnSub number, wa.me link still correct.
+        (self.site / "refund.html").write_text(page(B + "/refund",
+            '<meta name="description" content="+৮৮০ ১৮৬৫-৩৮৫৩৪৮"><a href="https://wa.me/8801305869242">+৮৮০ ১৩০৫-৮৬৯২৪২</a>'))
+        self.assertFails("contact-display")
+
+    def test_official_displayed_number_passes(self):
+        self.fix()
+        (self.site / "refund.html").write_text(page(B + "/refund",
+            '<a href="https://wa.me/8801305869242">+880 1305-869242 / +৮৮০ ১৩০৫-৮৬৯২৪২</a>'))
+        self.assertFalse(any(e.startswith("contact-display") for e in ra.audit()))
+
     def test_dead_internal_link_fails(self):
         self.fix()
         (self.site / "refund.html").write_text(page(B + "/refund", '<a href="/p/missing">x</a>'))

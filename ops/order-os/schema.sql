@@ -211,3 +211,21 @@ BEFORE UPDATE ON order_events
 BEGIN
   SELECT RAISE(ABORT, 'AUDIT_LOG_IMMUTABLE');
 END;
+-- CANDIDATE (not applied anywhere): SOS-P0-005 defence in depth.
+-- SQLite CHECK(x IN (...)) passes when x IS NULL, so a payment_verifications row
+-- written outside the API (console/SQL) with receipt_source NULL still satisfies
+-- trg_orders_paid_states_need_verification. These triggers close that at the DB layer.
+CREATE TRIGGER IF NOT EXISTS trg_payment_verifications_receipt_source_required
+BEFORE INSERT ON payment_verifications
+WHEN NEW.receipt_source IS NULL
+  OR (NEW.provider = 'bank_transfer' AND NEW.receipt_source <> 'bank_statement')
+  OR (NEW.provider <> 'bank_transfer' AND NEW.receipt_source <> 'receiving_account_history')
+BEGIN
+  SELECT RAISE(ABORT, 'RECEIPT_SOURCE_REQUIRED');
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_payment_verifications_receipt_source_immutable
+BEFORE UPDATE OF receipt_source, provider ON payment_verifications
+BEGIN
+  SELECT RAISE(ABORT, 'RECEIPT_SOURCE_IMMUTABLE');
+END;
