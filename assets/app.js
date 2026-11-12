@@ -255,6 +255,7 @@ document.addEventListener('DOMContentLoaded', ()=>{ cartBadge(); startTicker(); 
    article unchanged; headings stay real h2 for search engines). */
 (function () {
   function ready(fn) { document.readyState !== 'loading' ? fn() : document.addEventListener('DOMContentLoaded', fn); }
+  if (typeof document === 'undefined' || typeof document.querySelector !== 'function') return;
   ready(function () {
     var main = document.querySelector('main[data-bangla-guide]'); if (!main || main.querySelector('.guide-toc')) return;
     var wrap = main.querySelector('.wrap'); if (!wrap) return;
