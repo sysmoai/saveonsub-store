@@ -99,3 +99,12 @@
 - Finance (Profit Tracker 1YlQf047…, read-only): ORDERS and REFUNDS header-only; ADS 1 row ($14.85, 46 chats,
   paid orders blank); MARGIN has 0 actual buy costs (133/133 blank) → every margin is an estimate.
 - Next: CEO decision on the integration PR, then C2–C7 on staging with synthetic data.
+
+## Cycle 12 (2026-11-12, CORTEX V3.1) — verified staging state
+- main moved to 19f4cd5 (PR #122) then later merges; staging Pages `saveonsub-staff-staging` runs 19f4cd5 (alert-routing fix #123 NOT yet deployed there).
+- Access: 1 self-hosted app, 1 Allow policy (2 staff emails), One-time PIN only, **MFA not enforced**, 12h session.
+  TURNSTILE_SECRET_KEY missing (Production + Preview). `/api/orders` sits behind Access on staging (no Bypass), so public intake is untested.
+- Staging owner lifecycle passed with one synthetic order (wrong amount 409, verify 200, repeat 409, claim, fulfilling, delivered, service period).
+  NOT tested: fulfillment-role 403, third-email block, public intake. Synthetic rows still in staging D1 (cleanup pending: Time Travel restore to before the test, or a fresh production D1). Do not go live or deploy the alert worker before cleanup.
+- Website order numbers (`SOS-YYMMDD-NNNN`) are generated in the browser (`assets/app.js`) and are not persisted anywhere; they are not proof of a sale. Live checkout is WhatsApp only.
+- `aips-live.json` is tracked in this public repo (AIPS price list, no costs/customers); not served on the live site (404).
