@@ -854,10 +854,6 @@
           "a": "Gemini Pro models, Veo video, NotebookLM, 2TB Google One storage — activated on your own Gmail for Personal."
         },
         {
-          "q": "Why our #1 seller?",
-          "a": "211+ orders — the AIPS special: full Google AI Pro activated on YOUR OWN Gmail at ৳500 (official ~৳2,200). Personal account, zero sharing."
-        },
-        {
           "q": "Which AI assistant is best for my use case?",
           "a": "ChatGPT is the all-rounder with the widest tool ecosystem. Claude excels at long documents, legal/medical text, and careful writing. Google AI Pro combines Google AI features with Google One storage. Check Google's current Bangladesh plan page and the current SaveOnSub offer before choosing. Perplexity is best for cited research. Buy the one that matches your primary task; most pros run two for under ৳1,000/month."
         },
@@ -868,10 +864,6 @@
         {
           "q": "What happens if the AI model gets updated or changed by the provider?",
           "a": "Provider features and models can change. What you receive depends on the exact plan and access method disclosed for your order. Provider model availability and upgrade eligibility depend on the exact provider plan and can change over time. If a provider retires a model or changes pricing, SaveOnSub updates product information after the change is verified; timing can vary."
-        },
-        {
-          "q": "Why is Google AI Pro our #1 seller at ৳500?",
-          "a": "211+ orders. Personal account on YOUR Gmail. Includes Gemini Pro models, Veo video generation, NotebookLM, and 2TB Google One storage. This is the best single-AI value in BD — lower risk than shared, better value than official."
         }
       ],
       "bundles": [],
@@ -1655,7 +1647,7 @@
       "faq": [
         {
           "q": "Standard vs Basic?",
-          "a": "Standard Personal (৳1,199, 156+ orders) = 15h fast GPU + relax mode unlimited. Basic Shared = budget entry."
+          "a": "Standard Personal (৳1,199) = 15h fast GPU + relax mode unlimited. Basic Shared = budget entry."
         },
         {
           "q": "Commercial use?",
@@ -1805,7 +1797,7 @@
         },
         {
           "q": "Why popular in BD?",
-          "a": "178+ orders — daily token system means predictable output for thumbnail/design sellers."
+          "a": "Its daily token system gives predictable output for thumbnail and design work."
         },
         {
           "q": "Can I use the images commercially? For Fiverr/client work?",
@@ -4153,7 +4145,7 @@
       "faq": [
         {
           "q": "Who buys this?",
-          "a": "201+ orders — IELTS candidates, freelancers and students. Full rewrites, tone, plagiarism checker."
+          "a": "Often used by IELTS candidates, freelancers and students. Full rewrites, tone, plagiarism checker."
         },
         {
           "q": "Works everywhere?",

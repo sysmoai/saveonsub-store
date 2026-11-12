@@ -3,9 +3,9 @@
  * Fail-closed: if PIXEL_ID is emptied this file makes no network request and
  * shows nothing. Setting the ID (a public value, not a secret) turns it on.
  *
- * Consent: Global Privacy Control / Do Not Track always win. Otherwise a small
- * notice offers Accept / Decline. CONSENT_MODE 'opt-in' loads nothing until
- * Accept; 'notice' loads at once and stops for good on Decline.
+ * Consent: Global Privacy Control / Do Not Track always win. Meta Pixel
+ * loads only after explicit OK; Decline prevents tracking, and resetting the
+ * choice revokes tracking until consent is granted again.
  *
  * Event map (browser):
  *   every page            → PageView
@@ -21,7 +21,6 @@
   'use strict';
 
   const PIXEL_ID = '2330425734478961'; // "SaveOnSub Website" dataset, Sysmoai Business Portfolio
-  const CONSENT_MODE = 'notice';  // 'notice' | 'opt-in'
   const CURRENCY = 'BDT';
   const CONSENT_KEY = 'sos_ads_consent_v1';
 
@@ -37,7 +36,7 @@
   let viewedCheckout = false;
 
   function loadPixel(){
-    if(loaded) return;
+    if(loaded || getConsent() !== 'granted') return;
     loaded = true;
     /* Meta's standard base code, unminified */
     if(!window.fbq){
@@ -54,7 +53,7 @@
   }
 
   function send(name, params, eventId){
-    if(!loaded || !window.fbq) return;
+    if(!loaded || !window.fbq || getConsent() !== 'granted') return;
     if(eventId) window.fbq('track', name, params || {}, {eventID: eventId});
     else window.fbq('track', name, params || {});
   }
@@ -155,7 +154,12 @@
     no.className = 'btn btn-sm';
     no.style.cssText = 'background:none;border:1px solid var(--line,#24504c);color:inherit';
     no.textContent = bn ? 'না' : 'Decline';
-    ok.onclick = function(){ setConsent('granted'); bar.remove(); loadPixel(); announce('granted'); };
+    ok.onclick = function(){
+      setConsent('granted'); bar.remove();
+      if(loaded && window.fbq) window.fbq('consent', 'grant');
+      else loadPixel();
+      announce('granted');
+    };
     no.onclick = function(){
       setConsent('denied'); bar.remove();
       if(loaded && window.fbq) window.fbq('consent', 'revoke');
@@ -168,12 +172,17 @@
   function start(){
     const c = getConsent();
     if(c === 'denied') return;
-    if(c === 'granted' || CONSENT_MODE === 'notice') loadPixel();
+    if(c === 'granted') loadPixel();
     if(c !== 'granted') showNotice();
   }
 
   // Lets the privacy page offer "change my choice".
-  window.sosAdsConsentReset = function(){ try { localStorage.removeItem(CONSENT_KEY); } catch(e){} showNotice(); };
+  window.sosAdsConsentReset = function(){
+    try { localStorage.removeItem(CONSENT_KEY); } catch(e){}
+    if(loaded && window.fbq) window.fbq('consent', 'revoke');
+    announce('denied');
+    showNotice();
+  };
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();

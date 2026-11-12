@@ -36,7 +36,7 @@ for (const provider of ["bkash", "nagad", "rocket", "bank_transfer"]) {
     assert.equal(alerts.length, 1);
     assert.equal(alerts[0].status, "pending", "queued does not mean delivered");
     assert.equal(alerts[0].priority, 0);
-    assert.equal(alerts[0].destination_key, "sos-ripon");
+    assert.equal(alerts[0].destination_key, "sos-emon", "owner is alerted first; fulfiller availability is unconfirmed");
     assert.equal(alerts[0].order_id, id);
     const payload = JSON.parse(alerts[0].payload_json);
     assert.deepEqual(payload, {
@@ -72,6 +72,38 @@ test("attestation and actual receiving-account source are required", async () =>
     assert.equal(paidAlerts().length, 0);
     assert.equal(w.order(pub).status, "payment_review");
   }
+});
+
+test("payer screenshots or public conversation/image URLs cannot substitute for receiving-side evidence", async () => {
+  const { pub } = w.seedOrder();
+  const invalidRefs = [
+    "https://wa.me/customer-payment-proof",
+    "https://example.com/receipt.png",
+    "r2:sos/private/customer-claim.png",
+    "r2:sos/private/customer-claim.jpeg",
+    "r2:sos/private/customer-claim.heic",
+    "stmt:customer-payment-proof.jpg"
+  ];
+  for (const evidence_ref of invalidRefs) {
+    const result = await w.api.verify("owner", pub, { ...good("bkash"), evidence_ref });
+    assert.equal(result.status, 400, "customer claim/screenshot should never attest settlement");
+    assert.equal(result.body.error, "INVALID_EVIDENCE_REF");
+    assert.equal(w.order(pub).status, "payment_review");
+    assert.equal(paidAlerts().length, 0);
+  }
+});
+
+test("screenshot only, even with a matching customer reference, never confirms payment", async () => {
+  const { pub, id } = w.seedOrder({ ref: "9ABC12XYZ0" });
+  w.db.run("UPDATE orders SET payment_method='bkash' WHERE id=?", id);
+  const claim = await w.api.verify("owner", pub, {
+    ...good("bkash"),
+    evidence_ref: "r2:sos/private/customer-claim.png"
+  });
+  assert.equal(claim.status, 400);
+  assert.equal(claim.body.error, "INVALID_EVIDENCE_REF");
+  assert.equal(w.order(pub).status, "payment_review");
+  assert.equal(paidAlerts().length, 0);
 });
 
 test("the same incoming reference cannot pay two orders or trigger two alerts", async () => {

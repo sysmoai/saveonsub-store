@@ -55,7 +55,7 @@
   }
 
   function send(name, params){
-    if(!loaded) return;
+    if(!loaded || getConsent() !== 'granted') return;
     gtag('event', name, params || {});
   }
 
@@ -133,7 +133,10 @@
   // meta-pixel.js owns the notice; it fires sos:consent with 'granted' | 'denied'.
   window.addEventListener('sos:consent', function(e){
     const v = e && e.detail;
-    if(v === 'granted') loadGa();
+    if(v === 'granted'){
+      if(loaded) gtag('consent', 'update', {analytics_storage: 'granted'});
+      else loadGa();
+    }
     else if(v === 'denied' && loaded) gtag('consent', 'update', {analytics_storage: 'denied'});
   });
 
