@@ -1311,3 +1311,12 @@ td a:not(.btn) {
 .tos.shared { background: rgba(251, 191, 36, 0.14); color: var(--gold); }
 .tos.team { background: rgba(167, 139, 250, 0.16); color: #c4b5fd; }
 @media (max-width: 760px) { main .grid.g4 .pcard .tos { font-size: 11px; letter-spacing: 0; } }
+
+/* ==== value box 2026-11-12: what a directly-bought personal plan's taka price includes ==== */
+.valuebox { border: 1px solid rgba(46, 240, 210, .35); border-radius: var(--radius); padding: 20px 22px; background: linear-gradient(160deg, rgba(20, 212, 184, .08), rgba(9, 31, 34, .6)); }
+.valuebox h2 { font-size: 20px !important; margin-bottom: 10px; }
+.valuebox ul { list-style: none; padding: 0; margin: 0; }
+.valuebox li { position: relative; padding: 8px 0 8px 30px; line-height: 1.65; border-top: 1px solid var(--line); }
+.valuebox li:first-child { border-top: 0; }
+.valuebox li::before { content: "✓"; position: absolute; left: 4px; top: 8px; color: var(--green2); font-weight: 900; }
+.valuebox b { color: #fff; }

@@ -143,6 +143,59 @@ def key_facts(p: dict, plans: list[dict], ref: dict, date: str, bn: bool, prefix
     return f'<section data-sos="{MARK}" class="kfacts mt3"><h2>{title}</h2><dl>{dl}</dl></section>'
 
 
+BD_VAT = 0.15
+NO_VALUE_BOX = {"pubg-royale-pass"}  # game passes are not provider-billed subscriptions
+
+
+def fx_reference() -> float:
+    try:
+        return float(json.loads(POLICY.read_text(encoding="utf-8")).get("fx_reference_bdt_per_usd") or 0)
+    except (OSError, ValueError, TypeError):
+        return 0.0
+
+
+def direct_plans(pid: str, plans: list[dict], usd, fx: float) -> list[dict]:
+    """Personal plans whose taka price covers the provider's list price + 15% VAT at the
+    pricebook FX reference: the plans SaveOnSub buys directly on the customer's own
+    account (CEO, 2026-11-12). Cheaper 'personal' plans are not described this way."""
+    if pid in NO_VALUE_BOX or not isinstance(usd, (int, float)) or usd <= 0 or fx <= 0:
+        return []
+    floor = usd * (1 + BD_VAT) * fx
+    return [pl for pl in plans
+            if (pl.get("type") or pl.get("access_type")) in ("personal", "official")
+            and floor <= int(pl["bdt"]) <= floor * 1.3]
+
+
+def value_box(p: dict, plans: list[dict], ref: dict, bn: bool) -> str:
+    usd = ref.get("usd")
+    picks = direct_plans(p["id"], plans, usd, fx_reference())
+    if not picks:
+        return ""
+    name = clean_name(p.get("name", p["id"]))
+    pl = min(picks, key=lambda x: int(x["bdt"]))
+    bdt = f"৳{int(pl['bdt']):,}"
+    with_vat = f"{usd * (1 + BD_VAT):.2f}".rstrip("0").rstrip(".")
+    if bn:
+        bdt = bdt.translate(str.maketrans("0123456789", "০১২৩৪৫৬৭৮৯"))
+        h = f"{esc(pl['label'])} প্ল্যানের {bdt}-এ কী কী থাকে"
+        rows = [
+            f"প্রোভাইডারের কাছ থেকে <b>আপনার নিজের অ্যাকাউন্টে</b> কেনা অফিসিয়াল {esc(name)} প্ল্যান। লিস্ট প্রাইস ${usd:g}।",
+            f"বাংলাদেশে বিদেশি ডিজিটাল সার্ভিসে কার্ড পেমেন্টে <b>১৫% ভ্যাট</b> লাগে, তাই চেকআউটে ${usd:g} হয়ে যায় ${with_vat}।",
+            f"আপনার {bdt}-এর মধ্যে এই পুরো খরচ, আন্তর্জাতিক কার্ড ও ডলার রেটের চার্জ, অ্যাক্টিভেশন সহায়তা এবং বাংলা ও ইংরেজিতে WhatsApp সাপোর্ট ধরা আছে। আমাদের পেমেন্ট করার সময় আলাদা ভ্যাট বা কার্ড চার্জ নেই।",
+            "বিকাশ, নগদ বা রকেটে টাকায় পেমেন্ট করুন; আন্তর্জাতিক কার্ড লাগবে না।",
+        ]
+    else:
+        h = f"What the {bdt} {esc(pl['label'])} plan includes"
+        rows = [
+            f"An official {esc(name)} plan bought from the provider on <b>your own account</b>. List price ${usd:g}.",
+            f"Bangladesh adds <b>15% VAT</b> to card payments for foreign digital services, so ${usd:g} becomes ${with_vat} at checkout.",
+            f"Your {bdt} covers that full amount, the international card and dollar-rate charges, activation help and WhatsApp support in Bangla and English. No separate VAT or card fee when you pay us.",
+            "Pay in taka with bKash, Nagad or Rocket; no international card needed.",
+        ]
+    lis = "".join(f"<li>{r}</li>" for r in rows)
+    return f'<section data-sos="{MARK}" class="valuebox mt3"><h2>{h}</h2><ul>{lis}</ul></section>'
+
+
 def compare_table(plans: list[dict], bn: bool) -> str:
     if len(plans) < 2:
         return ""
@@ -235,7 +288,7 @@ def upgrade_product(text: str, p: dict, products: dict, priced_ids: set, ref: di
     insert_at = text.find("</div>", j) + 6 if j > k else i
     if insert_at < i:
         insert_at = i
-    block = key_facts(p, plans, ref, date, bn, prefix) + compare_table(plans, bn) + order_steps(bn)
+    block = key_facts(p, plans, ref, date, bn, prefix) + value_box(p, plans, ref, bn) + compare_table(plans, bn) + order_steps(bn)
     text = text[:insert_at] + block + text[insert_at:]
     # 4. related list -> cards
     rel_h = "সম্পর্কিত টুল" if bn else "Related tools"
