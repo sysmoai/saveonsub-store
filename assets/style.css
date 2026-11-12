@@ -1325,3 +1325,43 @@ main[data-commercial-truth] section.valuebox { padding: 20px 22px; }
 .valuebox.benefits > p { margin: 0 0 8px; line-height: 1.7; color: var(--muted); }
 .valuebox.benefits > p.bfoot { margin: 10px 0 0; font-size: 13px; }
 .valuebox.benefits a { color: var(--green2); text-decoration: underline; }
+
+/* ==== guide article layout 2026-11-12 (pages built by bangla_guides.py: main[data-bangla-guide]) ====
+   Comfortable Bangla reading rhythm, visible links, styled tables/lists/notices and an
+   auto table of contents. Styles only; the builder's markup is unchanged. */
+main[data-bangla-guide] { padding-bottom: 56px; }
+main[data-bangla-guide] h2 { scroll-margin-top: 84px; }
+main[data-bangla-guide] .wrap > p, main[data-bangla-guide] li { font-size: 17px; line-height: 1.85; color: #d7e6e4; }
+main[data-bangla-guide] .wrap > p.sub { font-size: 18px; line-height: 1.75; color: var(--muted); margin-bottom: 18px; }
+main[data-bangla-guide] .wrap > p + p { margin-top: 14px; }
+main[data-bangla-guide] .wrap > h1 { margin-top: 10px; line-height: 1.25; }
+main[data-bangla-guide] .wrap > h2 { position: relative; padding-top: 22px; margin-top: 34px !important; border-top: 1px solid var(--line); line-height: 1.35; }
+main[data-bangla-guide] .wrap > h2::before { content: ""; position: absolute; top: -1px; left: 0; width: 56px; height: 3px; border-radius: 3px; background: var(--grad); }
+main[data-bangla-guide] .wrap > ul, main[data-bangla-guide] .wrap > ol { margin: 12px 0 0; padding-left: 1.35em; }
+main[data-bangla-guide] .wrap > ul > li, main[data-bangla-guide] .wrap > ol > li { margin: 8px 0; padding-left: 4px; }
+main[data-bangla-guide] li::marker { color: var(--green2); font-weight: 800; }
+main[data-bangla-guide] .wrap > :not(.crumbs) a:not(.btn):not(.pcard), main[data-bangla-guide] .wrap > p a { color: var(--green2); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+main[data-bangla-guide] .wrap a:not(.btn):not(.pcard):hover { text-decoration-thickness: 2px; }
+main[data-bangla-guide] b, main[data-bangla-guide] strong { color: #fff; }
+main[data-bangla-guide] blockquote.notice { font-size: 15.5px; line-height: 1.75; border-left-width: 4px; margin: 18px 0 0; }
+/* tables: readable on phones (scrolls inside its box, never the page) */
+main[data-bangla-guide] .wrap > div > table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 15px; }
+main[data-bangla-guide] .wrap > div > table th { background: rgba(20, 212, 184, .10); color: #fff; text-align: left; font-weight: 800; padding: 12px 14px; }
+main[data-bangla-guide] .wrap > div > table td { padding: 11px 14px; border-top: 1px solid var(--line); line-height: 1.6; vertical-align: top; }
+main[data-bangla-guide] .wrap > div > table tr:nth-child(even) td { background: rgba(255, 255, 255, .02); }
+/* product links at the end become tappable chips */
+main[data-bangla-guide] ul:has(> li > a[href*="/p/"]) { list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+main[data-bangla-guide] ul:has(> li > a[href*="/p/"]) > li { margin: 0; padding: 0; }
+main[data-bangla-guide] ul:has(> li > a[href*="/p/"]) a { display: inline-block; padding: 9px 16px; border: 1px solid var(--line); border-radius: 99px; background: var(--card); color: var(--ink) !important; text-decoration: none !important; font-weight: 700; font-size: 15px; }
+main[data-bangla-guide] ul:has(> li > a[href*="/p/"]) a:hover { border-color: var(--green2); color: var(--green2) !important; }
+/* auto table of contents (assets/app.js) */
+.guide-toc { margin: 22px 0 6px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(160deg, rgba(15, 51, 55, .7), rgba(9, 31, 34, .7)); }
+.guide-toc b { display: block; font-size: 14px; letter-spacing: .3px; color: var(--muted); margin-bottom: 8px; }
+.guide-toc ol { margin: 0; padding-left: 1.3em; columns: 2; column-gap: 28px; }
+.guide-toc li { font-size: 15px !important; line-height: 1.55 !important; margin: 5px 0 !important; break-inside: avoid; }
+.guide-toc a { color: var(--ink) !important; text-decoration: none !important; }
+.guide-toc a:hover { color: var(--green2) !important; }
+@media (max-width: 760px) {
+  main[data-bangla-guide] .wrap > p, main[data-bangla-guide] li { font-size: 16.5px; }
+  .guide-toc ol { columns: 1; }
+}

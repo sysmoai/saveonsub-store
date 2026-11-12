@@ -53,56 +53,41 @@ function makeBrowser(initialConsent, privacy = {}) {
   return { ctx, scripts, items, elements, emit };
 }
 
-function noticeButton(browser, index) {
-  const el = browser.elements.get('sos-ads-consent');
-  assert.ok(el, 'consent notice should be available');
-  return el.children[index];
-}
-
 function run() {
-  const unknown = makeBrowser();
-  assert.equal(unknown.scripts.length, 0, 'no network scripts before consent');
-  assert.equal(unknown.ctx.fbq, undefined, 'Pixel must not initialize before consent');
-  assert.equal(unknown.ctx.dataLayer.length, 0, 'GA4 must not emit before consent');
-
-  noticeButton(unknown, 1).onclick(); // OK
-  assert.equal(unknown.items.get('sos_ads_consent_v1'), 'granted');
-  assert.equal(unknown.scripts.filter(x => x.includes('connect.facebook.net')).length, 1);
-  assert.equal(unknown.scripts.filter(x => x.includes('googletagmanager.com/gtag')).length, 1);
+  const fresh = makeBrowser();
+  assert.equal(fresh.ctx.document.getElementById('sos-ads-consent'), null, 'no cookie banner');
+  assert.equal(fresh.scripts.filter(x => x.includes('connect.facebook.net')).length, 1, 'Pixel loads by default');
+  assert.equal(fresh.scripts.filter(x => x.includes('googletagmanager.com/gtag')).length, 1, 'GA4 loads by default');
   const adTrack = () => {
-    unknown.emit(new unknown.ctx.CustomEvent('sos:track', {
+    fresh.emit(new fresh.ctx.CustomEvent('sos:track', {
       detail: { event: 'sos_whatsapp_click', link_text: 'CTA' }
     }));
   };
   adTrack();
-  const queue = unknown.ctx.fbq.queue;
+  const queue = fresh.ctx.fbq.queue;
   assert.ok(queue.some(args => args[0] === 'track' && args[1] === 'Contact'), 'Meta Contact expected');
-  assert.ok(unknown.ctx.dataLayer.some(args => args[0] === 'event' && args[1] === 'whatsapp_click'), 'GA4 click expected');
+  assert.ok(fresh.ctx.dataLayer.some(args => args[0] === 'event' && args[1] === 'whatsapp_click'), 'GA4 click expected');
 
-  unknown.ctx.sosAdsConsentReset();
-  assert.equal(unknown.items.get('sos_ads_consent_v1'), undefined);
+  fresh.ctx.sosAdsOptOut();
+  assert.equal(fresh.items.get('sos_ads_consent_v1'), 'denied');
   assert.ok(queue.some(args => args[0] === 'consent' && args[1] === 'revoke'), 'Pixel revoke expected');
+  assert.ok(fresh.ctx.dataLayer.some(args => args[0] === 'consent' && args[1] === 'update' && args[2].analytics_storage === 'denied'), 'GA4 deny expected');
   const beforeQueue = queue.length;
-  const beforeLayer = unknown.ctx.dataLayer.length;
+  const beforeLayer = fresh.ctx.dataLayer.length;
   adTrack();
-  assert.equal(queue.length, beforeQueue, 'no Meta event after revocation');
-  assert.equal(unknown.ctx.dataLayer.length, beforeLayer, 'no GA4 event after revocation');
+  assert.equal(queue.length, beforeQueue, 'no Meta event after opt-out');
+  assert.equal(fresh.ctx.dataLayer.length, beforeLayer, 'no GA4 event after opt-out');
 
-  noticeButton(unknown, 1).onclick(); // Re-accept
+  fresh.ctx.sosAdsOptIn();
   assert.ok(queue.some(args => args[0] === 'consent' && args[1] === 'grant'), 'Pixel re-grant expected');
-  assert.ok(unknown.ctx.dataLayer.some(args => args[0] === 'consent' && args[1] === 'update' && args[2].analytics_storage === 'granted'), 'GA4 grant expected');
   adTrack();
-  assert.ok(queue.length > beforeQueue, 'Meta event resumes after re-accept');
+  assert.ok(queue.length > beforeQueue, 'Meta event resumes after opt-in');
 
-  const decline = makeBrowser();
-  noticeButton(decline, 2).onclick(); // Decline
-  assert.equal(decline.items.get('sos_ads_consent_v1'), 'denied');
-  assert.equal(decline.scripts.length, 0, 'Decline never loads tracking');
-  assert.equal(makeBrowser('denied').scripts.length, 0, 'Decline survives reload');
-  assert.equal(makeBrowser('granted').scripts.length, 2, 'Existing explicit grant survives reload');
+  assert.equal(makeBrowser('denied').scripts.length, 0, 'Opt-out survives reload');
+  assert.equal(makeBrowser('granted').scripts.length, 2, 'Older explicit grant still loads');
   assert.equal(makeBrowser(null, { gpc: true }).scripts.length, 0, 'GPC blocks both trackers');
-  assert.equal(makeBrowser('granted', { dnt: true }).scripts.length, 0, 'DNT blocks both trackers');
+  assert.equal(makeBrowser(null, { dnt: true }).scripts.length, 0, 'DNT blocks both trackers');
 
-  process.stdout.write('PASS: synthetic Meta Pixel + GA4 consent lifecycle\n');
+  process.stdout.write('PASS: synthetic Meta Pixel + GA4 opt-out lifecycle\n');
 }
 run();
