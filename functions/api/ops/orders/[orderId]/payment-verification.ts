@@ -106,7 +106,7 @@ export const onRequestPost: PagesFunction<VerifierEnv> = async ({ request, env, 
         .bind(ts, ts, order.id),
       env.DB.prepare(`INSERT INTO notification_outbox
         (order_id,channel,destination_key,template_key,payload_json,priority,status,attempt_count,next_attempt_at,created_at,updated_at)
-        SELECT id,'webhook','sos-ripon','paid_order_priority',?,0,'pending',0,?,?,?
+        SELECT id,'webhook','sos-emon','paid_order_priority',?,0,'pending',0,?,?,?
         FROM orders WHERE id=? AND status='payment_confirmed'`)
         .bind(JSON.stringify({ order_id: orderId, amount_minor: amountMinor, currency, provider }), ts, ts, ts, order.id),
     ]);

@@ -36,7 +36,7 @@ for (const provider of ["bkash", "nagad", "rocket", "bank_transfer"]) {
     assert.equal(alerts.length, 1);
     assert.equal(alerts[0].status, "pending", "queued does not mean delivered");
     assert.equal(alerts[0].priority, 0);
-    assert.equal(alerts[0].destination_key, "sos-ripon");
+    assert.equal(alerts[0].destination_key, "sos-emon", "owner is alerted first; fulfiller availability is unconfirmed");
     assert.equal(alerts[0].order_id, id);
     const payload = JSON.parse(alerts[0].payload_json);
     assert.deepEqual(payload, {
