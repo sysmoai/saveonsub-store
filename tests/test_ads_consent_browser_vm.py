@@ -10,7 +10,7 @@ NODE = shutil.which("node")
 
 @unittest.skipUnless(NODE, "node is required for synthetic browser smoke test")
 class AdsConsentBrowserVm(unittest.TestCase):
-    def test_meta_ga4_optin_lifecycle(self):
+    def test_meta_ga4_optout_lifecycle(self):
         p = subprocess.run(
             [NODE, str(ROOT / "tests" / "ads_consent_vm.cjs")],
             cwd=ROOT,
@@ -19,7 +19,7 @@ class AdsConsentBrowserVm(unittest.TestCase):
             timeout=20,
         )
         self.assertEqual(p.returncode, 0, p.stdout + "\n" + p.stderr)
-        self.assertIn("PASS: synthetic Meta Pixel + GA4 consent lifecycle", p.stdout)
+        self.assertIn("PASS: synthetic Meta Pixel + GA4 opt-out lifecycle", p.stdout)
 
 
 if __name__ == "__main__":
