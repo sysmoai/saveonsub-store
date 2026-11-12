@@ -11,7 +11,8 @@ import shared_copy_check  # noqa: E402
 POLICY = json.loads((ROOT / "ops" / "PRICING-V2-2026-09-17.json").read_text(encoding="utf-8"))
 # SOS-A3 (CEO 2026-11-12): these products publish no shared-access plan.
 HELD = ["chatgpt-plus", "chatgpt-business", "chatgpt-pro", "claude-pro", "google-ai-plus", "perplexity-pro",
-        "heygen", "grammarly", "otter", "writesonic", "netflix", "surfshark", "copilot-pro"]
+        "heygen", "grammarly", "otter", "writesonic", "netflix", "surfshark", "copilot-pro",
+        "midjourney", "synthesia", "freepik", "windsurf"]
 
 
 class SharedTermsHold(unittest.TestCase):

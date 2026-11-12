@@ -205,32 +205,11 @@
       "mode": "fixed",
       "plans": [
         {
-          "plan_id": "standard-shared-1-month",
-          "label": "Standard Shared",
-          "bdt": 1199,
-          "duration": "1 month",
-          "access_type": "shared"
-        },
-        {
-          "plan_id": "standard-premium-shared-3-max-1-month",
-          "label": "Standard Premium Shared (3 max)",
-          "bdt": 2399,
-          "duration": "1 month",
-          "access_type": "shared"
-        },
-        {
           "plan_id": "standard-personal-1-month",
           "label": "Standard Personal",
           "bdt": 3990,
           "duration": "1 month",
           "access_type": "personal"
-        },
-        {
-          "plan_id": "pro-shared-1-month",
-          "label": "Pro Shared",
-          "bdt": 4788,
-          "duration": "1 month",
-          "access_type": "shared"
         },
         {
           "plan_id": "pro-personal-1-month",
@@ -309,25 +288,11 @@
       "note": "Price on Request — SOS-A3 commercial HOLD (CEO 2026-11-12). Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "synthesia": {
-      "mode": "fixed",
-      "plans": [
-        {
-          "plan_id": "starter-shared-budget-1-month",
-          "label": "Starter Shared (budget)",
-          "bdt": 399,
-          "duration": "1 month",
-          "access_type": "shared"
-        },
-        {
-          "plan_id": "starter-shared-1-month",
-          "label": "Starter Shared",
-          "bdt": 700,
-          "duration": "1 month",
-          "access_type": "shared"
-        }
-      ],
+      "mode": "inquiry",
+      "plans": [],
       "approved_by": "CEO Emon Hossain",
-      "approved_on": "2026-11-02"
+      "approved_on": "2026-11-02",
+      "note": "Price on Request — SOS-A3 commercial HOLD (CEO 2026-11-12). Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "elevenlabs": {
       "mode": "fixed",
@@ -548,25 +513,11 @@
       "approved_on": "2026-11-02"
     },
     "freepik": {
-      "mode": "fixed",
-      "plans": [
-        {
-          "plan_id": "starter-shared-budget-1-month",
-          "label": "Starter Shared (budget)",
-          "bdt": 249,
-          "duration": "1 month",
-          "access_type": "shared"
-        },
-        {
-          "plan_id": "premium-shared-1-month",
-          "label": "Premium Shared",
-          "bdt": 450,
-          "duration": "1 month",
-          "access_type": "shared"
-        }
-      ],
+      "mode": "inquiry",
+      "plans": [],
       "approved_by": "CEO Emon Hossain",
-      "approved_on": "2026-11-02"
+      "approved_on": "2026-11-02",
+      "note": "Price on Request — SOS-A3 commercial HOLD (CEO 2026-11-12). Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "ideogram": {
       "mode": "fixed",
@@ -744,25 +695,11 @@
       "approved_on": "2026-11-02"
     },
     "windsurf": {
-      "mode": "fixed",
-      "plans": [
-        {
-          "plan_id": "starter-shared-budget-1-month",
-          "label": "Starter Shared (budget)",
-          "bdt": 299,
-          "duration": "1 month",
-          "access_type": "shared"
-        },
-        {
-          "plan_id": "pro-shared-1-month",
-          "label": "Pro Shared",
-          "bdt": 590,
-          "duration": "1 month",
-          "access_type": "shared"
-        }
-      ],
+      "mode": "inquiry",
+      "plans": [],
       "approved_by": "CEO Emon Hossain",
-      "approved_on": "2026-11-02"
+      "approved_on": "2026-11-02",
+      "note": "Price on Request — SOS-A3 commercial HOLD (CEO 2026-11-12). Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
     },
     "quillbot": {
       "mode": "fixed",
