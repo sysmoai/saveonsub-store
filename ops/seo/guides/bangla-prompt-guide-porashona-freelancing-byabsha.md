@@ -1,7 +1,7 @@
 ---
 slug: bangla-prompt-guide-porashona-freelancing-byabsha
 lang: bn
-title: বাংলা প্রম্পট গাইড — পড়াশোনা, ফ্রিল্যান্সিং ও ব্যবসার জন্য কপি-পেস্ট উদাহরণ
+title: বাংলা প্রম্পট গাইড: পড়াশোনা, ফ্রিল্যান্সিং ও ব্যবসা
 description: ChatGPT, Claude, Gemini বা Grok-কে বাংলায় ভালো নির্দেশ দেওয়ার ৪-ধাপ সূত্র এবং পড়াশোনা, ফ্রিল্যান্সিং ও ছোট ব্যবসার জন্য ১২টি ব্যবহারযোগ্য প্রম্পটের উদাহরণ।
 related: [chatgpt-plus, claude-pro, google-ai-pro]
 source: Drafted and reviewed by Claude; general prompt-writing guidance, no vendor claims.
