@@ -2,7 +2,7 @@
 slug: ai-subscription-kenar-age-7ti-proshno
 lang: bn
 title: AI সাবস্ক্রিপশন কেনার আগে নিজেকে ৭টি প্রশ্ন করুন
-description: ChatGPT, Claude, Gemini বা অন্য AI সাবস্ক্রিপশন কেনার আগে বাংলাদেশের ক্রেতার জন্য ৭টি নিরাপত্তা-প্রশ্নের তালিকা: অ্যাকাউন্ট কার নামে, অফিসিয়াল দাম, ওটিপি, রিফান্ড ও শর্ত।
+description: ChatGPT, Claude, Gemini বা অন্য AI সাবস্ক্রিপশন কেনার আগে ৭টি নিরাপত্তা-প্রশ্ন: অ্যাকাউন্ট কার নামে, অফিসিয়াল দাম, ওটিপি, রিফান্ড ও শর্ত।
 related: [chatgpt-plus, claude-pro, google-ai-pro]
 source: Drafted and reviewed by Claude; general buyer-safety checklist, no vendor price claims.
 ---
