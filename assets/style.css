@@ -1276,3 +1276,32 @@ td a:not(.btn) {
   main .grid.g4 .pcard .price { font-size: 17px; }
   main .grid.g4 .pcard .tos { font-size: 9.5px; letter-spacing: .2px; }
 }
+
+/* ==== motion v2 2026-11-12: grid-precise motion grammar ====
+   Ideas adapted (no code, fonts, images or audio copied) from the motion notes in
+   lemomo-ai/lemo-opuscar (MIT code/docs; https://github.com/lemomo-ai/lemo-opuscar):
+   headings rise out of a mask instead of fading; card grids ripple out by distance
+   on the grid, not DOM order; one soft light sweep crosses a card once as it lands;
+   precise eases with no bounce for content; a hairline hero grid with every 4th line
+   stronger. Colours stay the approved teal/navy palette. Content is untouched. */
+:root {
+  --ease-snap: cubic-bezier(.7, 0, .2, 1);   /* precise in-out: lands, never bounces */
+  --ease-out3: cubic-bezier(.33, 1, .68, 1); /* cubic ease-out for arrivals */
+}
+.mo .rv { transition: opacity .6s var(--ease-out3), transform .6s var(--ease-out3); transition-delay: var(--d, 0s); }
+/* section headings: mask slide-up (rises out of a slot, revealed bottom to top) */
+.mo h2.rv { opacity: 1; transform: translateY(.38em); clip-path: inset(100% 0 0 0); transition: transform .75s var(--ease-snap), clip-path .75s var(--ease-snap); transition-delay: var(--d, 0s); }
+.mo h2.rv.in { transform: none; clip-path: inset(-.4em -.4em -.4em -.4em); }
+/* one light sweep across a product card as it lands */
+.mo .pcard.rv.in { background-image: linear-gradient(105deg, transparent 42%, rgba(46, 240, 210, .10) 50%, transparent 58%); background-size: 260% 100%; background-repeat: no-repeat; background-position: 130% 0; animation: sosSweep 1.3s var(--ease-snap) both; animation-delay: calc(var(--d, 0s) + .2s); }
+@keyframes sosSweep { from { background-position: -30% 0; } to { background-position: 130% 0; } }
+/* hero: hairline grid with a stronger line every 4th module */
+.hero-grid { background-image: linear-gradient(rgba(147,189,183,.10) 1px, transparent 1px), linear-gradient(90deg, rgba(147,189,183,.10) 1px, transparent 1px), linear-gradient(rgba(147,189,183,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(147,189,183,.05) 1px, transparent 1px); background-size: 176px 176px, 176px 176px, 44px 44px, 44px 44px; }
+/* phone trust bar: the next message rises in instead of popping */
+.trustbar span.tb-in { animation: tbIn .5s var(--ease-out3) both; }
+@keyframes tbIn { from { opacity: 0; transform: translateY(70%); } }
+@media (prefers-reduced-motion: reduce) {
+  .mo h2.rv { transform: none; clip-path: none; transition: none; }
+  .mo .pcard.rv.in { animation: none; background-image: none; }
+  .trustbar span.tb-in { animation: none; }
+}
