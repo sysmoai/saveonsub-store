@@ -4,10 +4,10 @@
  * The ID is a public value, not a secret ("SaveOnSub Website" property 561849452,
  * account 414322003, web stream 16249309705).
  *
- * Consent: opt-in only. gtag.js is never requested until the visitor presses OK
- * on the cookie notice shown by meta-pixel.js (shared key sos_ads_consent_v1).
- * Global Privacy Control / Do Not Track always win. Decline after Accept stops
- * further hits on the next page and turns analytics_storage off at once.
+ * Choice: on by default, disclosed on /privacy (no on-page banner, CEO
+ * 2026-11-12). Global Privacy Control / Do Not Track always win. The privacy
+ * page opt-out (meta-pixel.js, shared key sos_ads_consent_v1 = 'denied') turns
+ * analytics_storage off at once and stops loading on later pages.
  *
  * Event map:
  *   every page            → page_view (gtag config)
@@ -55,7 +55,7 @@
   }
 
   function send(name, params){
-    if(!loaded || getConsent() !== 'granted') return;
+    if(!loaded || getConsent() === 'denied') return;
     gtag('event', name, params || {});
   }
 
@@ -130,7 +130,7 @@
     }
   });
 
-  // meta-pixel.js owns the notice; it fires sos:consent with 'granted' | 'denied'.
+  // meta-pixel.js owns the opt-out/opt-in; it fires sos:consent with 'granted' | 'denied'.
   window.addEventListener('sos:consent', function(e){
     const v = e && e.detail;
     if(v === 'granted'){
@@ -141,7 +141,7 @@
   });
 
   function start(){
-    if(getConsent() === 'granted') loadGa();
+    if(getConsent() !== 'denied') loadGa();
   }
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);

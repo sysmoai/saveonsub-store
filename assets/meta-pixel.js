@@ -3,9 +3,10 @@
  * Fail-closed: if PIXEL_ID is emptied this file makes no network request and
  * shows nothing. Setting the ID (a public value, not a secret) turns it on.
  *
- * Consent: Global Privacy Control / Do Not Track always win. Meta Pixel
- * loads only after explicit OK; Decline prevents tracking, and resetting the
- * choice revokes tracking until consent is granted again.
+ * Choice (CEO, 2026-11-12: no on-page cookie banner): measurement is on by
+ * default and disclosed on /privacy. Global Privacy Control / Do Not Track
+ * always win, and the privacy page's opt-out (sosAdsOptOut) stops tracking in
+ * this browser until the visitor opts back in (sosAdsOptIn).
  *
  * Event map (browser):
  *   every page            → PageView
@@ -31,12 +32,13 @@
 
   function getConsent(){ try { return localStorage.getItem(CONSENT_KEY) || ''; } catch(e){ return ''; } }
   function setConsent(v){ try { localStorage.setItem(CONSENT_KEY, v); } catch(e){} }
+  function allowed(){ return getConsent() !== 'denied'; }
 
   let loaded = false;
   let viewedCheckout = false;
 
   function loadPixel(){
-    if(loaded || getConsent() !== 'granted') return;
+    if(loaded || !allowed()) return;
     loaded = true;
     /* Meta's standard base code, unminified */
     if(!window.fbq){
@@ -53,7 +55,7 @@
   }
 
   function send(name, params, eventId){
-    if(!loaded || !window.fbq || getConsent() !== 'granted') return;
+    if(!loaded || !window.fbq || !allowed()) return;
     if(eventId) window.fbq('track', name, params || {}, {eventID: eventId});
     else window.fbq('track', name, params || {});
   }
@@ -131,58 +133,23 @@
   // ga4.js listens for this; it loads Google Analytics only after 'granted'.
   function announce(v){ try { window.dispatchEvent(new CustomEvent('sos:consent', {detail: v})); } catch(e){} }
 
-  function showNotice(){
-    if(document.getElementById('sos-ads-consent')) return;
-    const bn = (document.documentElement.lang || '').startsWith('bn');
-    const bar = document.createElement('div');
-    bar.id = 'sos-ads-consent';
-    bar.setAttribute('role', 'region');
-    bar.setAttribute('aria-label', bn ? 'কুকি' : 'Cookies');
-    bar.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:9998;max-width:560px;margin:0 auto;'
-      + 'background:var(--card,#103433);border:1px solid var(--line,#24504c);border-radius:14px;'
-      + 'padding:12px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:13.5px;'
-      + 'box-shadow:0 8px 30px rgba(0,0,0,.4)';
-    const text = document.createElement('span');
-    text.style.flex = '1 1 240px';
-    text.innerHTML = bn
-      ? 'আমাদের বিজ্ঞাপন ও ওয়েবসাইট কতটা কাজ করছে তা মাপতে আমরা Meta Pixel ও Google Analytics ব্যবহার করি। <a href="/privacy" style="color:var(--green2,#14d4b8);text-decoration:underline">বিস্তারিত</a>'
-      : 'We use the Meta Pixel and Google Analytics to measure our ads and website. <a href="/privacy" style="color:var(--green2,#14d4b8);text-decoration:underline">Details</a>';
-    const ok = document.createElement('button');
-    ok.className = 'btn btn-primary btn-sm';
-    ok.textContent = bn ? 'ঠিক আছে' : 'OK';
-    const no = document.createElement('button');
-    no.className = 'btn btn-sm';
-    no.style.cssText = 'background:none;border:1px solid var(--line,#24504c);color:inherit';
-    no.textContent = bn ? 'না' : 'Decline';
-    ok.onclick = function(){
-      setConsent('granted'); bar.remove();
-      if(loaded && window.fbq) window.fbq('consent', 'grant');
-      else loadPixel();
-      announce('granted');
-    };
-    no.onclick = function(){
-      setConsent('denied'); bar.remove();
-      if(loaded && window.fbq) window.fbq('consent', 'revoke');
-      announce('denied');
-    };
-    bar.appendChild(text); bar.appendChild(ok); bar.appendChild(no);
-    document.body.appendChild(bar);
-  }
-
   function start(){
-    const c = getConsent();
-    if(c === 'denied') return;
-    if(c === 'granted') loadPixel();
-    if(c !== 'granted') showNotice();
+    if(allowed()) loadPixel();
   }
 
-  // Lets the privacy page offer "change my choice".
-  window.sosAdsConsentReset = function(){
-    try { localStorage.removeItem(CONSENT_KEY); } catch(e){}
+  // The privacy page offers these two links. Opt-out persists in this browser.
+  window.sosAdsOptOut = function(){
+    setConsent('denied');
     if(loaded && window.fbq) window.fbq('consent', 'revoke');
     announce('denied');
-    showNotice();
   };
+  window.sosAdsOptIn = function(){
+    setConsent('granted');
+    if(loaded && window.fbq) window.fbq('consent', 'grant');
+    else loadPixel();
+    announce('granted');
+  };
+  window.sosAdsConsentReset = window.sosAdsOptOut; // old privacy-page link
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();

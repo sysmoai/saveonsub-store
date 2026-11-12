@@ -114,7 +114,7 @@ for path in SITE.rglob('*.html'):
     if '/assets/meta-pixel.js' not in text and '/assets/measurement.js' in text:
         text = re.sub(r'(<script src="/assets/measurement\.js" defer></script>)',
                       r'\1\n<script src="/assets/meta-pixel.js" defer></script>', text, count=1)
-    # GA4 bridge: opt-in only, listens to sos:track and to the shared consent notice.
+    # GA4 bridge: on by default with privacy-page opt-out (shared key with meta-pixel.js).
     if '/assets/ga4.js' not in text and '/assets/meta-pixel.js' in text:
         text = re.sub(r'(<script src="/assets/meta-pixel\.js" defer></script>)',
                       r'\1\n<script src="/assets/ga4.js" defer></script>', text, count=1)
