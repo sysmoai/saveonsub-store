@@ -196,6 +196,64 @@ def value_box(p: dict, plans: list[dict], ref: dict, bn: bool) -> str:
     return f'<section data-sos="{MARK}" class="valuebox mt3"><h2>{h}</h2><ul>{lis}</ul></section>'
 
 
+# Provider benefit lists, checked against the provider's own plan pages. Keep each
+# entry dated and sourced; model names and limits change often, so describe them
+# by tier ("Pro models") rather than version numbers.
+BENEFITS = {
+    "google-ai-pro": {
+        "checked": "2026-11-12",
+        "source": "https://gemini.google/subscriptions/",
+        "en": [
+            "<b>Gemini with Google's Pro models</b>: about 4x the usage limits of free Gemini and a 1M-token context window for long files.",
+            "<b>Deep Research</b>: Gemini searches the web and writes a sourced report for you.",
+            "<b>Video and image generation</b>: Veo video in Gemini, 1,000 monthly credits in Google Flow, and higher Nano Banana image limits.",
+            "<b>Gemini Notebook (NotebookLM)</b>: more notebooks and 5x the Audio Overviews.",
+            "<b>Gemini inside Gmail, Docs, Sheets and Vids</b>, plus Gemini in Chrome and more AI Mode access in Google Search.",
+            "<b>For developers</b>: higher limits in Google AI Studio, Antigravity and Android Studio, 200 Colab compute units a month and $10 monthly Google Cloud credit.",
+            "<b>5 TB cloud storage</b> across Gmail, Drive and Photos, with family sharing for up to five others.",
+            "<b>Extras</b> where Google offers them in your country: YouTube Premium Lite and Google Home Premium.",
+        ],
+        "bn": [
+            "<b>Google-এর Pro মডেলসহ Gemini</b>: ফ্রি Gemini-এর প্রায় ৪ গুণ ইউসেজ লিমিট, আর লম্বা ফাইলের জন্য ১০ লাখ টোকেন context window।",
+            "<b>Deep Research</b>: Gemini ওয়েব ঘেঁটে সোর্সসহ পুরো রিপোর্ট লিখে দেয়।",
+            "<b>ভিডিও ও ছবি বানানো</b>: Gemini-তে Veo ভিডিও, Google Flow-তে মাসে ১,০০০ ক্রেডিট, Nano Banana ইমেজের বেশি লিমিট।",
+            "<b>Gemini Notebook (NotebookLM)</b>: বেশি নোটবুক আর ৫ গুণ Audio Overview।",
+            "<b>Gmail, Docs, Sheets ও Vids-এর ভেতরেই Gemini</b>, সাথে Chrome-এ Gemini আর Google Search-এর AI Mode-এ বেশি অ্যাক্সেস।",
+            "<b>ডেভেলপারদের জন্য</b>: Google AI Studio, Antigravity ও Android Studio-তে বেশি লিমিট, মাসে ২০০ Colab compute unit আর $১০ Google Cloud ক্রেডিট।",
+            "<b>৫ TB ক্লাউড স্টোরেজ</b> Gmail, Drive ও Photos জুড়ে, পরিবারের আরও ৫ জনের সাথে শেয়ার করা যায়।",
+            "<b>এক্সট্রা</b> (Google আপনার দেশে দিলে): YouTube Premium Lite ও Google Home Premium।",
+        ],
+    },
+}
+
+
+def benefits_box(p: dict, plans: list[dict], bn: bool) -> str:
+    b = BENEFITS.get(p["id"])
+    if not b or not plans:
+        return ""
+    name = clean_name(p.get("name", p["id"]))
+    pl = min(plans, key=lambda x: int(x["bdt"]))
+    bdt = f"৳{int(pl['bdt']):,}"
+    src = f'<a href="{b["source"]}" target="_blank" rel="noopener nofollow">'
+    if bn:
+        bdt = bdt.translate(str.maketrans("0123456789", "০১২৩৪৫৬৭৮৯"))
+        h = f"{esc(name)}-এ কী কী পাবেন"
+        lead = (f"{bdt}-এ {esc(name)} চালু হয় <b>আপনার নিজের Gmail অ্যাকাউন্টে</b>, তাই প্রতিটি ফিচার আপনার নিজের "
+                "Gemini অ্যাপ ও Google অ্যাপে আসে। Google-এর প্ল্যানে যা যা আছে:")
+        foot = (f"Google-এর অফিসিয়াল প্ল্যান পেজ থেকে {b['checked']} তারিখে মিলিয়ে দেখা। ফিচার, লিমিট ও দেশভেদে প্রাপ্যতা "
+                f"Google বদলাতে পারে, আর কিছু ফিচার শুধু ১৮+ বয়সীদের জন্য। {src}Google-এ বর্তমান তালিকা দেখুন ↗</a>")
+    else:
+        h = f"What you get with {esc(name)}"
+        lead = (f"At {bdt}, {esc(name)} is activated on <b>your own Gmail account</b>, so every feature shows up in your own "
+                "Gemini app and Google apps. Google's plan includes:")
+        foot = (f"Checked against Google's official plan page on {b['checked']}. Google can change features, limits and "
+                f"country availability, and some features are 18+ only. {src}See Google's current list ↗</a>")
+    rows = b["bn" if bn else "en"]
+    lis = "".join(f"<li>{r}</li>" for r in rows)
+    return (f'<section data-sos="{MARK}" class="valuebox benefits mt3"><h2>{h}</h2><p>{lead}</p>'
+            f'<ul>{lis}</ul><p class="bfoot">{foot}</p></section>')
+
+
 def compare_table(plans: list[dict], bn: bool) -> str:
     if len(plans) < 2:
         return ""
@@ -288,7 +346,7 @@ def upgrade_product(text: str, p: dict, products: dict, priced_ids: set, ref: di
     insert_at = text.find("</div>", j) + 6 if j > k else i
     if insert_at < i:
         insert_at = i
-    block = key_facts(p, plans, ref, date, bn, prefix) + value_box(p, plans, ref, bn) + compare_table(plans, bn) + order_steps(bn)
+    block = key_facts(p, plans, ref, date, bn, prefix) + value_box(p, plans, ref, bn) + benefits_box(p, plans, bn) + compare_table(plans, bn) + order_steps(bn)
     text = text[:insert_at] + block + text[insert_at:]
     # 4. related list -> cards
     rel_h = "সম্পর্কিত টুল" if bn else "Related tools"
