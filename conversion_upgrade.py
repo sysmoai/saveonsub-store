@@ -126,7 +126,7 @@ def key_facts(p: dict, plans: list[dict], ref: dict, date: str, bn: bool, prefix
                  ("পেমেন্ট", "বিকাশ, নগদ, রকেট (টাকায়)"),
                  ("অর্ডার", f'কার্টে যোগ করুন বা WhatsApp <a href="https://wa.me/{WA}" target="_blank" rel="noopener">{WA_DISPLAY}</a>')]
         if isinstance(ref.get("usd"), (int, float)) and ref.get("url"):
-            rows.append(("প্রোভাইডারের লিস্ট প্রাইস", f'${ref["usd"]:g} (আন্তর্জাতিক কার্ডে) — <a href="{esc(ref["url"])}" target="_blank" rel="noopener nofollow">অফিসিয়াল পেজ ↗</a>'))
+            rows.append(("প্রোভাইডারের লিস্ট প্রাইস", f'${ref["usd"]:g} (আন্তর্জাতিক কার্ডে), সাথে বিদেশি ডিজিটাল সার্ভিসে কার্ড পেমেন্টে ১৫% ভ্যাট (চেকআউটে বা ব্যাংক কেটে নেয়) ও ব্যাংকের চার্জ — <a href="{esc(ref["url"])}" target="_blank" rel="noopener nofollow">অফিসিয়াল পেজ ↗</a>'))
         rows += [("রিফান্ড", f'<a href="{prefix}/refund">রিফান্ড নীতি</a> · <a href="{prefix}/warranty">সাপোর্ট শর্ত</a>'),
                  ("দাম হালনাগাদ", esc(date))]
         title = f"{esc(p['name'])} — মূল তথ্য"
@@ -135,7 +135,7 @@ def key_facts(p: dict, plans: list[dict], ref: dict, date: str, bn: bool, prefix
                  ("Payment", "bKash, Nagad, Rocket (pay in taka)"),
                  ("How to order", f'Add to cart, or WhatsApp <a href="https://wa.me/{WA}" target="_blank" rel="noopener">{WA_DISPLAY}</a>')]
         if isinstance(ref.get("usd"), (int, float)) and ref.get("url"):
-            rows.append(("Provider list price", f'${ref["usd"]:g} by international card — <a href="{esc(ref["url"])}" target="_blank" rel="noopener nofollow">official page ↗</a>'))
+            rows.append(("Provider list price", f'${ref["usd"]:g} by international card, plus 15% Bangladesh VAT on card payments to foreign digital services (charged at checkout or by your bank) and any bank charges — <a href="{esc(ref["url"])}" target="_blank" rel="noopener nofollow">official page ↗</a>'))
         rows += [("Refunds", f'<a href="{prefix}/refund">Refund policy</a> · <a href="{prefix}/warranty">Support terms</a>'),
                  ("Prices updated", esc(date))]
         title = f"{esc(p['name'])} key facts"

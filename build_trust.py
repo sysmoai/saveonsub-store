@@ -323,7 +323,7 @@ body = """<span class="pill">🎓 STUDENT ZONE</span>
 <div class="grid g3 mt2">
   <div class="tcard"><b>📚 Research Bundle</b><p class="sub" style="font-size:13.5px">ChatGPT + Perplexity — cited sources + drafting</p><a class="btn btn-primary btn-sm mt2" href="p/bundle-research.html">From ৳600</a></div>
   <div class="tcard"><b>✍️ Grammarly</b><p class="sub" style="font-size:13.5px">IELTS &amp; assignment writing</p><a class="btn btn-primary btn-sm mt2" href="p/grammarly.html">From ৳470</a></div>
-  <div class="tcard"><b>💎 Google AI Pro</b><p class="sub" style="font-size:13.5px">Gemini + 2TB storage on your Gmail</p><a class="btn btn-primary btn-sm mt2" href="p/google-ai-pro.html">৳500</a></div>
+  <div class="tcard"><b>💎 Google AI Pro</b><p class="sub" style="font-size:13.5px">Gemini + 5TB storage on your Gmail</p><a class="btn btn-primary btn-sm mt2" href="p/google-ai-pro.html">৳500</a></div>
 </div>
 <h2 class="mt3" style="font-size:21px">Student discount</h2>
 <p class="sub" style="font-size:15px">Show a valid student ID on WhatsApp and get <b>৳100 off</b> ChatGPT/Claude personal plans. And if the free path covers you, we'll say so before you spend a taka.</p>

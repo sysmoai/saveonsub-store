@@ -250,3 +250,27 @@ document.addEventListener('DOMContentLoaded', ()=>{ cartBadge(); startTicker(); 
     }, { passive: true });
   });
 })();
+
+/* guide pages: build a table of contents from the h2 headings (no-JS readers see the
+   article unchanged; headings stay real h2 for search engines). */
+(function () {
+  function ready(fn) { document.readyState !== 'loading' ? fn() : document.addEventListener('DOMContentLoaded', fn); }
+  if (typeof document === 'undefined' || typeof document.querySelector !== 'function') return;
+  ready(function () {
+    var main = document.querySelector('main[data-bangla-guide]'); if (!main || main.querySelector('.guide-toc')) return;
+    var wrap = main.querySelector('.wrap'); if (!wrap) return;
+    var hs = [].slice.call(wrap.querySelectorAll(':scope > h2'));
+    if (hs.length < 4) return;
+    var bn = (document.documentElement.lang || '').indexOf('bn') === 0 || /[ঀ-৿]/.test(hs[0].textContent);
+    var nav = document.createElement('div'); nav.className = 'guide-toc'; nav.setAttribute('role', 'navigation'); nav.setAttribute('aria-label', bn ? 'এই গাইডে যা আছে' : 'In this guide');
+    var title = document.createElement('b'); title.textContent = bn ? 'এই গাইডে যা আছে' : 'In this guide'; nav.appendChild(title);
+    var ol = document.createElement('ol');
+    hs.forEach(function (h, i) {
+      if (!h.id) h.id = 'sec-' + (i + 1);
+      var li = document.createElement('li'), a = document.createElement('a');
+      a.href = '#' + h.id; a.textContent = h.textContent; li.appendChild(a); ol.appendChild(li);
+    });
+    nav.appendChild(ol);
+    hs[0].parentNode.insertBefore(nav, hs[0]);
+  });
+})();
