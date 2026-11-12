@@ -185,17 +185,37 @@ document.addEventListener('DOMContentLoaded', ()=>{ cartBadge(); startTicker(); 
     root.classList.add('mo');
     var sel = 'main section h2, section > .wrap > h2, .pcard, .cattile, .step, .whyg > div, .fcell, .notice, .box, .tbl, article h2';
     var els = [].slice.call(document.querySelectorAll(sel)).filter(function (el) { return !el.closest('.hero'); });
+    // motion v2: siblings ripple out by distance on the grid (column + row from the
+    // first card), so a row of cards lands left to right and the next row follows.
     var groups = new Map();
-    els.forEach(function (el) {
-      var p = el.parentElement, i = groups.get(p) || 0; groups.set(p, i + 1);
-      el.classList.add('rv'); el.style.setProperty('--d', Math.min(i, 8) * 0.06 + 's');
+    els.forEach(function (el) { var p = el.parentElement; (groups.get(p) || groups.set(p, []).get(p)).push(el); });
+    groups.forEach(function (list) {
+      var rs = list.map(function (el) { return el.getBoundingClientRect(); });
+      var x0 = Math.min.apply(null, rs.map(function (r) { return r.left; }));
+      var y0 = Math.min.apply(null, rs.map(function (r) { return r.top; }));
+      list.forEach(function (el, i) {
+        var r = rs[i], w = r.width || 1, h = r.height || 1;
+        var rank = Math.round((r.left - x0) / w) + Math.round((r.top - y0) / h);
+        el.classList.add('rv'); el.style.setProperty('--d', Math.min(rank, 6) * 0.07 + 's');
+      });
     });
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    // a heading hidden by its mask has no visible area, so watch its parent instead
+    var proxy = new Map();
+    var io2 = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return; io2.unobserve(e.target);
+        (proxy.get(e.target) || []).forEach(function (h) { h.classList.add('in'); });
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
     els.forEach(function (el) {
       var r = el.getBoundingClientRect();
-      if (r.top < innerHeight && r.bottom > 0) el.classList.add('in'); else io.observe(el);
+      if (r.top < innerHeight && r.bottom > 0) { el.classList.add('in'); return; }
+      if (el.tagName === 'H2' && el.parentElement) {
+        var p = el.parentElement; if (!proxy.has(p)) { proxy.set(p, []); io2.observe(p); } proxy.get(p).push(el);
+      } else io.observe(el);
     });
     // count-up for the facts band
     var bn = '০১২৩৪৫৬৭৮৯';
@@ -214,8 +234,8 @@ document.addEventListener('DOMContentLoaded', ()=>{ cartBadge(); startTicker(); 
     if (tb && matchMedia('(max-width: 760px)').matches) {
       var spans = [].slice.call(tb.children); var k = 0;
       if (spans.length > 1) setInterval(function () {
-        spans[k].style.display = 'none'; k = (k + 1) % spans.length; spans[k].style.display = 'inline'; spans[k].style.opacity = 0;
-        requestAnimationFrame(function () { spans[k].style.opacity = 1; });
+        spans[k].style.display = 'none'; spans[k].classList.remove('tb-in');
+        k = (k + 1) % spans.length; spans[k].style.display = 'inline'; spans[k].classList.add('tb-in');
       }, 3800);
     }
     // thin scroll-progress line
