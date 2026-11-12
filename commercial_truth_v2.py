@@ -217,6 +217,18 @@ def access_label(plan: dict, bn: bool = False) -> str:
             "bundle": "Bundle"}.get(kind, "Confirm access method")
 
 
+def access_class(access: str) -> str:
+    """Badge colour for an access label: shared plans never get the 'personal' colour."""
+    low = access.lower()
+    if "shared" in low or "শেয়ার্ড" in access:
+        return "shared"
+    if "team" in low or "টিম" in access:
+        return "team"
+    if low.startswith("official") or access.startswith("অফিসিয়াল"):
+        return "official"
+    return "personal"
+
+
 def duration_label(plan: dict, bn: bool = False) -> str:
     duration = plan.get("duration", "1 month")
     if bn:
@@ -279,7 +291,7 @@ def product_main(product: dict, bn: bool) -> str:
     if official_url:
         ref = f"{provider_text} ↗"
         usd = (f" · প্রোভাইডারের তালিকা মূল্য: ${official_usd:g}" if bn else f" · provider list reference: ${official_usd:g}") if isinstance(official_usd, (int, float)) else ""
-        provider_ref = f'<a href="{esc(official_url)}" target="_blank" rel="noopener nofollow" style="font-size:13px;color:var(--muted);text-decoration:underline">{esc(ref)}</a>{esc(usd)}'
+        provider_ref = f'<a href="{esc(official_url)}" target="_blank" rel="noopener nofollow" style="font-size:13px;color:var(--muted);text-decoration:underline;display:inline-block;padding:6px 0">{esc(ref)}</a>{esc(usd)}'
 
     if request_price:
         # The query value needs percent-encoding (it's a URL, not HTML body
@@ -300,7 +312,7 @@ def product_main(product: dict, bn: bool) -> str:
                 raise RuntimeError(f"Missing governed plan_id for {pid}: {label}")
             onclick = js_args(pid, label, price, name, plan_id)
             cards.append(
-                f'''<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b>{esc(label)}</b><br><span class="tos personal">{esc(access)}</span><span style="font-size:12px;color:var(--muted)"> · {esc(duration_label(plan, bn))}</span></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px;font-weight:900;color:var(--green2)">{esc(billing)}</span><button class="btn btn-primary btn-sm" onclick="cartAdd({onclick})">{'কার্টে যোগ করুন' if bn else 'Add to cart'}</button></div></div>'''
+                f'''<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b>{esc(label)}</b><br><span class="tos {access_class(access)}">{esc(access)}</span><span style="font-size:12px;color:var(--muted)"> · {esc(duration_label(plan, bn))}</span></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px;font-weight:900;color:var(--green2)">{esc(billing)}</span><button class="btn btn-primary btn-sm" onclick="cartAdd({onclick})">{'কার্টে যোগ করুন' if bn else 'Add to cart'}</button></div></div>'''
             )
         plan_html = "\n".join(cards)
         anchor = ("From " if len(plans) > 1 and not bn else "") + money(min(int(p["bdt"]) for p in plans))
@@ -453,7 +465,7 @@ def patch_listing_cards(text: str, governed: dict, bn: bool) -> str:
                 continue
             price, access = card_price(product, bn)
             chunk = re.sub(r'<div class="price">.*?</div>', f'<div class="price">{esc(price)}</div>', chunk, flags=re.I)
-            chunk = re.sub(r'<span class="tos[^"]*">.*?</span>', f'<span class="tos personal">{esc(access)}</span>', chunk, flags=re.I)
+            chunk = re.sub(r'<span class="tos[^"]*">.*?</span>', f'<span class="tos {access_class(access)}">{esc(access)}</span>', chunk, flags=re.I)
             chunk = re.sub(r'<s>.*?</s>', '', chunk, flags=re.I)
             chunks[j] = chunk
         lines[i] = "".join(chunks)
@@ -487,7 +499,7 @@ def home_body(governed: dict, bn: bool) -> str:
         if not product:
             continue
         price, access = card_price(product, bn)
-        cards.append(f'<div class="pcard"><span class="icon">{esc(product.get("emoji", "✨"))}</span><h3>{esc(product.get("name", pid))}</h3><div class="price">{esc(price)}</div><span class="tos personal">{esc(access)}</span><div class="ctas"><a class="btn btn-primary btn-sm" href="p/{esc(pid)}.html">{"দেখুন" if bn else "View"}</a></div></div>')
+        cards.append(f'<div class="pcard"><span class="icon">{esc(product.get("emoji", "✨"))}</span><h3>{esc(product.get("name", pid))}</h3><div class="price">{esc(price)}</div><span class="tos {access_class(access)}">{esc(access)}</span><div class="ctas"><a class="btn btn-primary btn-sm" href="p/{esc(pid)}.html">{"দেখুন" if bn else "View"}</a></div></div>')
     card_html = "".join(cards)
     categories = [
         ("🤖", "ai-assistants", "এআই অ্যাসিস্ট্যান্ট" if bn else "AI Assistants"),

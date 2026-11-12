@@ -20,7 +20,7 @@
 (function(){
   'use strict';
 
-  const PIXEL_ID = '2330425734478961'; // "SaveOnSub Website" dataset, Sysmoai Business Portfolio
+  const PIXEL_ID = '2330425734478961'; // "SaveOnSub Website" dataset
   const CURRENCY = 'BDT';
   const CONSENT_KEY = 'sos_ads_consent_v1';
 
