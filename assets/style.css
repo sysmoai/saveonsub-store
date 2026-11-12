@@ -1322,6 +1322,9 @@ td a:not(.btn) {
 .valuebox b { color: #fff; }
 main[data-commercial-truth] section.valuebox { padding: 20px 22px; }
 @media (max-width: 520px) { main[data-commercial-truth] section.valuebox { padding: 16px 16px; } }
+.valuebox.benefits > p { margin: 0 0 8px; line-height: 1.7; color: var(--muted); }
+.valuebox.benefits > p.bfoot { margin: 10px 0 0; font-size: 13px; }
+.valuebox.benefits a { color: var(--green2); text-decoration: underline; }
 
 /* ==== guide article layout 2026-11-12 (pages built by bangla_guides.py: main[data-bangla-guide]) ====
    Comfortable Bangla reading rhythm, visible links, styled tables/lists/notices and an
