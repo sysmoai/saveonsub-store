@@ -179,7 +179,8 @@ function draw(){
   document.getElementById('grid').innerHTML=list.map(card).join('')||'<p style="color:var(--muted)">No products match. <a href="https://wa.me/8801305869242?text=Do%20you%20have%20this%20product:%20" style="color:var(--green2)">Ask us on WhatsApp</a>.</p>';
   var qVal = document.getElementById('q').value||'';
   var safeQ = qVal.replace(/[<>&\"']/g, '').substring(0,80);
-  document.getElementById('count').textContent=list.length+' product'+(list.length===1?'':'s')+(cat0!=='All'?' in '+cat0:'')+(qVal?(' matching "'+safeQ+'"'):'');
+  var nb=P.filter(function(p){return p.category==="Bundles"}).length;
+  document.getElementById('count').textContent=list.length+' product'+(list.length===1?'':'s')+(cat0!=='All'?' in '+cat0:'')+(qVal?(' matching "'+safeQ+'"'):'')+(cat0==='All'&&!qVal&&nb?(' + '+nb+' bundle'+(nb===1?'':'s')+' below'):'');
 }
 
 function bundles(){
