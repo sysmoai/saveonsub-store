@@ -1320,3 +1320,5 @@ td a:not(.btn) {
 .valuebox li:first-child { border-top: 0; }
 .valuebox li::before { content: "✓"; position: absolute; left: 4px; top: 8px; color: var(--green2); font-weight: 900; }
 .valuebox b { color: #fff; }
+main[data-commercial-truth] section.valuebox { padding: 20px 22px; }
+@media (max-width: 520px) { main[data-commercial-truth] section.valuebox { padding: 16px 16px; } }
