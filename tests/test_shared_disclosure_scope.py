@@ -9,19 +9,14 @@ sys.path.insert(0, str(ROOT))
 import shared_copy_check  # noqa: E402
 
 POLICY = json.loads((ROOT / "ops" / "PRICING-V2-2026-09-17.json").read_text(encoding="utf-8"))
-# SOS-A3 (CEO 2026-11-12): these products publish no shared-access plan.
-HELD = ["chatgpt-plus", "chatgpt-business", "chatgpt-pro", "claude-pro", "google-ai-plus", "perplexity-pro",
-        "heygen", "grammarly", "otter", "writesonic", "netflix", "surfshark", "copilot-pro"]
 
 
-class SharedTermsHold(unittest.TestCase):
-    def test_held_products_publish_no_shared_plan(self):
-        for pid in HELD:
-            rule = POLICY["approved_products"][pid]
-            shared = [p["plan_id"] for p in rule.get("plans") or [] if str(p.get("access_type", "")).startswith("shared")]
-            self.assertEqual(shared, [], pid)
-            if not rule.get("plans"):
-                self.assertEqual(rule["mode"], "inquiry", pid)
+class SharedPlanDisclosure(unittest.TestCase):
+    def test_every_shared_type_product_needs_disclosure(self):
+        pids = shared_copy_check.approved_shared_type_pids()
+        for pid, rule in POLICY["approved_products"].items():
+            has_shared = any(str(p.get("access_type", "")).startswith("shared") for p in rule.get("plans") or [])
+            self.assertEqual(pid in pids, has_shared and rule.get("mode") == "fixed", pid)
 
     def test_personal_seat_label_needs_no_shared_disclosure(self):
         with tempfile.TemporaryDirectory() as d:
@@ -31,7 +26,6 @@ class SharedTermsHold(unittest.TestCase):
             (site / "p" / "demo.html").write_text('<button onclick="cartAdd(\'demo\',\'Personal seat\',100)">', encoding="utf-8")
             approved = {("demo", "Personal seat", 100)}
             self.assertEqual(shared_copy_check.page_issues(site, approved, set()), [])
-            # A product that does sell a shared-type plan still needs the disclosure.
             self.assertTrue(shared_copy_check.page_issues(site, approved, {"demo"}))
 
 

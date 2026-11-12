@@ -47,6 +47,20 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-6-8-users-1-month",
+          "label": "Starter Shared (6–8 users)",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "plan_id": "premium-shared-2-3-users-1-month",
+          "label": "Premium Shared (2–3 users)",
+          "bdt": 999,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
           "plan_id": "personal-your-email-1-month",
           "label": "Personal (your email)",
           "bdt": 3390,
@@ -61,6 +75,20 @@
     "chatgpt-business": {
       "mode": "fixed",
       "plans": [
+        {
+          "plan_id": "starter-shared-7-seats-1-month",
+          "label": "Starter Shared (7 seats)",
+          "bdt": 699,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "plan_id": "premium-shared-2-3-1-month",
+          "label": "Premium Shared (2–3)",
+          "bdt": 1299,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
         {
           "plan_id": "personal-seat-1-month",
           "label": "Personal seat",
@@ -77,6 +105,13 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "premium-shared-5-6-1-month",
+          "label": "Premium Shared (5–6)",
+          "bdt": 4500,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
           "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 29900,
@@ -90,6 +125,13 @@
     "claude-pro": {
       "mode": "fixed",
       "plans": [
+        {
+          "plan_id": "premium-shared-2-3-1-month",
+          "label": "Premium Shared (2–3)",
+          "bdt": 1495,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
         {
           "plan_id": "personal-your-email-1-month",
           "label": "Personal (your email)",
@@ -149,6 +191,13 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "shared-1-month",
+          "label": "Shared",
+          "bdt": 299,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
           "plan_id": "personal-your-gmail-1-month",
           "label": "Personal (your Gmail)",
           "bdt": 799,
@@ -162,6 +211,13 @@
     "perplexity-pro": {
       "mode": "fixed",
       "plans": [
+        {
+          "plan_id": "shared-1-month",
+          "label": "Shared",
+          "bdt": 350,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
         {
           "plan_id": "personal-1-month",
           "label": "Personal",
@@ -301,12 +357,26 @@
       "approved_on": "2026-11-02"
     },
     "heygen": {
-      "mode": "inquiry",
-      "plans": [],
+      "mode": "fixed",
+      "plans": [
+        {
+          "plan_id": "starter-shared-budget-1-month",
+          "label": "Starter Shared (budget)",
+          "bdt": 899,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "plan_id": "creator-shared-1-month",
+          "label": "Creator Shared",
+          "bdt": 1499,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
       "approved_by": "CEO Emon Hossain",
       "approved_on": "2026-11-02",
-      "official_usd": 29,
-      "note": "Price on Request — SOS-A3 commercial HOLD (CEO 2026-11-12). Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "official_usd": 29
     },
     "synthesia": {
       "mode": "fixed",
@@ -473,6 +543,13 @@
     "grammarly": {
       "mode": "fixed",
       "plans": [
+        {
+          "plan_id": "starter-shared-1-month",
+          "label": "Starter Shared",
+          "bdt": 470,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
         {
           "plan_id": "personal-1-month",
           "label": "Personal",
@@ -723,11 +800,25 @@
       "approved_on": "2026-11-02"
     },
     "otter": {
-      "mode": "inquiry",
-      "plans": [],
+      "mode": "fixed",
+      "plans": [
+        {
+          "plan_id": "starter-shared-budget-1-month",
+          "label": "Starter Shared (budget)",
+          "bdt": 399,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "plan_id": "pro-shared-6000-min-1-month",
+          "label": "Pro Shared (6000 min)",
+          "bdt": 799,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
       "approved_by": "CEO Emon Hossain",
-      "approved_on": "2026-11-02",
-      "note": "Price on Request — SOS-A3 commercial HOLD (CEO 2026-11-12). Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "approved_on": "2026-11-02"
     },
     "replit-core": {
       "mode": "fixed",
@@ -807,11 +898,25 @@
       "approved_on": "2026-11-02"
     },
     "writesonic": {
-      "mode": "inquiry",
-      "plans": [],
+      "mode": "fixed",
+      "plans": [
+        {
+          "plan_id": "starter-shared-budget-1-month",
+          "label": "Starter Shared (budget)",
+          "bdt": 499,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "plan_id": "individual-shared-1-month",
+          "label": "Individual Shared",
+          "bdt": 799,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
       "approved_by": "CEO Emon Hossain",
-      "approved_on": "2026-11-02",
-      "note": "Price on Request — SOS-A3 commercial HOLD (CEO 2026-11-12). Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "approved_on": "2026-11-02"
     },
     "gamma": {
       "mode": "fixed",
@@ -837,6 +942,13 @@
     "netflix": {
       "mode": "fixed",
       "plans": [
+        {
+          "plan_id": "1-screen-private-profile-1-month",
+          "label": "1 Screen (private profile)",
+          "bdt": 349,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
         {
           "plan_id": "personal-your-email-1-month",
           "label": "Personal (your email)",
@@ -989,11 +1101,25 @@
       "approved_on": "2026-11-02"
     },
     "surfshark": {
-      "mode": "inquiry",
-      "plans": [],
+      "mode": "fixed",
+      "plans": [
+        {
+          "plan_id": "starter-shared-budget-1-month",
+          "label": "Starter Shared (budget)",
+          "bdt": 149,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
+        {
+          "plan_id": "shared-1-month",
+          "label": "Shared",
+          "bdt": 249,
+          "duration": "1 month",
+          "access_type": "shared"
+        }
+      ],
       "approved_by": "CEO Emon Hossain",
-      "approved_on": "2026-11-02",
-      "note": "Price on Request — SOS-A3 commercial HOLD (CEO 2026-11-12). Confirm the exact provider tier, access method and availability with SaveOnSub support; no fixed price is published."
+      "approved_on": "2026-11-02"
     },
     "bundle-starter": {
       "mode": "fixed",
@@ -1068,6 +1194,13 @@
     "copilot-pro": {
       "mode": "fixed",
       "plans": [
+        {
+          "plan_id": "starter-shared-1-month",
+          "label": "Starter Shared",
+          "bdt": 780,
+          "duration": "1 month",
+          "access_type": "shared"
+        },
         {
           "plan_id": "personal-1-month",
           "label": "Personal",
