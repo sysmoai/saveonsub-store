@@ -45,6 +45,23 @@ def ceo_approved_shared() -> set[tuple[str, str, int]]:
     }
 
 
+def approved_shared_type_pids() -> set[str]:
+    """Products whose CEO-approved plans include one with a shared access type.
+
+    Only these must carry the shared-account disclosure; a personal plan whose
+    label says "seat" (e.g. "Personal seat") is not a shared plan.
+    """
+    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    if (policy.get("commercial_hold") or {}).get("status") != "SELECTIVE_UNLOCK":
+        return set()
+    return {
+        pid
+        for pid, rule in (policy.get("approved_products") or {}).items()
+        if rule.get("mode") == "fixed"
+        and any(SHARED_TYPE.search(str(p.get("access_type") or "")) for p in rule.get("plans") or [])
+    }
+
+
 def shared_plans(products: list[dict], approved: set[tuple[str, str, int]] = frozenset()) -> list[str]:
     out = []
     for product in products:
@@ -66,7 +83,8 @@ def public_catalog_products(site: Path) -> list[dict]:
     return json.loads(m.group(1)).get("products", []) if m else []
 
 
-def page_issues(site: Path, approved: set[tuple[str, str, int]] = frozenset()) -> list[str]:
+def page_issues(site: Path, approved: set[tuple[str, str, int]] = frozenset(),
+                shared_type_pids: set[str] | None = None) -> list[str]:
     issues = []
     approved_pids = {pid for pid, _, _ in approved}
     pages = sorted((site / "p").glob("*.html")) + sorted((site / "bn" / "p").glob("*.html"))
@@ -84,7 +102,8 @@ def page_issues(site: Path, approved: set[tuple[str, str, int]] = frozenset()) -
             if SHARED_LABEL.search(m.group(1)) and not ceo_ok:
                 issues.append(f"{rel}: shared Offer {m.group(1)[:80]}")
         # A CEO-approved shared plan must be disclosed as shared on the page.
-        if ceo_ok and shared_cart and not any(d in text for d in DISCLOSURE):
+        needs_disclosure = shared_type_pids is None or path.stem in shared_type_pids
+        if ceo_ok and shared_cart and needs_disclosure and not any(d in text for d in DISCLOSURE):
             issues.append(f"{rel}: shared plan sold without the shared-account disclosure")
         for m in SHARED_PROMO.finditer(text):
             issues.append(f"{rel}: shared promo copy {m.group(0)!r}")
@@ -98,7 +117,7 @@ def main(argv: list[str]) -> int:
     issues = [f"catalog.json: {x}" for x in shared_plans(catalog.get("products", []), approved)]
     if site.is_dir():
         issues += [f"assets/catalog.js: {x}" for x in shared_plans(public_catalog_products(site), approved)]
-        issues += page_issues(site, approved)
+        issues += page_issues(site, approved, approved_shared_type_pids())
     if issues:
         print(f"[shared-copy] FAIL — {len(issues)} shared offer(s)/promo(s):")
         for x in issues[:60]:
