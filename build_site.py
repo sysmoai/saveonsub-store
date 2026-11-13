@@ -48,6 +48,7 @@ STEPS = [
     "category_copy_polish.py",
     "buyer_intent_polish.py",
     "ai_search_facts.py",
+    "support_terms_v1.py",
     "audit_commercial_truth_v2.py",
     "exec003_claims_guard.py",
     "shared_copy_check.py",

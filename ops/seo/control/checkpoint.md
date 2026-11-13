@@ -99,3 +99,12 @@
 - Finance (Profit Tracker 1YlQf047…, read-only): ORDERS and REFUNDS header-only; ADS 1 row ($14.85, 46 chats,
   paid orders blank); MARGIN has 0 actual buy costs (133/133 blank) → every margin is an estimate.
 - Next: CEO decision on the integration PR, then C2–C7 on staging with synthetic data.
+
+## Cycle 2026-11-13 (CORTEX PRIME)
+- main 8d480e5 = live (sw CACHE sos-58103dd90980, read in CEO Chrome 13 Nov). This file was stale since 3 Nov; the private
+  CEO checkpoint (project Library, cortex-prime-2026-11-13/) is now the current-state record.
+- GSC read 13 Nov: indexing is not the bottleneck (most priced pages indexed); impressions are near zero and branded only.
+  Hub pages /all, /prices, /faq, /how-to-order, /students are "Crawled - currently not indexed". Next: unique Tier-A product
+  copy + hub-page depth, not more URLs.
+- New build step `support_terms_v1.py`: /warranty EN+BN rewritten to the Refund V1 rules (it had a duplicated title and a
+  broken H1 left by an earlier global rename). Test: tests/test_support_terms_v1.py (also a post-build CI gate).
