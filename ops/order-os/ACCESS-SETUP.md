@@ -45,3 +45,12 @@ Then enroll staff with `ops/order-os/operators-enroll.template.sql` (replace the
 
 ## 6. Removing access
 Remove the email from the Access policy **and** set `operators.active = 0`.
+
+## Support tickets (draft, non-production)
+
+`/api/support/tickets*` is the customer-facing ticket API. Like `/api/orders*` it must be an Access BYPASS path
+and nothing else on the staff host may be. It is protected by Turnstile on creation and by a per-ticket secret
+(sent in the `x-ticket-token` header) on every later call. `/api/ops/tickets*` stays behind Access and the operator
+role checks. Apply `ops/order-os/support-tickets-schema.sql` once, after `schema.sql`, to a NEW staging D1 first.
+Do not call this production-ready until the staging D1, Turnstile secret, Access MFA and the fulfillment-role login
+test have passed.
