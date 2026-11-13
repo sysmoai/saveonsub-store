@@ -60,12 +60,19 @@ def esc(v) -> str:
     return html.escape(str(v or ""), quote=True)
 
 
+TIERS = {"plus", "pro", "max", "go", "business", "premium", "team", "basic", "standard", "ultra",
+         "advanced", "starter", "lite", "personal", "family", "individual", "unlimited", "creator", "teams"}
+
+
 def initials(name: str) -> str:
     words = [w for w in re.split(r"[\s\-+()/]+", clean_name(name)) if w and w[0].isalnum()]
     if not words:
         return "S"
-    if len(words) == 1:
-        return words[0][:2].upper()
+    # "ChatGPT Plus" and "Claude Pro" both gave "CP"; when the second word is only a
+    # plan tier, use the brand word itself ("Ch", "Cl") so neighbouring tiles differ.
+    if len(words) == 1 or words[1].lower() in TIERS:
+        w = words[0]
+        return (w[0].upper() + w[1:2].lower()) if len(w) > 1 else w.upper()
     return (words[0][0] + words[1][0]).upper()
 
 
