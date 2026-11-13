@@ -78,6 +78,8 @@ jobs:
           python conversion_upgrade.py --check
           python -m unittest -v tests.test_product_seo 2>&1 | tee /tmp/product_seo_tests.log
           ! grep -q "skipped" /tmp/product_seo_tests.log || exit 1  # bash ignores set -e for '!' commands
+          python -m unittest -v tests.test_support_terms_v1 2>&1 | tee /tmp/support_terms_tests.log
+          ! grep -q "skipped" /tmp/support_terms_tests.log || exit 1  # bash ignores set -e for '!' commands
 
       - name: Brand kit pinned files match staged output
         run: python -m unittest -v tests.test_brand_kit_integration
