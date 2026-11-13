@@ -103,6 +103,8 @@ jobs:
           python -m unittest -v tests.test_coverage_disclosure
           python bn_buyer_copy.py --check
           python -m unittest -v tests.test_bn_buyer_copy
+          python order_sequence_truth.py --check
+          python -m unittest -v tests.test_order_sequence_truth
           python release_truth_audit.py
 
       - name: Verify governed pricing-v2 release boundary

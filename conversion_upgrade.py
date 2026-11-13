@@ -291,13 +291,13 @@ def order_steps(bn: bool) -> str:
         steps = [("প্ল্যান বাছুন", "উপরের তালিকা থেকে অ্যাক্সেস টাইপ দেখে প্ল্যান বেছে নিন।"),
                  ("WhatsApp-এ নিশ্চিত করুন", "আমরা প্ল্যান, অ্যাক্সেস পদ্ধতি ও সময় লিখিতভাবে জানাই।"),
                  ("টাকায় পেমেন্ট", "বিকাশ, নগদ বা রকেটে পাঠিয়ে ট্রানজ্যাকশন আইডি দিন।"),
-                 ("অ্যাক্টিভেশন ও সাপোর্ট", "অ্যাক্টিভেশনের পর WhatsApp-এ মানুষের সাপোর্ট পাবেন।")]
+                 ("আমরা যাচাই করে অ্যাক্টিভেট করি", "অনুমোদিত রিসিভিং অ্যাকাউন্টে আসল ইনকামিং পেমেন্ট যাচাইয়ের পর অ্যাক্টিভেশন শুরু হয়, তারপর WhatsApp-এ মানুষের সাপোর্ট পাবেন।")]
         h2 = "কীভাবে অর্ডার হয়"
     else:
         steps = [("Pick a plan", "Choose a plan above; each one shows its access type."),
                  ("Confirm on WhatsApp", "We confirm the plan, access method and timing in writing."),
                  ("Pay in taka", "Send by bKash, Nagad or Rocket and share the transaction ID."),
-                 ("Activation and support", "After activation, a real person supports you on WhatsApp.")]
+                 ("We verify, then activate", "Activation starts after we verify the actual incoming payment in the authorized receiving account. After that, a real person supports you on WhatsApp.")]
         h2 = "How ordering works"
     lis = "".join(f"<li><b>{esc(a)}</b>{esc(b)}</li>" for a, b in steps)
     return f'<section data-sos="{MARK}" class="mt3"><h2 style="font-size:22px">{h2}</h2><ol class="osteps">{lis}</ol></section>'
