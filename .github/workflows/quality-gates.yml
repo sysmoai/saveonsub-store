@@ -99,6 +99,8 @@ jobs:
           python cross_unit_quarantine.py --check
           python fab_polish.py --check
           python mobile_policy_tables.py --check
+          python coverage_disclosure.py --check
+          python -m unittest -v tests.test_coverage_disclosure
           python release_truth_audit.py
 
       - name: Verify governed pricing-v2 release boundary

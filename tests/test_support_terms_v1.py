@@ -27,7 +27,7 @@ class SupportTermsV1(unittest.TestCase):
     def test_same_outcomes_as_refund_v1(self):
         en, bn = self.page("warranty.html"), self.page("bn/warranty.html")
         self.assertIn("refund for the unused days", en)
-        self.assertIn("covered period shown on your product", en)
+        self.assertIn("covered period confirmed in writing for your order", en)
         self.assertIn("অব্যবহৃত দিনের রিফান্ড", bn)
         self.assertIn("কভারের সময়ের মধ্যে", bn)
 
