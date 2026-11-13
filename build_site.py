@@ -44,6 +44,7 @@ STEPS = [
     "link_hygiene.py",
     "a11y_polish.py",
     "motion_polish.py",
+    "tech_motion.py",
     "category_copy_polish.py",
     "buyer_intent_polish.py",
     "ai_search_facts.py",
