@@ -80,6 +80,7 @@ jobs:
           ! grep -q "skipped" /tmp/product_seo_tests.log || exit 1  # bash ignores set -e for '!' commands
           python -m unittest -v tests.test_support_terms_v1 2>&1 | tee /tmp/support_terms_tests.log
           ! grep -q "skipped" /tmp/support_terms_tests.log || exit 1  # bash ignores set -e for '!' commands
+          python -m unittest -v tests.test_mobile_ux
 
       - name: Brand kit pinned files match staged output
         run: python -m unittest -v tests.test_brand_kit_integration
@@ -96,6 +97,8 @@ jobs:
           python blog_copy_polish.py --check
           python buyer_intent_polish.py --check
           python cross_unit_quarantine.py --check
+          python fab_polish.py --check
+          python mobile_policy_tables.py --check
           python release_truth_audit.py
 
       - name: Verify governed pricing-v2 release boundary

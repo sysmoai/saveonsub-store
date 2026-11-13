@@ -391,3 +391,32 @@ document.addEventListener('DOMContentLoaded', ()=>{ cartBadge(); startTicker(); 
     if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 1500 }); else setTimeout(start, 700);
   });
 })();
+
+
+/* phones: slide the floating buttons away while reading downwards and in the footer,
+   so they never sit on top of cards or text. Without JS they simply stay (small, round). */
+(function () {
+  if (typeof document === 'undefined' || typeof document.querySelectorAll !== 'function') return;
+  function ready(fn) { document.readyState !== 'loading' ? fn() : document.addEventListener('DOMContentLoaded', fn); }
+  ready(function () {
+    var fabs = document.querySelectorAll('.fab'); if (!fabs.length) return;
+    var mq = window.matchMedia ? window.matchMedia('(max-width: 760px)') : { matches: false };
+    var last = window.pageYOffset || 0, inFooter = false, ticking = false;
+    function set(away) { for (var i = 0; i < fabs.length; i++) fabs[i].classList.toggle('fab-away', away); }
+    var foot = document.querySelector('footer');
+    if (foot && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { inFooter = es[0].isIntersecting; if (inFooter) set(true); }, { threshold: 0.05 }).observe(foot);
+    }
+    addEventListener('scroll', function () {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(function () {
+        var y = window.pageYOffset || 0, d = y - last;
+        if (!mq.matches) { set(false); }
+        else if (inFooter || (d > 8 && y > 120)) { set(true); }
+        else if (d < -8 || y <= 120) { set(false); }
+        if (Math.abs(d) > 8) last = y;
+        ticking = false;
+      });
+    }, { passive: true });
+  });
+})();
