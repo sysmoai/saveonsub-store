@@ -36,7 +36,8 @@ class BnBuyerCopy(unittest.TestCase):
     def test_no_new_faq_markup_or_schema(self):
         for s in PAGES:
             _, b = block(s)
-            self.assertNotIn("<details", b)
+            self.assertEqual(b.count("<details"), 1, s)  # optional tutorial only, not an FAQ
+            self.assertNotIn("FAQ", b)
             self.assertNotIn("application/ld+json", b)
             self.assertNotIn("FAQPage", b)
 
@@ -44,9 +45,29 @@ class BnBuyerCopy(unittest.TestCase):
         for s in PAGES:
             _, b = block(s)
             for href in re.findall(r'href="([^"]+)"', b):
+                if href.startswith("https://wa.me/8801305869242"):
+                    continue
                 self.assertNotIn(".html", href)
                 target = (SITE / "bn" / "p" / href).resolve()
                 self.assertTrue(target.with_suffix(".html").exists() or target.is_dir(), f"{s}: dead {href}")
+
+    def test_visible_part_is_short_and_has_cta_before_the_tutorial(self):
+        for s in PAGES:
+            _, b = block(s)
+            head, tail = b.split("<details", 1)
+            self.assertLess(len(re.sub(r"<[^>]+>", "", head)), 520, s)
+            self.assertIn('href="https://wa.me/8801305869242?text=', head, s)
+            self.assertNotRegex(head, r"wa\.me/(?!8801305869242)", s)
+            self.assertIn("দশ মিনিটের", tail, s)
+
+    def test_google_box_separates_official_list_from_offer_confirmation(self):
+        t = (SITE / "bn" / "p" / "google-ai-pro.html").read_text(encoding="utf-8")
+        a = t.index("১. Google-এর অফিসিয়াল প্ল্যানে যা আছে")
+        b = t.index("২. ")
+        self.assertLess(a, b)
+        self.assertIn("এমন ধরে নেবেন না", t)
+        en = (SITE / "p" / "google-ai-pro.html").read_text(encoding="utf-8")
+        self.assertIn("Do not assume the whole list above applies", en)
 
     def test_google_lead_no_longer_asserts_every_feature_is_on_this_offer(self):
         t = (SITE / "bn" / "p" / "google-ai-pro.html").read_text(encoding="utf-8")

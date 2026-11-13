@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import re
 import sys
+from urllib.parse import quote
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -92,7 +93,11 @@ def esc_keep(s: str) -> str:
     return s  # copy is static, authored here
 
 
-def section(site: Path, page: Path, c: dict) -> str:
+WA = "https://wa.me/8801305869242"
+NAMES = {"chatgpt-plus": "ChatGPT Plus", "chatgpt-go": "ChatGPT Go", "google-ai-pro": "Google AI Pro"}
+
+
+def section(site: Path, page: Path, c: dict, slug: str) -> str:
     links = []
     for path, label in c["links"]:
         if path.startswith("blog/"):
@@ -102,17 +107,21 @@ def section(site: Path, page: Path, c: dict) -> str:
             links.append(f'<a href="{path.split("/")[-1]}">{label}</a>')
     li = lambda items: "".join(f"<li>{x}</li>" for x in items)
     more = f'<p style="font-size:14px;margin:8px 0 0">আরও: {" · ".join(links)}</p>' if links else ""
+    msg = quote(f"হাই! {NAMES[slug]} আমার কাজে লাগবে কিনা জানতে চাই। আমার কাজ: ")
     return (
         f'<section class="mt3" id="kaje-lage" {MARK}>'
         f'<h2 class="mt3" style="font-size:22px">{c["h2"]}</h2>'
+        f'<ul style="margin:8px 0 8px 18px;padding:0;font-size:15px;line-height:1.7">{li(c["choose"])}</ul>'
+        f'<p style="font-size:15px;line-height:1.7;margin:0 0 10px">{c["note"]}</p>'
+        f'<p style="margin:0 0 10px"><a class="btn btn-primary" href="{WA}?text={msg}" rel="noopener">'
+        f'আপনার কাজ WhatsApp-এ জানান</a></p>'
+        f'<details style="margin:6px 0 0"><summary style="cursor:pointer;font-weight:600;padding:8px 0">'
+        f'কাজ অনুযায়ী উদাহরণ ও দশ মিনিটের অনুশীলন (ঐচ্ছিক)</summary>'
         f'<ul style="margin:8px 0 12px 18px;padding:0;font-size:15px;line-height:1.7">{li(c["uses"])}</ul>'
-        f'<h3 style="font-size:17px;margin:10px 0 4px">কোনটা বেছে নেবেন</h3>'
-        f'<ul style="margin:6px 0 8px 18px;padding:0;font-size:15px;line-height:1.7">{li(c["choose"])}</ul>'
-        f'<p style="font-size:15px;line-height:1.7;margin:0 0 8px">{c["note"]}</p>'
         f'<h3 style="font-size:17px;margin:10px 0 4px">{c["tut_h"]}</h3>'
         f'<div {BOX}>{c["tut"]}</div>'
         f'<p style="font-size:15px;line-height:1.7;margin:0">{c["after"]}</p>{more}'
-        "</section>\n  "
+        "</details></section>\n  "
     )
 
 
@@ -129,7 +138,7 @@ def apply(site: Path) -> int:
         if not m:
             print(f"[bn-buyer-copy] FAIL — anchor 'কীভাবে অর্ডার হয়' not found in {slug}")
             return 1
-        f.write_text(t[: m.start()] + section(site, f, c) + t[m.start():], encoding="utf-8")
+        f.write_text(t[: m.start()] + section(site, f, c, slug) + t[m.start():], encoding="utf-8")
     print("[bn-buyer-copy] PASS — Bangla buyer guidance added to chatgpt-plus, chatgpt-go, google-ai-pro (no price, feature or authorization claim)")
     return 0
 
