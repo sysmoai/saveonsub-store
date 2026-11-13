@@ -23,3 +23,6 @@ ops/seo/control/product-coverage.json
 # derived from other business units; stays private until the CEO approves publishing it
 ops/seo/control/universe-families.json
 .local/
+
+# Other business unit data: never track in this public repository
+aips-live.json
