@@ -7,10 +7,10 @@ step 2 and confirm on WhatsApp in step 3, while the homepage, product pages and
 checkout say price, access method, timing and covered period are confirmed in
 writing BEFORE payment. The page also promised "3 minutes, start to delivered"
 and described a screenshot/TxnID flow without saying that payment only counts
-once the merchant has verified it.
+once the actual incoming credit is verified in the authorized receiving account.
 
 New sequence (identical everywhere):
-  choose -> written confirmation on WhatsApp -> pay -> merchant verifies ->
+  choose -> written confirmation on WhatsApp -> pay -> receiving-side verification ->
   fulfil -> support.
 
 What this step does NOT do: it does not change the payment number or any
@@ -41,9 +41,9 @@ PAGES = {
         "h1": 'First time? <span class="grad-text">Here is the order, step by step.</span>',
         "steps": [
             ("Pick your product", 'Browse <a href="all" style="color:var(--green2)">all products</a> or take the <a href="quiz" style="color:var(--green2)">quiz</a>. Each plan shows its price and whether access is shared, personal or team. Tap <b>Add to cart</b>.'),
-            ("Confirm on WhatsApp before you pay", "Tap the green button. A WhatsApp message with your order opens. Send it. We reply in writing with the plan, access method, total, delivery timing and covered period for your order."),
+            ("Confirm on WhatsApp before you pay", "Tap the green button. A WhatsApp message with your order ID opens. Send it. We reply in writing with the plan, access method, total, delivery timing, covered period and the payment destination for your order."),
             ("Pay only after that confirmation", f"Open bKash/Nagad/Rocket → <b>Send Money</b> → the payment number shown at our checkout (currently {NUM_EN}). It must match the number in our written confirmation. Amount = the confirmed total. Reference = your order ID. Never pay a number from another website or chat."),
-            ("We verify the payment", "A payment counts only after we see it in our own merchant account. A TxnID or screenshot alone is not payment. We then reply with your order ID."),
+            ("We verify the incoming payment", "A payment counts only after we see the actual incoming credit in the authorized receiving account (wallet or bank). A TxnID or screenshot alone is not payment. We then update the payment status and delivery status of your existing order ID."),
             ("Delivery and support", "Access or an invite follows on WhatsApp, as confirmed for your order. The support terms of your plan are on its product page and in the refund policy. Save our number in case you need help."),
         ],
         "nervous_h": "Nervous about paying first?",
@@ -52,7 +52,7 @@ PAGES = {
         "mistakes": "Paying before the written confirmation · forgetting the order ID in the reference · sending to a number that does not match our written confirmation, or one from any other website · changing the password on a shared seat (it can end access for everyone and support terms may not apply).",
         "cta": "Start shopping →",
         "howto_name": "How to buy a subscription on SAVEONSUB with bKash, Nagad or Rocket",
-        "howto_names": ["Pick your product", "Confirm on WhatsApp before you pay", "Pay after the written confirmation", "We verify the payment", "Delivery and support"],
+        "howto_names": ["Pick your product", "Confirm on WhatsApp before you pay", "Pay after the written confirmation", "We verify the incoming payment", "Delivery and support"],
     },
     "bn/how-to-order.html": {
         "title": "বিকাশ, নগদ বা রকেটে কীভাবে অর্ডার করবেন — ধাপে ধাপে | SAVEONSUB",
@@ -60,9 +60,9 @@ PAGES = {
         "h1": 'প্রথমবার? <span class="grad-text">অর্ডারের ধাপগুলো এক নজরে।</span>',
         "steps": [
             ("প্রোডাক্ট বেছে নিন", '<a href="../all" style="color:var(--green2)">সব প্রোডাক্ট</a> দেখুন বা <a href="quiz" style="color:var(--green2)">কুইজ</a> দিন। প্রতিটি প্ল্যানে দাম এবং অ্যাক্সেস শেয়ার্ড, পার্সোনাল না টিম, তা লেখা আছে। <b>কার্টে যোগ করুন</b>।'),
-            ("পেমেন্টের আগে WhatsApp-এ নিশ্চিত করুন", "সবুজ বাটনে চাপ দিন। অর্ডারসহ একটি মেসেজ খুলবে, পাঠিয়ে দিন। আমরা লিখিতভাবে জানাব প্ল্যান, অ্যাক্সেস পদ্ধতি, মোট দাম, ডেলিভারির সময় ও কভারের সময়।"),
+            ("পেমেন্টের আগে WhatsApp-এ নিশ্চিত করুন", "সবুজ বাটনে চাপ দিন। আপনার অর্ডার আইডিসহ একটি মেসেজ খুলবে, পাঠিয়ে দিন। আমরা লিখিতভাবে জানাব প্ল্যান, অ্যাক্সেস পদ্ধতি, মোট দাম, ডেলিভারির সময়, কভারের সময় ও পেমেন্ট গ্রহণের গন্তব্য।"),
             ("নিশ্চিতকরণের পরই পেমেন্ট করুন", f"বিকাশ/নগদ/রকেট খুলুন → <b>Send Money</b> → আমাদের চেকআউটে দেখানো পেমেন্ট নম্বর (বর্তমানে {NUM_BN})। নম্বরটি আমাদের লিখিত নিশ্চিতকরণের নম্বরের সাথে মিলতে হবে। অ্যামাউন্ট = নিশ্চিত করা মোট। রেফারেন্স = আপনার অর্ডার আইডি। অন্য কোনো ওয়েবসাইট বা চ্যাটের নম্বরে টাকা পাঠাবেন না।"),
-            ("আমরা পেমেন্ট যাচাই করি", "আমাদের নিজস্ব মার্চেন্ট অ্যাকাউন্টে টাকা দেখার পরই পেমেন্ট গণ্য হয়। শুধু TxnID বা স্ক্রিনশট পেমেন্ট নয়। তারপর আমরা আপনার অর্ডার আইডিসহ উত্তর দিই।"),
+            ("আমরা আসল ইনকামিং পেমেন্ট যাচাই করি", "অনুমোদিত রিসিভিং অ্যাকাউন্টে (ওয়ালেট বা ব্যাংক) আসল ইনকামিং টাকা দেখার পরই পেমেন্ট গণ্য হয়। শুধু TxnID বা স্ক্রিনশট পেমেন্ট নয়। তারপর আপনার বিদ্যমান অর্ডার আইডির পেমেন্ট স্ট্যাটাস ও ডেলিভারি স্ট্যাটাস আপডেট করি।"),
             ("ডেলিভারি ও সাপোর্ট", "আপনার অর্ডারে যা নিশ্চিত করা হয়েছে সেই অনুযায়ী WhatsApp-এ অ্যাক্সেস বা ইনভাইট আসে। প্ল্যানের সাপোর্ট শর্ত পণ্যের পেজে ও রিফান্ড নীতিতে আছে। সাহায্য লাগলে নম্বরটা সেভ রাখুন।"),
         ],
         "nervous_h": "আগে টাকা দিতে ভয়?",
@@ -71,7 +71,7 @@ PAGES = {
         "mistakes": "লিখিত নিশ্চিতকরণের আগে পেমেন্ট করা · রেফারেন্সে অর্ডার আইডি না দেওয়া · আমাদের লিখিত নিশ্চিতকরণের সাথে মেলে না এমন নম্বরে বা অন্য ওয়েবসাইটের নম্বরে টাকা পাঠানো · শেয়ার্ড সিটের পাসওয়ার্ড বদলানো (এতে সবার অ্যাক্সেস বন্ধ হতে পারে এবং সাপোর্ট শর্ত নাও খাটতে পারে)।",
         "cta": "শপিং শুরু করুন →",
         "howto_name": "বিকাশ, নগদ বা রকেটে SAVEONSUB থেকে সাবস্ক্রিপশন কেনার ধাপ",
-        "howto_names": ["প্রোডাক্ট বেছে নিন", "পেমেন্টের আগে WhatsApp-এ নিশ্চিত করুন", "নিশ্চিতকরণের পর পেমেন্ট", "আমরা পেমেন্ট যাচাই করি", "ডেলিভারি ও সাপোর্ট"],
+        "howto_names": ["প্রোডাক্ট বেছে নিন", "পেমেন্টের আগে WhatsApp-এ নিশ্চিত করুন", "নিশ্চিতকরণের পর পেমেন্ট", "আমরা আসল ইনকামিং পেমেন্ট যাচাই করি", "ডেলিভারি ও সাপোর্ট"],
     },
 }
 
@@ -163,7 +163,7 @@ def main() -> int:
         for e in errs:
             print("  " + e)
         return 1
-    print("[order-sequence] PASS — /how-to-order (EN+BN): confirm in writing, then pay, then merchant verification; no minute SLA; payment number unchanged")
+    print("[order-sequence] PASS — /how-to-order (EN+BN): confirm in writing, then pay, then receiving-side verification; no minute SLA; payment number unchanged")
     return 0
 
 

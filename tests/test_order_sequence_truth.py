@@ -22,7 +22,7 @@ class OrderSequence(unittest.TestCase):
     def test_written_confirmation_precedes_payment_then_verification_then_delivery(self):
         for rel, conf in PAGES.items():
             txt = self.main_text(rel)
-            order = [txt.find(conf), txt.find("Send Money"), txt.find("মার্চেন্ট") if rel.startswith("bn/") else txt.find("merchant account"),
+            order = [txt.find(conf), txt.find("Send Money"), txt.find("আসল ইনকামিং") if rel.startswith("bn/") else txt.find("actual incoming credit"),
                      txt.find("ডেলিভারি ও সাপোর্ট") if rel.startswith("bn/") else txt.find("Delivery and support")]
             self.assertTrue(all(o >= 0 for o in order), (rel, order))
             self.assertEqual(order, sorted(order), rel)
@@ -36,6 +36,21 @@ class OrderSequence(unittest.TestCase):
     def test_txn_id_or_screenshot_is_not_treated_as_payment(self):
         self.assertIn("A TxnID or screenshot alone is not payment", self.main_text("how-to-order"))
         self.assertIn("শুধু TxnID বা স্ক্রিনশট পেমেন্ট নয়", self.main_text("bn/how-to-order"))
+
+    def test_order_id_exists_before_payment_and_page_updates_it_not_reissues_it(self):
+        en, bn = self.main_text("how-to-order"), self.main_text("bn/how-to-order")
+        self.assertIn("update the payment status and delivery status of your existing order ID", en)
+        self.assertIn("বিদ্যমান অর্ডার আইডির পেমেন্ট স্ট্যাটাস", bn)
+        for t in (en, bn):
+            self.assertNotIn("reply with your order ID", t)
+            self.assertNotIn("merchant", t.lower())
+            self.assertNotIn("মার্চেন্ট", t)
+
+    def test_receiving_side_wording_does_not_claim_a_merchant_account(self):
+        for rel in ("p/chatgpt-plus", "bn/p/chatgpt-plus"):
+            t = read(rel)
+            self.assertNotIn("merchant account", t)
+            self.assertNotIn("মার্চেন্ট অ্যাকাউন্ট", t)
 
     def test_payment_number_is_unchanged_and_shown_once(self):
         # same number the page showed before this change; the CEO-verified source decides any change
