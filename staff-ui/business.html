@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta name="referrer" content="same-origin" />
+    <title>SaveOnSub · Business OS</title>
+    <link rel="stylesheet" href="business.css" />
+    <script defer src="business.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to workspace</a>
+    <aside>
+      <a class="wordmark" href="business.html"
+        ><img src="assets/logo.svg" alt="SaveOnSub" /><span
+          >BUSINESS OS</span
+        ></a
+      >
+      <div class="unit">SAVEONSUB ONLY <span class="dot"></span></div>
+      <nav aria-label="Workspace">
+        <button data-view="overview" aria-current="page">◈ Overview</button
+        ><button data-view="orders">▤ Orders & payments</button
+        ><button data-view="crm">◎ CRM pipeline</button
+        ><button data-view="finance">▥ Finance ledger</button
+        ><button data-view="pricing">◇ Product & pricing</button
+        ><button data-view="growth">↗ SEO & marketing</button
+        ><button data-view="agents">◉ Agent operations</button
+        ><button data-view="approvals">✓ Approvals & audit</button
+        ><button data-view="connections">⇄ Connections</button>
+      </nav>
+      <div class="aside-foot">
+        Asia/Dhaka · BDT<br />Owner-controlled operations<br /><a
+          href="orders.html"
+          >Payment & fulfillment desk ↗</a
+        ><a href="catalog.html">Catalog & media studio ↗</a>
+      </div>
+    </aside>
+    <main id="main">
+      <header>
+        <div>
+          <p class="eyebrow">SAVEONSUB / COMMAND CENTER</p>
+          <h1 id="viewTitle">Business overview</h1>
+        </div>
+        <div class="header-actions">
+          <label
+            >Reporting month<input
+              id="month"
+              type="month"
+              aria-label="Reporting month" /></label
+          ><button id="refresh">Refresh</button>
+        </div>
+      </header>
+      <div class="status-bar">
+        <span id="identity">Checking staff identity…</span
+        ><span id="environment">Connection unverified</span>
+      </div>
+      <div id="notice" role="status" aria-live="polite">
+        Connecting to protected backend…
+      </div>
+      <section id="overview" class="view">
+        <div class="hero">
+          <div>
+            <p class="eyebrow">MONTHLY REVENUE TARGET · বিক্রয় লক্ষ্য</p>
+            <h2>৳3,00,000<span>Revenue, not net profit.</span></h2>
+            <p>
+              One workspace for verified sales, customer follow-up and
+              accountable execution.
+            </p>
+          </div>
+          <div class="target-box">
+            <span id="progressLabel">Waiting for verified records</span
+            ><progress id="progress" max="300000" value="0"></progress>
+            <p id="pace">No forecast until the finance backend responds.</p>
+          </div>
+        </div>
+        <div class="kpis">
+          <article>
+            <span>Confirmed sales</span><strong id="sales">—</strong
+            ><small>Verified receipts · excludes refunded orders</small>
+          </article>
+          <article>
+            <span>Target remaining</span><strong id="remaining">—</strong
+            ><small>BDT 300,000 monthly sales goal</small>
+          </article>
+          <article>
+            <span>Payment review queue</span><strong id="reviewCount">—</strong
+            ><small>Claims awaiting human verification</small>
+          </article>
+          <article>
+            <span>Net profit</span><strong>Unavailable</strong
+            ><small>Requires complete verified costs</small>
+          </article>
+        </div>
+        <div class="columns">
+          <article class="panel">
+            <p class="eyebrow">EXECUTION</p>
+            <h2>Work that moves the business</h2>
+            <div id="overviewTasks"></div>
+          </article>
+          <article class="panel">
+            <p class="eyebrow">CONTROL ROOM</p>
+            <h2>Decisions before action</h2>
+            <p id="pendingCount">— pending reviews</p>
+            <p>
+              Owner approval records do not transfer money, publish prices,
+              deploy code or send customer messages.
+            </p>
+            <button data-go="approvals">Open review queue →</button>
+            <p class="muted">
+              Source: dedicated SaveOnSub staff database. External historical
+              sales are not imported.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section id="orders" class="view" hidden>
+        <article class="panel">
+          <h2>Orders & payment reconciliation</h2>
+          <p>
+            Reconcile against actual incoming credits in the receiving account.
+            A screenshot or customer reference is never proof of receipt.
+          </p>
+          <div id="orderQueue" class="kpis"></div>
+          <a class="primary" href="orders.html"
+            >Open protected receipt & fulfillment desk ↗</a
+          >
+          <p class="muted">
+            Existing server-enforced order states, duplicate-reference checks,
+            owner receipt attestation and per-order audit history are retained.
+          </p>
+        </article>
+      </section>
+      <section id="crm" class="view" hidden>
+        <div class="columns">
+          <article class="panel">
+            <h2>New lead</h2>
+            <p>
+              SaveOnSub contacts only. Do not store passwords, OTPs or account
+              credentials.
+            </p>
+            <form data-kind="lead">
+              <label
+                >Lead / opportunity<input
+                  name="title"
+                  required
+                  minlength="2"
+                  maxlength="160"
+                  placeholder="Customer inquiry or opportunity" /></label
+              ><label
+                >Follow-up details<textarea
+                  name="details"
+                  maxlength="1200"
+                  placeholder="Consent, source and next action"
+                ></textarea></label
+              ><button>Create lead</button>
+            </form>
+          </article>
+          <article class="panel">
+            <h2>CRM pipeline</h2>
+            <div id="leadList"></div>
+          </article>
+        </div>
+      </section>
+      <section id="finance" class="view" hidden>
+        <article class="panel">
+          <h2>Reconciled operating ledger</h2>
+          <p id="financeBasis">Owner or manager access required.</p>
+          <p id="expenseTotal"></p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Type</th>
+                  <th>BDT</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="ledgerRows"></tbody>
+            </table>
+          </div>
+        </article>
+        <article class="panel">
+          <h2>Record an expense for review</h2>
+          <p>
+            Records accounting evidence only. A different owner must approve it;
+            no payment is sent.
+          </p>
+          <form data-kind="expense">
+            <label
+              >Description<input
+                name="title"
+                required
+                minlength="2"
+                maxlength="160" /></label
+            ><label
+              >Amount in BDT<input
+                name="amount_bdt"
+                type="number"
+                min="0.01"
+                max="1000000"
+                step="0.01"
+                required /></label
+            ><label
+              >Private evidence reference<textarea
+                name="details"
+                maxlength="1200"
+                placeholder="Private statement or invoice reference; no credentials"
+              ></textarea></label
+            ><button>Request expense review</button>
+          </form>
+        </article>
+      </section>
+      <section id="pricing" class="view" hidden>
+        <article class="panel">
+          <h2>Product governance</h2>
+          <p>
+            The existing catalog studio owns product drafts and authorization
+            evidence. Price reviews here are proposals; approval never changes
+            the public catalog.
+          </p>
+          <a class="primary" href="catalog.html"
+            >Open catalog & media studio ↗</a
+          >
+        </article>
+        <div class="columns">
+          <article class="panel">
+            <h2>Propose a price</h2>
+            <form data-kind="price_review">
+              <label
+                >Product + stable plan ID<input
+                  name="title"
+                  required
+                  minlength="2"
+                  maxlength="160" /></label
+              ><label
+                >Proposed selling price in BDT<input
+                  name="amount_bdt"
+                  type="number"
+                  min="0.01"
+                  max="1000000"
+                  step="0.01"
+                  required /></label
+              ><label
+                >Rationale and evidence<textarea
+                  name="details"
+                  maxlength="1200"
+                ></textarea></label
+              ><button>Request pricing review</button>
+            </form>
+          </article>
+          <article class="panel">
+            <h2>Pricing proposals</h2>
+            <div id="priceList"></div>
+          </article>
+        </div>
+      </section>
+      <section id="growth" class="view" hidden>
+        <div class="columns">
+          <article class="panel">
+            <h2>Growth work queue</h2>
+            <p>
+              Attach source evidence, metric baseline and the next measurable
+              action. Search Console metrics are not connected.
+            </p>
+            <form data-kind="task">
+              <input type="hidden" name="prefix" value="Growth: " /><label
+                >SEO / marketing task<input
+                  name="title"
+                  required
+                  minlength="2"
+                  maxlength="145"
+                  placeholder="Improve an existing page conversion path" /></label
+              ><label
+                >Evidence, owner, next action<textarea
+                  name="details"
+                  maxlength="1200"
+                ></textarea></label
+              ><button>Create growth task</button>
+            </form>
+          </article>
+          <article class="panel">
+            <h2>Growth tasks</h2>
+            <div id="growthList"></div>
+          </article>
+        </div>
+      </section>
+      <section id="agents" class="view" hidden>
+        <article class="panel">
+          <h2>Agent status & limits</h2>
+          <p>
+            Task status is persisted here. Runtime and usage telemetry are not
+            connected. Add observation time and source when recording a limit.
+            No agent may approve payments, grant access or move money.
+          </p>
+          <div class="columns">
+            <div class="agent">
+              <h3>Claude</h3>
+              <p>Brand / content work isolated in its existing branch.</p>
+              <p>Usage: unknown until a dated observation is recorded.</p>
+            </div>
+            <div class="agent">
+              <h3>Codex</h3>
+              <p>Business OS implementation & verification.</p>
+              <p>Usage: no account quota telemetry available.</p>
+            </div>
+          </div>
+        </article>
+        <div class="columns">
+          <article class="panel">
+            <h2>Assign tracked work</h2>
+            <form data-kind="task">
+              <label
+                >Task / agent<input
+                  name="title"
+                  required
+                  minlength="2"
+                  maxlength="160"
+                  placeholder="Codex: verify release readiness" /></label
+              ><label
+                >Owner, scope, evidence, limits & handoff<textarea
+                  name="details"
+                  maxlength="1200"
+                ></textarea></label
+              ><button>Create task</button>
+            </form>
+          </article>
+          <article class="panel">
+            <h2>Agent work queue</h2>
+            <div id="taskList"></div>
+          </article>
+        </div>
+      </section>
+      <section id="approvals" class="view" hidden>
+        <article class="panel">
+          <h2>Approval queue</h2>
+          <p>
+            Independent owner approval is required. Your own requests cannot be
+            self-approved. Approved records remain immutable. Deployment, public
+            price changes, refunds and money movement need separate execution
+            approval.
+          </p>
+          <div id="approvalList"></div>
+        </article>
+        <article class="panel">
+          <h2>Business audit log</h2>
+          <p>
+            Append-only business actions; order history remains in the existing
+            order event API.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Actor</th>
+                  <th>Action</th>
+                  <th>State</th>
+                </tr>
+              </thead>
+              <tbody id="auditRows"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+      <section id="connections" class="view" hidden>
+        <article class="panel">
+          <h2>Connection truth</h2>
+          <div id="integrationList"></div>
+          <p>
+            Browser login does not automatically grant the OS API access. This
+            workspace never reads sister-business records.
+          </p>
+          <a
+            class="primary"
+            href="https://business.facebook.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Open Meta Business Suite ↗</a
+          >
+          <p class="muted">
+            Choose the SaveOnSub asset yourself. No message, ad or financial
+            action is submitted by this link.
+          </p>
+        </article>
+      </section>
+      <footer>
+        SaveOnSub Business OS · Protected operations · No financial action
+        executes automatically
+      </footer>
+    </main>
+  </body>
+</html>

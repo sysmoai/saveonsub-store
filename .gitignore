@@ -22,3 +22,4 @@ graphify-out/
 ops/seo/control/product-coverage.json
 # derived from other business units; stays private until the CEO approves publishing it
 ops/seo/control/universe-families.json
+.local/

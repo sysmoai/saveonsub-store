@@ -109,6 +109,15 @@ for path in SITE.rglob('*.html'):
     # Absolute path works on every nested EN/BN/category/product page.
     if '/assets/measurement.js' not in text and '</body>' in text:
         text = text.replace('</body>', '<script src="/assets/measurement.js" defer></script>\n</body>')
+    # Meta Pixel bridge: inert (no request) until a Pixel ID is configured in it,
+    # and must load after measurement.js because it listens to its sos:track events.
+    if '/assets/meta-pixel.js' not in text and '/assets/measurement.js' in text:
+        text = re.sub(r'(<script src="/assets/measurement\.js" defer></script>)',
+                      r'\1\n<script src="/assets/meta-pixel.js" defer></script>', text, count=1)
+    # GA4 bridge: on by default with privacy-page opt-out (shared key with meta-pixel.js).
+    if '/assets/ga4.js' not in text and '/assets/meta-pixel.js' in text:
+        text = re.sub(r'(<script src="/assets/meta-pixel\.js" defer></script>)',
+                      r'\1\n<script src="/assets/ga4.js" defer></script>', text, count=1)
 
     if text != original:
         path.write_text(text, encoding='utf-8')
@@ -121,6 +130,14 @@ if robots.exists():
         marker = '# AI crawlers welcome — see llms.txt for structured store facts\n'
         addition = 'User-agent: OAI-SearchBot\nAllow: /\n\n'
         r = r.replace(marker, marker + addition) if marker in r else r + '\n' + addition
+        robots.write_text(r, encoding='utf-8')
+    # AI answer engines fetch with search/user agents distinct from training bots;
+    # name them so assistants that cite live pages are explicitly allowed.
+    extra = [a for a in ('Claude-SearchBot', 'Claude-User', 'ChatGPT-User', 'Perplexity-User', 'Bingbot')
+             if f'User-agent: {a}\n' not in r]
+    if extra:
+        block = ''.join(f'User-agent: {a}\nAllow: /\n' for a in extra) + '\n'
+        r = r.replace('\nSitemap:', '\n' + block + 'Sitemap:', 1) if '\nSitemap:' in r else r + '\n' + block
         robots.write_text(r, encoding='utf-8')
 
 llms = SITE / 'llms.txt'
@@ -138,6 +155,12 @@ measurement = SITE / 'assets' / 'measurement.js'
 if not measurement.exists():
     print('RELEASE HARDENING FAILED — staged measurement.js missing.', file=sys.stderr)
     raise SystemExit(1)
+if not (SITE / 'assets' / 'meta-pixel.js').exists():
+    print('RELEASE HARDENING FAILED — staged meta-pixel.js missing.', file=sys.stderr)
+    raise SystemExit(1)
+if not (SITE / 'assets' / 'ga4.js').exists():
+    print('RELEASE HARDENING FAILED — staged ga4.js missing.', file=sys.stderr)
+    raise SystemExit(1)
 
 hits = []
 html_pages = list(SITE.rglob('*.html'))
@@ -152,6 +175,10 @@ for path in html_pages + [p for p in (SITE / 'llms.txt',) if p.exists()]:
         hits.append((path.as_posix(), '<meta name="keywords"', 'obsolete generated keyword meta tag'))
     if path.suffix == '.html' and '/assets/measurement.js' not in text:
         hits.append((path.as_posix(), '/assets/measurement.js', 'first-party attribution script missing'))
+    if path.suffix == '.html' and '/assets/meta-pixel.js' not in text:
+        hits.append((path.as_posix(), '/assets/meta-pixel.js', 'Meta Pixel bridge script missing'))
+    if path.suffix == '.html' and '/assets/ga4.js' not in text:
+        hits.append((path.as_posix(), '/assets/ga4.js', 'GA4 bridge script missing'))
 
 if hits:
     print(f'RELEASE HARDENING FAILED — {len(hits)} unsafe staged item(s):', file=sys.stderr)

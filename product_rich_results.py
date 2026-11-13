@@ -14,7 +14,7 @@ Per priced product page (EN /p and BN /bn/p, AIPS excluded) it:
   access type and price, plus the pricebook approval date (quotable by AI
   search engines);
 - adds a visible price & ordering FAQ (3 questions, facts from the catalog);
-- adds Product JSON-LD with one Offer per approved plan (BDT, InStock) and a
+- adds Product JSON-LD with one Offer per approved plan (BDT, no availability claim) and a
   FAQPage JSON-LD built only from FAQ text that is visible on the page.
 
 No ratings, reviews, rankings, delivery-time or guarantee claims are added.
@@ -101,11 +101,15 @@ def approved_on(pid: str, policy: dict) -> str:
 def make_title(name: str, low: int, many: bool, bn: bool) -> str | None:
     p = money(low)
     if bn:
-        options = [f"{name} দাম বাংলাদেশে — {p}{' থেকে' if many else ''} | SAVEONSUB",
+        options = [f"{name} সাবস্ক্রিপশন দাম বাংলাদেশে — {p}{' থেকে' if many else ''} | SAVEONSUB",
+                   f"{name} দাম বাংলাদেশে — {p}{' থেকে' if many else ''} | SAVEONSUB",
                    f"{name} দাম — {p}{' থেকে' if many else ''} | SAVEONSUB",
                    f"{name} দাম বাংলাদেশে — {p}{' থেকে' if many else ''}"]
     else:
-        options = [f"{name} Price in Bangladesh — {'from ' if many else ''}{p} | SAVEONSUB",
+        # "<x> subscription bd" out-searches "<x> price in bd" ~6:1 in BD (Semrush, 23 Oct 2026);
+        # the H1 keeps "Price in Bangladesh", so the title carries the BD + subscription variant.
+        options = [f"{name} Subscription Price in BD — {'from ' if many else ''}{p} | SAVEONSUB",
+                   f"{name} Price in Bangladesh — {'from ' if many else ''}{p} | SAVEONSUB",
                    f"{name} Price in BD — {'from ' if many else ''}{p} | SAVEONSUB",
                    f"{name} Price in Bangladesh — {'from ' if many else ''}{p}",
                    f"{name} Price in BD — {'from ' if many else ''}{p}"]
@@ -117,7 +121,7 @@ def make_desc(name: str, plans: list[dict], bn: bool) -> str:
     kinds = {pl.get("type") or pl.get("access_type") for pl in plans}
     if bn:
         lead = f"বাংলাদেশে {name} {price_text(low, True)} থেকে"
-        tail = "। bKash, Nagad বা Rocket-এ পেমেন্ট, WhatsApp-এ অর্ডার। পেমেন্টের আগে অ্যাক্সেস টাইপ লিখিতভাবে নিশ্চিত।"
+        tail = "। বিকাশ, নগদ বা রকেটে পেমেন্ট, WhatsApp-এ অর্ডার। পেমেন্টের আগে অ্যাক্সেস টাইপ লিখিতভাবে নিশ্চিত।"
         mid = f" — {len(plans)}টি প্ল্যান" if len(plans) > 1 else ""
     else:
         lead = f"{name} in Bangladesh from {price_text(low, False)}"
@@ -144,9 +148,9 @@ def faq_items(name: str, plans: list[dict], date: str, bn: bool) -> list[tuple[s
     if bn:
         items = [
             (f"বাংলাদেশে {name}-এর দাম কত?",
-             f"SaveOnSub-এ {name}: {plan_list(plans, True)}। দাম CEO-অনুমোদিত প্রাইসবুক থেকে (সর্বশেষ অনুমোদন {date})। পেমেন্টের আগে WhatsApp-এ চূড়ান্ত দাম ও প্ল্যান নিশ্চিত করা হয়।"),
+             f"SaveOnSub-এ {name}: {plan_list(plans, True)}। দাম সর্বশেষ হালনাগাদ {date}। পেমেন্টের আগে WhatsApp-এ চূড়ান্ত দাম ও প্ল্যান নিশ্চিত করা হয়।"),
             (f"{name} কীভাবে কিনব ও পেমেন্ট করব?",
-             "প্ল্যান বেছে কার্টে যোগ করুন অথবা WhatsApp-এ মেসেজ দিন। bKash, Nagad বা Rocket-এ পেমেন্ট করুন; ট্রানজ্যাকশন আইডি দিলে অর্ডার নিশ্চিত হয়।"),
+             "প্ল্যান বেছে কার্টে যোগ করুন অথবা WhatsApp-এ মেসেজ দিন। বিকাশ, নগদ বা রকেটে পেমেন্ট করুন; ট্রানজ্যাকশন আইডি দিলে অর্ডার নিশ্চিত হয়।"),
         ]
         if "shared" in kinds:
             items.append(("শেয়ার্ড আর পার্সোনাল প্ল্যানের পার্থক্য কী?",
@@ -157,7 +161,7 @@ def faq_items(name: str, plans: list[dict], date: str, bn: bool) -> list[tuple[s
         return items
     items = [
         (f"How much is {name} in Bangladesh?",
-         f"At SaveOnSub, {name} costs {plan_list(plans, False)}. Prices come from the CEO-approved pricebook (last approved {date}); the final price and plan are confirmed on WhatsApp before payment."),
+         f"At SaveOnSub, {name} costs {plan_list(plans, False)}. Prices were last updated on {date}; your final plan and price are confirmed on WhatsApp before you pay."),
         (f"How do I buy {name} and pay in Bangladesh?",
          "Pick a plan and add it to the cart, or message SaveOnSub on WhatsApp. Pay by bKash, Nagad or Rocket and share the transaction ID to confirm the order."),
     ]
@@ -206,7 +210,9 @@ def product_ld(pid: str, p: dict, name: str, url: str, desc: str, image: str | N
             "name": f"{name} — {pl.get('label', 'Plan')}",
             "price": str(int(pl["bdt"])),
             "priceCurrency": "BDT",
-            "availability": "https://schema.org/InStock",
+            # No "availability": pages say availability is confirmed on WhatsApp
+            # before payment, so a blanket InStock would contradict the visible copy
+            # (SOS-P0-009). Add it back per plan only from verified supply data.
             "url": url,
             "seller": {"@type": "Organization", "name": "SaveOnSub", "url": BASE + "/"},
             "description": f"{access_text(pl, False)} · {pl.get('duration', '1 month')}",
@@ -234,9 +240,9 @@ def enrich(t: str, pid: str, p: dict, date: str, bn: bool) -> str:
     t = set_meta(t, "property", "og:description", desc)
 
     qa_label = "দ্রুত উত্তর" if bn else "Quick answer"
-    date_txt = (f"দাম সর্বশেষ অনুমোদন: {date}" if bn else f"Prices last approved: {date}")
+    date_txt = (f"দাম সর্বশেষ হালনাগাদ: {date}" if bn else f"Prices last updated: {date}")
     if bn:
-        answer = f"বাংলাদেশে SaveOnSub-এ {esc(name)}: {plan_list(plans, True)}। পেমেন্ট bKash, Nagad বা Rocket-এ।"
+        answer = f"বাংলাদেশে SaveOnSub-এ {esc(name)}: {plan_list(plans, True)}। পেমেন্ট বিকাশ, নগদ বা রকেটে।"
     else:
         answer = f"At SaveOnSub, {esc(name)} in Bangladesh costs {plan_list(plans, False)}. Pay by bKash, Nagad or Rocket."
     quick = (f'<section data-sos="{MARK}" class="quick-answer" style="margin:14px 0;padding:12px 14px;'
@@ -294,6 +300,8 @@ def check(site: Path, products: dict[str, dict]) -> list[str]:
                 errors.append(f"{rel}: Offer prices {sorted(prices)} != approved {sorted(allowed)}")
             if any(o.get("priceCurrency") != "BDT" for o in prod[0]["offers"]):
                 errors.append(f"{rel}: Offer currency not BDT")
+            if any("availability" in o for o in prod[0]["offers"]):
+                errors.append(f"{rel}: Offer availability claimed without verified supply data")
             text = html.unescape(re.sub(r"<[^>]+>", " ", t))
             text = re.sub(r"\s+", " ", text)
             for q in faq[0]["mainEntity"]:

@@ -26,10 +26,29 @@ BASE = rr.BASE
 MARK = "prices-page-2026-11-06"
 
 
+# Display-only Bangla for /bn/prices (catalog labels stay English everywhere else).
+BN_CAT = {"AI Assistants": "AI অ্যাসিস্ট্যান্ট", "AI Image & Design": "AI ইমেজ ও ডিজাইন", "AI Video": "AI ভিডিও",
+          "AI Voice & Music": "AI ভয়েস ও মিউজিক", "AI Code & Dev": "AI কোড ও ডেভ", "AI Writing": "AI লেখালেখি",
+          "Workspace & Productivity": "ওয়ার্কস্পেস ও প্রোডাক্টিভিটি", "Entertainment": "বিনোদন",
+          "Education & Career": "শিক্ষা ও ক্যারিয়ার", "VPN & Security": "VPN ও সিকিউরিটি", "Bundles": "বান্ডেল",
+          "BD Lifestyle": "বাংলাদেশ লাইফস্টাইল", "Other": "অন্যান্য"}
+BN_WORDS = [(r"\(your email\)", "(আপনার ইমেইল)"), (r"\(your Gmail\)", "(আপনার জিমেইল)"),
+            (r"\(your login\)", "(আপনার লগইন)"), (r"\(own account\)", "(নিজের অ্যাকাউন্ট)"),
+            (r"\bShared\b", "শেয়ার্ড"), (r"\bPersonal\b", "পার্সোনাল"), (r"\bPremium\b", "প্রিমিয়াম"),
+            (r"\bStarter\b", "স্টার্টার"), (r"\bTeam [Ss]eat\b", "টিম সিট"), (r"\bseats?\b", "সিট"),
+            (r"\busers\b", "জন"), (r"\bmax\b", "সর্বোচ্চ"), (r"\(budget\)", "(বাজেট)")]
+
+
+def bn_label(label: str) -> str:
+    for pat, rep in BN_WORDS:
+        label = re.sub(pat, rep, label)
+    return label
+
+
 def card(pid: str, p: dict, bn: bool) -> str:
     rows = "".join(
         f'<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:6px 0;'
-        f'border-top:1px solid var(--line,rgba(127,127,127,.2))"><span>{rr.esc(pl.get("label", "Plan"))}'
+        f'border-top:1px solid var(--line,rgba(127,127,127,.2))"><span>{rr.esc(bn_label(pl.get("label", "Plan")) if bn else pl.get("label", "Plan"))}'
         f'<br><small style="color:var(--muted)">{rr.access_text(pl, bn)}</small></span>'
         f'<div class="price">{rr.price_text(pl, bn)}</div></div>'
         for pl in p["plans"])
@@ -45,9 +64,9 @@ def page(template: str, products: dict[str, dict], policy: dict, bn: bool) -> st
     if bn:
         title = "AI সাবস্ক্রিপশনের দাম বাংলাদেশে — প্রাইস লিস্ট | SAVEONSUB"
         desc = (f"ChatGPT, Gemini, Claude, Canva, Netflix সহ {n}টি সাবস্ক্রিপশনের বর্তমান দাম টাকায়, "
-                "অ্যাক্সেস টাইপসহ। bKash, Nagad বা Rocket-এ পেমেন্ট।")
+                "অ্যাক্সেস টাইপসহ। বিকাশ, নগদ বা রকেটে পেমেন্ট।")
         h1 = "AI ও ডিজিটাল সাবস্ক্রিপশনের দাম — বাংলাদেশ"
-        intro = (f"নিচের সব দাম SaveOnSub-এর CEO-অনুমোদিত প্রাইসবুক থেকে তৈরি (সর্বশেষ অনুমোদন {latest})। "
+        intro = (f"SaveOnSub-এর সব দাম এক তালিকায় (সর্বশেষ হালনাগাদ {latest})। "
                  "শেয়ার্ড প্ল্যানে একাধিক ব্যবহারকারী একই অ্যাকাউন্ট ব্যবহার করেন; কাজ বা গোপন তথ্যের জন্য "
                  "কাস্টমার-নির্দিষ্ট প্ল্যান নিন। পেমেন্টের আগে WhatsApp-এ চূড়ান্ত দাম নিশ্চিত করা হয়।")
     else:
@@ -55,17 +74,17 @@ def page(template: str, products: dict[str, dict], policy: dict, bn: bool) -> st
         desc = (f"Current BDT prices for {n} subscriptions incl. ChatGPT, Gemini, Claude, Canva and Netflix, "
                 "with access type. Pay by bKash, Nagad or Rocket.")
         h1 = "AI and digital subscription prices in Bangladesh"
-        intro = (f"Every price below comes from SaveOnSub's CEO-approved pricebook (last approved {latest}). "
+        intro = (f"Every SaveOnSub price in one list (last updated {latest}). "
                  "On a shared plan several people use one account; choose a customer-specific plan for work or "
                  "private data. The final price is confirmed on WhatsApp before payment.")
     by_cat: dict[str, list[str]] = {}
     for pid, p in products.items():
         by_cat.setdefault(p.get("category", "Other"), []).append(card(pid, p, bn))
     sections = "".join(
-        f'<h2 class="mt3" style="font-size:20px">{rr.esc(cat)}</h2>'
+        f'<h2 class="mt3" style="font-size:20px">{rr.esc(BN_CAT.get(cat, cat) if bn else cat)}</h2>'
         f'<div class="grid mt2" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">'
         f'{"".join(cards)}</div>' for cat, cards in by_cat.items())
-    main = (f'<main id="main" data-sos="{MARK}"><div class="wrap"><h1>{h1}</h1><p>{intro}</p>'
+    main = (f'<main id="main" data-sos="{MARK}"><div class="wrap" style="padding-top:28px"><h1>{h1}</h1><p>{intro}</p>'
             f'{sections}</div></main>')
     t = re.sub(r"<main\b.*?</main>", lambda _m: main, template, count=1, flags=re.S)
     t = re.sub(r'<script type="application/ld\+json">.*?</script>\s*', "", t, flags=re.S)

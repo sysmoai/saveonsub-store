@@ -38,12 +38,16 @@ ROOT = pathlib.Path(__file__).resolve().parent
 DEST = ROOT / '_site'
 BRAND_LOCK = 'data-brand-lock="2026-08-19-approved"'
 
-EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next',
+EXCLUDE_DIRS = {'.git', '.github', '.vercel', '.wrangler', '.astro', '.next', '.local',
                 '__pycache__', 'node_modules', 'marketing', 'reports', '_site',
                 'ops',  # internal business files (cohort facts, SEO copy); never public
-                'tests'}  # repo test harness; served publicly in fca3dd7, never needed live
-EXCLUDE_EXT = {'.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml'}
-EXCLUDE_FILES = {'.replit', '.gitignore', '.env.example', 'catalog.json',
+                'tests',  # repo test harness; served publicly in fca3dd7, never needed live
+                'functions', 'workers', 'staff-ui'}  # Order OS backend + staff console: separate private project only
+EXCLUDE_EXT = {'.py', '.md', '.sh', '.pyc', '.log', '.bak', '.orig-backup', '.toml',
+               '.ts', '.tsx', '.sql', '.yml', '.yaml', '.jsonc', '.mjs', '.cjs', '.map',
+               '.pem', '.key', '.p12', '.sqlite', '.db', '.ipynb'}
+# '.git' is a *file* (gitdir pointer) in worktrees/submodules; EXCLUDE_DIRS only covers the directory form.
+EXCLUDE_FILES = {'.git', '.replit', '.gitignore', '.env.example', 'catalog.json',
                  'package.json', 'package-lock.json', 'vercel.json', 'AGENTS.md',
                  'aips-live.json',  # other business unit's price source; never public
                  'requirements.txt', '.gitattributes'}  # build/dev metadata, not site content
@@ -169,6 +173,8 @@ def main():
             rel = (rel_base / fn).as_posix().lstrip('./')
             if rel.startswith(EXCLUDE_PREFIXES):
                 continue
+            if fn.startswith(('.env', '.dev.vars', 'wrangler.')):
+                continue
             if rel in keep:
                 pass
             elif fn in EXCLUDE_FILES or pathlib.Path(fn).suffix.lower() in EXCLUDE_EXT:
@@ -208,7 +214,8 @@ def main():
         rel = f.relative_to(DEST).as_posix()
         if rel in keep:
             continue
-        if f.suffix.lower() in EXCLUDE_EXT or f.name in EXCLUDE_FILES:
+        if (f.suffix.lower() in EXCLUDE_EXT or f.name in EXCLUDE_FILES
+                or f.name.startswith(('.env', '.dev.vars', 'wrangler.'))):
             leaks.append(rel)
         if any(part in EXCLUDE_DIRS for part in f.relative_to(DEST).parts):
             leaks.append(rel)

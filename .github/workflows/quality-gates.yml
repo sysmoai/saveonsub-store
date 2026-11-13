@@ -47,6 +47,17 @@ jobs:
             exit 1
           fi
 
+      - name: Setup Node (Order OS security tests use built-in TypeScript + SQLite)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Order OS security tests (Access JWT, state machine, payment provenance, concurrency, PII)
+        run: |
+          set -euo pipefail
+          python audit_order_os.py
+          node --import ./tests/order-os/register.mjs --test tests/order-os/*.test.mjs
+
       - name: Full repository regression audit
         run: |
           set -euo pipefail
@@ -63,8 +74,10 @@ jobs:
           python product_seo_enrich.py --check
           python product_rich_results.py --check
           python prices_page.py --check
+          python all_static_index.py --check
+          python conversion_upgrade.py --check
           python -m unittest -v tests.test_product_seo 2>&1 | tee /tmp/product_seo_tests.log
-          ! grep -q "skipped" /tmp/product_seo_tests.log
+          ! grep -q "skipped" /tmp/product_seo_tests.log || exit 1  # bash ignores set -e for '!' commands
 
       - name: Brand kit pinned files match staged output
         run: python -m unittest -v tests.test_brand_kit_integration
@@ -73,6 +86,15 @@ jobs:
         run: |
           python hold_content_price_guard.py --check
           python site_seo_hygiene.py --check
+          python link_hygiene.py --check
+          python a11y_polish.py --check
+          python motion_polish.py --check
+          python tech_motion.py --check
+          python category_copy_polish.py --check
+          python blog_copy_polish.py --check
+          python buyer_intent_polish.py --check
+          python cross_unit_quarantine.py --check
+          python release_truth_audit.py
 
       - name: Verify governed pricing-v2 release boundary
         run: |
@@ -80,29 +102,29 @@ jobs:
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/logo.svg
           grep -q 'data-brand-lock="2026-08-19-approved"' _site/assets/favicon.svg
           grep -q 'User-agent: OAI-SearchBot' _site/robots.txt
-          ! grep -qiE 'commercial HOLD|publishes no fixed|not currently offered for sale' _site/llms.txt  # AI-search facts match live prices
+          ! grep -qiE 'commercial HOLD|publishes no fixed|not currently offered for sale' _site/llms.txt || exit 1  # bash ignores set -e for '!' commands # AI-search facts match live prices
           grep -q '৳499' _site/llms.txt
           grep -q 'data-sos-org-schema' _site/index.html
           grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' _site/index.html
-          ! grep -q '৳3,390' _site/p/chatgpt-plus.html
-          ! grep -q '৳3,390' _site/p/google-ai-pro.html
-          ! grep -q '৳1,299' _site/p/chatgpt-go.html
-          ! grep -q '৳4,290' _site/p/chatgpt-business.html
+          grep -q '৳3,390' _site/p/chatgpt-plus.html  # CEO APPROVE PRICE 3390 (PR #117)
+          ! grep -q '৳3,390' _site/p/google-ai-pro.html || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q '৳1,299' _site/p/chatgpt-go.html || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q '৳4,290' _site/p/chatgpt-business.html || exit 1  # bash ignores set -e for '!' commands
           grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
           grep -q 'SELECTIVE_UNLOCK' ops/PRICING-V2-2026-09-17.json
-          grep -q '৳499' _site/p/chatgpt-plus.html  # CEO pricebook 2026-11-02
+          grep -q '৳499' _site/p/chatgpt-plus.html  # CEO 2026-11-12: shared plans restored (reverses #130)
           grep -q '৳999' _site/p/chatgpt-plus.html
           grep -q 'Shared account (multiple users)' _site/p/chatgpt-plus.html
           grep -q '৳500' _site/p/google-ai-pro.html
           grep -q '"bdt"' _site/assets/catalog.js
           python catalog_hold_gate.py
-          ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html
-          ! grep -q 'SHARED · WARRANTY COVERED' _site/p/chatgpt-plus.html
-          ! grep -q '5–15 min' _site/p/chatgpt-plus.html
+          ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q 'SHARED · WARRANTY COVERED' _site/p/chatgpt-plus.html || exit 1  # bash ignores set -e for '!' commands
+          ! grep -q '5–15 min' _site/p/chatgpt-plus.html || exit 1  # bash ignores set -e for '!' commands
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
           grep -q '<meta name="robots" content="noindex,follow">' _site/checkout.html
           grep -Eq 'favicon-32\.png\?v=[0-9a-f]{10}" type="image/png"' _site/p/chatgpt-plus.html
-          ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml
+          ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml || exit 1  # bash ignores set -e for '!' commands
           python audit_commercial_truth_v2.py
 
           if grep -R -q '<meta name="keywords"' _site --include='*.html'; then
@@ -114,7 +136,7 @@ jobs:
             exit 1
           fi
 
-          for phrase in 'Every subscription is official' '100% customer-owned' 'Price-match guarantee' 'replace dead seats within 1 hour' 'Shared seats work the same as personal on mobile' 'SHARED · LOW RISK' 'SHARED · WARRANTY COVERED' 'enforcement is light but real' 'No official path without a card' 'Netflix has no official taka price' 'regional pricing around ৳239/month' 'other seat-holders can never see your usage'; do
+          for phrase in 'Every subscription is official' '100% customer-owned' 'Price-match guarantee' 'replace dead seats within 1 hour' 'Shared seats work the same as personal on mobile' 'SHARED · LOW RISK' 'SHARED · WARRANTY COVERED' 'enforcement is light but real' 'No official path without a card' 'Netflix has no official taka price' 'regional pricing around ৳239/month' 'other seat-holders can never see your usage' '১ ঘণ্টায় রিপ্লেস' 'শর্ত অনুযায়ী অনুমোদিত নয়' '7 days (shared) / 30 days (personal)' 'চেকআউটে চেকআউটে'; do
             if grep -R -F -q "$phrase" _site --include='*.html' --include='llms.txt'; then
               echo "::error::Unsafe or stale claim remains in staged public artifact: $phrase"
               exit 1
@@ -132,6 +154,15 @@ jobs:
           test ! -e _site/catalog.json
           test ! -e _site/build_assets.py
           test ! -e _site/.env
+          test ! -d _site/ops
+          test ! -d _site/functions
+          test ! -d _site/workers
+          test ! -d _site/tests
+          test ! -d _site/staff-ui
+          if find _site -type f \( -name '*.ts' -o -name '*.tsx' -o -name '*.sql' -o -name '.env*' -o -name '.dev.vars*' \) | grep -q .; then
+            echo "::error::Private source file detected inside staged public artifact."
+            exit 1
+          fi
           test -f _site/index.html
           test -f _site/sitemap.xml
           test -f _site/robots.txt

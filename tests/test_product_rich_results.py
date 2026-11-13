@@ -47,6 +47,13 @@ class RichResults(unittest.TestCase):
         self.assertTrue(all(o["priceCurrency"] == "BDT" for o in prod["offers"]))
         self.assertNotIn("aggregateRating", json.dumps(prod))
 
+    def test_offers_make_no_availability_claim(self):
+        # SOS-P0-009: visible copy says availability is confirmed before payment.
+        for t in (self.en, self.bn):
+            prod = [x for x in lds(t) if x["@type"] == "Product"][0]
+            self.assertFalse(any("availability" in o for o in prod["offers"]))
+            self.assertNotIn("InStock", t)
+
     def test_faq_jsonld_is_visible_and_includes_existing(self):
         faq = [x for x in lds(self.en) if x["@type"] == "FAQPage"][0]
         names = [q["name"] for q in faq["mainEntity"]]

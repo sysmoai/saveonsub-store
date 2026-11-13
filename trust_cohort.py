@@ -152,7 +152,7 @@ def harden_warranty(rel, bn=False):
         # Use a broad deterministic replacement on the central warranty table and hard SLA phrases.
         t = re.sub(
             r'<div class="tbl mt3"><table>.*?</table></div>',
-            '<div class="notice mt3"><b>Coverage offer-specific।</b> Warranty duration, replacement timing, refund eligibility ও exclusions product এবং access method অনুযায়ী ভিন্ন হতে পারে। Payment-এর আগে selected product/order-এ দেখানো written terms-ই প্রযোজ্য।</div>',
+            '<div class="notice mt3"><b>কভারেজ প্রতিটি অফার অনুযায়ী আলাদা।</b> সাপোর্টের মেয়াদ, রিপ্লেসমেন্টের সময়, রিফান্ডের যোগ্যতা ও ব্যতিক্রম প্রোডাক্ট এবং অ্যাক্সেস পদ্ধতি অনুযায়ী ভিন্ন হতে পারে। পেমেন্টের আগে নির্বাচিত প্রোডাক্ট/অর্ডারে লিখিতভাবে দেখানো শর্তই প্রযোজ্য।</div>',
             t,
             count=1,
             flags=re.S,

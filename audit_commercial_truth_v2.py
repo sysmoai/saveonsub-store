@@ -47,9 +47,13 @@ def audit_unlock(home: str, plus: str, go: str, business: str, pro: str, public_
     if errors:
         raise SystemExit("[commercial-audit] pricebook mismatch: " + "; ".join(errors[:5]))
     book = {pid: {b for _, b in plans} for pid, plans in approved_plans(POLICY).items()}
-    pages = sorted((SITE / "p").glob("*.html")) + sorted((SITE / "bn" / "p").glob("*.html"))
-    if len(pages) != 2 * len(catalog["products"]):
-        raise SystemExit(f"[commercial-audit] expected {2 * len(catalog['products'])} product pages, found {len(pages)}")
+    # Other business units (aips-*) are removed from the public site by
+    # cross_unit_quarantine.py (SOS-P0-003); count only SaveOnSub products.
+    pages = [p for p in sorted((SITE / "p").glob("*.html")) + sorted((SITE / "bn" / "p").glob("*.html"))
+             if not p.stem.startswith("aips-")]
+    own = [p for p in catalog["products"] if not str(p.get("id", "")).startswith("aips-")]
+    if len(pages) != 2 * len(own):
+        raise SystemExit(f"[commercial-audit] expected {2 * len(own)} product pages, found {len(pages)}")
     priced_pages = 0
     for path in pages:
         rel = path.relative_to(SITE).as_posix()
@@ -142,9 +146,13 @@ def main() -> int:
     # Every product page, EN and BN: no sell price in <main>, no cart action,
     # no priced Offer, no price in the WhatsApp prefill, no checkout CTA.
     from urllib.parse import unquote
-    pages = sorted((SITE / "p").glob("*.html")) + sorted((SITE / "bn" / "p").glob("*.html"))
-    if len(pages) != 2 * len(catalog["products"]):
-        raise SystemExit(f"[commercial-audit] expected {2 * len(catalog['products'])} product pages, found {len(pages)}")
+    # Other business units (aips-*) are removed from the public site by
+    # cross_unit_quarantine.py (SOS-P0-003); count only SaveOnSub products.
+    pages = [p for p in sorted((SITE / "p").glob("*.html")) + sorted((SITE / "bn" / "p").glob("*.html"))
+             if not p.stem.startswith("aips-")]
+    own = [p for p in catalog["products"] if not str(p.get("id", "")).startswith("aips-")]
+    if len(pages) != 2 * len(own):
+        raise SystemExit(f"[commercial-audit] expected {2 * len(own)} product pages, found {len(pages)}")
     for path in pages:
         rel = path.relative_to(SITE).as_posix()
         text = path.read_text(encoding="utf-8", errors="replace")

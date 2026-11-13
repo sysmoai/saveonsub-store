@@ -144,6 +144,9 @@ def sanitize_common(text: str) -> str:
     text = re.sub(r'\b(?:href|src|action)\s*=\s*(?:"[^"]*"|\'[^\']*\')|https?://[^\s"\'<>]+', _mask, text, flags=re.I)
     for old, new in replacements.items():
         text = text.replace(old, new)
+    # "Warranty terms" / "1-hour replacement warranty" become doubled phrases
+    # after the swap above ("Support terms terms"); collapse them.
+    text = re.sub(r"\b(support terms)(?:\s+(?:support\s+)?terms)+\b", r"\1", text, flags=re.I)
     text = re.sub(r"\x00URL(\d+)\x00", lambda m: masked[int(m.group(1))], text)
 
     text = re.sub(r"(?:·|&middot;)\s*A SYSmoAI venture\.\s*", "· ", text)
@@ -214,6 +217,18 @@ def access_label(plan: dict, bn: bool = False) -> str:
             "bundle": "Bundle"}.get(kind, "Confirm access method")
 
 
+def access_class(access: str) -> str:
+    """Badge colour for an access label: shared plans never get the 'personal' colour."""
+    low = access.lower()
+    if "shared" in low or "শেয়ার্ড" in access:
+        return "shared"
+    if "team" in low or "টিম" in access:
+        return "team"
+    if low.startswith("official") or access.startswith("অফিসিয়াল"):
+        return "official"
+    return "personal"
+
+
 def duration_label(plan: dict, bn: bool = False) -> str:
     duration = plan.get("duration", "1 month")
     if bn:
@@ -249,17 +264,17 @@ def product_main(product: dict, bn: bool) -> str:
 
     if bn:
         heading = f"{name} — বাংলাদেশে মূল্য ও অ্যাক্সেস"
-        intro = "SaveOnSub-এর বর্তমান পাবলিক অফারটি নিচে দেখুন। পেমেন্টের আগে exact provider tier, access method, availability এবং order-specific support terms নিশ্চিত করুন।"
+        intro = "বিকাশ, নগদ বা রকেটে টাকায় পেমেন্ট করুন। প্রতিটি প্ল্যানের পাশে অ্যাক্সেস টাইপ লেখা আছে; পেমেন্টের আগে WhatsApp-এ প্ল্যান, অ্যাক্সেস পদ্ধতি ও সময় নিশ্চিত করা হয়।"
         access_heading = "অ্যাক্সেস আগে নিশ্চিত করুন"
-        access_copy = "SaveOnSub credential-sharing ব্যবস্থাকে provider-supported personal বা team access হিসেবে দেখায় না। Exact access method পেমেন্টের আগে লিখিতভাবে জানানো হয়; provider checkout price আলাদা হতে পারে।"
+        access_copy = "SaveOnSub শেয়ার করা লগইনকে প্রোভাইডার-সমর্থিত ব্যক্তিগত বা টিম অ্যাক্সেস হিসেবে দেখায় না। সঠিক অ্যাক্সেস পদ্ধতি পেমেন্টের আগে লিখিতভাবে জানানো হয়; প্রোভাইডারের নিজস্ব চেকআউট মূল্য আলাদা হতে পারে।"
         how_heading = "অর্ডার করার আগে"
-        how_items = ["Exact plan/tier নিশ্চিত করুন", "অ্যাক্সেস পদ্ধতি ও account/workspace ownership নিশ্চিত করুন", "বর্তমান availability ও delivery timing নিশ্চিত করুন", "তারপর দেখানো local payment method ব্যবহার করুন"]
-        independent = "SaveOnSub একটি স্বাধীন local subscription/payment assistance store; provider-এর সাথে affiliation কেবল স্পষ্টভাবে প্রমাণিত হলে বলা হবে। Provider plan, limits ও terms পরিবর্তিত হতে পারে।"
+        how_items = ["সঠিক প্ল্যান বা টিয়ার নিশ্চিত করুন", "অ্যাক্সেস পদ্ধতি এবং অ্যাকাউন্ট বা ওয়ার্কস্পেসের মালিকানা নিশ্চিত করুন", "বর্তমানে পাওয়া যাচ্ছে কি না এবং কত সময় লাগবে তা নিশ্চিত করুন", "তারপর চেকআউটে দেখানো স্থানীয় পেমেন্ট পদ্ধতি ব্যবহার করুন"]
+        independent = "SaveOnSub একটি স্বাধীন স্থানীয় সাবস্ক্রিপশন ও পেমেন্ট সহায়তা স্টোর; প্রোভাইডারের সাথে সম্পর্কের কথা কেবল স্পষ্ট প্রমাণ থাকলেই বলা হয়। প্রোভাইডারের প্ল্যান, সীমা ও শর্ত বদলাতে পারে।"
         confirm = "WhatsApp-এ বর্তমান মূল্য নিশ্চিত করুন"
-        provider_text = "Provider pricing/terms যাচাই করুন"
+        provider_text = "প্রোভাইডারের দাম ও শর্ত যাচাই করুন"
     else:
         heading = f"{name} Price in Bangladesh"
-        intro = "Review the current SaveOnSub public offer below. Before payment, confirm the exact provider tier, access method, availability and order-specific support terms."
+        intro = "Pay in taka with bKash, Nagad or Rocket. Every plan below shows its access type, and we confirm the exact plan, access method and timing on WhatsApp before you pay."
         access_heading = "Confirm the access model before payment"
         access_copy = "SaveOnSub does not present credential-sharing arrangements as provider-supported personal or team access. The exact access method is disclosed in writing before payment; the provider checkout price can be different."
         how_heading = "Before you order"
@@ -275,8 +290,8 @@ def product_main(product: dict, bn: bool) -> str:
     provider_ref = ""
     if official_url:
         ref = f"{provider_text} ↗"
-        usd = f" · provider list reference: ${official_usd:g}" if isinstance(official_usd, (int, float)) else ""
-        provider_ref = f'<a href="{esc(official_url)}" target="_blank" rel="noopener nofollow" style="font-size:13px;color:var(--muted);text-decoration:underline">{esc(ref)}</a>{esc(usd)}'
+        usd = (f" · প্রোভাইডারের তালিকা মূল্য: ${official_usd:g}" if bn else f" · provider list reference: ${official_usd:g}") if isinstance(official_usd, (int, float)) else ""
+        provider_ref = f'<a href="{esc(official_url)}" target="_blank" rel="noopener nofollow" style="font-size:13px;color:var(--muted);text-decoration:underline;display:inline-block;padding:6px 0">{esc(ref)}</a>{esc(usd)}'
 
     if request_price:
         # The query value needs percent-encoding (it's a URL, not HTML body
@@ -292,9 +307,12 @@ def product_main(product: dict, bn: bool) -> str:
             price = int(plan["bdt"])
             access = access_label(plan, bn)
             billing = price_label(plan, bn)
-            onclick = js_args(pid, label, price, name)
+            plan_id = str(plan.get("plan_id") or "")
+            if not plan_id:
+                raise RuntimeError(f"Missing governed plan_id for {pid}: {label}")
+            onclick = js_args(pid, label, price, name, plan_id)
             cards.append(
-                f'''<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b>{esc(label)}</b><br><span class="tos personal">{esc(access)}</span><span style="font-size:12px;color:var(--muted)"> · {esc(duration_label(plan, bn))}</span></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px;font-weight:900;color:var(--green2)">{esc(billing)}</span><button class="btn btn-primary btn-sm" onclick="cartAdd({onclick})">{'কার্টে যোগ করুন' if bn else 'Add to cart'}</button></div></div>'''
+                f'''<div class="pcard" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b>{esc(label)}</b><br><span class="tos {access_class(access)}">{esc(access)}</span><span style="font-size:12px;color:var(--muted)"> · {esc(duration_label(plan, bn))}</span></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="font-size:22px;font-weight:900;color:var(--green2)">{esc(billing)}</span><button class="btn btn-primary btn-sm" onclick="cartAdd({onclick})">{'কার্টে যোগ করুন' if bn else 'Add to cart'}</button></div></div>'''
             )
         plan_html = "\n".join(cards)
         anchor = ("From " if len(plans) > 1 and not bn else "") + money(min(int(p["bdt"]) for p in plans))
@@ -310,7 +328,10 @@ def product_main(product: dict, bn: bool) -> str:
         caveat = ""
     elif pid == "chatgpt-business":
         caveat = "<div class=\"notice mt2\">ChatGPT Business is a workspace product and provider minimum-seat/billing rules can apply. Confirm the current seat requirement and workspace role before payment.</div>"
-    elif pid in {"chatgpt-go", "chatgpt-plus", "claude-pro"}:
+    elif pid in {"chatgpt-go", "chatgpt-plus", "claude-pro"} and not any(
+            (pl.get("type") or pl.get("access_type")) == "shared" for pl in plans):
+        # Only true when no shared plan is listed on this page; a page that
+        # also lists disclosed shared plans must not claim the opposite.
         caveat = "<div class=\"notice mt2\">This listing is not a credential-sharing offer. Confirm the exact customer-specific activation method before payment.</div>"
     elif pid == "chatgpt-pro":
         caveat = "<div class=\"notice mt2\">Fixed-price sale is paused on this page until the currently available provider tier and checkout amount are reconfirmed.</div>"
@@ -444,7 +465,7 @@ def patch_listing_cards(text: str, governed: dict, bn: bool) -> str:
                 continue
             price, access = card_price(product, bn)
             chunk = re.sub(r'<div class="price">.*?</div>', f'<div class="price">{esc(price)}</div>', chunk, flags=re.I)
-            chunk = re.sub(r'<span class="tos[^"]*">.*?</span>', f'<span class="tos personal">{esc(access)}</span>', chunk, flags=re.I)
+            chunk = re.sub(r'<span class="tos[^"]*">.*?</span>', f'<span class="tos {access_class(access)}">{esc(access)}</span>', chunk, flags=re.I)
             chunk = re.sub(r'<s>.*?</s>', '', chunk, flags=re.I)
             chunks[j] = chunk
         lines[i] = "".join(chunks)
@@ -478,7 +499,7 @@ def home_body(governed: dict, bn: bool) -> str:
         if not product:
             continue
         price, access = card_price(product, bn)
-        cards.append(f'<div class="pcard"><span class="icon">{esc(product.get("emoji", "✨"))}</span><h3>{esc(product.get("name", pid))}</h3><div class="price">{esc(price)}</div><span class="tos personal">{esc(access)}</span><div class="ctas"><a class="btn btn-primary btn-sm" href="p/{esc(pid)}.html">{"দেখুন" if bn else "View"}</a></div></div>')
+        cards.append(f'<div class="pcard"><span class="icon">{esc(product.get("emoji", "✨"))}</span><h3>{esc(product.get("name", pid))}</h3><div class="price">{esc(price)}</div><span class="tos {access_class(access)}">{esc(access)}</span><div class="ctas"><a class="btn btn-primary btn-sm" href="p/{esc(pid)}.html">{"দেখুন" if bn else "View"}</a></div></div>')
     card_html = "".join(cards)
     categories = [
         ("🤖", "ai-assistants", "এআই অ্যাসিস্ট্যান্ট" if bn else "AI Assistants"),
@@ -496,11 +517,11 @@ def home_body(governed: dict, bn: bool) -> str:
     if bn:
         eyebrow = "🇧🇩 বাংলাদেশ সাবস্ক্রিপশন স্টোর"
         h1 = "সঠিক সাবস্ক্রিপশন বেছে নিন। BDT-তে পেমেন্ট করুন। অ্যাক্সেস আগে বুঝে নিন।"
-        sub = "AI, productivity, streaming ও অন্যান্য subscription তুলনা করুন। Fixed price কেবল approved plan-এ দেখানো হয়; dynamic plan-এ payment-এর আগে exact tier, access method এবং বর্তমান price নিশ্চিত করা হয়।"
-        how = [("১. প্রোডাক্ট বাছুন", "আপনার কাজ অনুযায়ী tool/plan নির্বাচন করুন।"), ("২. অ্যাক্সেস নিশ্চিত করুন", "Personal/customer-specific, provider-supported Team/Workspace, Bundle বা Setup/Service—exact method আগে জানুন।"), ("৩. মূল্য নিশ্চিত করুন", "Fixed approved price থাকলে page-এ দেখবেন; অন্যথায় WhatsApp-এ current checkout reconfirm করা হবে।"), ("৪. তারপর পেমেন্ট", "Availability, delivery timing ও support terms নিশ্চিত হওয়ার পর দেখানো local method ব্যবহার করুন।")]
-        note = "SaveOnSub credential-sharing ব্যবস্থাকে provider-supported personal/team plan হিসেবে দেখায় না। SaveOnSub স্বাধীন local subscription/payment assistance store; provider plans ও terms পরিবর্তিত হতে পারে।"
+        sub = "AI, প্রোডাক্টিভিটি, স্ট্রিমিং সহ নানা সাবস্ক্রিপশন তুলনা করুন। নির্দিষ্ট দাম শুধু অনুমোদিত প্ল্যানে দেখানো হয়; বাকিগুলোতে পেমেন্টের আগে সঠিক প্ল্যান, অ্যাক্সেস পদ্ধতি ও বর্তমান দাম নিশ্চিত করা হয়।"
+        how = [("১. প্রোডাক্ট বাছুন", "আপনার কাজ অনুযায়ী টুল বা প্ল্যান বেছে নিন।"), ("২. অ্যাক্সেস নিশ্চিত করুন", "পার্সোনাল, প্রোভাইডারের টিম/ওয়ার্কস্পেস সিট, বান্ডেল নাকি সেটআপ সার্ভিস, অ্যাক্সেসের সঠিক পদ্ধতি আগে জেনে নিন।"), ("৩. মূল্য নিশ্চিত করুন", "অনুমোদিত নির্দিষ্ট দাম থাকলে পেইজেই দেখবেন; না থাকলে হোয়াটসঅ্যাপে বর্তমান দাম আবার নিশ্চিত করা হবে।"), ("৪. তারপর পেমেন্ট", "প্রাপ্যতা, ডেলিভারির সময় ও সাপোর্ট শর্ত নিশ্চিত হওয়ার পর দেখানো লোকাল পদ্ধতিতে পেমেন্ট করুন।")]
+        note = "SaveOnSub লগইন শেয়ার করার ব্যবস্থাকে প্রোভাইডার-সমর্থিত পার্সোনাল বা টিম প্ল্যান হিসেবে দেখায় না। SaveOnSub একটি স্বাধীন লোকাল সাবস্ক্রিপশন ও পেমেন্ট সহায়তা স্টোর; প্রোভাইডারের প্ল্যান ও শর্ত বদলাতে পারে।"
         browse = "সব সাবস্ক্রিপশন দেখুন"
-        ask = "WhatsApp-এ সাহায্য নিন"
+        ask = "হোয়াটসঅ্যাপে সাহায্য নিন"
     else:
         eyebrow = "🇧🇩 BANGLADESH SUBSCRIPTION STORE"
         h1 = "Choose the right subscription. Pay in BDT. Know the access model first."

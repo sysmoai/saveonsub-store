@@ -1,0 +1,9 @@
+/*
+  Cache-Control: private, no-store
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: same-origin
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/business.html
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'

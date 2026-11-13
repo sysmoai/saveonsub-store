@@ -124,18 +124,18 @@ body = """<span class="pill">↩️ REFUND POLICY</span>
 <h1 style="font-size:clamp(26px,4vw,38px)">Clear refunds. <span class="grad-text">No fine-print games.</span></h1>
 <div class="tbl mt3"><table>
 <tr><th>Situation</th><th>What you get</th><th>Timeline</th></tr>
-<tr><td>Not delivered within 24h of payment</td><td><b>Full refund</b></td><td>Same day, to your bKash/Nagad</td></tr>
-<tr><td>Cancelled before delivery</td><td><b>Full refund</b></td><td>Same day</td></tr>
-<tr><td>Seat died in warranty, replacement failed</td><td><b>Refund for unused days</b></td><td>Within 24h of failed replacement</td></tr>
-<tr><td>Wrong product delivered</td><td>Correct product or <b>full refund</b> — your choice</td><td>Within 1 hour</td></tr>
-<tr><td>Changed mind after successful delivery</td><td>Replacement-first policy; refund case-by-case</td><td>Within 48h</td></tr>
+<tr><td>Not delivered within 24h of payment</td><td><b>Full refund</b></td><td>Confirmed in writing for your order</td></tr>
+<tr><td>Cancelled before delivery</td><td><b>Full refund</b></td><td>Confirmed in writing for your order</td></tr>
+<tr><td>Seat died in warranty, replacement failed</td><td><b>Refund for unused days</b></td><td>Confirmed in writing for your order</td></tr>
+<tr><td>Wrong product delivered</td><td>Correct product or <b>full refund</b> — your choice</td><td>Confirmed in writing for your order</td></tr>
+<tr><td>Changed mind after successful delivery</td><td>Replacement-first policy; refund case-by-case</td><td>Confirmed in writing for your order</td></tr>
 </table></div>
 <h2 class="mt3" style="font-size:21px">How refunds are paid</h2>
 <p class="sub" style="font-size:15px">Back to the same bKash/Nagad/Rocket number you paid from — send-money, no fees deducted. We don't do store-credit-only games.</p>
 <h2 class="mt3" style="font-size:21px">How to request</h2>
-<p class="sub" style="font-size:15px">WhatsApp your order ID + reason. Refunds are approved by a human (usually within the hour), not a bot maze.</p>
+<p class="sub" style="font-size:15px">WhatsApp your order ID + reason. Every refund is approved by a person, and we tell you the amount and date in writing before it is paid.</p>
 <div class="notice green mt3">🤝 Still deciding? Ask whether <b>pay-after-testing</b> is explicitly available for your selected product/order; otherwise use the standard checkout and written refund terms.</div>"""
-pages['refund'] = dict(title="Refund Policy — Same-Day, No Games | SAVEONSUB", desc="Full refund if not delivered in 24h. Unused-days refund on warranty failures. Paid back to your bKash same day. The whole policy in one table.", crumb="Refund Policy", body=body, schema="", robots="")
+pages['refund'] = dict(title="Refund Policy — Clear Rules, In Writing | SaveOnSub", desc="Full refund if not delivered in 24h. Unused-days refund on warranty failures. Amount and date confirmed in writing, paid to the number you paid from.", crumb="Refund Policy", body=body, schema="", robots="")
 
 # ---------- Privacy ----------
 body = """<span class="pill">🔒 PRIVACY</span>
@@ -143,14 +143,18 @@ body = """<span class="pill">🔒 PRIVACY</span>
 <h2 class="mt3" style="font-size:21px">What we collect</h2>
 <p class="sub" style="font-size:15px">Your WhatsApp number and name (because you message us), your order history (to honor warranties), and the email you want subscriptions activated on. That's it.</p>
 <h2 class="mt3" style="font-size:21px">What we never collect</h2>
-<p class="sub" style="font-size:15px">Your bKash PIN (impossible — you pay from your own app), card numbers (we don't take cards), passwords to your personal accounts (personal plans are activated ON your email — you set the password), browsing data (no invasive trackers; the cart lives in YOUR browser's localStorage, not our servers).</p>
+<p class="sub" style="font-size:15px">Your bKash PIN (impossible — you pay from your own app), card numbers (we don't take cards), passwords to your personal accounts (personal plans are activated ON your email — you set the password), browsing data on our servers (the cart lives in YOUR browser's localStorage; the only third-party measurement is the Meta Pixel and Google Analytics described below, which you can turn off).</p>
 <h2 class="mt3" style="font-size:21px">What we do with it</h2>
 <p class="sub" style="font-size:15px">Deliver your order, honor your warranty, and send ONE renewal reminder 3 days before expiry. No spam lists, no data selling, no sharing with third parties except the provider activation itself.</p>
+<h2 class="mt3" style="font-size:21px">Facebook ads measurement (Meta Pixel)</h2>
+<p class="sub" style="font-size:15px">To see which of our Facebook/Instagram ads actually bring customers, the site can load the Meta Pixel. It tells Meta which pages you viewed and when you add to cart, start checkout or send an order, together with Meta's own cookies (_fbp, _fbc). When you send an order on WhatsApp those two cookie IDs are included in the message, and when we confirm your payment we may report the order value with your phone number <b>hashed</b> (scrambled, never in plain text) to Meta so it can match the sale to an ad. Use the link below to turn measurement off and nothing more is sent to Meta from this browser; with Global Privacy Control or Do Not Track turned on in your browser, the Pixel is never loaded. <a href="#" onclick="window.sosAdsOptOut&amp;&amp;sosAdsOptOut();this.textContent='Measurement turned off in this browser';return false" style="color:var(--green2)">Turn off measurement in this browser</a> (or <a href="#" onclick="window.sosAdsOptIn&amp;&amp;sosAdsOptIn();this.textContent='Turned back on';return false" style="color:var(--green2)">turn it back on</a>). Meta's own use of this data is covered by <a href="https://www.facebook.com/privacy/policy/" rel="noopener" style="color:var(--green2)">Meta's privacy policy</a>.</p>
 <h2 class="mt3" style="font-size:21px">Deletion</h2>
 <p class="sub" style="font-size:15px">Message "delete my data" on WhatsApp — order history and contact gone within 72 hours (ends warranty coverage, which needs the records).</p>
+<h2 class="mt3" style="font-size:21px">Website analytics (Google Analytics)</h2>
+<p class="sub" style="font-size:15px">The site loads Google Analytics 4 to count visits and see which pages, products and searches lead to orders. It records pages viewed, products viewed, add-to-cart, checkout start and order sent (order value and order number only — never your phone, name, email or payment details), with Google's own cookies (_ga). Google signals and ad personalisation are switched off. Turn measurement off with the link below, or turn on Global Privacy Control / Do Not Track, and Google Analytics is not loaded. <a href="#" onclick="window.sosAdsOptOut&amp;&amp;sosAdsOptOut();this.textContent='Measurement turned off in this browser';return false" style="color:var(--green2)">Turn off measurement in this browser</a> (or <a href="#" onclick="window.sosAdsOptIn&amp;&amp;sosAdsOptIn();this.textContent='Turned back on';return false" style="color:var(--green2)">turn it back on</a>). Google's use of this data is covered by <a href="https://policies.google.com/privacy" rel="noopener" style="color:var(--green2)">Google's privacy policy</a>.</p>
 <h2 class="mt3" style="font-size:21px">Shared-plan privacy</h2>
 <p class="sub" style="font-size:15px">On shared plans, other seat-holders may be able to see chats, files, history or settings, depending on the product. Do not enter personal, financial or confidential information on a shared plan. The known risk for each product is stated on its page. If privacy matters, choose a personal plan.</p>"""
-pages['privacy'] = dict(title="Privacy — We Barely Want Your Data | SAVEONSUB", desc="No PINs, no cards, no passwords, no tracking. What we collect (almost nothing), why, and how to delete it with one WhatsApp message.", crumb="Privacy", body=body, schema="", robots="")
+pages['privacy'] = dict(title="Privacy — We Barely Want Your Data | SAVEONSUB", desc="No PINs, no cards, no passwords. What we collect, the one ads cookie you can decline, and how to delete your data with one WhatsApp message.", crumb="Privacy", body=body, schema="", robots="")
 
 # ---------- Terms ----------
 body = """<span class="pill">📜 TERMS</span>
@@ -319,7 +323,7 @@ body = """<span class="pill">🎓 STUDENT ZONE</span>
 <div class="grid g3 mt2">
   <div class="tcard"><b>📚 Research Bundle</b><p class="sub" style="font-size:13.5px">ChatGPT + Perplexity — cited sources + drafting</p><a class="btn btn-primary btn-sm mt2" href="p/bundle-research.html">From ৳600</a></div>
   <div class="tcard"><b>✍️ Grammarly</b><p class="sub" style="font-size:13.5px">IELTS &amp; assignment writing</p><a class="btn btn-primary btn-sm mt2" href="p/grammarly.html">From ৳470</a></div>
-  <div class="tcard"><b>💎 Google AI Pro</b><p class="sub" style="font-size:13.5px">Gemini + 2TB storage on your Gmail</p><a class="btn btn-primary btn-sm mt2" href="p/google-ai-pro.html">৳500</a></div>
+  <div class="tcard"><b>💎 Google AI Pro</b><p class="sub" style="font-size:13.5px">Gemini + 5TB storage on your Gmail</p><a class="btn btn-primary btn-sm mt2" href="p/google-ai-pro.html">৳500</a></div>
 </div>
 <h2 class="mt3" style="font-size:21px">Student discount</h2>
 <p class="sub" style="font-size:15px">Show a valid student ID on WhatsApp and get <b>৳100 off</b> ChatGPT/Claude personal plans. And if the free path covers you, we'll say so before you spend a taka.</p>

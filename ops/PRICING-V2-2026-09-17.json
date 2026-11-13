@@ -32,6 +32,7 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "personal-your-email-1-month",
           "label": "Personal (your email)",
           "bdt": 450,
           "duration": "1 month",
@@ -46,20 +47,23 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-6-8-users-1-month",
           "label": "Starter Shared (6–8 users)",
           "bdt": 499,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "premium-shared-2-3-users-1-month",
           "label": "Premium Shared (2–3 users)",
           "bdt": 999,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-your-email-1-month",
           "label": "Personal (your email)",
-          "bdt": 2990,
+          "bdt": 3390,
           "duration": "1 month",
           "access_type": "personal"
         }
@@ -72,18 +76,21 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-7-seats-1-month",
           "label": "Starter Shared (7 seats)",
           "bdt": 699,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "premium-shared-2-3-1-month",
           "label": "Premium Shared (2–3)",
           "bdt": 1299,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-seat-1-month",
           "label": "Personal seat",
           "bdt": 3990,
           "duration": "1 month",
@@ -98,12 +105,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "premium-shared-5-6-1-month",
           "label": "Premium Shared (5–6)",
           "bdt": 4500,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 29900,
           "duration": "1 month",
@@ -117,18 +126,21 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "premium-shared-2-3-1-month",
           "label": "Premium Shared (2–3)",
           "bdt": 1495,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-your-email-1-month",
           "label": "Personal (your email)",
-          "bdt": 2990,
+          "bdt": 3390,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "team-seat-personal-1-month",
           "label": "Team Seat — Personal",
           "bdt": 3990,
           "duration": "1 month",
@@ -143,12 +155,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "max-5x-personal-1-month",
           "label": "Max 5x Personal",
           "bdt": 14950,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "max-20x-personal-1-month",
           "label": "Max 20x Personal",
           "bdt": 29900,
           "duration": "1 month",
@@ -162,6 +176,7 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "personal-your-gmail-1-month",
           "label": "Personal (your Gmail)",
           "bdt": 500,
           "duration": "1 month",
@@ -176,12 +191,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "shared-1-month",
           "label": "Shared",
           "bdt": 299,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-your-gmail-1-month",
           "label": "Personal (your Gmail)",
           "bdt": 799,
           "duration": "1 month",
@@ -195,18 +212,21 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "shared-1-month",
           "label": "Shared",
           "bdt": 350,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 2990,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "max-personal-1-month",
           "label": "Max — Personal",
           "bdt": 29900,
           "duration": "1 month",
@@ -220,12 +240,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "lite-personal-1-month",
           "label": "Lite — Personal",
           "bdt": 1495,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "standard-personal-1-month",
           "label": "Standard — Personal",
           "bdt": 3990,
           "duration": "1 month",
@@ -239,36 +261,42 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "standard-shared-1-month",
           "label": "Standard Shared",
           "bdt": 1199,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "standard-premium-shared-3-max-1-month",
           "label": "Standard Premium Shared (3 max)",
           "bdt": 2399,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "standard-personal-1-month",
           "label": "Standard Personal",
           "bdt": 3990,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "pro-shared-1-month",
           "label": "Pro Shared",
           "bdt": 4788,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "pro-personal-1-month",
           "label": "Pro Personal",
           "bdt": 8970,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "mega-personal-1-month",
           "label": "Mega Personal",
           "bdt": 17940,
           "duration": "1 month",
@@ -282,12 +310,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "apprentice-shared-1-month",
           "label": "Apprentice Shared",
           "bdt": 599,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "standard-personal-own-account-1-month",
           "label": "Standard Personal (own account)",
           "bdt": 1499,
           "duration": "1 month",
@@ -302,18 +332,21 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "standard-personal-625-credits-1-month",
           "label": "Standard Personal (625 credits)",
           "bdt": 499,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "pro-personal-2250-credits-1-month",
           "label": "Pro Personal (2250 credits)",
           "bdt": 4186,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "unlimited-personal-1-month",
           "label": "Unlimited Personal",
           "bdt": 11362,
           "duration": "1 month",
@@ -327,12 +360,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-budget-1-month",
           "label": "Starter Shared (budget)",
           "bdt": 899,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "creator-shared-1-month",
           "label": "Creator Shared",
           "bdt": 1499,
           "duration": "1 month",
@@ -347,12 +382,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-budget-1-month",
           "label": "Starter Shared (budget)",
           "bdt": 399,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "starter-shared-1-month",
           "label": "Starter Shared",
           "bdt": 700,
           "duration": "1 month",
@@ -366,18 +403,21 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-personal-30k-chars-1-month",
           "label": "Starter Personal (30K chars)",
           "bdt": 499,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "creator-personal-100k-chars-1-month",
           "label": "Creator Personal (100K chars)",
           "bdt": 3289,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "pro-personal-500k-chars-1-month",
           "label": "Pro Personal (500K chars)",
           "bdt": 14802,
           "duration": "1 month",
@@ -391,12 +431,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "pro-personal-500-songs-1-month",
           "label": "Pro Personal (~500 songs)",
           "bdt": 499,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "premier-personal-2000-songs-1-month",
           "label": "Premier Personal (~2000 songs)",
           "bdt": 3990,
           "duration": "1 month",
@@ -410,12 +452,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-budget-1-month",
           "label": "Starter Shared (budget)",
           "bdt": 249,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "pro-shared-1-month",
           "label": "Pro Shared",
           "bdt": 499,
           "duration": "1 month",
@@ -429,12 +473,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "pro-personal-your-github-1-month",
           "label": "Pro Personal (your GitHub)",
           "bdt": 590,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "pro-personal-1500-reqs-1-month",
           "label": "Pro+ Personal (1500 reqs)",
           "bdt": 5831,
           "duration": "1 month",
@@ -448,12 +494,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "pro-personal-1-month",
           "label": "Pro Personal",
           "bdt": 590,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "pro-personal-3x-credits-1-month",
           "label": "Pro+ Personal (3x credits)",
           "bdt": 8970,
           "duration": "1 month",
@@ -474,12 +522,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "business-monthly-official-notion-ai-incl-1-month",
           "label": "Business Monthly (official, Notion AI incl.)",
           "bdt": 800,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "business-6-month-one-time-4-800-6-months",
           "label": "Business 6-Month (one-time ৳4,800)",
           "bdt": 4800,
           "duration": "6 months",
@@ -494,12 +544,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-1-month",
           "label": "Starter Shared",
           "bdt": 470,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 1790,
           "duration": "1 month",
@@ -514,12 +566,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "team-seat-your-login-1-month",
           "label": "Team seat (your login)",
           "bdt": 299,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-pro-1-year",
           "label": "Personal Pro",
           "bdt": 1499,
           "duration": "1 year",
@@ -553,12 +607,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-budget-1-month",
           "label": "Starter Shared (budget)",
           "bdt": 399,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "pro-shared-1-month",
           "label": "Pro Shared",
           "bdt": 999,
           "duration": "1 month",
@@ -572,12 +628,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-budget-1-month",
           "label": "Starter Shared (budget)",
           "bdt": 249,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "premium-shared-1-month",
           "label": "Premium Shared",
           "bdt": 450,
           "duration": "1 month",
@@ -591,12 +649,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "plus-personal-1-month",
           "label": "Plus Personal",
           "bdt": 499,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
+          "plan_id": "pro-personal-1-month",
           "label": "Pro Personal",
           "bdt": 8970,
           "duration": "1 month",
@@ -610,12 +670,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-1-month",
           "label": "Starter Shared",
           "bdt": 470,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 1790,
           "duration": "1 month",
@@ -629,6 +691,7 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 1299,
           "duration": "1 month",
@@ -642,6 +705,7 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "standard-personal-1-month",
           "label": "Standard Personal",
           "bdt": 2500,
           "duration": "1 month",
@@ -655,12 +719,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "shared-1-month",
           "label": "Shared",
           "bdt": 499,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 2499,
           "duration": "1 month",
@@ -674,12 +740,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "plus-shared-1-month",
           "label": "Plus Shared",
           "bdt": 699,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 2499,
           "duration": "1 month",
@@ -693,12 +761,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-1-month",
           "label": "Starter Shared",
           "bdt": 270,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "pro-personal-own-account-1-month",
           "label": "Pro Personal (own account)",
           "bdt": 1299,
           "duration": "1 month",
@@ -712,12 +782,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "family-shared-2-3-users-1-month",
           "label": "Family Shared (2-3 users)",
           "bdt": 249,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "starter-shared-1-month",
           "label": "Starter Shared",
           "bdt": 399,
           "duration": "1 month",
@@ -731,12 +803,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-budget-1-month",
           "label": "Starter Shared (budget)",
           "bdt": 399,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "pro-shared-6000-min-1-month",
           "label": "Pro Shared (6000 min)",
           "bdt": 799,
           "duration": "1 month",
@@ -750,6 +824,7 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "core-personal-1-month",
           "label": "Core Personal",
           "bdt": 500,
           "duration": "1 month",
@@ -763,12 +838,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-budget-1-month",
           "label": "Starter Shared (budget)",
           "bdt": 299,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "pro-shared-1-month",
           "label": "Pro Shared",
           "bdt": 590,
           "duration": "1 month",
@@ -782,12 +859,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-1-month",
           "label": "Starter Shared",
           "bdt": 390,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 1490,
           "duration": "1 month",
@@ -801,12 +880,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "creator-starter-shared-1-month",
           "label": "Creator Starter Shared",
           "bdt": 1520,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "creator-personal-1-month",
           "label": "Creator Personal",
           "bdt": 5830,
           "duration": "1 month",
@@ -820,12 +901,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-budget-1-month",
           "label": "Starter Shared (budget)",
           "bdt": 499,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "individual-shared-1-month",
           "label": "Individual Shared",
           "bdt": 799,
           "duration": "1 month",
@@ -839,12 +922,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-budget-1-month",
           "label": "Starter Shared (budget)",
           "bdt": 249,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "plus-shared-1-month",
           "label": "Plus Shared",
           "bdt": 399,
           "duration": "1 month",
@@ -858,12 +943,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "1-screen-private-profile-1-month",
           "label": "1 Screen (private profile)",
           "bdt": 349,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-your-email-1-month",
           "label": "Personal (your email)",
           "bdt": 799,
           "duration": "1 month",
@@ -877,12 +964,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "family-slot-your-account-1-month",
           "label": "Family slot (your account)",
           "bdt": 129,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "official-bd-individual-guide-1-month",
           "label": "Official BD Individual (guide)",
           "bdt": 219,
           "duration": "1 month",
@@ -896,12 +985,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "family-slot-your-gmail-1-month",
           "label": "Family slot (your Gmail)",
           "bdt": 149,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "official-bd-individual-guide-1-month",
           "label": "Official BD Individual (guide)",
           "bdt": 239,
           "duration": "1 month",
@@ -915,12 +1006,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "1-screen-1-month",
           "label": "1 Screen",
           "bdt": 249,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 899,
           "duration": "1 month",
@@ -934,12 +1027,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-budget-1-month",
           "label": "Starter Shared (budget)",
           "bdt": 299,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "official-yearly-guide-gift-1-year",
           "label": "Official Yearly (guide/gift)",
           "bdt": 599,
           "duration": "1 year",
@@ -953,12 +1048,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "shared-1-month",
           "label": "Shared",
           "bdt": 1199,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 4999,
           "duration": "1 month",
@@ -972,6 +1069,7 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "personal-your-profile-1-month",
           "label": "Personal (your profile)",
           "bdt": 1999,
           "duration": "1 month",
@@ -985,12 +1083,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "shared-1-month",
           "label": "Shared",
           "bdt": 299,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-year-1-year",
           "label": "Personal (1 year)",
           "bdt": 3499,
           "duration": "1 year",
@@ -1004,12 +1104,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-budget-1-month",
           "label": "Starter Shared (budget)",
           "bdt": 149,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "shared-1-month",
           "label": "Shared",
           "bdt": 249,
           "duration": "1 month",
@@ -1023,6 +1125,7 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "chatgpt-shared-canva-team-1-month",
           "label": "ChatGPT Shared + Canva Team",
           "bdt": 799,
           "duration": "1 month",
@@ -1036,6 +1139,7 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "supergrok-midjourney-shared-1-month",
           "label": "SuperGrok + Midjourney Shared",
           "bdt": 999,
           "duration": "1 month",
@@ -1049,6 +1153,7 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "chatgpt-perplexity-shared-1-month",
           "label": "ChatGPT + Perplexity Shared",
           "bdt": 600,
           "duration": "1 month",
@@ -1062,6 +1167,7 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "invideo-plus-capcut-pro-shared-1-month",
           "label": "Invideo Plus + CapCut Pro Shared",
           "bdt": 999,
           "duration": "1 month",
@@ -1075,6 +1181,7 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "cursor-shared-copilot-personal-1-month",
           "label": "Cursor Shared + Copilot Personal",
           "bdt": 1799,
           "duration": "1 month",
@@ -1088,12 +1195,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-1-month",
           "label": "Starter Shared",
           "bdt": 780,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 2990,
           "duration": "1 month",
@@ -1107,12 +1216,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-1-month",
           "label": "Starter Shared",
           "bdt": 190,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "pro-personal-own-account-1-month",
           "label": "Pro Personal (own account)",
           "bdt": 499,
           "duration": "1 month",
@@ -1126,12 +1237,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-1-month",
           "label": "Starter Shared",
           "bdt": 310,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 1200,
           "duration": "1 month",
@@ -1145,12 +1258,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-1-month",
           "label": "Starter Shared",
           "bdt": 590,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 2240,
           "duration": "1 month",
@@ -1164,12 +1279,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "starter-shared-1-month",
           "label": "Starter Shared",
           "bdt": 740,
           "duration": "1 month",
           "access_type": "shared"
         },
         {
+          "plan_id": "personal-1-month",
           "label": "Personal",
           "bdt": 2840,
           "duration": "1 month",
@@ -1183,12 +1300,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "yearly-official-year",
           "label": "Yearly (official)",
           "bdt": 599,
           "duration": "year",
           "access_type": "personal"
         },
         {
+          "plan_id": "monthly-activation-month",
           "label": "Monthly activation",
           "bdt": 99,
           "duration": "month",
@@ -1202,12 +1321,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "monthly-premium-month",
           "label": "Monthly Premium",
           "bdt": 149,
           "duration": "month",
           "access_type": "personal"
         },
         {
+          "plan_id": "yearly-premium-year",
           "label": "Yearly Premium",
           "bdt": 999,
           "duration": "year",
@@ -1221,12 +1342,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "premium-monthly-month",
           "label": "Premium Monthly",
           "bdt": 350,
           "duration": "month",
           "access_type": "personal"
         },
         {
+          "plan_id": "premium-personal-month",
           "label": "Premium Personal",
           "bdt": 790,
           "duration": "month",
@@ -1240,12 +1363,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "api-access-starter-month",
           "label": "API Access — Starter",
           "bdt": 199,
           "duration": "month",
           "access_type": "personal"
         },
         {
+          "plan_id": "api-access-pro-month",
           "label": "API Access — Pro",
           "bdt": 599,
           "duration": "month",
@@ -1259,12 +1384,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "photography-plan-20gb-month",
           "label": "Photography Plan (20GB)",
           "bdt": 990,
           "duration": "month",
           "access_type": "personal"
         },
         {
+          "plan_id": "all-apps-plan-month",
           "label": "All Apps Plan",
           "bdt": 4990,
           "duration": "month",
@@ -1278,12 +1405,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "plus-monthly-month",
           "label": "Plus Monthly",
           "bdt": 399,
           "duration": "month",
           "access_type": "personal"
         },
         {
+          "plan_id": "gold-monthly-month",
           "label": "Gold Monthly",
           "bdt": 690,
           "duration": "month",
@@ -1297,12 +1426,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "monthly-month",
           "label": "Monthly",
           "bdt": 299,
           "duration": "month",
           "access_type": "personal"
         },
         {
+          "plan_id": "6-months-6months",
           "label": "6 Months",
           "bdt": 1299,
           "duration": "6months",
@@ -1316,12 +1447,14 @@
       "mode": "fixed",
       "plans": [
         {
+          "plan_id": "elite-pass-monthly-month",
           "label": "Elite Pass (monthly)",
           "bdt": 550,
           "duration": "month",
           "access_type": "personal"
         },
         {
+          "plan_id": "elite-pass-plus-month",
           "label": "Elite Pass Plus",
           "bdt": 990,
           "duration": "month",
