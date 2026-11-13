@@ -1365,3 +1365,64 @@ main[data-bangla-guide] ul:has(> li > a[href*="/p/"]) a:hover { border-color: va
   main[data-bangla-guide] .wrap > p, main[data-bangla-guide] li { font-size: 16.5px; }
   .guide-toc ol { columns: 1; }
 }
+
+/* ==== motion v3 2026-11-13: AI-tech look (neural hero, line icons, chip tiles, live borders) ====
+   Markup hooks come from tech_motion.py; the neural canvas is drawn by assets/app.js.
+   Approved teal/navy palette only. Everything decorative stops under reduced motion. */
+@property --sos-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.neural-fx { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.4s var(--ease); }
+.neural-fx.on { opacity: 1; }
+/* hero: soft vignette so text stays readable over the network */
+.hero-fx::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 55% 70% at 22% 45%, rgba(6, 24, 26, .78), transparent 70%); }
+.hero h1 { text-wrap: balance; }
+.hero .sub { text-wrap: pretty; }
+/* line-icon tiles (categories, why cards) */
+.ico-wrap { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 14px; color: var(--green2); background: linear-gradient(150deg, rgba(46, 240, 210, .16), rgba(124, 199, 255, .06)); border: 1px solid rgba(46, 240, 210, .28); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 0 24px -8px rgba(46, 240, 210, .45); }
+.ico { display: block; width: 26px; height: 26px; }
+.cattile { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 22px 14px; }
+.cattile .icon.ico-wrap { display: inline-flex; font-size: 0; margin: 0; }
+.whyg .ico-wrap { width: 44px; height: 44px; border-radius: 12px; }
+.whyg .ico { width: 23px; height: 23px; }
+.fnum.fico { background: none; color: var(--green2); line-height: 1; }
+.fnum.fico .ico { width: 38px; height: 38px; filter: drop-shadow(0 0 10px rgba(46, 240, 210, .45)); }
+/* monogram tiles read as AI chips: glassy highlight + circuit trace */
+.ptile { position: relative; overflow: hidden; background: radial-gradient(circle at 28% 18%, rgba(255, 255, 255, .28), transparent 45%), linear-gradient(140deg, hsl(var(--h) 72% 44%), hsl(calc(var(--h) + 40) 78% 28%)); letter-spacing: -.3px; text-shadow: 0 1px 2px rgba(0, 0, 0, .3); }
+.ptile::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0 12%, rgba(255, 255, 255, .16) 12% calc(12% + 1px), transparent 0) 0 0 / 100% 100%, linear-gradient(transparent 0 78%, rgba(255, 255, 255, .14) 78% calc(78% + 1px), transparent 0); pointer-events: none; }
+.pcard > .ptile + h3, .pcard > .ptile { margin-top: 0; }
+/* live gradient border: always faint on hero cards, full on hover anywhere */
+.pcard::before, .cattile::before, .whyg > div::before, .fcell::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: conic-gradient(from var(--sos-a), transparent 0 55%, #2ef0d2 70%, #7cc7ff 80%, #a78bfa 88%, transparent 96%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity .35s var(--ease); pointer-events: none; }
+.cattile, .whyg > div, .fcell { position: relative; }
+.hgrid .pcard::before { opacity: .45; animation: sosSpin 6s linear infinite; }
+.pcard:hover::before, .pcard:focus-within::before, .cattile:hover::before, .cattile:focus-visible::before, .whyg > div:hover::before, .fcell:hover::before { opacity: 1; animation: sosSpin 4s linear infinite; }
+@keyframes sosSpin { to { --sos-a: 360deg; } }
+/* pointer spotlight (desktop: app.js sets --mx/--my) */
+.pcard::after { opacity: 1; background: radial-gradient(260px circle at var(--mx, 50%) var(--my, -60%), rgba(46, 240, 210, .13), transparent 62%); }
+.cattile, .whyg > div, .fcell, .step { background-image: radial-gradient(240px circle at var(--mx, 50%) var(--my, -60%), rgba(46, 240, 210, .12), transparent 62%); }
+/* section rhythm: hairline glow between bands, tighter empty gaps */
+main > section, body > section { position: relative; }
+section[style*="--bg2"]::before, .factband::before { content: ""; position: absolute; top: -1px; left: 50%; width: min(720px, 80%); height: 1px; transform: translateX(-50%); background: linear-gradient(90deg, transparent, rgba(46, 240, 210, .6), transparent); }
+section:has(> .wrap > .notice:only-child) { padding: 8px 0 0; }
+section > .wrap > h2 { letter-spacing: -.4px; }
+section > .wrap > .pill { border-color: rgba(46, 240, 210, .35); color: var(--green2); background: rgba(46, 240, 210, .06); }
+@media (min-width: 761px) { section { padding: 72px 0; } }
+/* phones and tablets */
+@media (max-width: 1020px) and (min-width: 761px) { .hgrid { gap: 30px; } .hgrid .pcard { padding: 16px; } }
+@media (max-width: 760px) {
+  .hero h1 { font-size: clamp(30px, 8.6vw, 38px); }
+  .hero .sub { font-size: 15.5px; line-height: 1.6; }
+  .hero .heroctas { margin-top: 18px; }
+  .hero .heroctas .btn { flex: 1 1 auto; justify-content: center; }
+  .hero .ticker.mt2 { margin-top: 14px; }
+  .hgrid { gap: 22px; }
+  .hgrid .pcard { flex-basis: 46%; }
+  section { padding: 52px 0; }
+  .cattile { padding: 18px 10px; gap: 8px; }
+  .ico-wrap { width: 44px; height: 44px; border-radius: 12px; }
+  .ico { width: 23px; height: 23px; }
+  .hgrid .pcard::before { opacity: .3; }
+}
+@media (hover: none) { .pcard::after { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .neural-fx { display: none; }
+  .pcard::before, .cattile::before, .whyg > div::before, .fcell::before { animation: none; }
+}

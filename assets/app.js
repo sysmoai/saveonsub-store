@@ -200,13 +200,14 @@ document.addEventListener('DOMContentLoaded', ()=>{ cartBadge(); startTicker(); 
       });
     });
     var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      // also reveal anything already scrolled past (a fast flick can skip the in-view moment)
+      es.forEach(function (e) { if (e.isIntersecting || e.boundingClientRect.top < 0) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
     // a heading hidden by its mask has no visible area, so watch its parent instead
     var proxy = new Map();
     var io2 = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
-        if (!e.isIntersecting) return; io2.unobserve(e.target);
+        if (!e.isIntersecting && e.boundingClientRect.top >= 0) return; io2.unobserve(e.target);
         (proxy.get(e.target) || []).forEach(function (h) { h.classList.add('in'); });
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
@@ -272,5 +273,121 @@ document.addEventListener('DOMContentLoaded', ()=>{ cartBadge(); startTicker(); 
     });
     nav.appendChild(ol);
     hs[0].parentNode.insertBefore(nav, hs[0]);
+  });
+})();
+
+/* motion v3 2026-11-13: neural-network hero + pointer spotlight (canvas hook from tech_motion.py).
+   Starts when the page is idle, caps pixel density, fewer nodes on phones, pauses off screen
+   or in a hidden tab, and never runs under reduced motion or Save-Data. */
+(function () {
+  if (typeof document === 'undefined' || typeof document.querySelector !== 'function' || typeof window === 'undefined') return;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var saveData = navigator.connection && navigator.connection.saveData;
+  function ready(fn) { document.readyState !== 'loading' ? fn() : document.addEventListener('DOMContentLoaded', fn); }
+  ready(function () {
+    var fine = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
+    // pointer spotlight on cards (desktop only)
+    if (fine && !reduce) {
+      document.addEventListener('pointermove', function (e) {
+        var c = e.target && e.target.closest && e.target.closest('.pcard, .cattile, .whyg > div, .fcell, .step');
+        if (!c) return;
+        var r = c.getBoundingClientRect();
+        c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      }, { passive: true });
+    }
+    var cv = document.querySelector('canvas.neural-fx');
+    if (!cv || !cv.getContext || reduce || saveData) return;
+    var ctx = cv.getContext('2d'); if (!ctx) return;
+    var hero = cv.closest('.hero') || cv.parentNode;
+    var W = 0, H = 0, dpr = 1, nodes = [], pulses = [], links = [], D = 130, running = false, visible = true, raf = 0, last = 0;
+    var ptr = { x: -1e4, y: -1e4 };
+    var COLS = ['46,240,210', '124,199,255', '167,139,250'];
+    var phone = innerWidth < 761;
+    function size() {
+      var r = hero.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, phone ? 1.25 : 1.5);
+      W = Math.max(1, r.width); H = Math.max(1, r.height);
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      D = phone ? 105 : 140;
+      var n = Math.round(Math.min(phone ? 30 : 70, Math.max(18, W * H / (phone ? 13000 : 17000))));
+      while (nodes.length < n) nodes.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .22, vy: (Math.random() - .5) * .22, r: 1 + Math.random() * 1.6, c: COLS[Math.random() < .6 ? 0 : Math.random() < .6 ? 1 : 2], ph: Math.random() * 6.28 });
+      nodes.length = n;
+    }
+    function spawn() {
+      if (!links.length) return;
+      var l = links[(Math.random() * links.length) | 0];
+      pulses.push({ a: l[0], b: l[1], t: 0, sp: .012 + Math.random() * .018, hops: 2 + ((Math.random() * 4) | 0) });
+    }
+    function frame(ts) {
+      raf = 0; if (!running) return;
+      raf = requestAnimationFrame(frame);
+      if (phone && ts - last < 32) return; // ~30 fps on phones
+      last = ts;
+      ctx.clearRect(0, 0, W, H);
+      var i, j, a, b, dx, dy, d2, D2 = D * D;
+      for (i = 0; i < nodes.length; i++) {
+        a = nodes[i];
+        dx = ptr.x - a.x; dy = ptr.y - a.y; d2 = dx * dx + dy * dy;
+        if (d2 < 32400) { a.vx += dx * 4e-5; a.vy += dy * 4e-5; }
+        a.vx *= .995; a.vy *= .995;
+        var sp = Math.hypot(a.vx, a.vy); if (sp < .05) { a.vx += (Math.random() - .5) * .04; a.vy += (Math.random() - .5) * .04; }
+        a.x += a.vx; a.y += a.vy;
+        if (a.x < -20) a.x = W + 20; else if (a.x > W + 20) a.x = -20;
+        if (a.y < -20) a.y = H + 20; else if (a.y > H + 20) a.y = -20;
+      }
+      links = [];
+      ctx.lineWidth = 1;
+      for (i = 0; i < nodes.length; i++) {
+        a = nodes[i];
+        for (j = i + 1; j < nodes.length; j++) {
+          b = nodes[j]; dx = a.x - b.x; dy = a.y - b.y; d2 = dx * dx + dy * dy;
+          if (d2 < D2) {
+            links.push([i, j]);
+            ctx.strokeStyle = 'rgba(' + a.c + ',' + (0.16 * (1 - d2 / D2)).toFixed(3) + ')';
+            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          }
+        }
+        dx = ptr.x - a.x; dy = ptr.y - a.y; d2 = dx * dx + dy * dy;
+        if (d2 < 32400) { ctx.strokeStyle = 'rgba(46,240,210,' + (0.28 * (1 - d2 / 32400)).toFixed(3) + ')'; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(ptr.x, ptr.y); ctx.stroke(); }
+      }
+      for (i = 0; i < nodes.length; i++) {
+        a = nodes[i]; a.ph += .03;
+        ctx.fillStyle = 'rgba(' + a.c + ',' + (0.45 + Math.sin(a.ph) * .25).toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, 6.283); ctx.fill();
+      }
+      // data pulses travel along links and hop to a neighbour
+      if (pulses.length < (phone ? 5 : 11) && Math.random() < .06) spawn();
+      for (i = pulses.length - 1; i >= 0; i--) {
+        var p = pulses[i], A = nodes[p.a], B = nodes[p.b];
+        if (!A || !B) { pulses.splice(i, 1); continue; }
+        p.t += p.sp;
+        var x = A.x + (B.x - A.x) * p.t, y = A.y + (B.y - A.y) * p.t;
+        var g = ctx.createRadialGradient(x, y, 0, x, y, 9);
+        g.addColorStop(0, 'rgba(210,255,248,.95)'); g.addColorStop(.35, 'rgba(46,240,210,.5)'); g.addColorStop(1, 'rgba(46,240,210,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 9, 0, 6.283); ctx.fill();
+        ctx.strokeStyle = 'rgba(46,240,210,.55)'; ctx.lineWidth = 1.4;
+        var tx = A.x + (B.x - A.x) * Math.max(0, p.t - .35), ty = A.y + (B.y - A.y) * Math.max(0, p.t - .35);
+        ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(x, y); ctx.stroke(); ctx.lineWidth = 1;
+        if (p.t >= 1) {
+          var nb = [];
+          for (j = 0; j < links.length; j++) { if (links[j][0] === p.b && links[j][1] !== p.a) nb.push(links[j][1]); else if (links[j][1] === p.b && links[j][0] !== p.a) nb.push(links[j][0]); }
+          if (--p.hops > 0 && nb.length) { p.a = p.b; p.b = nb[(Math.random() * nb.length) | 0]; p.t = 0; } else pulses.splice(i, 1);
+        }
+      }
+    }
+    function play() { var on = visible && !document.hidden; if (on && !running) { running = true; raf = requestAnimationFrame(frame); } else if (!on) { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; } }
+    function start() {
+      size(); cv.classList.add('on');
+      if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; play(); }).observe(hero);
+      document.addEventListener('visibilitychange', play);
+      var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { phone = innerWidth < 761; size(); }, 200); }, { passive: true });
+      if (fine) {
+        hero.addEventListener('pointermove', function (e) { var r = hero.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; }, { passive: true });
+        hero.addEventListener('pointerleave', function () { ptr.x = ptr.y = -1e4; });
+      }
+      play();
+    }
+    if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 1500 }); else setTimeout(start, 700);
   });
 })();

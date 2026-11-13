@@ -89,6 +89,7 @@ jobs:
           python link_hygiene.py --check
           python a11y_polish.py --check
           python motion_polish.py --check
+          python tech_motion.py --check
           python category_copy_polish.py --check
           python blog_copy_polish.py --check
           python buyer_intent_polish.py --check
