@@ -26,8 +26,11 @@ class CoverageDisclosure(unittest.TestCase):
                 if p and p.get("plans"):
                     t = f.read_text(encoding="utf-8")
                     self.assertEqual(t.count(MARK), 1, str(f))
-                    self.assertIn("refund.html", t)
-                    self.assertIn("warranty.html", t)
+                    blk = re.search(r'<section[^>]*' + re.escape(MARK) + r'.*?</section>', t, re.S).group(0)
+                    up = "../" if d == "p" else "../../"
+                    self.assertIn(f'href="{up}refund"', blk)
+                    self.assertIn(f'href="{up}warranty"', blk)
+                    self.assertNotIn(".html", blk)  # clean URLs only (link_hygiene)
                     n += 1
         self.assertGreaterEqual(n, 100)
 

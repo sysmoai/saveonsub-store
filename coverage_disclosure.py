@@ -87,8 +87,8 @@ def block(lang: str, prod: dict, periods: dict) -> str:
         f'<h2 style="font-size:20px;margin:0 0 8px">{s["h2"]}</h2>'
         '<ul style="margin:0 0 12px 18px;padding:0;font-size:15px;line-height:1.7">'
         f'<li><b>{s["period"]}:</b> {period}.</li>'
-        f'<li>{s["fix"]} {s["full"]} <a href="{s["up"]}refund.html">{s["refund"]}</a> · '
-        f'<a href="{s["up"]}warranty.html">{s["support"]}</a>.</li>'
+        f'<li>{s["fix"]} {s["full"]} <a href="{s["up"]}refund">{s["refund"]}</a> · '
+        f'<a href="{s["up"]}warranty">{s["support"]}</a>.</li>'
         f"{shared_li}</ul>"
         f'<a class="btn btn-wa btn-sm" href="{href}" target="_blank" rel="noopener">{s["cta"]}</a>'
         "</section>\n  "
