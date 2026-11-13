@@ -5,12 +5,14 @@ Why: /refund and /warranty say the covered period is "shown on your product", bu
 product pages never showed one. This step adds one short, truthful block per
 product page. It invents NO period, number of days or guarantee.
 
-* The covered period reads "confirmed in writing for your order before you pay"
-  unless the CEO supplies a real value in ops/seo/control/coverage-periods.json
-  (slug -> {"en": "...", "bn": "..."}). Empty file = no period promised.
-* If a product has any shared plan, the block says plainly that shared access is
-  arranged by SaveOnSub and is not provided or endorsed by the provider, and that
-  the provider's own account rules may apply. It never claims provider permission.
+* The block lists EVERY plan of the product with its own access type and covered
+  period. The period reads "confirmed in writing for your order before you pay"
+  unless the CEO supplies a real value per plan in
+  ops/seo/control/coverage-periods.json: {product_id: {plan_id: {"en": "...", "bn": "..."}}}.
+  Empty file = no period promised for any plan.
+* Each SHARED plan row carries its own plain disclosure: arranged by SaveOnSub, not
+  provided or endorsed by the provider, the provider's own account rules may apply.
+  Personal/official rows carry none. It never claims provider permission.
 
 Usage: python3 coverage_disclosure.py [SITE_DIR] [--check]
 """
@@ -35,7 +37,9 @@ L = {
         "default": "confirmed in writing for your order before you pay",
         "fix": "If access stops working through no fault of yours inside that period, we fix it first. If we cannot restore working access, you get a refund for the unused days.",
         "full": "Full table:", "refund": "Refund policy", "support": "Support terms",
-        "shared": "Shared plans: access is arranged by SaveOnSub. It is not provided or endorsed by {name}, and {name}'s own account rules may apply. Choose a personal plan if you need access that is yours alone.",
+        "plans": "Plan by plan",
+        "kind": {"shared": "Shared access", "personal": "Personal access", "official": "Official provider plan"},
+        "shared": "arranged by SaveOnSub, not provided or endorsed by {name}; {name}'s own account rules may apply. Choose a personal plan if you need access that is yours alone.",
         "cta": "Ask for my covered period before paying",
         "wa": "Hi! Before I pay for {name}, please confirm my covered support period and refund terms in writing.",
         "faq": re.compile(r'<h2[^>]*>\s*Questions about[^<]*</h2>'),
@@ -47,7 +51,9 @@ L = {
         "default": "পেমেন্টের আগে আপনার অর্ডারের জন্য লিখিতভাবে নিশ্চিত করা হয়",
         "fix": "আপনার দোষ ছাড়া ওই সময়ের মধ্যে অ্যাক্সেস বন্ধ হলে আগে আমরা ঠিক করি। কাজ করা অ্যাক্সেস ফিরিয়ে দিতে না পারলে অব্যবহৃত দিনের টাকা ফেরত পাবেন।",
         "full": "পূর্ণ তালিকা:", "refund": "রিফান্ড নীতি", "support": "সাপোর্ট শর্ত",
-        "shared": "শেয়ার্ড প্ল্যান: অ্যাক্সেস SaveOnSub ব্যবস্থা করে। এটা {name} দেয় না বা অনুমোদন করে না, এবং {name}-এর নিজস্ব অ্যাকাউন্ট নিয়ম প্রযোজ্য হতে পারে। শুধু আপনার নিজের অ্যাক্সেস দরকার হলে পার্সোনাল প্ল্যান বেছে নিন।",
+        "plans": "প্ল্যান ধরে ধরে",
+        "kind": {"shared": "শেয়ার্ড অ্যাক্সেস", "personal": "পার্সোনাল অ্যাক্সেস", "official": "প্রোভাইডারের অফিশিয়াল প্ল্যান"},
+        "shared": "অ্যাক্সেস SaveOnSub ব্যবস্থা করে, {name} দেয় না বা অনুমোদন করে না; {name}-এর নিজস্ব অ্যাকাউন্ট নিয়ম প্রযোজ্য হতে পারে। শুধু আপনার নিজের অ্যাক্সেস দরকার হলে পার্সোনাল প্ল্যান বেছে নিন।",
         "cta": "পেমেন্টের আগে আমার কভারের সময় জানতে চাই",
         "wa": "হাই! {name} কেনার আগে আমার কভারের সাপোর্ট সময় ও রিফান্ড শর্ত লিখিতভাবে নিশ্চিত করুন।",
         "faq": re.compile(r'<h2[^>]*>\s*[^<]*নিয়ে সাধারণ প্রশ্ন</h2>'),
@@ -76,20 +82,27 @@ def load_periods() -> dict:
 def block(lang: str, prod: dict, periods: dict) -> str:
     s = L[lang]
     name = prod["name"]
-    custom = (periods.get(prod["id"]) or {}).get(lang)
-    period = esc(custom) if custom else s["default"]
-    shared = any(pl.get("type") == "shared" for pl in prod.get("plans", []))
-    shared_li = f'<li>{esc(s["shared"].format(name=name))}</li>' if shared else ""
+    per_plan = periods.get(prod["id"]) or {}
+    rows = []
+    for pl in prod.get("plans", []):
+        custom = (per_plan.get(pl.get("plan_id")) or {}).get(lang)
+        period = esc(custom) if custom else s["default"]
+        kind = s["kind"].get(pl.get("type"), esc(str(pl.get("type", ""))))
+        note = f' {esc(s["shared"].format(name=name))}' if pl.get("type") == "shared" else ""
+        rows.append(
+            f'<li data-plan-id="{esc(pl.get("plan_id", ""))}"><b>{esc(pl["label"])}</b> ({kind}): '
+            f'{s["period"]}: {period}.{note}</li>'
+        )
     href = f'{WA}?text={quote(s["wa"].format(name=name))}'
     return (
         f'<section class="mt3" id="support-terms" {MARK} '
         'style="border:1px solid var(--line,rgba(255,255,255,.12));border-radius:14px;padding:14px 16px">'
         f'<h2 style="font-size:20px;margin:0 0 8px">{s["h2"]}</h2>'
+        f'<p style="margin:0 0 8px;font-size:15px;line-height:1.7">{s["fix"]} {s["full"]} '
+        f'<a href="{s["up"]}refund">{s["refund"]}</a> · <a href="{s["up"]}warranty">{s["support"]}</a>.</p>'
+        f'<h3 style="font-size:16px;margin:0 0 6px">{s["plans"]}</h3>'
         '<ul style="margin:0 0 12px 18px;padding:0;font-size:15px;line-height:1.7">'
-        f'<li><b>{s["period"]}:</b> {period}.</li>'
-        f'<li>{s["fix"]} {s["full"]} <a href="{s["up"]}refund">{s["refund"]}</a> · '
-        f'<a href="{s["up"]}warranty">{s["support"]}</a>.</li>'
-        f"{shared_li}</ul>"
+        f'{"".join(rows)}</ul>'
         f'<a class="btn btn-wa btn-sm" href="{href}" target="_blank" rel="noopener">{s["cta"]}</a>'
         "</section>\n  "
     )

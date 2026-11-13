@@ -43,16 +43,28 @@ class CoverageDisclosure(unittest.TestCase):
         for bad in ("guarantee", "lifetime", "official reseller", "authorized"):
             self.assertNotIn(bad, blk.lower())
 
-    def test_shared_products_get_provider_disclosure_personal_only_do_not(self):
+    def test_every_plan_listed_and_only_shared_rows_carry_provider_disclosure(self):
         cat = catalog()
-        t = (SITE / "p" / "chatgpt-plus.html").read_text(encoding="utf-8")
-        self.assertIn("not provided or endorsed by ChatGPT Plus", t)
-        bn = (SITE / "bn/p" / "chatgpt-plus.html").read_text(encoding="utf-8")
-        self.assertIn("ChatGPT Plus দেয় না বা অনুমোদন করে না", bn)
-        personal_only = [i for i, p in cat.items() if p.get("plans") and not any(x.get("type") == "shared" for x in p["plans"])]
-        self.assertTrue(personal_only)
-        pt = (SITE / "p" / f"{personal_only[0]}.html").read_text(encoding="utf-8")
-        self.assertNotIn("not provided or endorsed by", pt)
+        for d, marker in (("p", "not provided or endorsed by"), ("bn/p", "দেয় না বা অনুমোদন করে না")):
+            for pid in ("chatgpt-plus", "claude-pro", "canva-pro"):
+                t = (SITE / d / f"{pid}.html").read_text(encoding="utf-8")
+                blk = re.search(r'<section[^>]*' + re.escape(MARK) + r'.*?</section>', t, re.S).group(0)
+                for pl in cat[pid]["plans"]:
+                    row = re.search(r'<li data-plan-id="' + re.escape(pl["plan_id"]) + r'">.*?</li>', blk, re.S)
+                    self.assertIsNotNone(row, f"{pid}/{pl['plan_id']} row missing")
+                    self.assertEqual(marker in row.group(0), pl["type"] == "shared", f"{d}/{pid}/{pl['plan_id']}")
+
+    def test_plan_specific_period_only_from_config(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("cd", ROOT / "coverage_disclosure.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        prod = catalog()["chatgpt-plus"]
+        first = prod["plans"][0]["plan_id"]
+        cfg = {"chatgpt-plus": {first: {"en": "TEST-PERIOD-X", "bn": "টেস্ট"}}}
+        html = mod.block("en", prod, cfg)
+        self.assertEqual(html.count("TEST-PERIOD-X"), 1)
+        self.assertEqual(html.count("confirmed in writing for your order before you pay"), len(prod["plans"]) - 1)
 
     def test_whatsapp_cta_uses_official_number_only(self):
         t = (SITE / "p" / "google-ai-pro.html").read_text(encoding="utf-8")
