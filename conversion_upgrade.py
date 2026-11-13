@@ -245,14 +245,16 @@ def benefits_box(p: dict, plans: list[dict], bn: bool) -> str:
     if bn:
         bdt = bdt.translate(str.maketrans("0123456789", "০১২৩৪৫৬৭৮৯"))
         h = f"{esc(name)}-এ কী কী পাবেন"
-        lead = (f"{bdt}-এ {esc(name)} চালু হয় <b>আপনার নিজের Gmail অ্যাকাউন্টে</b>, তাই প্রতিটি ফিচার আপনার নিজের "
-                "Gemini অ্যাপ ও Google অ্যাপে আসে। Google-এর প্ল্যানে যা যা আছে:")
+        lead = (f"{bdt}-এর Personal অফারটি <b>আপনার নিজের Gmail অ্যাকাউন্টের</b> জন্য। নিচের তালিকা Google-এর নিজস্ব প্ল্যানের "
+                "সুবিধা। আপনার অর্ডারে কোন সুবিধা কতটা চালু হবে তা আপনার অ্যাকাউন্ট ও দেশভেদে আলাদা হতে পারে, "
+                "তাই পেমেন্টের আগে লিখিতভাবে নিশ্চিত করুন। Google-এর প্ল্যানে যা যা আছে:")
         foot = (f"Google-এর অফিসিয়াল প্ল্যান পেজ থেকে {b['checked']} তারিখে মিলিয়ে দেখা। ফিচার, লিমিট ও দেশভেদে প্রাপ্যতা "
                 f"Google বদলাতে পারে, আর কিছু ফিচার শুধু ১৮+ বয়সীদের জন্য। {src}Google-এ বর্তমান তালিকা দেখুন ↗</a>")
     else:
         h = f"What you get with {esc(name)}"
-        lead = (f"At {bdt}, {esc(name)} is activated on <b>your own Gmail account</b>, so every feature shows up in your own "
-                "Gemini app and Google apps. Google's plan includes:")
+        lead = (f"The {bdt} Personal offer is for <b>your own Gmail account</b>. The list below is what Google's own plan "
+                "includes. Which of these apply to your order can differ by account and country, so confirm it in "
+                "writing before you pay. Google's plan includes:")
         foot = (f"Checked against Google's official plan page on {b['checked']}. Google can change features, limits and "
                 f"country availability, and some features are 18+ only. {src}See Google's current list ↗</a>")
     rows = b["bn" if bn else "en"]
