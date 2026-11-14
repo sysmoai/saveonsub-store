@@ -10,6 +10,7 @@ SLUG = "canva-free-naki-pro-bangladesh-bangla-guide"
 PAGE = ROOT / "_site" / "blog" / f"{SLUG}.html"
 
 
+@unittest.skipUnless(PAGE.exists(), "run python build_site.py first")
 class CanvaGuide(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
