@@ -25,7 +25,8 @@ def main(argv: list[str]) -> int:
     body = json.dumps({"host": HOST, "key": KEY, "keyLocation": f"https://{HOST}/{KEY}.txt",
                        "urlList": urls}).encode()
     req = urllib.request.Request("https://api.indexnow.org/indexnow", data=body,
-                                 headers={"Content-Type": "application/json; charset=utf-8"})
+                                 headers={"Content-Type": "application/json; charset=utf-8",
+                                          "User-Agent": "saveonsub-indexnow/1.0"})
     with urllib.request.urlopen(req, timeout=30) as r:
         print(f"[indexnow] HTTP {r.status} for {len(urls)} URL(s)")
     return 0
