@@ -83,6 +83,8 @@ jobs:
           python -m unittest -v tests.test_mobile_ux
           python -m unittest -v tests.test_canva_guide 2>&1 | tee /tmp/canva_guide_tests.log
           ! grep -q "skipped" /tmp/canva_guide_tests.log || exit 1  # bash ignores set -e for '!' commands
+          python -m unittest -v tests.test_gemini_notebook_guide 2>&1 | tee /tmp/gemini_guide_tests.log
+          ! grep -q "skipped" /tmp/gemini_guide_tests.log || exit 1  # bash ignores set -e for '!' commands
 
       - name: Brand kit pinned files match staged output
         run: python -m unittest -v tests.test_brand_kit_integration
