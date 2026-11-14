@@ -551,7 +551,7 @@ qa += [
  ("How to get YouTube Premium cheap in Bangladesh?",
   f"Official BD price ≈৳239/month (includes YouTube Music — don't buy music separately). Family slot on your own Gmail ≈৳{_f('youtube-premium')} via SAVEONSUB. Both beat paying for ads."),
  ("Can I get Canva Pro cheap in Bangladesh?",
-  f"Yes — team-seat method from ৳{_f('canva-pro')}/month at SAVEONSUB (your own account joins a Pro team — Canva officially supports teams, lowest-risk shared product). Education users: Canva Edu is FREE."),
+  "Canva Pro pricing and access method are being re-verified, so ask on WhatsApp before you pay. Canva's own pricing page lists the current Free, Pro and Business plans, and its Education tab covers eligible students and teachers."),
  ("What is the best VPN deal in Bangladesh?",
   f"Shared seats from ৳{_f('surfshark')} (Surfshark) / ৳{_f('nordvpn')} (NordVPN) monthly at SAVEONSUB via bKash; yearly personal plans cost less per month officially — watch renewal-price jumps either way."),
  ("How do subscription renewals work at SAVEONSUB?",
