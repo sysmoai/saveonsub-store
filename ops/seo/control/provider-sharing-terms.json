@@ -1,7 +1,24 @@
 {
-  "_note": "Provider account-sharing rules read from the provider's OWN published terms. Only paraphrase what the page said; each entry needs source_url + checked date. Add a product id only after reading that provider's terms. This text is shown on SHARED plan rows only.",
-  "chatgpt-plus": {"provider": "OpenAI", "source_url": "https://openai.com/policies/terms-of-use/", "checked": "2026-11-14", "en": "OpenAI's Terms of Use (checked 14 Nov 2026) say you may not make your account credentials available to people outside your organization.", "bn": "OpenAI-এর Terms of Use (১৪ নভেম্বর ২০২৬-এ দেখা) অনুযায়ী আপনার সংস্থার বাইরের কারও কাছে নিজের অ্যাকাউন্টের লগইন তথ্য দেওয়া যায় না।"},
-  "chatgpt-business": {"provider": "OpenAI", "source_url": "https://openai.com/policies/terms-of-use/", "checked": "2026-11-14", "en": "OpenAI's Terms of Use (checked 14 Nov 2026) say you may not make your account credentials available to people outside your organization.", "bn": "OpenAI-এর Terms of Use (১৪ নভেম্বর ২০২৬-এ দেখা) অনুযায়ী আপনার সংস্থার বাইরের কারও কাছে নিজের অ্যাকাউন্টের লগইন তথ্য দেওয়া যায় না।"},
-  "chatgpt-pro": {"provider": "OpenAI", "source_url": "https://openai.com/policies/terms-of-use/", "checked": "2026-11-14", "en": "OpenAI's Terms of Use (checked 14 Nov 2026) say you may not make your account credentials available to people outside your organization.", "bn": "OpenAI-এর Terms of Use (১৪ নভেম্বর ২০২৬-এ দেখা) অনুযায়ী আপনার সংস্থার বাইরের কারও কাছে নিজের অ্যাকাউন্টের লগইন তথ্য দেওয়া যায় না।"},
-  "claude-pro": {"provider": "Anthropic", "source_url": "https://www.anthropic.com/legal/consumer-terms", "checked": "2026-11-14", "en": "Anthropic's Consumer Terms (effective 8 Oct 2025, checked 14 Nov 2026) say you may not share your account login or make your account available to anyone else.", "bn": "Anthropic-এর Consumer Terms (কার্যকর ৮ অক্টোবর ২০২৫, ১৪ নভেম্বর ২০২৬-এ দেখা) অনুযায়ী নিজের অ্যাকাউন্টের লগইন শেয়ার করা বা অন্য কাউকে অ্যাকাউন্ট ব্যবহার করতে দেওয়া যায় না।"}
+  "_note": "Provider account-sharing rules read from the provider's OWN published terms. Only paraphrase what the page said; each entry needs source_url + checked date. Add a product id only after reading that provider's terms. This text is shown on SHARED plan rows only. ChatGPT Business is governed by OpenAI's Services Agreement (cited by reviewer: sections 3.1-3.2), which could not be fetched on 14 Nov 2026; add a chatgpt-business entry only after reading it. Wording is deliberately the common denominator of what was read and what was reviewed; never narrow it (no 'outside your organization').",
+  "chatgpt-plus": {
+    "provider": "OpenAI",
+    "source_url": "https://openai.com/policies/terms-of-use/",
+    "checked": "2026-11-14",
+    "en": "OpenAI's Terms of Use (checked 14 Nov 2026) restrict sharing account credentials or making an account available to other people. Read the terms at the link.",
+    "bn": "OpenAI-এর Terms of Use (১৪ নভেম্বর ২০২৬-এ দেখা) অ্যাকাউন্টের লগইন তথ্য শেয়ার করা বা অন্য মানুষকে অ্যাকাউন্ট ব্যবহার করতে দেওয়ার ওপর বিধিনিষেধ রাখে। শর্ত লিংকে পড়ুন।"
+  },
+  "chatgpt-pro": {
+    "provider": "OpenAI",
+    "source_url": "https://openai.com/policies/terms-of-use/",
+    "checked": "2026-11-14",
+    "en": "OpenAI's Terms of Use (checked 14 Nov 2026) restrict sharing account credentials or making an account available to other people. Read the terms at the link.",
+    "bn": "OpenAI-এর Terms of Use (১৪ নভেম্বর ২০২৬-এ দেখা) অ্যাকাউন্টের লগইন তথ্য শেয়ার করা বা অন্য মানুষকে অ্যাকাউন্ট ব্যবহার করতে দেওয়ার ওপর বিধিনিষেধ রাখে। শর্ত লিংকে পড়ুন।"
+  },
+  "claude-pro": {
+    "provider": "Anthropic",
+    "source_url": "https://www.anthropic.com/legal/consumer-terms",
+    "checked": "2026-11-14",
+    "en": "Anthropic's Consumer Terms (effective 8 Oct 2025, checked 14 Nov 2026) say you may not share your account login or make your account available to anyone else.",
+    "bn": "Anthropic-এর Consumer Terms (কার্যকর ৮ অক্টোবর ২০২৫, ১৪ নভেম্বর ২০২৬-এ দেখা) অনুযায়ী নিজের অ্যাকাউন্টের লগইন শেয়ার করা বা অন্য কাউকে অ্যাকাউন্ট ব্যবহার করতে দেওয়া যায় না।"
+  }
 }

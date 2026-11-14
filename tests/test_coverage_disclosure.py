@@ -111,3 +111,15 @@ class ProviderSharingTerms(unittest.TestCase):
                 continue
             self.assertTrue(v["source_url"].startswith("https://"))
             self.assertRegex(v["source_url"], r"openai\.com|anthropic\.com")
+
+    def test_openai_wording_is_not_narrowed_and_business_is_not_cited_from_consumer_terms(self):
+        for k, v in self.cfg.items():
+            if k.startswith("_"):
+                continue
+            for lang in ("en", "bn"):
+                self.assertNotIn("outside your organization", v[lang].lower())
+                self.assertNotIn("সংস্থার বাইরের", v[lang])
+        # Business is governed by the Services Agreement, not the consumer Terms of Use
+        if "chatgpt-business" in self.cfg:
+            self.assertIn("services-agreement", self.cfg["chatgpt-business"]["source_url"])
+        self.assertNotIn("chatgpt-business", {k for k, v in self.cfg.items() if "terms-of-use" in v.get("source_url", "")})
