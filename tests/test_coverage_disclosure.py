@@ -75,3 +75,39 @@ class CoverageDisclosure(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+@unittest.skipUnless((SITE / "p" / "chatgpt-plus.html").exists(), "run python build_site.py first")
+class ProviderSharingTerms(unittest.TestCase):
+    """Shared rows of OpenAI/Anthropic products cite the provider's own sharing rule, dated and linked."""
+
+    cfg = json.loads((ROOT / "ops/seo/control/provider-sharing-terms.json").read_text(encoding="utf-8"))
+
+    def block(self, d, pid):
+        t = (SITE / d / f"{pid}.html").read_text(encoding="utf-8")
+        return re.search(r'<section[^>]*' + re.escape(MARK) + r'.*?</section>', t, re.S).group(0)
+
+    def test_shared_rows_cite_provider_rule_in_both_languages(self):
+        for pid, rule in ((k, v) for k, v in self.cfg.items() if not k.startswith("_")):
+            for d, lang in (("p", "en"), ("bn/p", "bn")):
+                blk = self.block(d, pid)
+                shared = [li for li in re.findall(r"<li .*?</li>", blk, re.S) if "Shared" in li or "শেয়ার্ড" in li]
+                self.assertTrue(shared, pid)
+                for li in shared:
+                    self.assertIn(rule["source_url"], li)
+                    self.assertIn(rule[lang].replace("&", "&amp;"), li)  # exact dated sentence from the config
+
+    def test_personal_rows_carry_no_sharing_warning(self):
+        for d in ("p", "bn/p"):
+            blk = self.block(d, "chatgpt-plus")
+            personal = [li for li in re.findall(r"<li .*?</li>", blk, re.S) if "shared" not in li.split(">")[0]]
+            self.assertTrue(personal)
+            for li in personal:
+                self.assertNotIn("openai.com/policies", li)
+
+    def test_sources_are_official_https(self):
+        for k, v in self.cfg.items():
+            if k.startswith("_"):
+                continue
+            self.assertTrue(v["source_url"].startswith("https://"))
+            self.assertRegex(v["source_url"], r"openai\.com|anthropic\.com")

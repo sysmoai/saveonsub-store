@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parent
 WA = "https://wa.me/8801305869242"
 MARK = 'data-coverage-block="1"'
 PERIODS = ROOT / "ops" / "seo" / "control" / "coverage-periods.json"
+SHARING = ROOT / "ops" / "seo" / "control" / "provider-sharing-terms.json"
 
 L = {
     "en": {
@@ -79,7 +80,15 @@ def load_periods() -> dict:
     return json.loads(PERIODS.read_text(encoding="utf-8"))
 
 
-def block(lang: str, prod: dict, periods: dict) -> str:
+def load_sharing() -> dict:
+    """Provider account-sharing rules read from the provider's own terms (dated, sourced)."""
+    if not SHARING.exists():
+        return {}
+    d = json.loads(SHARING.read_text(encoding="utf-8"))
+    return {k: v for k, v in d.items() if not k.startswith("_")}
+
+
+def block(lang: str, prod: dict, periods: dict, sharing: dict | None = None) -> str:
     s = L[lang]
     name = prod["name"]
     per_plan = periods.get(prod["id"]) or {}
@@ -89,6 +98,11 @@ def block(lang: str, prod: dict, periods: dict) -> str:
         period = esc(custom) if custom else s["default"]
         kind = s["kind"].get(pl.get("type"), esc(str(pl.get("type", ""))))
         note = f' {esc(s["shared"].format(name=name))}' if pl.get("type") == "shared" else ""
+        rule = (sharing or {}).get(prod["id"])
+        if note and rule and rule.get(lang):
+            note += (f' <b>{esc(rule[lang])}</b> '
+                     f'<a href="{esc(rule["source_url"])}" rel="noopener nofollow" target="_blank">'
+                     f'{esc(rule["provider"])}</a>')
         rows.append(
             f'<li data-plan-id="{esc(pl.get("plan_id", ""))}"><b>{esc(pl["label"])}</b> ({kind}): '
             f'{s["period"]}: {period}.{note}</li>'
@@ -109,7 +123,7 @@ def block(lang: str, prod: dict, periods: dict) -> str:
 
 
 def apply(site: Path) -> int:
-    cat, periods = load_catalog(site), load_periods()
+    cat, periods, sharing = load_catalog(site), load_periods(), load_sharing()
     done = 0
     for lang, s in L.items():
         for f in sorted((site / s["dir"]).glob("*.html")):
@@ -119,7 +133,7 @@ def apply(site: Path) -> int:
             t = f.read_text(encoding="utf-8")
             if MARK in t:
                 continue
-            blk = block(lang, prod, periods)
+            blk = block(lang, prod, periods, sharing)
             m = s["faq"].search(t) or FALLBACK.search(t)
             if not m:
                 print(f"[coverage] FAIL — no anchor in {f.relative_to(site)}")
