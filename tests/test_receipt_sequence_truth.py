@@ -75,7 +75,7 @@ class PendingOrderRequestTruth(unittest.TestCase):
                 self.assertNotRegex(text, r"5[–-]15|৫[–-]১৫|1-hour replacement|১ ঘণ্টায় রিপ্লেস")
                 self.assertIn("TxnID", text)
                 self.assertIn("wa.me/8801305869242", text)
-                self.assertIn("receiving", text.lower() if rel == "order.html" else text + " receiving")
+                self.assertIn("receiving-side" if rel == "order.html" else "রিসিভিং অ্যাকাউন্টে", text)
                 self.assertIn(facts["whatsapp"], text)
 
     def test_existing_browser_state_and_whatsapp_hooks_preserved(self):
