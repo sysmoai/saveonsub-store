@@ -92,7 +92,7 @@ flowchart TD
 3. **Access roles:** CEO, Ripon ও unauthorized third user দিয়ে MFA + positive/negative role matrix (Ripon-এর আলাদা account)।
 4. **Turnstile:** Cloudflare-এর real staging sitekey + secret; secret শুধু Cloudflare secret storage-তে; server Siteverify valid, absent, invalid, expired, replay failure।
 5. **Customer boundary:** staff endpoints private; প্রয়োজনীয় customer endpoints-এর জন্য *path-specific*, minimally scoped Bypass + code validation, no PII. Bypass পুরো host-এর জন্য নয়। Browser origin `saveonsub.com` থেকে CORS/OPTIONS test।
-6. **Abuse controls:** `/api/support/tickets` ও `/api/support/tickets/status` rate limits; 429, retry, enumeration resistance ও logs QA।
+6. **Abuse controls:** `/api/support/tickets` ও `/api/support/tickets/status` rate limits; 429, retry, enumeration resistance ও logs QA। `*.pages.dev`-তে নিজের `saveonsub.com` zone-এর WAF rule স্বয়ংক্রিয়ভাবে কাজ করছে ধরে নেওয়া যাবে না; যে hostname দিয়ে API আসলেই চলছে, সেখানেই rule কার্যকর কি না পরীক্ষা করতে হবে। Custom domain/DNS পরিবর্তন আলাদা CEO অনুমোদনের বিষয়।
 7. **Order link:** synthetic order + tracking proof + ticket create/view/assign/escalate/rotate/close + immutable audit; real customer/payment data ব্যবহার নয়।
 8. **Privacy & support:** consent, retention/deletion policy, code lost/reissue SOP, service-hours/fallback, notification, monitoring, accessibility/mobile, backup/rollback।
 9. **Controlled release:** PR #163 → #164 → #170 dependency, #172 tracking-contract compatibility এবং #171 customer receipt copy পৃথকভাবে review; exact SHA approval, staging E2E, production release ID + rollback plan। **কোনো auto-deploy নয়।**
