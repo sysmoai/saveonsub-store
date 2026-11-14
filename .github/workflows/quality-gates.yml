@@ -82,6 +82,9 @@ jobs:
           ! grep -q "skipped" /tmp/support_terms_tests.log || exit 1  # bash ignores set -e for '!' commands
           python -m unittest -v tests.test_mobile_ux
 
+      - name: Support ticket page (noindex, inert, no prices, safe JS)
+        run: python -m unittest -v tests.test_support_portal
+
       - name: Brand kit pinned files match staged output
         run: python -m unittest -v tests.test_brand_kit_integration
 
