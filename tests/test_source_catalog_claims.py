@@ -34,6 +34,21 @@ class SourceCatalogClaims(unittest.TestCase):
         hits = [s[:80] for s in strings(data) if BANNED.search(s)]
         self.assertEqual(hits, [])
 
+    def test_canva_pro_source_has_no_unverified_team_seat_or_price_claims(self):
+        """canva-pro is commercial_hold; its stored FAQ must not carry team-seat, 'lowest-risk' or old-price claims."""
+        data = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
+        canva = next(p for p in data["products"] if p["id"] == "canva-pro")
+        text = json.dumps(canva.get("faq", []), ensure_ascii=False)
+        for bad in ("lowest-risk", "officially supported", "officially supports", "team-seat method",
+                    "৳1,499", "৳125", "your designs stay yours", "use it extensively"):
+            self.assertNotIn(bad, text)
+
+    def test_no_generator_republishes_the_canva_team_seat_claim(self):
+        for name in ("build_seo.py",):
+            src = (ROOT / name).read_text(encoding="utf-8")
+            self.assertNotIn("team-seat method", src, name)
+            self.assertNotIn("Canva officially supports teams", src, name)
+
 
 if __name__ == "__main__":
     unittest.main()
