@@ -2,12 +2,12 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>অর্ডার সম্পন্ন — আপনার রসিদ | SAVEONSUB</title>
-<meta name="description" content="আপনার অর্ডার রেকর্ড করা হয়েছে। অর্ডার আইডি, আইটেম ও টোটাল সহ রসিদ — স্ক্রিনশট নিন, তারপর হোয়াটসঅ্যাপে কনফার্ম করুন 5–15 minute delivery.">
+<title>অর্ডার অনুরোধ সংরক্ষিত — পেমেন্ট নিশ্চিত নয় | SAVEONSUB</title>
+<meta name="description" content="আপনার অর্ডার অনুরোধ এই ডিভাইসে সংরক্ষিত। পেমেন্টের আগে লিখিত নিশ্চিতকরণ নিন; এটি পেমেন্টের রসিদ নয়।">
 <link rel="canonical" href="https://saveonsub.com/bn/order.html">
 <meta name="robots" content="noindex,follow">
 <meta name="theme-color" content="#102634">
-<meta property="og:title" content="অর্ডার পাওয়া গেছে — SAVEONSUB"><meta property="og:description" content="অর্ডার আইডি, আইটেম ও মোটসহ আপনার রসিদ।">
+<meta property="og:title" content="অর্ডার অনুরোধ সংরক্ষিত — SAVEONSUB"><meta property="og:description" content="স্থানীয় অর্ডার অনুরোধ; রিসিভিং অ্যাকাউন্টে টাকা যাচাই হয়নি।">
 <meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/bn/order.html">
 <meta property="og:locale" content="bn_BD">
 <link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/bn/order.html">
@@ -71,36 +71,36 @@
 </div></nav>
 
 <main id="main"><div class="wrap">
-  <div class="crumbs"><a href="../bn.html">হোম</a> › <a href="checkout.html">চেকআউট</a> › অর্ডার পাওয়া গেছে</div>
-  <h1 style="font-size:clamp(24px,4vw,34px);text-align:center">অর্ডার <span class="grad-text">গৃহীত।</span></h1>
+  <div class="crumbs"><a href="../bn.html">হোম</a> › <a href="checkout.html">চেকআউট</a> › অর্ডার অনুরোধ</div>
+  <h1 style="font-size:clamp(24px,4vw,34px);text-align:center">অর্ডার অনুরোধ <span class="grad-text">সংরক্ষিত।</span></h1>
 
   <div class="receipt" id="receipt">
     <div class="rhead">
-      <div class="rtick">✅</div>
-      <p style="margin:0 0 8px;color:var(--muted);font-size:14px">আপনার অর্ডার আইডি — সংরক্ষণ করুন</p>
+      <div class="rtick">📝</div>
+      <p style="margin:0 0 8px;color:var(--muted);font-size:14px">আপনার অনুরোধের আইডি — সংরক্ষণ করুন</p>
       <span class="oid" id="oid">SOS-…</span>
-      <p style="margin:10px 0 0;font-size:13px;color:var(--muted)"><span id="kind">অর্ডার</span> · <span id="method">bKash</span> · <span id="when"></span></p>
+      <p style="margin:10px 0 0;font-size:13px;color:var(--muted)"><span id="kind">অনুরোধ</span> · <span id="method">bKash</span> · <span id="when"></span></p>
     </div>
     <div class="rbody">
       <div id="items"></div>
       <div class="rtot"><span>মোট</span><span id="total" style="color:var(--green2)">৳0</span></div>
 
       <div class="notice green mt3" style="text-align:center">
-        <b>আরও একটি ধাপ:</b> ডেলিভারির জন্য হোয়াটসঅ্যাপে কনফার্ম করুন।
-        <p class="bn">শেষ ধাপ: হোয়াটসঅ্যাপে কনফার্ম করুন — ডেলিভারির সময় পেমেন্টের আগে জানানো হবে।</p>
+        <b>অনুরোধ এই ডিভাইসে সংরক্ষিত — এটি পেমেন্টের রসিদ নয়।</b> টাকা পাঠানোর আগে WhatsApp-এ প্ল্যান, অ্যাক্সেস পদ্ধতি, মোট দাম, ডেলিভারির সময়, সাপোর্ট কভারেজ ও পেমেন্ট গ্রহণের অ্যাকাউন্ট লিখিতভাবে নিশ্চিত করুন।
+        <p class="bn">শুধু অনুরোধ বা TxnID দেখানো মানে পেমেন্ট নিশ্চিত নয়। অনুমোদিত রিসিভিং অ্যাকাউন্টে টাকা আসা যাচাই করা হবে।</p>
       </div>
-      <a class="btn btn-wa" id="waBtn" style="width:100%;font-size:16px;margin-top:12px" href="#">💬 হোয়াটসঅ্যাপে কনফার্ম করুন →</a>
-      <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="copyReceipt()">📋 অর্ডার কপি করুন</button>
+      <a class="btn btn-wa" id="waBtn" style="width:100%;font-size:16px;margin-top:12px" href="#">💬 লিখিত নিশ্চিতকরণ নিন →</a>
+      <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="copyReceipt()">📋 অনুরোধের তথ্য কপি করুন</button>
 
       <ol class="steps">
-        <li>আমরা হোয়াটসঅ্যাপে আপনার <b>অর্ডার আইডি</b> ও পেমেন্ট নিশ্চিত করব।</li>
-        <li>সাপোর্ট মূল্য ও অ্যাক্সেস পদ্ধতি নিশ্চিত করার পর <b id="method2">bKash</b>-এ টাকা পাঠান।</li>
-        <li><b>অ্যাক্সেস ও সেটআপ</b> পান — সময় পেমেন্টের আগে লিখিতভাবে জানানো হয়।</li>
-        <li>কোনো সমস্যা? <b>অর্ডার-নির্দিষ্ট সাপোর্ট শর্ত</b> অনুযায়ী সাহায্য পাবেন।</li>
+        <li><b>আগে লিখিত নিশ্চিতকরণ নিন:</b> WhatsApp-এ এই অনুরোধের আইডি পাঠিয়ে প্ল্যান, অ্যাক্সেস, মোট দাম, সময়, কভারের মেয়াদ ও গ্রহণের অ্যাকাউন্ট মিলিয়ে নিন।</li>
+        <li><b>তারপর পেমেন্ট করুন:</b> লিখিত উত্তরের সঙ্গে মিললে <b id="method2">bKash</b> পেমেন্ট নির্দেশনা অনুসরণ করুন। TxnID বা স্ক্রিনশট একা পেমেন্ট যাচাইয়ের প্রমাণ নয়।</li>
+        <li><b>রিসিভিং অ্যাকাউন্টে যাচাই:</b> অনুমোদিত টিম আসল ইনকামিং টাকা যাচাই করার পরই পেমেন্টকে verified ধরে ডেলিভারি প্রক্রিয়া শুরু করতে পারবে।</li>
+        <li><b>ডেলিভারি ও সাপোর্ট:</b> লিখিতভাবে নিশ্চিত করা সময় ও শর্ত অনুসরণ হবে। দেখুন <a href="../warranty">সাপোর্ট শর্ত</a> ও <a href="../refund">রিফান্ড নীতি</a>।</li>
       </ol>
 
       <p style="text-align:center;font-size:12.5px;color:var(--muted);margin-top:16px">
-        💡 টিপ: এই রসিদের স্ক্রিনশট নিন। অ্যাকাউন্ট লাগবে না — অর্ডারটি এই ডিভাইসেই সেভ থাকে।
+        💡 এই অনুরোধের আইডি সংরক্ষণ করুন। তথ্য এই ডিভাইসে থাকে; এটি পেমেন্ট হয়েছে বা ব্যবসা সেটি যাচাই করেছে—এমন প্রমাণ নয়।
       </p>
       <div style="text-align:center;margin-top:14px">
         <a href="../all.html" style="color:var(--green2);font-weight:700">← কেনাকাটা চালিয়ে যান</a>
@@ -109,7 +109,7 @@
   </div>
 
   <div id="empty" style="display:none;max-width:640px;margin:22px auto;text-align:center">
-    <div class="notice">এই ডিভাইসে সাম্প্রতিক কোনো অর্ডার পাওয়া যায়নি। চেকআউটের পরই রসিদ এখানে দেখাবে।</div>
+    <div class="notice">এই ডিভাইসে কোনো সংরক্ষিত অনুরোধ নেই। চেকআউটের পর এখানে অনুরোধের সারাংশ দেখাবে।</div>
     <a class="btn btn-primary mt2" href="all.html">প্রোডাক্ট দেখুন →</a>
   </div>
 </div></main>
@@ -161,7 +161,7 @@ function fmtDate(iso){try{const d=new Date(iso);return d.toLocaleString('en-GB',
   const o=lastOrder();
   if(!o){document.getElementById('receipt').style.display='none';document.getElementById('empty').style.display='block';return;}
   document.getElementById('oid').textContent=o.oid;
-  document.getElementById('kind').textContent=o.kind==='pay-after-testing'?'pay-after-testing':'Order';
+  document.getElementById('kind').textContent='অনুরোধ';
   document.getElementById('method').textContent=o.method;
   document.getElementById('method2').textContent=o.method;
   document.getElementById('when').textContent=fmtDate(o.at);
@@ -171,9 +171,9 @@ function fmtDate(iso){try{const d=new Date(iso);return d.toLocaleString('en-GB',
     <b>৳${(i.bdt*i.qty).toLocaleString()}</b></div>`).join('');
   // WhatsApp confirm link (fallback if the auto-opened tab was blocked)
   const lines=(o.items||[]).map(i=>`• ${i.name} — ${i.plan} ×${i.qty} = ৳${i.bdt*i.qty}`).join('\n');
-  const msg=`🛒 ORDER ${o.oid}\n${lines}\nTOTAL: ৳${o.total}\nPayment: ${o.method}${o.txn?(' TxnID: '+o.txn):''}\n— sent from saveonsub store`;
+  const msg=`🛒 অর্ডার অনুরোধ ${o.oid}\n${lines}\nপ্রদর্শিত মোট (আগে নিশ্চিত করুন): ৳${o.total}\nপছন্দের পেমেন্ট মাধ্যম: ${o.method}${o.txn?(' TxnID দেওয়া হয়েছে: '+o.txn):''}\nপেমেন্ট স্ট্যাটাস: রিসিভিং অ্যাকাউন্ট যাচাই বাকি\nটাকা পাঠানোর আগে প্ল্যান, অ্যাক্সেস, দাম, সময়, কভারেজ ও গ্রহণের নম্বর লিখিতভাবে নিশ্চিত করুন।`;
   document.getElementById('waBtn').href='https://wa.me/8801305869242?text='+encodeURIComponent(msg);
-  window.copyReceipt=function(){copyText(msg,'Order details copied');};
+  window.copyReceipt=function(){copyText(msg,'অনুরোধের তথ্য কপি হয়েছে');};
 })();
 </script>
 </body>
