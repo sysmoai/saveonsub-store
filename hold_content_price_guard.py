@@ -27,6 +27,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from pricebook import load_policy
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
@@ -110,7 +111,7 @@ def _unmask(text: str, kept: list[str]) -> str:
 
 def unlock_book() -> dict[str, set[int]] | None:
     """Approved BDT amounts per product id, or None while the global HOLD applies."""
-    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    policy = load_policy(POLICY)
     if (policy.get("commercial_hold") or {}).get("status") != "SELECTIVE_UNLOCK":
         return None
     return {

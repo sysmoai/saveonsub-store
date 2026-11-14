@@ -38,6 +38,7 @@ import re
 import sys
 from pathlib import Path
 
+from pricebook import load_policy
 from product_rich_results import (FORBIDDEN, access_text, clean_name, load_catalog, price_text,
                                   priced, approved_on, money, unit_text)
 
@@ -484,7 +485,7 @@ def main(argv: list[str]) -> int:
     products = load_catalog(SITE)
     pr = priced(products)
     priced_ids = set(pr)
-    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    policy = load_policy(POLICY)
     refs = official_refs()
     errors: list[str] = []
     pages = 0

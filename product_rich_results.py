@@ -27,6 +27,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from pricebook import load_policy
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
@@ -321,7 +322,7 @@ def main(argv: list[str]) -> int:
     site = SITE
     if not (site / "assets" / "catalog.js").exists():
         raise SystemExit("[rich-results] _site missing; run the build first")
-    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    policy = load_policy(POLICY)
     products = priced(load_catalog(site))
     if "--check" not in argv:
         n = 0

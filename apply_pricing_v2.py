@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from pricebook import load_policy
 
 ROOT = Path(__file__).resolve().parent
 CATALOG_PATH = ROOT / "catalog.json"
@@ -16,7 +17,7 @@ POLICY_PATH = ROOT / "ops" / "PRICING-V2-2026-09-17.json"
 
 
 def load(path: Path):
-    return json.loads(path.read_text(encoding="utf-8"))
+    return load_policy(path) if path == POLICY_PATH else json.loads(path.read_text(encoding="utf-8"))
 
 
 # Pricebook durations are free text ("month", "year", "6months"). Normalise the
@@ -118,6 +119,8 @@ def main() -> int:
             product["commercial_note"] = "SaveOnSub local catalog price. Confirm current provider tier, access method and availability before payment."
             if rule.get("official_usd") is not None:
                 product["official_usd"] = rule["official_usd"]
+            if rule.get("held_plans"):
+                product["held_plans"] = rule["held_plans"]
             fixed += 1
             continue
 

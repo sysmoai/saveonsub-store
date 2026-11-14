@@ -11,6 +11,7 @@ import json
 import re
 from pathlib import Path
 from catalog_hold_gate import approved_plans, catalog_errors
+from pricebook import load_policy
 
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "catalog.json"
@@ -53,7 +54,7 @@ def scrub(value):
 
 def main() -> int:
     data = json.loads(SRC.read_text(encoding="utf-8"))
-    policy = json.loads((ROOT / 'ops' / 'PRICING-V2-2026-09-17.json').read_text(encoding='utf-8'))
+    policy = load_policy(ROOT / 'ops' / 'PRICING-V2-2026-09-17.json')
     errors = catalog_errors(data, policy)
     if errors:
         raise SystemExit('[public-catalog] HOLD violation: ' + '; '.join(errors[:10]))
@@ -102,6 +103,7 @@ def main() -> int:
             + ", ".join(remaining[:10])
         )
     for product in public["products"]:
+        product.pop("held_plans", None)  # held plans are not advertised in the browser catalog
         if unlock and product.get("plans") and product.get("id") in approved:
             product["sellability"] = "approved"
         else:

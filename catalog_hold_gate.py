@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from pricebook import load_policy
 
 ROOT = Path(__file__).resolve().parent
 POLICY = ROOT / "ops" / "PRICING-V2-2026-09-17.json"
@@ -138,7 +139,7 @@ def refuse_legacy_generator(name: str) -> None:
 
 def main() -> int:
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
-    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    policy = load_policy(POLICY)
     errors = catalog_errors(catalog, policy)
     if errors:
         for error in errors[:30]:
