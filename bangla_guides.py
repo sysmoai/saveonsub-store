@@ -54,6 +54,8 @@ def inline(s: str) -> str:
     s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
     s = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)",
                r'<a href="\2" target="_blank" rel="noopener nofollow">\1</a>', s)
+    # Internal guide links: ./slug only (no scheme, no path traversal).
+    s = re.sub(r"\[([^\]]+)\]\(\./([a-z0-9-]+)\)", r'<a href="\2">\1</a>', s)
     return s
 
 
@@ -116,6 +118,32 @@ def set_once(text: str, pattern: str, repl: str) -> str:
     return new
 
 
+def faq_pairs(body: str) -> list[tuple[str, str]]:
+    """Q/A pairs from a '## প্রশ্নোত্তর' section: each '### question' plus the text under it."""
+    m = re.search(r"^## প্রশ্নোত্তর\s*\n(.*?)(?=^## |\Z)", body, re.S | re.M)
+    if not m:
+        return []
+    pairs = []
+    for chunk in re.split(r"^### ", m.group(1), flags=re.M)[1:]:
+        q, _, a = chunk.partition("\n")
+        a = re.sub(r"\s+", " ", a).strip()
+        if q.strip() and a:
+            pairs.append((q.strip(), a))
+    return pairs
+
+
+def cta_block(meta: dict) -> str:
+    """WhatsApp qualification CTA: no price, no offer; message is pre-filled, the customer sends it."""
+    if not meta.get("cta"):
+        return ""
+    from urllib.parse import quote
+    href = "https://wa.me/8801305869242?text=" + quote(meta.get("cta_prefill", ""), safe="")
+    return (
+        '<div class="notice mt3" data-guide-cta="whatsapp"><p>' + esc(meta["cta"]) + "</p>"
+        f'<p><a class="btn" href="{esc(href)}" target="_blank" rel="noopener">WhatsApp-এ লিখুন</a></p></div>'
+    )
+
+
 def render(meta: dict, body: str, shell: str, products: dict) -> str:
     slug, title, desc = meta["slug"], meta["title"], meta["description"]
     url = f"{BASE}/blog/{slug}"
@@ -127,6 +155,7 @@ def render(meta: dict, body: str, shell: str, products: dict) -> str:
         f'<span class="pill">📖 বাংলা গাইড</span><h1 style="font-size:clamp(26px,4vw,38px)">{esc(title)}</h1>'
         f'<p class="sub mt2">{esc(desc)}</p>'
         f"{md_to_html(body)}"
+        f"{cta_block(meta)}"
         f'<h2 class="mt3" style="font-size:22px">সম্পর্কিত টুল</h2><ul>{links}</ul>'
         "</div></main>"
     )
@@ -149,12 +178,21 @@ def render(meta: dict, body: str, shell: str, products: dict) -> str:
     t = re.sub(r'<script type="application/ld\+json">.*?</script>', "", t, flags=re.S)
     ld = {
         "@context": "https://schema.org", "@type": "Article", "headline": title, "description": desc,
-        "inLanguage": "bn-BD", "datePublished": "2026-11-01", "dateModified": "2026-11-01",
+        "inLanguage": "bn-BD", "datePublished": meta.get("date", "2026-11-01"), "dateModified": meta.get("date", "2026-11-01"),
         "author": {"@type": "Organization", "name": "SAVEONSUB"},
         "publisher": {"@type": "Organization", "name": "SAVEONSUB", "url": BASE},
         "mainEntityOfPage": url,
     }
-    t = t.replace("</head>", f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n</head>', 1)
+    blocks = [ld]
+    faqs = faq_pairs(body)
+    if faqs:
+        blocks.append({
+            "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "bn-BD",
+            "mainEntity": [{"@type": "Question", "name": q,
+                            "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs],
+        })
+    ld_html = "".join(f'<script type="application/ld+json">{json.dumps(b, ensure_ascii=False)}</script>\n' for b in blocks)
+    t = t.replace("</head>", ld_html + "</head>", 1)
     t = set_once(t, r"<main\b[^>]*>.*?</main>", main.replace("\\", "\\\\"))
     return t
 
