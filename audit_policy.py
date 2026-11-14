@@ -19,6 +19,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from pricebook import load_policy
 
 ROOT = Path(__file__).resolve().parent
 POLICY_PATH = ROOT / "ops" / "PRICING-V2-2026-09-17.json"
@@ -98,7 +99,7 @@ def audit(catalog: dict, policy: dict) -> list[str]:
 
 def main() -> int:
     catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
-    policy = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
+    policy = load_policy(POLICY_PATH)
     issues = audit(catalog, policy)
     if issues:
         print(f"[policy-audit] FAIL — {len(issues)} issue(s):")

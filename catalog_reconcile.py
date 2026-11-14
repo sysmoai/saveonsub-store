@@ -30,6 +30,7 @@ from pathlib import Path
 
 from apply_pricing_v2 import DURATION_UNITS
 from site_config import SUPPORT_PHONE_DIGITS
+from pricebook import load_policy
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
@@ -212,7 +213,7 @@ def reconcile(policy: dict, catalog: dict, site: Path) -> tuple[list[str], list[
 
 
 def main(argv: list[str]) -> int:
-    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    policy = load_policy(POLICY)
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     errors, warnings, ledger = reconcile(policy, catalog, SITE)
     for w in warnings:

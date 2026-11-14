@@ -13,6 +13,7 @@ import json
 import re
 from pathlib import Path
 from urllib.parse import quote as urlquote
+from pricebook import load_policy
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
@@ -336,6 +337,12 @@ def product_main(product: dict, bn: bool) -> str:
     elif pid == "chatgpt-pro":
         caveat = "<div class=\"notice mt2\">Fixed-price sale is paused on this page until the currently available provider tier and checkout amount are reconfirmed.</div>"
 
+    held = product.get("held_plans") or []
+    if held:
+        # No plan label or price here: the notice must not re-advertise what is on hold.
+        caveat += ('<div class="notice mt2" data-held-plans="1">এই পণ্যের আগের শেয়ার্ড প্ল্যানগুলো এখন নতুন অর্ডার নিচ্ছে না। এখন কী পাওয়া যায় তা WhatsApp-এ জিজ্ঞেস করুন।</div>' if bn else
+                   '<div class="notice mt2" data-held-plans="1">The earlier shared plans for this product are not taking new orders right now. Ask on WhatsApp what is available.</div>')
+
     items = "".join(f"<li>{esc(x)}</li>" for x in how_items)
     # Price-on-request (HOLD) pages carry no checkout path at all.
     checkout_link = "" if request_price else f'<p><a class="btn btn-ghost btn-sm" href="{checkout}">{"চেকআউট দেখুন" if bn else "View checkout"}</a></p>'
@@ -562,7 +569,7 @@ def main() -> int:
     if not SITE.exists():
         raise SystemExit("[commercial-truth] _site is missing; stage_deploy.py must run first")
     catalog = read_json(CATALOG)
-    policy = read_json(POLICY)
+    policy = load_policy(POLICY)
     if catalog.get("meta", {}).get("commercial_revision") != policy.get("revision"):
         raise SystemExit("[commercial-truth] catalog projection revision mismatch")
 

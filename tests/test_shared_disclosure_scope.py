@@ -7,8 +7,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 import shared_copy_check  # noqa: E402
+from pricebook import load_policy  # noqa: E402
 
-POLICY = json.loads((ROOT / "ops" / "PRICING-V2-2026-09-17.json").read_text(encoding="utf-8"))
+POLICY = load_policy(ROOT / "ops" / "PRICING-V2-2026-09-17.json")  # effective: held plans removed
 
 
 class SharedPlanDisclosure(unittest.TestCase):

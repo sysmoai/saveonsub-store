@@ -17,6 +17,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from pricebook import load_policy
 
 ROOT = Path(__file__).resolve().parent
 POLICY = ROOT / "ops" / "PRICING-V2-2026-09-17.json"
@@ -34,7 +35,7 @@ SHARED_PROMO = re.compile(
 
 def ceo_approved_shared() -> set[tuple[str, str, int]]:
     """(product, label, bdt) shared plans the CEO approved under SELECTIVE_UNLOCK."""
-    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    policy = load_policy(POLICY)
     if (policy.get("commercial_hold") or {}).get("status") != "SELECTIVE_UNLOCK":
         return set()
     return {
@@ -51,7 +52,7 @@ def approved_shared_type_pids() -> set[str]:
     Only these must carry the shared-account disclosure; a personal plan whose
     label says "seat" (e.g. "Personal seat") is not a shared plan.
     """
-    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    policy = load_policy(POLICY)
     if (policy.get("commercial_hold") or {}).get("status") != "SELECTIVE_UNLOCK":
         return set()
     return {

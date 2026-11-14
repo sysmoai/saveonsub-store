@@ -19,6 +19,8 @@ class V(HTMLParser):
         else: self.errs.append(t)
 
 from stage_deploy import EXCLUDE_DIRS  # audit only what can be published
+from pathlib import Path
+from pricebook import load_policy
 
 pages = []
 for root, dirs, files in os.walk('.'):
@@ -130,8 +132,7 @@ if ':focus' not in _css: issues.append("style.css missing focus states (keyboard
 
 idx=open('index.html').read()
 from audit_home_prices import homepage_price_issues
-with open('ops/PRICING-V2-2026-09-17.json', encoding='utf-8') as policy_file:
-    pricing_policy = json.load(policy_file)
+pricing_policy = load_policy(Path('ops/PRICING-V2-2026-09-17.json'))
 issues.extend(homepage_price_issues(cat['products'], idx, pricing_policy))
 for f in ['blog/index.html','_headers','_redirects','build_all.sh','README.md','build_home.py','contact.html','track.html','students.html','offers.html','sitemap.html','bn.html',
           'sw.js','offline.html','assets/icon-192.png','assets/icon-512.png','order.html','bn/faq.html','bn/how-to-order.html']:
