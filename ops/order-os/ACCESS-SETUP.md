@@ -23,9 +23,16 @@ Architecture doc: project file `architecture/SAVEONSUB-BUSINESS-ARCHITECTURE-AND
 
 Copy the staff app's **Application Audience (AUD) tag** (= `POLICY_AUD`).
 
-The public order endpoints only answer browsers from `https://saveonsub.com` and
-`https://www.saveonsub.com` (see `functions/api/orders/_middleware.ts`), require
-Turnstile and never expose staff data.
+The public order endpoints accept browser origins `https://saveonsub.com` and
+`https://www.saveonsub.com` only (see `functions/api/orders/_middleware.ts`).
+**New order creation** requires Turnstile. **Tracking** uses a long bearer secret
+in `POST /api/orders/track` JSON (`{ "tracking_token": "<opaque token>" }`),
+NOT a `GET ?token=...` URL: URL query bearer tokens can appear in logs and
+browser history. A tracking response reveals only the order reference, status,
+total, currency and timestamps, not customer contact details. Rate-limit the
+public tracking endpoint at the edge; Turnstile is not a substitute for token
+checking and is not currently required on tracking reads. Staff-only paths
+must never be included in a public Access Bypass.
 
 ## 3. Staff Pages project settings (`saveonsub-staff-staging`)
 - Custom domain: `ops.saveonsub.com` (DNS record Save = CEO).
