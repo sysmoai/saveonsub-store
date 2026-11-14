@@ -1,6 +1,6 @@
 import { json, nowIso, readJson } from "../../../lib/order-os/http";
 import {
-  MAX_OPEN_TICKETS_PER_ORDER, NOT_FOUND_BODY, newAccessToken, newPublicTicketId, redactBody, sha256Hex,
+  MAX_OPEN_TICKETS_PER_ORDER, NOT_FOUND_BODY, isCategory, newAccessToken, newPublicTicketId, redactBody, sha256Hex,
 } from "../../../lib/order-os/support-tickets";
 
 interface Env { DB: D1Database; TURNSTILE_SECRET_KEY?: string }
@@ -32,6 +32,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const message = redactBody(body.message);
   const subject = redactBody(body.subject).slice(0, 120) || null;
   if (!message) return json({ error: "MESSAGE_REQUIRED" }, 400);
+  const category = body.category === undefined ? "subscription_support" : body.category;
+  if (!isCategory(category)) return json({ error: "INVALID_CATEGORY" }, 400);
 
   // Constant work for every outcome: hash first, then one lookup.
   const hash = await sha256Hex(tracking);
@@ -51,8 +53,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const ts = nowIso();
   try {
     await env.DB.batch([
-      env.DB.prepare(`INSERT INTO support_threads(id,order_id,status,priority,subject,public_ticket_id,access_token_hash,created_at,updated_at)
-        VALUES (?,?,'waiting_staff',2,?,?,?,?,?)`).bind(id, order.id, subject, publicId, await sha256Hex(token), ts, ts),
+      env.DB.prepare(`INSERT INTO support_threads(id,order_id,status,priority,subject,public_ticket_id,access_token_hash,category,created_at,updated_at)
+        VALUES (?,?,'waiting_staff',2,?,?,?,?,?,?)`).bind(id, order.id, subject, publicId, await sha256Hex(token), category, ts, ts),
       env.DB.prepare(`INSERT INTO support_events(thread_id,actor_type,actor_id,event_type,body_redacted,created_at)
         VALUES (?,'customer',NULL,'customer_message',?,?)`).bind(id, message, ts),
     ]);

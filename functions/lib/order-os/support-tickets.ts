@@ -49,3 +49,15 @@ export const canSeeAllTickets = (role: Role) => role === "owner" || role === "ma
 // One identical answer for every way a customer lookup can fail, so ticket ids
 // and tokens cannot be enumerated by comparing responses.
 export const NOT_FOUND_BODY = { error: "NOT_FOUND" };
+
+export const TICKET_CATEGORIES = ["subscription_support", "order_status", "renewal", "ai_training_inquiry", "other"] as const;
+export const VERIFICATION_METHODS = ["whatsapp_number_match", "payment_ref_last4", "order_details_match"] as const;
+export const isCategory = (v: unknown): v is (typeof TICKET_CATEGORIES)[number] =>
+  typeof v === "string" && (TICKET_CATEGORIES as readonly string[]).includes(v);
+export const isVerificationMethod = (v: unknown): v is (typeof VERIFICATION_METHODS)[number] =>
+  typeof v === "string" && (VERIFICATION_METHODS as readonly string[]).includes(v);
+
+// Staff-assisted intake and assignment. Fulfillment staff may read their own orders'
+// tickets but cannot verify ownership, create tickets or reassign.
+export const canCreateAssistedTicket = (role: Role) => role === "owner" || role === "manager" || role === "support";
+export const canAssignTickets = (role: Role) => role === "owner" || role === "manager";

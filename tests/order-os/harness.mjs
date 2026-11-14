@@ -33,6 +33,7 @@ export class FakeD1 {
     this.db.exec(readFileSync(resolve(root, "ops/order-os/schema.sql"), "utf8"));
     this.db.exec(readFileSync(resolve(root, "ops/order-os/lifecycle-finance-schema.sql"), "utf8"));
     this.db.exec(readFileSync(resolve(root, "ops/order-os/support-tickets-schema.sql"), "utf8"));
+    this.db.exec(readFileSync(resolve(root, "ops/order-os/support-tickets-intake-schema.sql"), "utf8"));
     this.reads = 0;
     this.beforeBatch = null; // simulate another writer slipping in between read and write
   }
