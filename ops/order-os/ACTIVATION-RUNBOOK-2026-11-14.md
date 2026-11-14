@@ -47,7 +47,7 @@ Never copy staging synthetic rows (e.g. SOS-SYNTH-0001) into production.
 - [ ] Staff URLs (including deployment previews) require login from unauthenticated contexts, as observed 14 Nov. Independently verify actual Cloudflare Access applications, two-user allow-list, MFA and path-scoped customer API policies; external probes alone cannot prove them.
 - [ ] Ripon's ACTUAL role confirmed by login test: `support` cannot claim fulfilment or verify payment; `fulfillment` sees only own-assigned tickets. Role changes need CEO review. Ripon's consent is unconfirmed.
 - [ ] Payment receiving configuration approved by the CEO from a verified source (see `CEO-CONFIRMED-PAYMENT-EVIDENCE-2026-11-11.md`). This repo never changes the number.
-- [ ] Edge rate limits (below) live and tested from outside.
+- [ ] Edge rate limits (below) live and tested on the **actual API hostname**, including observed 429. Cloudflare zone WAF rules on a proxied custom domain cannot be assumed to protect the `*.pages.dev` staging hostname; verify supported route/plan, without making DNS changes.
 - [ ] Exact staging deployment contains approved support-specific `x-ticket-token` CORS fix (#170; NOT in observed `a3df890`); allowlisted-origin and denied-origin real OPTIONS browser tests pass. Order API CORS remains narrower.
 - [ ] `assets/order-config.js` `apiBase` set only after all of the above; page stays noindex until the CEO decides otherwise.
 
