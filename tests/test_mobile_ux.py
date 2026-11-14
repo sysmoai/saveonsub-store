@@ -24,6 +24,16 @@ class MobileUx(unittest.TestCase):
         for needle in (".fab.fab-away", "width: 48px", ".tbl.tbl-stack", "min-height: 44px"):
             self.assertIn(needle, css)
 
+    def test_anchor_jumps_clear_the_sticky_nav(self):
+        """Tapping the sticky buy bar's 'Plans' (#plans) used to put the first plan card under the 63px nav."""
+        css = (SITE / "assets" / "style.css").read_text(encoding="utf-8")
+        m = re.search(r"html\s*\{[^}]*scroll-padding-top:\s*(\d+)px", css)
+        self.assertTrue(m, "html needs scroll-padding-top")
+        self.assertGreaterEqual(int(m.group(1)), 70)  # nav is 63px
+        page = (SITE / "p" / "chatgpt-plus.html").read_text(encoding="utf-8")
+        self.assertIn('href="#plans"', page)
+        self.assertIn('id="plans"', page)
+
     def test_app_js_hides_fab_on_scroll(self):
         js = (SITE / "assets" / "app.js").read_text(encoding="utf-8")
         self.assertIn("fab-away", js)

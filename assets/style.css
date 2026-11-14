@@ -44,6 +44,8 @@
 }
 html {
   scroll-behavior: smooth;
+  /* Sticky nav is 63px tall: in-page jumps (#plans, #faq...) must land below it, not under it. */
+  scroll-padding-top: 80px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
