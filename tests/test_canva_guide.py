@@ -53,6 +53,15 @@ class CanvaGuide(unittest.TestCase):
         self.assertIn("নিজের চেকআউটে", self.text)
         self.assertNotIn("Canva Teams-এ", self.text)
 
+    def test_first_party_sources_are_visible_links(self):
+        for url in ("https://www.canva.com/pricing/", "https://www.canva.com/help/upgrade-to-canva-pro-or-business/"):
+            self.assertIn(f'href="{url}"', self.main)
+        self.assertIn("সংখ্যা ও সুবিধা বদলাতে পারে", self.text)
+
+    def test_localized_taka_not_presented_as_a_rate_or_promise(self):
+        self.assertIn("ডলার-টাকা রেট ধরে নেওয়া ঠিক নয়", self.text)
+        self.assertIn("সবার জন্য নির্দিষ্ট দামের প্রতিশ্রুতি নয়", self.text)
+
     def test_links_resolve(self):
         for href in re.findall(r'href="(\.\./bn/p/[a-z0-9-]+|[a-z0-9-]+)"', self.main):
             self.assertTrue((PAGE.parent / (href + ".html")).resolve().exists(), href)
