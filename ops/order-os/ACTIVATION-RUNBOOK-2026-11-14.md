@@ -1,29 +1,46 @@
 # Order OS + Ticket System — activation runbook (NON-PRODUCTION until every gate below is ticked)
 
-Nothing here is deployed. No claim of production readiness is made. Each gate needs a
-recorded result from the real service, not a FakeD1 run.
+A Cloudflare deployment now exists in the SEPARATE staff **staging Pages project**.
+This does NOT mean that the customer-facing storefront, support API or private
+Order OS is production-ready. The deployment ID, observed protected UI, missing
+CORS fix and unverified gates are recorded in
+`ops/order-os/STAGING-EVIDENCE-2026-11-14.md`.
+Each acceptance gate still requires evidence from the real service, not FakeD1.
 
 ## 0. What exists in code (draft PRs)
 Order OS (main) · #163 tickets API on existing `support_threads`/`support_events` · this PR:
 assisted intake, assignment, escalation, categories, Bangla ticket page, staff ticket desk.
 Tests are synthetic FakeD1 only: they prove logic, RBAC and privacy rules, not Cloudflare behaviour.
 
-## 1. Migration order (one D1 database, apply once, in this order)
-1. `schema.sql`  2. `lifecycle-finance-schema.sql`  3. `support-tickets-schema.sql`  4. `support-tickets-intake-schema.sql`
-`ALTER TABLE ADD COLUMN` is not idempotent: never re-run 3 or 4. Staging first, on a NEW empty D1.
-Production D1 is a separate, new, empty database with the same four files and the real staff rows only.
+## 1. Complete fresh-staging D1 migration order (one database; check existing state first)
+For a **new empty full Business OS D1**, apply the six tracked files in order:
+1. `ops/order-os/schema.sql` (operators, orders, support base)
+2. `ops/commerce/001_catalog_content_foundation.sql` (catalog foundation)
+3. `ops/order-os/business-schema.sql` (private business records)
+4. `ops/order-os/lifecycle-finance-schema.sql` (order costs, refunds, periods)
+5. `ops/order-os/support-tickets-schema.sql` (ticket IDs, secrets, history rules)
+6. `ops/order-os/support-tickets-intake-schema.sql` (assisted intake, ownership verification, categories)
+
+This reconciles `ACCESS-SETUP.md`'s four base migrations with the two ticket
+extensions. **Do not assume the deployed staging D1 is empty.** Read its actual
+table/index/trigger inventory and migration history first; apply only missing
+approved migrations, after a backup. The ticket `ALTER TABLE ADD COLUMN`
+statements in steps 5 and 6 are **not idempotent**: never replay them. The
+synthetic six-file regression test is
+`tests/order-os/staging-migrations.test.mjs`; it is not a substitute for
+the real D1 inventory. Production D1 remains a separately authorized environment.
 **Rollback:** the migrations are additive. Before applying to any D1, take `wrangler d1 export`
 (Time Travel also works). To roll back, restore from that export/bookmark; do not hand-drop columns.
 Never copy staging synthetic rows (e.g. SOS-SYNTH-0001) into production.
 
 ## 2. Gates (tick with evidence: date, who, link/log; no secrets)
-- [ ] Staging D1 created, 4 migrations applied in order, `PRAGMA table_info(support_threads)` matches.
+- [ ] Read-only confirm which D1 the staging Pages project actually binds; inventory all six schema stages, verify support columns, integrity, foreign keys and trigger state; backup before any approved migration. Do not claim new empty D1.
 - [ ] Turnstile widget + `TURNSTILE_SECRET_KEY` set on the staging Pages project; real challenge passes, a failed token is refused.
-- [ ] Cloudflare Access on the staff project with **MFA required** and an explicit allow-list; two named staff only.
+- [ ] Staff URLs (including deployment previews) require login from unauthenticated contexts, as observed 14 Nov. Independently verify actual Cloudflare Access applications, two-user allow-list, MFA and path-scoped customer API policies; external probes alone cannot prove them.
 - [ ] Ripon's ACTUAL role confirmed by login test: `support` cannot claim fulfilment or verify payment; `fulfillment` sees only own-assigned tickets. Role changes need CEO review. Ripon's consent is unconfirmed.
 - [ ] Payment receiving configuration approved by the CEO from a verified source (see `CEO-CONFIRMED-PAYMENT-EVIDENCE-2026-11-11.md`). This repo never changes the number.
 - [ ] Edge rate limits (below) live and tested from outside.
-- [ ] CORS origin list = storefront origins only.
+- [ ] Exact staging deployment contains approved support-specific `x-ticket-token` CORS fix (#170; NOT in observed `a3df890`); allowlisted-origin and denied-origin real OPTIONS browser tests pass. Order API CORS remains narrower.
 - [ ] `assets/order-config.js` `apiBase` set only after all of the above; page stays noindex until the CEO decides otherwise.
 
 ## 3. Edge rate-limit rules to configure in Cloudflare (code cannot enforce these)
