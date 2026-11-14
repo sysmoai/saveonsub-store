@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Order Received — Your Receipt | SAVEONSUB</title>
-<meta name="description" content="Your order is recorded. Here is your receipt with order ID, items and total. Screenshot it, then confirm on WhatsApp.">
+<title>Order request saved — confirmation pending | SAVEONSUB</title>
+<meta name="description" content="Your order request is saved locally, not payment-verified. Confirm plan and payment details on WhatsApp before paying.">
 <link rel="canonical" href="https://saveonsub.com/order.html">
 <meta name="robots" content="noindex,follow">
 <meta name="theme-color" content="#102634">
-<meta property="og:title" content="Order Received — SAVEONSUB"><meta property="og:description" content="Your receipt with order ID, items and total.">
+<meta property="og:title" content="Order request saved — SAVEONSUB"><meta property="og:description" content="Your local order request summary; payment requires separate merchant verification.">
 <meta property="og:type" content="website"><meta property="og:url" content="https://saveonsub.com/order.html">
 <meta property="og:locale" content="en_BD">
 <link rel="alternate" hreflang="en-bd" href="https://saveonsub.com/order.html">
@@ -71,36 +71,36 @@
 </div></nav>
 
 <main id="main"><div class="wrap">
-  <div class="crumbs"><a href="index.html">Home</a> › <a href="checkout.html">Checkout</a> › Order received</div>
-  <h1 style="font-size:clamp(24px,4vw,34px);text-align:center">Order <span class="grad-text">received.</span></h1>
+  <div class="crumbs"><a href="index.html">Home</a> › <a href="checkout.html">Checkout</a> › Order request</div>
+  <h1 style="font-size:clamp(24px,4vw,34px);text-align:center">Order request <span class="grad-text">saved.</span></h1>
 
   <div class="receipt" id="receipt">
     <div class="rhead">
-      <div class="rtick">✅</div>
-      <p style="margin:0 0 8px;color:var(--muted);font-size:14px">Your order ID — keep it safe</p>
+      <div class="rtick">📝</div>
+      <p style="margin:0 0 8px;color:var(--muted);font-size:14px">Your request reference — keep it safe</p>
       <span class="oid" id="oid">SOS-…</span>
-      <p style="margin:10px 0 0;font-size:13px;color:var(--muted)"><span id="kind">Order</span> · <span id="method">bKash</span> · <span id="when"></span></p>
+      <p style="margin:10px 0 0;font-size:13px;color:var(--muted)"><span id="kind">Request</span> · <span id="method">bKash</span> · <span id="when"></span></p>
     </div>
     <div class="rbody">
       <div id="items"></div>
       <div class="rtot"><span>Total</span><span id="total" style="color:var(--green2)">৳0</span></div>
 
       <div class="notice green mt3" style="text-align:center">
-        <b>One more step:</b> confirm on WhatsApp so we can deliver.
-        <p class="bn">শেষ ধাপ: হোয়াটসঅ্যাপে কনফার্ম করুন — ৫–১৫ মিনিটে ডেলিভারি।</p>
+        <b>Request saved on this device — not a paid receipt.</b> Ask us on WhatsApp to confirm the exact plan, access model, total, delivery timing, support coverage and receiving-account details in writing before you pay.
+        <p class="bn">এটি পেমেন্টের রসিদ নয়। আগে WhatsApp-এ লিখিত নিশ্চিতকরণ নিন, তারপর টাকা দিন।</p>
       </div>
-      <a class="btn btn-wa" id="waBtn" style="width:100%;font-size:16px;margin-top:12px" href="#">💬 Confirm on WhatsApp →</a>
-      <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="copyReceipt()">📋 Copy order details</button>
+      <a class="btn btn-wa" id="waBtn" style="width:100%;font-size:16px;margin-top:12px" href="#">💬 Request written confirmation →</a>
+      <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="copyReceipt()">📋 Copy request details</button>
 
       <ol class="steps">
-        <li>We verify your payment and reply on WhatsApp to confirm your <b>order ID</b>.</li>
-        <li>Haven't sent payment yet? Send it via <b id="method2">bKash</b> after support confirms the price and access method.</li>
-        <li>Get your <b>access + setup</b> — usually in 5–15 minutes.</li>
-        <li>Something off? <b>1-hour replacement warranty</b> from minute one.</li>
+        <li><b>Request written confirmation first:</b> send this request ID on WhatsApp. Confirm the product, access type, total, delivery timing, covered period and receiving-account details.</li>
+        <li><b>Only then pay:</b> use the confirmed <b id="method2">bKash</b> instructions if they match the written reply. A transaction ID or screenshot alone is not verified payment.</li>
+        <li><b>Receiving-side verification:</b> our authorized team checks the actual incoming credit before marking an order paid or beginning fulfilment.</li>
+        <li><b>Delivery and support:</b> follow the timing and coverage confirmed for your order. See <a href="warranty.html">support terms</a> and <a href="refund.html">refund policy</a>.</li>
       </ol>
 
       <p style="text-align:center;font-size:12.5px;color:var(--muted);margin-top:16px">
-        💡 Tip: screenshot this receipt. No account needed — your order lives on this device.
+        💡 Save or copy this request for reference. It is stored on this device and does not establish a paid or merchant-verified order.
       </p>
       <div style="text-align:center;margin-top:14px">
         <a href="all.html" style="color:var(--green2);font-weight:700">← Continue shopping</a>
@@ -109,7 +109,7 @@
   </div>
 
   <div id="empty" style="display:none;max-width:640px;margin:22px auto;text-align:center">
-    <div class="notice">No recent order found on this device. Your receipt appears here right after checkout.</div>
+    <div class="notice">No request saved on this device. A pending request summary appears here after checkout.</div>
     <a class="btn btn-primary mt2" href="all.html">Browse products →</a>
   </div>
 </div></main>
@@ -164,7 +164,7 @@ function fmtDate(iso){try{const d=new Date(iso);return d.toLocaleString('en-GB',
   const o=lastOrder();
   if(!o){document.getElementById('receipt').style.display='none';document.getElementById('empty').style.display='block';return;}
   document.getElementById('oid').textContent=o.oid;
-  document.getElementById('kind').textContent='Order';
+  document.getElementById('kind').textContent='Request';
   document.getElementById('method').textContent=o.method;
   document.getElementById('method2').textContent=o.method;
   document.getElementById('when').textContent=fmtDate(o.at);
@@ -174,9 +174,9 @@ function fmtDate(iso){try{const d=new Date(iso);return d.toLocaleString('en-GB',
     <b>৳${(i.bdt*i.qty).toLocaleString()}</b></div>`).join('');
   // WhatsApp confirm link (fallback if the auto-opened tab was blocked)
   const lines=(o.items||[]).map(i=>`• ${i.name} — ${i.plan} ×${i.qty} = ৳${i.bdt*i.qty}`).join('\n');
-  const msg=`🛒 ORDER ${o.oid}\n${lines}\nTOTAL: ৳${o.total}\nPayment: ${o.method}${o.txn?(' TxnID: '+o.txn):''}\n— sent from saveonsub store`;
+  const msg=`🛒 ORDER REQUEST ${o.oid}\n${lines}\nDISPLAYED TOTAL (CONFIRM FIRST): ৳${o.total}\nPreferred method: ${o.method}${o.txn?(' TxnID supplied: '+o.txn):''}\nPayment status: awaiting receiving-side verification\nPlease confirm plan, access, amount, timing, coverage and receiving account in writing before payment.`;
   document.getElementById('waBtn').href='https://wa.me/8801305869242?text='+encodeURIComponent(msg);
-  window.copyReceipt=function(){copyText(msg,'Order details copied');};
+  window.copyReceipt=function(){copyText(msg,'Request details copied');};
 })();
 </script>
 </body>
