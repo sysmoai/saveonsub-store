@@ -570,7 +570,7 @@
           "label": "Team seat (your login)",
           "bdt": 299,
           "duration": "1 month",
-          "access_type": "shared"
+          "access_type": "team"
         },
         {
           "plan_id": "personal-pro-1-year",

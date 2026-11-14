@@ -141,6 +141,7 @@ jobs:
           grep -Eq 'favicon-32\.png\?v=[0-9a-f]{10}" type="image/png"' _site/p/chatgpt-plus.html
           ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml || exit 1  # bash ignores set -e for '!' commands
           python audit_commercial_truth_v2.py
+          python -m unittest -v tests.test_canva_team_seat_label
 
           if grep -R -q '<meta name="keywords"' _site --include='*.html'; then
             echo "::error::Generated meta-keywords remain in staged HTML."
