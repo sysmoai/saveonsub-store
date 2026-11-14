@@ -52,6 +52,7 @@ STEPS = [
     "mobile_policy_tables.py",
     "support_terms_v1.py",
     "coverage_disclosure.py",
+    "order_sequence_truth.py",
     "audit_commercial_truth_v2.py",
     "exec003_claims_guard.py",
     "shared_copy_check.py",
