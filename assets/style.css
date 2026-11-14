@@ -1277,6 +1277,9 @@ td a:not(.btn) {
   main .grid.g4 .pcard h3 { font-size: 15px; }
   main .grid.g4 .pcard .price { font-size: 17px; }
   main .grid.g4 .pcard .tos { font-size: 9.5px; letter-spacing: .2px; }
+  /* bundle cards sit in the same 2-column grid: let them shrink instead of widening the page at 320px */
+  main .grid.g4 > .bcard { min-width: 0; padding: 14px; overflow-wrap: anywhere; }
+  main .grid.g4 .bcard h3 { font-size: 15px; }
 }
 
 /* ==== motion v2 2026-11-12: grid-precise motion grammar ====
