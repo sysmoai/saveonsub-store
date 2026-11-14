@@ -125,9 +125,9 @@ jobs:
           ! grep -q '৳4,290' _site/p/chatgpt-business.html || exit 1  # bash ignores set -e for '!' commands
           grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
           grep -q 'SELECTIVE_UNLOCK' ops/PRICING-V2-2026-09-17.json
-          grep -q '৳499' _site/p/chatgpt-plus.html  # CEO 2026-11-12: shared plans restored (reverses #130)
-          grep -q '৳999' _site/p/chatgpt-plus.html
-          grep -q 'Shared account (multiple users)' _site/p/chatgpt-plus.html
+          ! grep -q '৳499' _site/p/chatgpt-plus.html || exit 1  # held shared tier (ops/HELD-PLANS-2026-11-14.json)
+          ! grep -q '৳999' _site/p/chatgpt-plus.html || exit 1
+          grep -q 'data-held-plans="1"' _site/p/chatgpt-plus.html
           grep -q '৳500' _site/p/google-ai-pro.html
           grep -q '"bdt"' _site/assets/catalog.js
           python catalog_hold_gate.py
