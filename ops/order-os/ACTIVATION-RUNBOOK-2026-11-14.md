@@ -10,7 +10,13 @@ Each acceptance gate still requires evidence from the real service, not FakeD1.
 ## 0. What exists in code (draft PRs)
 Order OS (main) · #163 tickets API on existing `support_threads`/`support_events` · this PR:
 assisted intake, assignment, escalation, categories, Bangla ticket page, staff ticket desk.
-Tests are synthetic FakeD1 only: they prove logic, RBAC and privacy rules, not Cloudflare behaviour.
+GitHub CI tests use synthetic FakeD1 and confirm logic/RBAC invariants only. Separately,
+the CEO reports a live Cloudflare staging synthetic ticket lifecycle pass under the
+owner Access login (HTTP 400/404/200/409, reason-required escalation, code rotation,
+unknown assignee denial, closed-ticket immutability); raw redacted HTTP logs and
+deployment source-SHA parity were not supplied for independent sign-off.
+See `STAGING-EVIDENCE-2026-11-14.md`. The CEO's authenticated test does NOT prove
+public customer API availability, Ripon login role denial, Turnstile or rate limits.
 
 ## 1. Complete fresh-staging D1 migration order (one database; check existing state first)
 For a **new empty full Business OS D1**, apply the six tracked files in order:
@@ -34,6 +40,8 @@ the real D1 inventory. Production D1 remains a separately authorized environment
 Never copy staging synthetic rows (e.g. SOS-SYNTH-0001) into production.
 
 ## 2. Gates (tick with evidence: date, who, link/log; no secrets)
+- [x] **CEO-REPORTED (not independently reproduced):** real Cloudflare staging / owner-Access synthetic ticket lifecycle gave 400 wrong input, 404 unknown/missing/wrong ticket code with no known write, 200 valid status, escalation reason check, code rotation, 404 unknown assignee, 409 immutable closed ticket. Closed synthetic test ticket retained in staging D1; no customer data.
+- [ ] Attach sanitized HTTP status, D1 audit/row-count proof and exact deployed commit/deployment ID for the above. Keep raw access codes, Access JWTs and secrets out of reports.
 - [ ] Read-only confirm which D1 the staging Pages project actually binds; inventory all six schema stages, verify support columns, integrity, foreign keys and trigger state; backup before any approved migration. Do not claim new empty D1.
 - [ ] Turnstile widget + `TURNSTILE_SECRET_KEY` set on the staging Pages project; real challenge passes, a failed token is refused.
 - [ ] Staff URLs (including deployment previews) require login from unauthenticated contexts, as observed 14 Nov. Independently verify actual Cloudflare Access applications, two-user allow-list, MFA and path-scoped customer API policies; external probes alone cannot prove them.
