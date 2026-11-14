@@ -24,6 +24,15 @@ class CanvaTeamSeatLabel(unittest.TestCase):
         html = PAGE.read_text(encoding="utf-8")
         self.assertNotIn("Shared account (multiple users)", html)
         self.assertIn("Team / Workspace access", html)
+        self.assertIn("you receive a Canva Team invitation to your own email.", html)
+        self.assertEqual(html.count("data-canva-team-delivery"), 1)
+
+    @unittest.skipUnless(PAGE.exists(), "run python build_site.py first")
+    def test_delivery_note_makes_no_other_claim(self):
+        import re
+        html = PAGE.read_text(encoding="utf-8")
+        note = re.search(r'data-canva-team-delivery="1">(.*?)</div>', html, re.S).group(1)
+        self.assertFalse(re.search(r"[0-9৳]|minute|hour|instant|guarantee|always", note, re.I), note)
 
 
 if __name__ == "__main__":

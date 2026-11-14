@@ -326,6 +326,10 @@ def product_main(product: dict, bn: bool) -> str:
                   "<div class=\"notice mt2\">Google AI Pro is Price on Request. This page has no published price and no checkout.</div>")
     elif request_price:
         caveat = ""
+    elif pid == "canva-pro":
+        # CEO 2026-11-14: the Team seat is delivered as a Canva Team invitation to the buyer's own email. Nothing else is claimed.
+        caveat = ("<div class=\"notice mt2\" data-canva-team-delivery=\"1\">Team seat: আপনি আপনার নিজের ইমেইলে Canva Team আমন্ত্রণ পান।</div>" if bn else
+                  "<div class=\"notice mt2\" data-canva-team-delivery=\"1\">Team seat: you receive a Canva Team invitation to your own email.</div>")
     elif pid == "chatgpt-business":
         caveat = "<div class=\"notice mt2\">ChatGPT Business is a workspace product and provider minimum-seat/billing rules can apply. Confirm the current seat requirement and workspace role before payment.</div>"
     elif pid in {"chatgpt-go", "chatgpt-plus", "claude-pro"} and not any(
