@@ -245,20 +245,28 @@ def benefits_box(p: dict, plans: list[dict], bn: bool) -> str:
     if bn:
         bdt = bdt.translate(str.maketrans("0123456789", "০১২৩৪৫৬৭৮৯"))
         h = f"{esc(name)}-এ কী কী পাবেন"
-        lead = (f"{bdt}-এ {esc(name)} চালু হয় <b>আপনার নিজের Gmail অ্যাকাউন্টে</b>, তাই প্রতিটি ফিচার আপনার নিজের "
-                "Gemini অ্যাপ ও Google অ্যাপে আসে। Google-এর প্ল্যানে যা যা আছে:")
+        lead = ("<b>১. Google-এর অফিসিয়াল প্ল্যানে যা আছে</b> (নিচের তালিকা Google-এর নিজস্ব পেজ অনুযায়ী, "
+                "এটি আপনার অর্ডারে চালু হওয়ার প্রতিশ্রুতি নয়):")
         foot = (f"Google-এর অফিসিয়াল প্ল্যান পেজ থেকে {b['checked']} তারিখে মিলিয়ে দেখা। ফিচার, লিমিট ও দেশভেদে প্রাপ্যতা "
                 f"Google বদলাতে পারে, আর কিছু ফিচার শুধু ১৮+ বয়সীদের জন্য। {src}Google-এ বর্তমান তালিকা দেখুন ↗</a>")
     else:
         h = f"What you get with {esc(name)}"
-        lead = (f"At {bdt}, {esc(name)} is activated on <b>your own Gmail account</b>, so every feature shows up in your own "
-                "Gemini app and Google apps. Google's plan includes:")
+        lead = ("<b>1. What Google's own plan includes</b> (the list below follows Google's own page; it is not a promise "
+                "that each item is active on your order):")
         foot = (f"Checked against Google's official plan page on {b['checked']}. Google can change features, limits and "
                 f"country availability, and some features are 18+ only. {src}See Google's current list ↗</a>")
     rows = b["bn" if bn else "en"]
     lis = "".join(f"<li>{r}</li>" for r in rows)
+    if bn:
+        offer = (f"<p><b>২. {bdt}-এর Personal অফারে যা নিশ্চিত</b></p><ul><li>অফারটি <b>আপনার নিজের Gmail অ্যাকাউন্টের</b> জন্য।</li>"
+                 "<li>কোন সুবিধা কতটা চালু হবে, তা এখনো প্রতিটি অর্ডারের জন্য আলাদা করে যাচাই করা হয়। দেশ ও অ্যাকাউন্ট ভেদে তা আলাদা হতে পারে।</li>"
+                 "<li>তাই পেমেন্টের আগে WhatsApp-এ লিখিতভাবে নিশ্চিত করুন। উপরের পুরো তালিকা আপনার অফারে আছে, এমন ধরে নেবেন না।</li></ul>")
+    else:
+        offer = (f"<p><b>2. What is confirmed for the {bdt} Personal offer</b></p><ul><li>The offer is for <b>your own Gmail account</b>.</li>"
+                 "<li>Which benefits are active, and how much, is checked for each order. It can differ by country and account.</li>"
+                 "<li>Confirm it in writing on WhatsApp before you pay. Do not assume the whole list above applies to your offer.</li></ul>")
     return (f'<section data-sos="{MARK}" class="valuebox benefits mt3"><h2>{h}</h2><p>{lead}</p>'
-            f'<ul>{lis}</ul><p class="bfoot">{foot}</p></section>')
+            f'<ul>{lis}</ul><p class="bfoot">{foot}</p>{offer}</section>')
 
 
 
