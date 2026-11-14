@@ -122,4 +122,5 @@ class ProviderSharingTerms(unittest.TestCase):
         # Business is governed by the Services Agreement, not the consumer Terms of Use
         if "chatgpt-business" in self.cfg:
             self.assertIn("services-agreement", self.cfg["chatgpt-business"]["source_url"])
-        self.assertNotIn("chatgpt-business", {k for k, v in self.cfg.items() if "terms-of-use" in v.get("source_url", "")})
+        consumer = {k for k, v in self.cfg.items() if not k.startswith("_") and "terms-of-use" in v["source_url"]}
+        self.assertNotIn("chatgpt-business", consumer)
