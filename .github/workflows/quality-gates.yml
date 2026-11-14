@@ -68,6 +68,9 @@ jobs:
       - name: Build exact canonical candidate
         run: python build_site.py
 
+      - name: Verify order receipt is a pending request in both languages
+        run: python -m unittest -v tests.test_receipt_sequence_truth
+
       - name: Product SEO staged gate (post-build, same _site artifact)
         run: |
           set -euo pipefail
