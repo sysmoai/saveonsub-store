@@ -8,6 +8,7 @@ or merchandising claims after the governed main content has been projected.
 """
 import json
 from pathlib import Path
+from pricebook import load_policy
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "_site"
@@ -31,7 +32,7 @@ TARGETS = {
 
 def approved_tokens() -> set[str]:
     """Prices/labels the CEO re-approved under SELECTIVE_UNLOCK; never stripped."""
-    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    policy = load_policy(POLICY)
     if (policy.get("commercial_hold") or {}).get("status") != "SELECTIVE_UNLOCK":
         return set()
     out: set[str] = set()

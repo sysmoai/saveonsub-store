@@ -38,6 +38,7 @@ import re
 import sys
 from pathlib import Path
 
+from pricebook import load_policy
 from product_rich_results import (FORBIDDEN, access_text, clean_name, load_catalog, price_text,
                                   priced, approved_on, money, unit_text)
 
@@ -245,20 +246,28 @@ def benefits_box(p: dict, plans: list[dict], bn: bool) -> str:
     if bn:
         bdt = bdt.translate(str.maketrans("0123456789", "০১২৩৪৫৬৭৮৯"))
         h = f"{esc(name)}-এ কী কী পাবেন"
-        lead = (f"{bdt}-এ {esc(name)} চালু হয় <b>আপনার নিজের Gmail অ্যাকাউন্টে</b>, তাই প্রতিটি ফিচার আপনার নিজের "
-                "Gemini অ্যাপ ও Google অ্যাপে আসে। Google-এর প্ল্যানে যা যা আছে:")
+        lead = ("<b>১. Google-এর অফিসিয়াল প্ল্যানে যা আছে</b> (নিচের তালিকা Google-এর নিজস্ব পেজ অনুযায়ী, "
+                "এটি আপনার অর্ডারে চালু হওয়ার প্রতিশ্রুতি নয়):")
         foot = (f"Google-এর অফিসিয়াল প্ল্যান পেজ থেকে {b['checked']} তারিখে মিলিয়ে দেখা। ফিচার, লিমিট ও দেশভেদে প্রাপ্যতা "
                 f"Google বদলাতে পারে, আর কিছু ফিচার শুধু ১৮+ বয়সীদের জন্য। {src}Google-এ বর্তমান তালিকা দেখুন ↗</a>")
     else:
         h = f"What you get with {esc(name)}"
-        lead = (f"At {bdt}, {esc(name)} is activated on <b>your own Gmail account</b>, so every feature shows up in your own "
-                "Gemini app and Google apps. Google's plan includes:")
+        lead = ("<b>1. What Google's own plan includes</b> (the list below follows Google's own page; it is not a promise "
+                "that each item is active on your order):")
         foot = (f"Checked against Google's official plan page on {b['checked']}. Google can change features, limits and "
                 f"country availability, and some features are 18+ only. {src}See Google's current list ↗</a>")
     rows = b["bn" if bn else "en"]
     lis = "".join(f"<li>{r}</li>" for r in rows)
+    if bn:
+        offer = (f"<p><b>২. {bdt}-এর Personal অফারে যা নিশ্চিত</b></p><ul><li>অফারটি <b>আপনার নিজের Gmail অ্যাকাউন্টের</b> জন্য।</li>"
+                 "<li>কোন সুবিধা কতটা চালু হবে, তা এখনো প্রতিটি অর্ডারের জন্য আলাদা করে যাচাই করা হয়। দেশ ও অ্যাকাউন্ট ভেদে তা আলাদা হতে পারে।</li>"
+                 "<li>তাই পেমেন্টের আগে WhatsApp-এ লিখিতভাবে নিশ্চিত করুন। উপরের পুরো তালিকা আপনার অফারে আছে, এমন ধরে নেবেন না।</li></ul>")
+    else:
+        offer = (f"<p><b>2. What is confirmed for the {bdt} Personal offer</b></p><ul><li>The offer is for <b>your own Gmail account</b>.</li>"
+                 "<li>Which benefits are active, and how much, is checked for each order. It can differ by country and account.</li>"
+                 "<li>Confirm it in writing on WhatsApp before you pay. Do not assume the whole list above applies to your offer.</li></ul>")
     return (f'<section data-sos="{MARK}" class="valuebox benefits mt3"><h2>{h}</h2><p>{lead}</p>'
-            f'<ul>{lis}</ul><p class="bfoot">{foot}</p></section>')
+            f'<ul>{lis}</ul><p class="bfoot">{foot}</p>{offer}</section>')
 
 
 
@@ -283,13 +292,13 @@ def order_steps(bn: bool) -> str:
         steps = [("প্ল্যান বাছুন", "উপরের তালিকা থেকে অ্যাক্সেস টাইপ দেখে প্ল্যান বেছে নিন।"),
                  ("WhatsApp-এ নিশ্চিত করুন", "আমরা প্ল্যান, অ্যাক্সেস পদ্ধতি ও সময় লিখিতভাবে জানাই।"),
                  ("টাকায় পেমেন্ট", "বিকাশ, নগদ বা রকেটে পাঠিয়ে ট্রানজ্যাকশন আইডি দিন।"),
-                 ("অ্যাক্টিভেশন ও সাপোর্ট", "অ্যাক্টিভেশনের পর WhatsApp-এ মানুষের সাপোর্ট পাবেন।")]
+                 ("আমরা যাচাই করে অ্যাক্টিভেট করি", "অনুমোদিত রিসিভিং অ্যাকাউন্টে আসল ইনকামিং পেমেন্ট যাচাইয়ের পর অ্যাক্টিভেশন শুরু হয়, তারপর WhatsApp-এ মানুষের সাপোর্ট পাবেন।")]
         h2 = "কীভাবে অর্ডার হয়"
     else:
         steps = [("Pick a plan", "Choose a plan above; each one shows its access type."),
                  ("Confirm on WhatsApp", "We confirm the plan, access method and timing in writing."),
                  ("Pay in taka", "Send by bKash, Nagad or Rocket and share the transaction ID."),
-                 ("Activation and support", "After activation, a real person supports you on WhatsApp.")]
+                 ("We verify, then activate", "Activation starts after we verify the actual incoming payment in the authorized receiving account. After that, a real person supports you on WhatsApp.")]
         h2 = "How ordering works"
     lis = "".join(f"<li><b>{esc(a)}</b>{esc(b)}</li>" for a, b in steps)
     return f'<section data-sos="{MARK}" class="mt3"><h2 style="font-size:22px">{h2}</h2><ol class="osteps">{lis}</ol></section>'
@@ -476,7 +485,7 @@ def main(argv: list[str]) -> int:
     products = load_catalog(SITE)
     pr = priced(products)
     priced_ids = set(pr)
-    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    policy = load_policy(POLICY)
     refs = official_refs()
     errors: list[str] = []
     pages = 0

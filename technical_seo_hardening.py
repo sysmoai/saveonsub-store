@@ -16,6 +16,7 @@ import json
 from pathlib import Path
 import re
 import sys
+from pricebook import load_policy
 
 SITE = Path("_site")
 MIGRATION_LASTMOD = "2026-09-09"
@@ -96,7 +97,7 @@ s = rewrite_same_origin_absolute(sitemap.read_text(encoding="utf-8", errors="str
 s = re.sub(r"<lastmod>\d{4}-\d{2}-\d{2}</lastmod>", f"<lastmod>{MIGRATION_LASTMOD}</lastmod>", s)
 # Product pages whose CEO-approved prices are published changed on the pricebook
 # approval date; give crawlers that real date instead of the migration date.
-policy = json.loads(Path("ops/PRICING-V2-2026-09-17.json").read_text(encoding="utf-8"))
+policy = load_policy(Path("ops/PRICING-V2-2026-09-17.json"))
 priced_lastmod = str(policy.get("approved_at", ""))
 if (policy.get("commercial_hold") or {}).get("status") == "SELECTIVE_UNLOCK" and re.fullmatch(r"\d{4}-\d{2}-\d{2}", priced_lastmod):
     for pid, rule in (policy.get("approved_products") or {}).items():

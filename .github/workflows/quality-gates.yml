@@ -78,6 +78,13 @@ jobs:
           python conversion_upgrade.py --check
           python -m unittest -v tests.test_product_seo 2>&1 | tee /tmp/product_seo_tests.log
           ! grep -q "skipped" /tmp/product_seo_tests.log || exit 1  # bash ignores set -e for '!' commands
+          python -m unittest -v tests.test_support_terms_v1 2>&1 | tee /tmp/support_terms_tests.log
+          ! grep -q "skipped" /tmp/support_terms_tests.log || exit 1  # bash ignores set -e for '!' commands
+          python -m unittest -v tests.test_mobile_ux
+          python -m unittest -v tests.test_canva_guide 2>&1 | tee /tmp/canva_guide_tests.log
+          ! grep -q "skipped" /tmp/canva_guide_tests.log || exit 1  # bash ignores set -e for '!' commands
+          python -m unittest -v tests.test_gemini_notebook_guide 2>&1 | tee /tmp/gemini_guide_tests.log
+          ! grep -q "skipped" /tmp/gemini_guide_tests.log || exit 1  # bash ignores set -e for '!' commands
 
       - name: Brand kit pinned files match staged output
         run: python -m unittest -v tests.test_brand_kit_integration
@@ -94,6 +101,16 @@ jobs:
           python blog_copy_polish.py --check
           python buyer_intent_polish.py --check
           python cross_unit_quarantine.py --check
+          python fab_polish.py --check
+          python mobile_policy_tables.py --check
+          python coverage_disclosure.py --check
+          python -m unittest -v tests.test_coverage_disclosure
+          python order_sequence_truth.py --check
+          python -m unittest -v tests.test_order_sequence_truth
+          python checkout_sequence_truth.py --check
+          python -m unittest -v tests.test_checkout_sequence_truth
+          python bn_buyer_copy.py --check
+          python -m unittest -v tests.test_bn_buyer_copy
           python release_truth_audit.py
 
       - name: Verify governed pricing-v2 release boundary
@@ -112,9 +129,9 @@ jobs:
           ! grep -q '৳4,290' _site/p/chatgpt-business.html || exit 1  # bash ignores set -e for '!' commands
           grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
           grep -q 'SELECTIVE_UNLOCK' ops/PRICING-V2-2026-09-17.json
-          grep -q '৳499' _site/p/chatgpt-plus.html  # CEO 2026-11-12: shared plans restored (reverses #130)
-          grep -q '৳999' _site/p/chatgpt-plus.html
-          grep -q 'Shared account (multiple users)' _site/p/chatgpt-plus.html
+          ! grep -q '৳499' _site/p/chatgpt-plus.html || exit 1  # held shared tier (ops/HELD-PLANS-2026-11-14.json)
+          ! grep -q '৳999' _site/p/chatgpt-plus.html || exit 1
+          grep -q 'data-held-plans="1"' _site/p/chatgpt-plus.html
           grep -q '৳500' _site/p/google-ai-pro.html
           grep -q '"bdt"' _site/assets/catalog.js
           python catalog_hold_gate.py
@@ -126,6 +143,7 @@ jobs:
           grep -Eq 'favicon-32\.png\?v=[0-9a-f]{10}" type="image/png"' _site/p/chatgpt-plus.html
           ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml || exit 1  # bash ignores set -e for '!' commands
           python audit_commercial_truth_v2.py
+          python -m unittest -v tests.test_canva_team_seat_label
 
           if grep -R -q '<meta name="keywords"' _site --include='*.html'; then
             echo "::error::Generated meta-keywords remain in staged HTML."
