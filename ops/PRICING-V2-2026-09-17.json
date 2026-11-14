@@ -34,7 +34,7 @@
         {
           "plan_id": "personal-your-email-1-month",
           "label": "Personal (your email)",
-          "bdt": 450,
+          "bdt": 1290,
           "duration": "1 month",
           "access_type": "personal"
         }
@@ -85,7 +85,7 @@
         {
           "plan_id": "premium-shared-2-3-1-month",
           "label": "Premium Shared (2–3)",
-          "bdt": 1299,
+          "bdt": 1499,
           "duration": "1 month",
           "access_type": "shared"
         },
