@@ -34,6 +34,14 @@ class MobileUx(unittest.TestCase):
         self.assertIn('href="#plans"', page)
         self.assertIn('id="plans"', page)
 
+    def test_bundle_cards_can_shrink_in_two_column_phone_grid(self):
+        """At 320px the /all bundle cards (price-on-request) widened the page to 326px (horizontal scroll)."""
+        css = (SITE / "assets" / "style.css").read_text(encoding="utf-8")
+        m = re.search(r"@media \(max-width: 760px\) \{\s*main \.grid\.g4 \{[^@]*?main \.grid\.g4 > \.bcard \{([^}]*)\}", css, re.S)
+        self.assertTrue(m, "phone rule for .grid.g4 > .bcard missing")
+        self.assertIn("min-width: 0", m.group(1))
+        self.assertIn("overflow-wrap", m.group(1))
+
     def test_app_js_hides_fab_on_scroll(self):
         js = (SITE / "assets" / "app.js").read_text(encoding="utf-8")
         self.assertIn("fab-away", js)
