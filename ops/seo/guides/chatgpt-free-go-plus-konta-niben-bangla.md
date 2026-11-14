@@ -4,7 +4,7 @@ lang: bn
 title: ChatGPT Free, Go নাকি Plus — বাংলাদেশে কোনটা আপনার জন্য?
 description: কার জন্য ফ্রি-ই যথেষ্ট, কখন Go বা Plus লাগে। ছাত্র, ফ্রিল্যান্সার, ডেভেলপার ও ছোট ব্যবসার বাস্তব পরিস্থিতি, ১৫ মিনিটের নিজে-পরীক্ষা আর কেনার আগের চারটি প্রশ্ন।
 related: [chatgpt-plus, chatgpt-go, google-ai-pro]
-source: Written by Claude for SaveOnSub 2026-11-14 from OpenAI's public plan pages and the repository's provider-fact file verified 2026-11-07 (Plus $20 per OpenAI help article; Go $8 from OpenAI launch post and secondary sources, not re-fetched from chatgpt.com). Readers are told to confirm limits and price in their own checkout.
+source: First-party evidence checked 2026-11-14 against OpenAI's Go launch announcement (US reference $8/month; localized pricing varies), Plus Help Center ($20/month), account-sharing policy, and multicurrency-billing guidance. Bangladesh checkout price and current plan entitlements must be independently confirmed before purchase.
 ---
 
 # ChatGPT Free, Go নাকি Plus — বাংলাদেশে কোনটা আপনার জন্য?
@@ -22,8 +22,8 @@ source: Written by Claude for SaveOnSub 2026-11-14 from OpenAI's public plan pag
 ## তিন প্ল্যান এক নজরে
 
 - **Free:** ChatGPT চেষ্টা করে দেখার জন্য। সীমা বেশি চাপ পড়লে কাজ থামিয়ে দিতে পারে।
-- **Go:** OpenAI-র প্রকাশিত রেফারেন্স মূল্য মাসে ৮ ডলার। কিছু দেশে স্থানীয় মূল্য থাকতে পারে, তাই আপনার চেকআউটে যে অঙ্ক দেখাবে সেটাই চূড়ান্ত। Go-তে ঠিক কতটা সুবিধা আছে তা OpenAI-র প্ল্যান পাতায় দেখে নিন।
-- **Plus:** মাসে ২০ ডলার রেফারেন্স মূল্য। OpenAI-র বর্ণনায় এতে উন্নত রিজনিং, ডিপ রিসার্চ, কোডিং টুল, মেমরি ও শিডিউল্ড টাস্কের বাড়তি অ্যাক্সেস আছে, সীমা সাপেক্ষে এবং বদলাতে পারে।
+- **Go:** OpenAI-র ১৬ জানুয়ারি ২০২৬ ঘোষণায় যুক্তরাষ্ট্রে Go-এর মূল্য মাসে ৮ মার্কিন ডলার বলা হয়েছে। এটি বাংলাদেশের নির্দিষ্ট চেকআউট মূল্য নয়। দেশভেদে স্থানীয় মূল্য ভিন্ন হতে পারে, তাই আপনার চেকআউটে যে অঙ্ক দেখাবে সেটিই যাচাই করুন। Go-তে ঠিক কতটা সুবিধা আছে তা OpenAI-র প্ল্যান পাতায় দেখে নিন।
+- **Plus:** OpenAI-র প্রকাশিত মাসিক মূল্য ২০ মার্কিন ডলার। উন্নত রিজনিং ও ফাইল/রিসার্চের মতো কাজে প্ল্যানটি উপযোগী হতে পারে; নির্দিষ্ট মডেল, টুল ও ব্যবহারের সীমা সময়ে সময়ে বদলায়। বাংলাদেশের চূড়ান্ত মূল্য ও ফিচার নিজের চেকআউট/অ্যাকাউন্টে যাচাই করুন।
 
 বাংলাদেশ থেকে ওয়েবে পেমেন্টের সময় OpenAI সাধারণত ডেবিট বা ক্রেডিট কার্ড চায়। বিকাশ সরাসরি তালিকায় নেই। আপনার চেকআউটে কোন মুদ্রা ও কত টাকা দেখায় সেটা নিজে দেখে নিন, কারণ ডলার থেকে টাকার একটা নির্দিষ্ট রেট ধরে নেওয়া ঠিক নয়।
 
@@ -69,4 +69,4 @@ source: Written by Claude for SaveOnSub 2026-11-14 from OpenAI's public plan pag
 - [ChatGPT Plus কী (OpenAI সহায়তা)](https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus)
 - [OpenAI অ্যাকাউন্ট শেয়ারিং নীতি](https://help.openai.com/en/articles/10471989-openai-account-sharing-policy)
 
-*তথ্য সর্বশেষ যাচাই: ২০২৬-১১-০৭। প্ল্যানের সুবিধা, সীমা ও মূল্য বদলাতে পারে।*
+*OpenAI-র প্রকাশিত তথ্য যাচাই: ১৪ নভেম্বর ২০২৬। প্ল্যানের সুবিধা, সীমা ও মূল্য বদলাতে পারে।*
