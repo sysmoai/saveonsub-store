@@ -33,3 +33,47 @@ Evidence references:
 ## What was done in this checkpoint
 
 Read-only browser/Cloudflare metadata, authorized GitHub source inspection and anonymous login-boundary probes. No secrets accessed, no D1 writes, no customer messages, no Access policy modification, no Cloudflare deployment or branch merge. CI in #170 uses synthetic data and cannot substitute for the staged security proofs above.
+
+
+## Subsequent CEO-reported real-staging synthetic ticket test (14 Nov 2026)
+
+**Provenance:** CEO-supplied summary of a test carried out on the actual Cloudflare staging service while authenticated using the CEO's Access login. The raw request/response log, exact testing deployment ID and timestamp, and D1 audit-event export were **not provided or independently reproduced in this checkpoint**. The results below are therefore **REPORTED PASS**, not independently signed-off production acceptance. They are a meaningful improvement over FakeD1-only tests.
+
+| Test | Reported outcome | Evidence status |
+| --- | --- | --- |
+| Malformed input | HTTP 400 | CEO-REPORTED PASS |
+| Unknown order | HTTP 404; no write | CEO-REPORTED PASS |
+| Synthetic ticket creation | One-time DISPLAY of access code | CEO-REPORTED PASS |
+| Correct code to view status | HTTP 200 | CEO-REPORTED PASS |
+| Wrong or absent code | Same HTTP 404; avoids existence disclosure | CEO-REPORTED PASS |
+| Escalation | Reason required | CEO-REPORTED PASS |
+| Code rotation | New code works | CEO-REPORTED PASS; old-code rejection should also be recorded in service log |
+| Assign unknown operator | HTTP 404 | CEO-REPORTED PASS |
+| Closed ticket mutation | HTTP 409 | CEO-REPORTED PASS |
+
+The synthetic test ticket is reportedly **closed and retained in the staging D1**. Do not delete, alter, export sensitive identifiers or copy it into production; treat it as test/audit evidence. The earlier authenticated page view displaying zero tickets was a separate earlier observation and does not supersede this later CEO report.
+
+**Important terminology:** "Access code shown once" means the secret is revealed at issuance and its hash is stored; it is not a single-use login OTP. A valid ticket code may be reused until rotated; rotation invalidates the previous code. The actual one-time-use Cloudflare Turnstile challenge token is a different concept.
+
+### What this test DOES NOT prove
+
+- Ripon's separate real Access login, least-privilege role, and negative authorization checks against payment verification, private financial data, unassigned orders and assignment actions.
+- Real Turnstile site key + `TURNSTILE_SECRET_KEY` Siteverify response, invalid-token rejection, expiration/replay tests, or fail-closed behavior under outages. Test/stub credentials are not production verification.
+- Real order-linked ownership verification: no usable genuine staging order existed in the reported test. Unlinked staff-assisted tickets cannot prove paid-order ownership.
+- A customer-facing (unauthenticated Cloudflare Access) browser reaching narrowly public ticket endpoints. CEO session success is NOT public consumer success. The specific Access Bypass app/policy, allowed paths, and cross-origin preflight need independent approval and testing.
+- Cloudflare per-IP/route rate limits, throttling response (e.g. 429), anti-bruteforce monitoring, and privacy-safe logging.
+- Actual D1 migration ledger, database backup/restore demonstration, code-to-deployment source SHA parity for the later tests, concurrent writes/retry behavior, leak-free retention/deletion policy, or production/payment fulfillment.
+- The draft `x-ticket-token` CORS fix in PR #170 being on the deployed staging artifact. An authenticated same-origin test may pass while a storefront cross-origin preflight still fails.
+
+### Release acceptance order — no automatic actions
+
+1. Preserve redacted staging HTTP test matrix (method, path, status, expected response, no-write counts, timestamp, deployed source SHA and Cloudflare deployment ID); never log ticket access tokens, OTPs, passwords or JWTs.
+2. Read-only inspect bound staging D1's exact schema/migration state; take backup before *any separately authorized* D1 migration. Do not rerun non-idempotent ALTER statements.
+3. Confirm CEO and Ripon accounts, explicit role matrix, MFA and denied third identity; document real negative tests.
+4. Obtain CEO-approved Turnstile secret through the Cloudflare secrets UI (never store in repository); verify Siteverify success, invalid/missing/replayed tokens, hostname and no-write failures.
+5. Prove path-specific Access policies and customer API protection (no broad bypass); coordinate draft PR #170 CORS and #172 tracking-token contract to avoid partial client/backend deployment. Test allowed and denied origins from an actual browser.
+6. Configure and observe rate limits on **the actual domain/route**; demonstrate 429/mitigation without affecting unrelated checkout traffic.
+7. Synthetic linked-order end-to-end: order creation, tracking proof, ticket creation, staff response, escalation, code rotation, close, audit events and denied writes. Keep every test clearly synthetic. Re-test rollback/restore in staging.
+8. Separately verify authorized payment receiver, supplier fulfillment rights, privacy/retention, notifications, support SOP, monitoring, and release parity. Only after independent CEO exact-SHA approval should a production merge or deployment be considered.
+
+**Verdict:** the real staging synthetic ticket lifecycle is *CEO-reported passed*, but public customer availability, real staff isolation, bot/abuse defenses, and production safety remain **NOT VERIFIED**. `#163/#164/#170` remain draft/not merged into main.
