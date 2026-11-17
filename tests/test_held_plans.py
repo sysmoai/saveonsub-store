@@ -26,9 +26,18 @@ class EffectivePricebook(unittest.TestCase):
             self.assertEqual({h["plan_id"] for h in eff[pid]["held_plans"]}, set(ids))
             self.assertTrue(eff[pid]["plans"], f"{pid} keeps its non-held plans")
 
-    def test_only_the_four_v40_tiers_are_held(self):
-        self.assertEqual(sum(len(v) for v in HELD.values()), 4)
-        self.assertEqual(set(HELD), {"chatgpt-plus", "chatgpt-pro", "claude-pro"})
+    def test_v40_holds_preserved_and_business_shared_held(self):
+        # Four prior CEO card-A holds must remain, plus the new 17 Nov
+        # provider-rights HOLD; never broaden or silently drop these IDs.
+        self.assertEqual(HELD, {
+            "chatgpt-plus": [
+                "starter-shared-6-8-users-1-month",
+                "premium-shared-2-3-users-1-month",
+            ],
+            "chatgpt-pro": ["premium-shared-5-6-1-month"],
+            "claude-pro": ["premium-shared-2-3-1-month"],
+            "chatgpt-business": ["premium-shared-2-3-1-month"],
+        })
 
     def test_unknown_held_plan_fails_closed(self):
         import tempfile
