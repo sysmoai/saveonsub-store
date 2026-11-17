@@ -78,12 +78,29 @@ class CatalogHoldGateTests(unittest.TestCase):
                 self.assertIn("retired under the commercial HOLD", result.stdout + result.stderr)
                 self.assertEqual([], list(Path(tmp).iterdir()))
 
+    def write_canonical_synthetic_policy(self, root):
+        """Fixture mirrors the canonical HOLD-file contract without real SKUs."""
+        fixture = copy.deepcopy(self.policy)
+        fixture["approved_products"] = {
+            "fixture-held": {
+                "mode": "fixed",
+                "plans": [{"plan_id": "fixture-not-sellable", "label": "Fixture hold", "bdt": 1}],
+            }
+        }
+        (root / "ops" / "PRICING-V2-2026-09-17.json").write_text(
+            json.dumps(fixture), encoding="utf-8"
+        )
+        (root / "ops" / "HELD-PLANS-2026-11-14.json").write_text(
+            json.dumps({"held_plans": {"fixture-held": ["fixture-not-sellable"]}}),
+            encoding="utf-8",
+        )
+
     def test_public_js_prunes_legacy_metadata_and_requires_inquiry(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "ops").mkdir()
             (root / "assets").mkdir()
-            (root / "ops" / "PRICING-V2-2026-09-17.json").write_text(json.dumps(self.policy))
+            self.write_canonical_synthetic_policy(root)
             example = copy.deepcopy(self.catalog)
             example["meta"].update({
                 "brand": "SAVEONSUB", "currency": "BDT",
@@ -106,7 +123,7 @@ class CatalogHoldGateTests(unittest.TestCase):
             root = Path(tmp)
             (root / "ops").mkdir()
             (root / "assets").mkdir()
-            (root / "ops" / "PRICING-V2-2026-09-17.json").write_text(json.dumps(self.policy))
+            self.write_canonical_synthetic_policy(root)
             bad = copy.deepcopy(self.catalog)
             bad["products"][0]["extension"] = {"sale_price_bdt": 499}
             (root / "catalog.json").write_text(json.dumps(bad))
@@ -124,7 +141,7 @@ class CatalogHoldGateTests(unittest.TestCase):
             root = Path(tmp)
             (root / "ops").mkdir()
             (root / "assets").mkdir()
-            (root / "ops" / "PRICING-V2-2026-09-17.json").write_text(json.dumps(self.policy))
+            self.write_canonical_synthetic_policy(root)
             bad = copy.deepcopy(self.catalog)
             bad["products"][0]["plans"] = [{"bdt": 499}]
             (root / "catalog.json").write_text(json.dumps(bad))
