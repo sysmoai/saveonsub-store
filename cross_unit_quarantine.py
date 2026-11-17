@@ -103,7 +103,7 @@ def stage(site: Path) -> int:
     removed = 0
     cat_js = site / "assets" / "catalog.js"
     new_js, old_n, new_n = clean_catalog(cat_js.read_text(encoding="utf-8"))
-    cat_js.write_text(new_js, encoding="utf-8")
+    cat_js.write_text(new_js, encoding="utf-8", newline="\n")
     fix_counts(site, old_n, new_n)
     for f in sorted(site.rglob(f"{TOKEN}*")):
         if f.is_file():
@@ -137,7 +137,7 @@ def refresh_sw_cache(site: Path) -> None:
     import motion_polish as mp
     saved, mp.SITE = mp.SITE, site
     try:
-        sw.write_text(mp.sw_version(sw.read_text(encoding="utf-8")), encoding="utf-8")
+        sw.write_text(mp.sw_version(sw.read_text(encoding="utf-8")), encoding="utf-8", newline="\n")
     finally:
         mp.SITE = saved
 
