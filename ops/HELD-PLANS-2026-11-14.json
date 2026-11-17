@@ -1,5 +1,5 @@
 {
-  "_note": "Plans listed here are not taking new orders. CEO-approved BDT prices may remain recorded in Pricing V2, but approval of a price does not authorize provider-restricted credential sharing, resale or fulfillment. 2026-11-17: ChatGPT Business Premium Shared (2-3) added to commercial HOLD pending verified provider rights, actual landed cost and CEO fulfillment/release signoff. pricebook.py removes held plans in memory for build and audit. No silent unlock.",
+  "_note": "Plans listed here are not taking new orders. CEO-approved BDT prices may remain recorded in Pricing V2, but approval of a price does not authorize provider-restricted credential sharing, resale or fulfillment. 2026-11-17: ChatGPT Business Premium Shared (2-3) added to commercial HOLD pending verified provider rights, documented commercial feasibility and CEO fulfillment/release signoff. pricebook.py removes held plans in memory for build and audit. No silent unlock.",
   "held_plans": {
     "chatgpt-plus": [
       "starter-shared-6-8-users-1-month",
