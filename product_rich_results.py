@@ -267,7 +267,7 @@ def enrich(t: str, pid: str, p: dict, date: str, bn: bool) -> str:
         else t.replace("</main>", faq + "</main>", 1)
 
     img = re.search(r'<meta property="og:image" content="([^"]+)"', t)
-    lds = jsonld(product_ld(pid, p, name, url, desc, img.group(1) if img else None))
+    lds = jsonld(product_ld(pid, p, name, url, desc, img.group(1) if img else f"{BASE}/assets/og-image.png"))
     all_qa = existing + [(q, html.unescape(re.sub(r"<[^>]+>", "", a))) for q, a in items]
     lds += jsonld({"@context": "https://schema.org", "@type": "FAQPage", "@id": url + "#faq",
                    "mainEntity": [{"@type": "Question", "name": q,
