@@ -58,6 +58,7 @@ def main() -> int:
         f"const SOS_COMMERCIAL_REVISION = {json.dumps(revision)};\n"
         f"const CATALOG = {payload};\n",
         encoding="utf-8",
+        newline="\n",  # byte-identical output on Windows and Linux (sw.js CACHE hashes this file)
     )
     print(f"[public-catalog] wrote {OUT} revision={revision} products={len(public.get('products', []))}")
     return 0
