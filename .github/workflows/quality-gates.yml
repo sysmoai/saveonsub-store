@@ -68,6 +68,45 @@ jobs:
       - name: Build exact canonical candidate
         run: python build_site.py
 
+      - name: Mandatory post-build held-plan and server-catalog acceptance (no skips)
+        run: |
+          set -euo pipefail
+          test -s _site/p/chatgpt-plus.html
+          test -s _site/bn/p/chatgpt-plus.html
+          test -s _site/assets/catalog.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from pricebook import load_policy
+
+          held = json.loads(Path("ops/HELD-PLANS-2026-11-14.json").read_text(encoding="utf-8"))["held_plans"]
+          effective = load_policy(Path("ops/PRICING-V2-2026-09-17.json"))
+          built = json.loads(Path("catalog.json").read_text(encoding="utf-8"))
+          priced = [p for p in built["products"] if p.get("request_price") is False and p.get("plans")]
+          if not priced:
+              raise SystemExit("[postbuild] no priced plans: server acceptance tests would skip")
+          catalog_js = Path("_site/assets/catalog.js").read_text(encoding="utf-8")
+          for pid, ids in held.items():
+              product = effective["approved_products"][pid]
+              remaining = {p["plan_id"] for p in product.get("plans", [])}
+              if set(ids) & remaining:
+                  raise SystemExit(f"[postbuild] held SKU still in effective pricebook: {pid}")
+              for plan_id in ids:
+                  if f'"plan_id":"{plan_id}"' in catalog_js:
+                      raise SystemExit(f"[postbuild] held SKU leaked in browser catalog: {pid}/{plan_id}")
+          print(f"[postbuild] held plans excluded; {len(priced)} priced products available to exercise server tests")
+          PY
+          python -m unittest -v tests.test_held_plans 2>&1 | tee /tmp/sos-postbuild-held-tests.log
+          if grep -Eq '\.\.\. skipped |\(skipped=[1-9][0-9]*\)' /tmp/sos-postbuild-held-tests.log; then
+            echo "::error::Critical held-plan tests were skipped after build"
+            exit 1
+          fi
+          node --import ./tests/order-os/register.mjs --test tests/order-os/built-catalog.test.mjs 2>&1 | tee /tmp/sos-postbuild-orders-tests.log
+          if grep -Eq '^# skipped [1-9]|# SKIP' /tmp/sos-postbuild-orders-tests.log; then
+            echo "::error::Critical server catalog tests were skipped after build"
+            exit 1
+          fi
+
       - name: Product SEO staged gate (post-build, same _site artifact)
         run: |
           set -euo pipefail
