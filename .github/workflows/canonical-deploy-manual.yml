@@ -1,8 +1,15 @@
 name: SaveOnSub Canonical Deploy
 
 on:
-  # CEO-directed PR #183 one-time release. Manual invocation only; no main auto-publish.
+  # Manual invocation only; no main auto-publish. The release SHA is an explicit input
+  # (the 40-char SHA the CEO approved) and must equal the current head of main, so a
+  # stale hard-coded pin can never publish an older revision.
   workflow_dispatch:
+    inputs:
+      release_sha:
+        description: 'Exact 40-char main SHA approved by the CEO (must equal current main head)'
+        required: true
+        type: string
 
 concurrency:
   group: saveonsub-canonical-production
@@ -26,13 +33,19 @@ jobs:
       - name: Checkout exact release source
         uses: actions/checkout@v4
         with:
-          ref: 6d8c8898985896e7857dfbb35ea4d277d0873170
+          ref: ${{ inputs.release_sha }}
+          fetch-depth: 0
 
-      - name: Guard exact CEO-reviewed source SHA
+      - name: Guard exact CEO-approved source SHA equals current main head
+        env:
+          APPROVED_SHA: ${{ inputs.release_sha }}
         run: |
           set -euo pipefail
+          printf '%s' "$APPROVED_SHA" | grep -Eq '^[0-9a-f]{40}$'
           DEPLOY_SHA="$(git rev-parse HEAD)"
-          test "$DEPLOY_SHA" = "6d8c8898985896e7857dfbb35ea4d277d0873170"
+          test "$DEPLOY_SHA" = "$APPROVED_SHA"
+          git fetch --quiet origin main
+          test "$DEPLOY_SHA" = "$(git rev-parse origin/main)"
           echo "DEPLOY_SHA=$DEPLOY_SHA" >> "$GITHUB_ENV"
 
       - name: Setup Python
@@ -191,7 +204,7 @@ jobs:
               && ! grep -q 'SHARED · POLICY RISK' /tmp/chatgpt-plus.html 2>/dev/null \
               && grep -q '<meta name="robots" content="noindex,follow">' /tmp/checkout.html 2>/dev/null \
               && ! grep -q 'https://saveonsub.com/.*\.html' /tmp/sitemap.xml 2>/dev/null; then
-              echo 'Canonical production verified — PR #183 Go ৳1,290 is live; Business Premium Shared remains HOLD.'
+              echo "Canonical production verified for $DEPLOY_SHA; held plans remain HOLD."
               exit 0
             fi
             sleep 15

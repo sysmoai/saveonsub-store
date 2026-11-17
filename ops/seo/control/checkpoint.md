@@ -1,3 +1,13 @@
+# Checkpoint — 2026-11-17 (supersedes cycle 5 below, kept as history)
+
+- main 247265c (#186 Product JSON-LD image fix). Live: Cloudflare b62a3ed7 = main ce942b4; rollback 7b3758b8. 247265c is merged but not yet deployed.
+- Sitemap truth: 215 URLs (count <loc> entries, not lines).
+- Held plans: 5 codes (ops/HELD-PLANS-2026-11-14.json).
+- Deploy path: manual `canonical-deploy-manual.yml` now takes the approved SHA as input and requires it to equal main head; or CEO-PC `wrangler pages deploy` of a static `_site`.
+- Open PRs: #187 (guide links), #163 #164 #170 #171 #172 (Order OS/support, own approval), #151, #118, #92, #74.
+- Always re-read git/PR/Cloudflare state before acting; this file is a pointer, not authority.
+
+---
 # Checkpoint — cycle 5 (2026-11-03)
 
 - main f265c25; live 77c20d55. PR #91 (CEO "APPROVED ALL" pricebook) open, CI green, unmerged.
