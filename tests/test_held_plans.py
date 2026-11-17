@@ -49,6 +49,27 @@ class EffectivePricebook(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 load_policy(d / "p.json")
 
+    def test_missing_canonical_held_file_fails_closed(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "PRICING-V2-2026-09-17.json"
+            p.write_text(json.dumps({"approved_products": {"x": {"mode": "fixed", "plans": [
+                {"plan_id": "a", "label": "A", "bdt": 1}]}}}), encoding="utf-8")
+            with self.assertRaisesRegex(SystemExit, "required HOLD manifest missing"):
+                load_policy(p)
+
+    def test_invalid_canonical_held_manifest_fails_closed(self):
+        import tempfile
+        for bad in ("{", '{"held_plans": {}}', '{"held_plans": {"x": []}}'):
+            with self.subTest(manifest=bad), tempfile.TemporaryDirectory() as d:
+                d = Path(d)
+                p = d / "PRICING-V2-2026-09-17.json"
+                p.write_text(json.dumps({"approved_products": {"x": {"mode": "fixed", "plans": [
+                    {"plan_id": "a", "label": "A", "bdt": 1}]}}}), encoding="utf-8")
+                (d / "HELD-PLANS-2026-11-14.json").write_text(bad, encoding="utf-8")
+                with self.assertRaises(SystemExit):
+                    load_policy(p)
+
     def test_no_held_file_means_no_hold(self):
         import tempfile
         with tempfile.TemporaryDirectory() as d:
