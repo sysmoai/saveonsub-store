@@ -144,7 +144,7 @@ jobs:
           except Exception:
               d = {}
           entries = d.get("result") or []
-          candidates = [x for x in entries if x.get("environment") == "production" and x.get("id")]
+          candidates = [x for x in entries if x.get("environment") == "production" and x.get("id") and (x.get("latest_stage") or {}).get("status") == "success" and not x.get("is_skipped")]
           if code != "200" or not d.get("success") or not candidates:
               print(f"::error::Cannot verify previous Cloudflare production deployment for rollback (HTTP {code}); release blocked.")
               raise SystemExit(1)
