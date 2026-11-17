@@ -27,9 +27,23 @@ class PolicyAuditTest(unittest.TestCase):
         policy = json.loads((ROOT / "ops/PRICING-V2-2026-09-17.json").read_text(encoding="utf-8"))
         self.assertEqual(audit_policy.audit(catalog, policy), [])
 
-    def test_repository_catalog_is_hold(self):
+    def test_repository_catalog_matches_commercial_state(self):
+        """HOLD-shape (committed catalog, no plans) or SELECTIVE_UNLOCK (generated): a product
+        has plans only if the effective pricebook approves it; every other product is request-price.
+        Held plan codes never appear. Code-approved != provider/legally authorized."""
+        from pricebook import load_policy
+        policy = load_policy(ROOT / "ops/PRICING-V2-2026-09-17.json")
+        book = policy["approved_products"]
         products = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))["products"]
-        self.assertTrue(all(p.get("request_price") and not p.get("plans") for p in products))
+        for p in products:
+            rule = book.get(p["id"]) or {}
+            approved = {x["plan_id"] for x in rule.get("plans") or []} if rule.get("mode") == "fixed" else set()
+            got = {x.get("plan_id") for x in p.get("plans") or []}
+            held = {h["plan_id"] for h in rule.get("held_plans", [])}
+            self.assertFalse(got & held, f"{p['id']}: held plan leaked")
+            self.assertTrue(got <= approved, f"{p['id']}: plan not in effective pricebook")
+            if not got:
+                self.assertTrue(p.get("request_price"), f"{p['id']}: no plans but not request-price")
 
     def test_priced_product_during_hold_fails(self):
         bad = product("netflix", [{"label": "Mobile", "bdt": 349}], False, "entertainment")
@@ -60,9 +74,18 @@ class SharedOfferTest(unittest.TestCase):
                     product("ok", [{"label": "Pro — 1 Month", "bdt": 1, "type": "personal"}])]
         self.assertEqual(len(shared_copy_check.shared_plans(products)), 4)
 
-    def test_repository_catalog_has_no_shared_plan(self):
+    def test_repository_catalog_shared_plans_are_code_approved_and_not_held(self):
+        """Committed HOLD-shape catalog has no plans (so no shared plan). The generated catalog may carry the
+        shared plans the CEO kept live (2026-11-14); each must be CEO-approved in the effective pricebook
+        (shared_copy_check.ceo_approved_shared) and the held plans must stay absent. Code-approved is not
+        the same as provider/legally authorized."""
+        from pricebook import load_policy
         products = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))["products"]
-        self.assertEqual(shared_copy_check.shared_plans(products), [])
+        self.assertEqual(shared_copy_check.shared_plans(products, shared_copy_check.ceo_approved_shared()), [])
+        book = load_policy(ROOT / "ops/PRICING-V2-2026-09-17.json")["approved_products"]
+        held = {(pid, h["plan_id"]) for pid, r in book.items() for h in r.get("held_plans", [])}
+        got = {(p["id"], pl.get("plan_id")) for p in products for pl in p.get("plans") or []}
+        self.assertFalse(got & held)
 
 
 if __name__ == "__main__":
