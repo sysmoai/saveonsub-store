@@ -27,10 +27,20 @@ class CanonicalReleaseFreezeC002(unittest.TestCase):
             with self.subTest(event=event):
                 self.assertNotRegex(self.trigger, rf"(?m)^  {event}:")
 
-    def test_manual_deploy_job_is_fail_closed(self):
+    def test_manual_deploy_requires_main_and_pinned_source_sha(self):
         self.assertIn("\n  validate-and-deploy:\n", self.deploy)
-        self.assertRegex(self.deploy, r"(?m)^    if: \$\{\{ false \}\}$")
+        self.assertIn("if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}", self.deploy)
         self.assertIn("\n    environment: production\n", self.deploy)
+        self.assertIn("ref: 6d8c8898985896e7857dfbb35ea4d277d0873170", self.deploy)
+        self.assertIn('test "$DEPLOY_SHA" = "6d8c8898985896e7857dfbb35ea4d277d0873170"', self.deploy)
+        self.assertIn("Cannot verify previous Cloudflare production deployment for rollback", self.deploy)
+
+    def test_current_price_and_hold_smoke_guards(self):
+        self.assertIn("grep -q '৳1,290' /tmp/chatgpt-go.html", self.deploy)
+        self.assertIn("! grep -q '৳450' /tmp/chatgpt-go.html", self.deploy)
+        self.assertIn("! grep -q '৳1,499' /tmp/chatgpt-business.html", self.deploy)
+        self.assertIn('data-held-plans="1"', self.deploy)
+        self.assertIn("python -m unittest -v tests.test_held_plans", self.deploy)
 
     def test_scoped_target_retained_for_separate_owner_review(self):
         self.assertIn("wrangler pages deploy", self.deploy)

@@ -1,7 +1,7 @@
 name: SaveOnSub Canonical Deploy
 
 on:
-  # C002 review-only freeze: main pushes must not auto-publish to canonical Cloudflare Pages.
+  # CEO-directed PR #183 one-time release. Manual invocation only; no main auto-publish.
   workflow_dispatch:
 
 concurrency:
@@ -16,8 +16,8 @@ env:
 
 jobs:
   validate-and-deploy:
-    # Release frozen until CEO approves a separately verified deployment and rollback path.
-    if: ${{ false }}
+    # Manual only on main; deploy is SHA-pinned and will fail closed without Cloudflare scope/rollback proof.
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: production
@@ -26,10 +26,14 @@ jobs:
       - name: Checkout exact release source
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'push' && github.sha || 'main' }}
+          ref: 6d8c8898985896e7857dfbb35ea4d277d0873170
 
-      - name: Capture exact release SHA
-        run: echo "DEPLOY_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Guard exact CEO-reviewed source SHA
+        run: |
+          set -euo pipefail
+          DEPLOY_SHA="$(git rev-parse HEAD)"
+          test "$DEPLOY_SHA" = "6d8c8898985896e7857dfbb35ea4d277d0873170"
+          echo "DEPLOY_SHA=$DEPLOY_SHA" >> "$GITHUB_ENV"
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -67,12 +71,21 @@ jobs:
           ! grep -q '৳4,290' _site/p/chatgpt-business.html || exit 1  # bash ignores set -e for '!' commands
           grep -q 'pricing-v2-2026-09-17' _site/assets/catalog.js
           grep -q 'SELECTIVE_UNLOCK' ops/PRICING-V2-2026-09-17.json
-          grep -q '৳499' _site/p/chatgpt-plus.html  # CEO pricebook 2026-11-02
-          grep -q '৳999' _site/p/chatgpt-plus.html
-          grep -q 'Shared account (multiple users)' _site/p/chatgpt-plus.html
+          ! grep -q '৳499' _site/p/chatgpt-plus.html || exit 1  # shared Plus is on HOLD
+          ! grep -q '৳999' _site/p/chatgpt-plus.html || exit 1
+          grep -q 'data-held-plans="1"' _site/p/chatgpt-plus.html
+          grep -q '৳1,290' _site/p/chatgpt-go.html
+          grep -q '৳1,290' _site/bn/p/chatgpt-go.html
+          ! grep -q '৳450' _site/p/chatgpt-go.html || exit 1
+          ! grep -q '৳450' _site/bn/p/chatgpt-go.html || exit 1
+          grep -q 'data-held-plans="1"' _site/p/chatgpt-business.html
+          ! grep -q '৳1,299' _site/p/chatgpt-business.html || exit 1
+          ! grep -q '৳1,499' _site/p/chatgpt-business.html || exit 1  # approved price, forbidden shared fulfillment remains HOLD
+          ! grep -q '৳1,499' _site/bn/p/chatgpt-business.html || exit 1
           grep -q '৳500' _site/p/google-ai-pro.html
           grep -q '"bdt"' _site/assets/catalog.js
           python catalog_hold_gate.py
+          python -m unittest -v tests.test_held_plans
           ! grep -q 'SHARED · POLICY RISK' _site/p/chatgpt-plus.html || exit 1  # bash ignores set -e for '!' commands
           ! grep -q '5–15 min' _site/p/chatgpt-plus.html || exit 1  # bash ignores set -e for '!' commands
           grep -q '<link rel="canonical" href="https://saveonsub.com/p/chatgpt-plus">' _site/p/chatgpt-plus.html
@@ -118,6 +131,28 @@ jobs:
               print(f"::error::CLOUDFLARE_API_TOKEN cannot read Pages project 'saveonsub' (HTTP {code}). Repair the scoped token; do not bypass.")
               raise SystemExit(1)
           PY
+          # Before any production change, record the previous successful production
+          # deployment as a rollback target. Never expose the scoped token.
+          DEPLOYMENTS_URL="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/saveonsub/deployments?env=production&per_page=10"
+          deploy_code=$(curl -sS -o /tmp/cf-production-deployments.json -w "%{http_code}" "$DEPLOYMENTS_URL" \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" || true)
+          python - /tmp/cf-production-deployments.json "$deploy_code" <<'PY'
+          import json, sys
+          path, code = sys.argv[1], sys.argv[2]
+          try:
+              d = json.load(open(path))
+          except Exception:
+              d = {}
+          entries = d.get("result") or []
+          candidates = [x for x in entries if x.get("environment") == "production" and x.get("id") and (x.get("latest_stage") or {}).get("status") == "success" and not x.get("is_skipped")]
+          if code != "200" or not d.get("success") or not candidates:
+              print(f"::error::Cannot verify previous Cloudflare production deployment for rollback (HTTP {code}); release blocked.")
+              raise SystemExit(1)
+          previous = candidates[0]
+          print(f"Verified previous production deployment ID (rollback target): {previous['id']}")
+          with open("/tmp/sos-previous-deployment.txt", "w") as out:
+              out.write(previous["id"] + "\n")
+          PY
           # Deploy from inside _site so Pages never bundles the repository's
           # ./functions (staff/order API) into the canonical storefront project.
           test ! -e _site/functions
@@ -141,20 +176,22 @@ jobs:
             curl -fsSL --max-time 20 https://saveonsub.com/checkout -o /tmp/checkout.html || true
             if grep -q 'User-agent: OAI-SearchBot' /tmp/robots.txt 2>/dev/null \
               && grep -q 'saveonsub-commercial-revision" content="pricing-v2-2026-09-17' /tmp/home.html 2>/dev/null \
-              && grep -q '৳499' /tmp/chatgpt-plus.html 2>/dev/null \
               && grep -q '৳3,390' /tmp/chatgpt-plus.html 2>/dev/null \
-              && grep -q 'Shared account (multiple users)' /tmp/chatgpt-plus.html 2>/dev/null \
-              && ! grep -q '৳1,299' /tmp/chatgpt-go.html 2>/dev/null \
-              && ! grep -q '৳4,290' /tmp/chatgpt-business.html 2>/dev/null \
-              && grep -q '৳4,500' /tmp/chatgpt-pro.html 2>/dev/null \
+              && ! grep -q '৳499' /tmp/chatgpt-plus.html 2>/dev/null \
+              && ! grep -q '৳999' /tmp/chatgpt-plus.html 2>/dev/null \
+              && grep -q 'data-held-plans="1"' /tmp/chatgpt-plus.html 2>/dev/null \
+              && grep -q '৳1,290' /tmp/chatgpt-go.html 2>/dev/null \
+              && ! grep -q '৳450' /tmp/chatgpt-go.html 2>/dev/null \
+              && ! grep -q '৳1,299' /tmp/chatgpt-business.html 2>/dev/null \
+              && ! grep -q '৳1,499' /tmp/chatgpt-business.html 2>/dev/null \
+              && grep -q 'data-held-plans="1"' /tmp/chatgpt-business.html 2>/dev/null \
+              && ! grep -q '৳4,500' /tmp/chatgpt-pro.html 2>/dev/null \
               && grep -q '৳500' /tmp/google-ai.html 2>/dev/null \
               && ! grep -q '৳3,390' /tmp/google-ai.html 2>/dev/null \
-              && grep -q 'cartAdd' /tmp/google-ai.html 2>/dev/null \
-              && grep -q '৳999' /tmp/chatgpt-plus.html 2>/dev/null \
               && ! grep -q 'SHARED · POLICY RISK' /tmp/chatgpt-plus.html 2>/dev/null \
               && grep -q '<meta name="robots" content="noindex,follow">' /tmp/checkout.html 2>/dev/null \
               && ! grep -q 'https://saveonsub.com/.*\.html' /tmp/sitemap.xml 2>/dev/null; then
-              echo 'Canonical production verified — CEO pricebook (EXEC-010 selective unlock) is live.'
+              echo 'Canonical production verified — PR #183 Go ৳1,290 is live; Business Premium Shared remains HOLD.'
               exit 0
             fi
             sleep 15
