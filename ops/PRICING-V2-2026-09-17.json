@@ -76,13 +76,6 @@
       "mode": "fixed",
       "plans": [
         {
-          "plan_id": "starter-shared-7-seats-1-month",
-          "label": "Starter Shared (7 seats)",
-          "bdt": 699,
-          "duration": "1 month",
-          "access_type": "shared"
-        },
-        {
           "plan_id": "premium-shared-2-3-1-month",
           "label": "Premium Shared (2–3)",
           "bdt": 1499,
