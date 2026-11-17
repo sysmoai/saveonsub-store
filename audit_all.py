@@ -130,7 +130,10 @@ if 'color-scheme' not in _css: issues.append("style.css missing color-scheme (da
 if 'prefers-reduced-motion' not in _css: issues.append("style.css missing reduced-motion support")
 if ':focus' not in _css: issues.append("style.css missing focus states (keyboard a11y)")
 
-idx=open('index.html').read()
+# Lifecycle-aware: after a build the live homepage is _site/index.html; the root
+# index.html is a pre-build source and legitimately differs (price cards injected at build).
+_built_idx = Path('_site/index.html')
+idx=(_built_idx if _built_idx.is_file() else Path('index.html')).read_text()
 from audit_home_prices import homepage_price_issues
 pricing_policy = load_policy(Path('ops/PRICING-V2-2026-09-17.json'))
 issues.extend(homepage_price_issues(cat['products'], idx, pricing_policy))
