@@ -71,9 +71,10 @@ class SharedOrderabilityTest(unittest.TestCase):
                 self.assertIn((r["product"], r["label"], r["bdt"]), approved, r)
 
     def test_report_chatgpt_business_seven_seat_sku_facts(self):
-        """Facts, not a verdict: this shared SKU is orderable by WhatsApp (not by the API)."""
+        """Facts while the SKU exists: orderable by WhatsApp, not by the API. Passes if it was removed."""
         sku = [r for r in self.rows if (r["product"], r["plan_id"]) == ("chatgpt-business", "starter-shared-7-seats-1-month")]
-        self.assertEqual(1, len(sku), "SKU is no longer in the built catalog; a decision was applied, update this report")
+        if not sku:
+            return  # CEO removed this SKU permanently (18 Nov 2026); tests/test_removed_skus.py guards it
         r = sku[0]
         self.assertEqual("shared", r["access_type"])
         self.assertEqual(
