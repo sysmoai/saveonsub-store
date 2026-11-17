@@ -40,6 +40,7 @@ STEPS = [
     "sanitize_pricing_v2_legacy.py",
     "hold_content_price_guard.py",
     "blog_copy_polish.py",
+    "guide_internal_links.py",
     "site_seo_hygiene.py",
     "link_hygiene.py",
     "a11y_polish.py",
