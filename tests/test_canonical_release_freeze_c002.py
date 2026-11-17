@@ -31,8 +31,12 @@ class CanonicalReleaseFreezeC002(unittest.TestCase):
         self.assertIn("\n  validate-and-deploy:\n", self.deploy)
         self.assertIn("if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}", self.deploy)
         self.assertIn("\n    environment: production\n", self.deploy)
-        self.assertIn("ref: 6d8c8898985896e7857dfbb35ea4d277d0873170", self.deploy)
-        self.assertIn('test "$DEPLOY_SHA" = "6d8c8898985896e7857dfbb35ea4d277d0873170"', self.deploy)
+        # The release SHA is an explicit input that must equal current main (no stale hard-coded pin).
+        self.assertIn("release_sha:", self.deploy)
+        self.assertIn("ref: ${{ inputs.release_sha }}", self.deploy)
+        self.assertIn('test "$DEPLOY_SHA" = "$APPROVED_SHA"', self.deploy)
+        self.assertIn('test "$DEPLOY_SHA" = "$(git rev-parse origin/main)"', self.deploy)
+        self.assertNotIn("6d8c8898985896e7857dfbb35ea4d277d0873170", self.deploy)
         self.assertIn("Cannot verify previous Cloudflare production deployment for rollback", self.deploy)
 
     def test_current_price_and_hold_smoke_guards(self):
