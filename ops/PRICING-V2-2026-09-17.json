@@ -34,13 +34,13 @@
         {
           "plan_id": "personal-your-email-1-month",
           "label": "Personal (your email)",
-          "bdt": 450,
+          "bdt": 1290,
           "duration": "1 month",
           "access_type": "personal"
         }
       ],
       "approved_by": "CEO Emon Hossain",
-      "approved_on": "2026-11-02",
+      "approved_on": "2026-11-14",
       "official_usd": 8
     },
     "chatgpt-plus": {
@@ -85,7 +85,7 @@
         {
           "plan_id": "premium-shared-2-3-1-month",
           "label": "Premium Shared (2–3)",
-          "bdt": 1299,
+          "bdt": 1499,
           "duration": "1 month",
           "access_type": "shared"
         },
@@ -98,7 +98,7 @@
         }
       ],
       "approved_by": "CEO Emon Hossain",
-      "approved_on": "2026-11-02",
+      "approved_on": "2026-11-14",
       "official_usd": 25
     },
     "chatgpt-pro": {

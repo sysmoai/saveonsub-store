@@ -1,8 +1,18 @@
 {
-  "_note": "Plans listed here are not taking new orders (CEO decision, card A, 14 Nov 2026, following CORTEX PRIME V4.0). The pricebook is unchanged; pricebook.py removes these plans in memory for every build step and audit. To resume a plan, delete its id here after written CEO approval.",
+  "_note": "Plans listed here are not taking new orders. CEO-approved BDT prices may remain recorded in Pricing V2, but approval of a price does not authorize provider-restricted credential sharing, resale or fulfillment. 2026-11-17: ChatGPT Business Premium Shared (2-3) added to commercial HOLD pending verified provider rights, documented commercial feasibility and CEO fulfillment/release signoff. pricebook.py removes held plans in memory for build and audit. No silent unlock.",
   "held_plans": {
-    "chatgpt-plus": ["starter-shared-6-8-users-1-month", "premium-shared-2-3-users-1-month"],
-    "chatgpt-pro": ["premium-shared-5-6-1-month"],
-    "claude-pro": ["premium-shared-2-3-1-month"]
+    "chatgpt-plus": [
+      "starter-shared-6-8-users-1-month",
+      "premium-shared-2-3-users-1-month"
+    ],
+    "chatgpt-pro": [
+      "premium-shared-5-6-1-month"
+    ],
+    "claude-pro": [
+      "premium-shared-2-3-1-month"
+    ],
+    "chatgpt-business": [
+      "premium-shared-2-3-1-month"
+    ]
   }
 }
