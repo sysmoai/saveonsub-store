@@ -70,6 +70,9 @@ class CatalogHoldGateTests(unittest.TestCase):
         in_catalog=sum(len(p["plans"]) for p in catalog["products"])
         approved=sum(len(r.get("plans") or []) for r in policy["approved_products"].values() if r.get("mode")=="fixed")
         self.assertIn(in_catalog,(0,approved),"catalog is neither HOLD-shape (0 plans) nor equal to the effective pricebook")
+        if (root/"_site"/"assets"/"catalog.js").is_file():
+            # A staged site exists, so build_site.py ran and regenerated catalog.json: it must now carry every approved plan.
+            self.assertEqual(approved,in_catalog,"site was built but catalog.json does not carry the approved plans")
         held={(pid,h["plan_id"]) for pid,r in policy["approved_products"].items() for h in r.get("held_plans",[])}
         for p in catalog["products"]:
             for pl in p["plans"]:
