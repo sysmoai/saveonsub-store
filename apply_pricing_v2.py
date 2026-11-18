@@ -136,6 +136,12 @@ def main() -> int:
                 "note",
                 "Current fixed price is withheld until the exact provider tier, checkout amount, access method and availability are reconfirmed.",
             )
+            # Preserve effective held-plan evidence on inquiry-only products,
+            # including products whose entire shared lineup is restricted.
+            # This is build-time notice metadata; build_public_catalog.py
+            # strips held plan IDs from the shipped browser catalog.
+            if rule and rule.get("held_plans"):
+                product["held_plans"] = rule["held_plans"]
             inquiry += 1
             continue
 
