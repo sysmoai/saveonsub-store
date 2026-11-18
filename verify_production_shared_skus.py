@@ -191,14 +191,29 @@ def fetch_text(url: str) -> str:
         return response.read().decode("utf-8", errors="replace")
 
 
-def verify_one(base: str, pid: str, locale: str, ids: set[str]) -> list[str]:
+def verify_one(base: str, pid: str, locale: str, ids: set[str],
+               profiles: dict) -> list[str]:
     path = f"/bn/p/{pid}" if locale == "bn" else f"/p/{pid}"
     url = base + path
+    profile = profiles.get(pid, {"restricted": [], "allowed": {}})
     try:
         return [f"{path}: {issue}" for issue in validate_product_html(
-            pid, fetch_text(url), ids)]
+            pid, fetch_text(url), ids, profile["restricted"], profile["allowed"])]
     except Exception as exc:
         return [f"{path}: fetch/validation error: {type(exc).__name__}: {exc}"]
+
+
+def _print_outcome(label: str, failures: list[str], restricted: dict) -> int:
+    if failures:
+        print(f"[{label}] FAIL: {len(failures)} problem(s)")
+        for issue in failures[:60]:
+            print("  " + issue)
+        if len(failures) > 60:
+            print("  ... " + str(len(failures) - 60) + " additional")
+        return 1
+    print(f"[{label}] PASS: {len(restricted)} groups / "
+          f"{sum(map(len, restricted.values()))} restricted shared SKU(s)")
+    return 0
 
 
 def verify_production(base: str = "https://saveonsub.com") -> int:
@@ -206,43 +221,71 @@ def verify_production(base: str = "https://saveonsub.com") -> int:
     if not base.startswith("https://"):
         raise ValueError("Production verification requires HTTPS")
     restricted = restricted_inventory()
+    profiles = plan_profiles()
     failures = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
-        jobs = [pool.submit(verify_one, base, pid, locale, ids)
+        jobs = [pool.submit(verify_one, base, pid, locale, ids, profiles)
                 for pid, ids in sorted(restricted.items())
                 for locale in ("en", "bn")]
         for task in concurrent.futures.as_completed(jobs):
             failures.extend(task.result())
 
+    all_offers = [item for p in profiles.values() for item in p["restricted"]]
     for locale, path in (("en", "/prices"), ("bn", "/bn/prices")):
         try:
-            failures.extend(validate_price_list(fetch_text(base + path), locale))
+            failures.extend(validate_price_list(fetch_text(base + path), locale, all_offers))
         except Exception as exc:
             failures.append(f"{path}: fetch/validation error: {type(exc).__name__}: {exc}")
 
     try:
-        failures.extend(validate_public_catalog(fetch_text(base + "/assets/catalog.js")))
+        failures.extend(validate_public_catalog(fetch_text(base + "/assets/catalog.js"),
+                                                restricted))
     except Exception as exc:
         failures.append(f"/assets/catalog.js: fetch/validation error: {type(exc).__name__}: {exc}")
+    return _print_outcome("shared-release", failures, restricted)
 
-    if failures:
-        print("[shared-release] FAIL: " + str(len(failures)) + " problem(s)")
-        for issue in failures[:50]:
-            print("  " + issue)
-        if len(failures) > 50:
-            print("  ... " + str(len(failures) - 50) + " more")
-        return 1
 
-    print("[shared-release] PASS: " + str(len(restricted)) +
-          " product groups, " + str(sum(map(len, restricted.values()))) +
-          " shared SKUs held across EN/BN, price listings and browser catalog")
-    return 0
+def verify_staged_site(site: Path) -> int:
+    """Check the exact allowlisted _site artifact BEFORE any Cloudflare write."""
+    restricted = restricted_inventory()
+    profiles = plan_profiles()
+    failures = []
+    for pid, ids in sorted(restricted.items()):
+        profile = profiles.get(pid, {"restricted": [], "allowed": {}})
+        for prefix in (Path("p"), Path("bn") / "p"):
+            rel = prefix / f"{pid}.html"
+            try:
+                markup = (site / rel).read_text(encoding="utf-8")
+                failures.extend(f"{rel}: {issue}" for issue in
+                                validate_product_html(pid, markup, ids,
+                                                      profile["restricted"],
+                                                      profile["allowed"]))
+            except (OSError, UnicodeError) as exc:
+                failures.append(f"{rel}: missing/unreadable staged artifact: {exc}")
+
+    offers = [item for p in profiles.values() for item in p["restricted"]]
+    for locale, rel in (("en", Path("prices.html")), ("bn", Path("bn") / "prices.html")):
+        try:
+            failures.extend(validate_price_list((site / rel).read_text(encoding="utf-8"),
+                                                locale, offers))
+        except (OSError, UnicodeError) as exc:
+            failures.append(f"{rel}: missing/unreadable staged artifact: {exc}")
+    try:
+        failures.extend(validate_public_catalog(
+            (site / "assets" / "catalog.js").read_text(encoding="utf-8"), restricted))
+    except (OSError, UnicodeError) as exc:
+        failures.append(f"assets/catalog.js: missing/unreadable staged artifact: {exc}")
+    return _print_outcome("shared-stage", failures, restricted)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-url", default="https://saveonsub.com")
+    parser.add_argument("--site-dir", type=Path, default=None,
+                        help="Verify a local staged artifact before production deployment")
     args = parser.parse_args()
+    if args.site_dir is not None:
+        return verify_staged_site(args.site_dir)
     return verify_production(args.base_url)
 
 
