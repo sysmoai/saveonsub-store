@@ -19,7 +19,7 @@ def run(catalog):
 class CartGuardTest(unittest.TestCase):
     HOLD = {"products": [{"id": "chatgpt-plus", "request_price": True, "plans": []},
                          {"id": "demo", "request_price": False,
-                          "plans": [{"label": "Demo — 1 Month", "bdt": 100}]}]}
+                          "plans": [{"plan_id": "demo-1-month", "label": "Demo — 1 Month", "bdt": 100}]}]}
 
     def test_hold_and_unknown_plans_never_reach_cart(self):
         r = run(self.HOLD)
