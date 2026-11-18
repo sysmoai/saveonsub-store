@@ -108,6 +108,9 @@ jobs:
           ! grep -R -q '<meta name="keywords"' _site --include='*.html' || exit 1  # bash ignores set -e for '!' commands
           ! grep -q 'https://saveonsub.com/.*\.html' _site/sitemap.xml || exit 1  # bash ignores set -e for '!' commands
           python audit_commercial_truth_v2.py
+          # Validate all 57 restricted shared SKU offers in the EXACT staged
+          # artifact before the Cloudflare token or any publish is used.
+          python verify_production_shared_skus.py --site-dir _site
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -209,9 +212,11 @@ jobs:
               # in the CEO pricebook against both live product locales, both
               # public price lists and the browser catalogue. Any failure
               # blocks this release instead of silently accepting stale content.
-              python verify_production_shared_skus.py --base-url https://saveonsub.com
-              echo "Canonical production verified for $DEPLOY_SHA; held plans remain HOLD."
-              exit 0
+              if python verify_production_shared_skus.py --base-url https://saveonsub.com; then
+                echo "Canonical production verified for $DEPLOY_SHA; held plans remain HOLD."
+                exit 0
+              fi
+              echo "Shared-SKU verification has not converged; retrying the read-only check."
             fi
             sleep 15
           done
