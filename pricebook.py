@@ -58,4 +58,38 @@ def load_policy(path: Path) -> dict:
             rule["mode"] = "inquiry"
             rule["note"] = ("Price on Request — no plan is currently taking new orders. Confirm the exact provider "
                             "tier, access method and availability with SaveOnSub support; no fixed price is published.")
+    # Reject stale declared SKU counts before projecting public offers.
+    if canonical:
+        declared = (policy.get("commercial_hold") or {}).get("approved_sku_count")
+        actual = sum(len(rule.get("plans") or []) + len(rule.get("held_plans") or [])
+                     for rule in book.values())
+        if declared is not None and declared != actual:
+            raise SystemExit(f"[pricebook] approved_sku_count mismatch: declared={declared} actual={actual}")
+
+    # Provider rights fail closed. Price approval is NOT account-sharing or
+    # unrelated third-party seat resale authorization. Until a separately
+    # reviewed exact-SKU contractual exception exists, no shared access can
+    # be published, quoted as an order, or added to a governed cart.
+    # Retain raw prices in source solely as historical records.
+    for pid, rule in book.items():
+        active = rule.get("plans") or []
+        restricted = [p for p in active if p.get("access_type") == "shared"]
+        if not restricted:
+            continue
+        held_rows = rule.setdefault("held_plans", [])
+        known = {p["plan_id"] for p in held_rows}
+        for plan in restricted:
+            if plan["plan_id"] not in known:
+                held_rows.append({
+                    "plan_id": plan["plan_id"], "label": plan["label"],
+                    "access_type": "shared",
+                    "reason": "PROVIDER_RIGHTS_UNVERIFIED",
+                })
+        rule["plans"] = [p for p in active if p.get("access_type") != "shared"]
+        if not rule["plans"]:
+            rule["mode"] = "inquiry"
+            rule["note"] = (
+                "Shared-account access is not taking new orders while provider rights "
+                "are unverified. Ask about customer-owned setup and training instead."
+            )
     return policy
