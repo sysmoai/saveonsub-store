@@ -13,8 +13,8 @@ try { vm.runInContext(fs.readFileSync(path.join(root, 'assets/app.js'), 'utf8'),
 const out = {};
 vm.runInContext("cartAdd('chatgpt-plus','x',3390,'ChatGPT Plus')", ctx); out.wrongPlan = JSON.parse(store.sos_cart || '[]').length;
 vm.runInContext("cartAdd('chatgpt-plus','Plus — 1 Month',3390,'ChatGPT Plus')", ctx); out.holdPlan = JSON.parse(store.sos_cart || '[]').length;
-vm.runInContext("cartAdd('demo','Demo — 1 Month',100,'Demo')", ctx); out.validPlan = JSON.parse(store.sos_cart || '[]').length;
-vm.runInContext("cartAdd('demo','Demo — 1 Month',1,'Demo')", ctx); out.editedPrice = JSON.parse(store.sos_cart || '[]').length;
+vm.runInContext("cartAdd('demo','Demo — 1 Month',100,'Demo','demo-1-month')", ctx); out.validPlan = JSON.parse(store.sos_cart || '[]').length;
+vm.runInContext("cartAdd('demo','Demo — 1 Month',1,'Demo','demo-1-month')", ctx); out.editedPrice = JSON.parse(store.sos_cart || '[]').length;
 store.sos_cart = JSON.stringify([{ id: 'chatgpt-plus', plan: 'Plus — 1 Month', bdt: 3390, qty: 1 }]);
 out.staleRead = vm.runInContext('cartGet().length', ctx);
 process.stdout.write(JSON.stringify(out));
