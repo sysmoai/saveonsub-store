@@ -12,7 +12,7 @@ function cartPlanOk(id, planLabel, bdt, planId){
   const p=CATALOG.products.find(x=>x && x.id===id);
   if(!p || p.request_price || !Array.isArray(p.plans)) return false;
   return p.plans.some(pl=>pl && pl.label===planLabel && Number(pl.bdt)===Number(bdt) && Number(bdt)>0
-    && (!planId || pl.plan_id===undefined || pl.plan_id===planId));
+    && typeof planId==='string' && planId.length>0 && pl.plan_id===planId);
 }
 function cartGet(){
   let c; try{c=JSON.parse(localStorage.getItem('sos_cart')||'[]')}catch(e){c=[]}

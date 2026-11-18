@@ -61,7 +61,7 @@
         },
         {
           "q": "Which plan should I pick?",
-          "a": "Work or sensitive data → choose a personal/customer-specific plan. Study or low-risk use → compare the shared options, current displayed savings, access method and warranty before ordering."
+          "a": "For work and sensitive information, use a customer-owned subscription. Shared-login access is not available while provider rights are unverified. Ask about lawful customer-owned setup help if needed."
         },
         {
           "q": "Which AI assistant is best for my use case?",
@@ -333,7 +333,7 @@
         },
         {
           "q": "Can my whole team use it?",
-          "a": "Yes — Starter Shared gives 7 real seats; we also set up managed workspaces for companies."
+          "a": "ChatGPT Business supports separate accounts for eligible members of a genuine organization workspace, subject to the provider's current seat and billing rules. SaveOnSub does not offer shared passwords or third-party seat rentals. Customer-owned setup and training are separately scoped."
         },
         {
           "q": "Which AI assistant is best for my use case?",
@@ -349,7 +349,7 @@
         },
         {
           "q": "How does ChatGPT Business differ from Plus?",
-          "a": "Business adds admin workspace, team management, higher message limits, and data controls. OpenAI cut its price to $25/mo in April 2026. Our managed seats from ৳699 shared to ৳3,990 personal — ideal for BD agencies and startups."
+          "a": "ChatGPT Business provides organizational workspace administration and team features, subject to current provider terms. Verify current eligibility, seat billing and pricing on OpenAI's official site. SaveOnSub can help with eligible customer-owned onboarding; provider authorization for seat resale is not established."
         }
       ],
       "bundles": [],
@@ -480,7 +480,7 @@
         },
         {
           "q": "Who actually needs ChatGPT Pro?",
-          "a": "OpenAI's top tier at $200/mo official. Unlimited access to all models including o1-pro reasoning. For BD: researchers, AI developers, and power users who constantly hit Plus limits. Shared from ৳4,500 — fraction of official cost."
+          "a": "Power users should compare current official ChatGPT plans and actual limits for their work. Features and prices change. SaveOnSub does not provide shared credentials without explicit provider permission."
         }
       ],
       "bundles": [],
@@ -989,7 +989,7 @@
         },
         {
           "q": "Plus vs AI Pro?",
-          "a": "AI Pro ($19.99) adds Veo video, NotebookLM limits and 2TB storage. If you mainly chat with Gemini, Plus at ৳299 shared is plenty — honestly."
+          "a": "Compare the current Google AI Plus and Google AI Pro tiers on Google's official site and choose your own eligible account. Retail family/shared slots are not offered without authorization."
         },
         {
           "q": "Which AI assistant is best for my use case?",
@@ -1260,7 +1260,7 @@
         },
         {
           "q": "Best deal?",
-          "a": "৳350 shared is our cheapest gateway to premium AI. Pairs with ChatGPT in the Research Bundle (৳600)."
+          "a": "Choose a provider-authorized subscription on your own account. Shared-account retail resale is not currently offered without written permission. Ask about separately scoped setup or training."
         },
         {
           "q": "Which AI assistant is best for my use case?",

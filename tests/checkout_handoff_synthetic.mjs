@@ -14,7 +14,7 @@ assert.ok(inline, 'Checkout script is available for a browser-like test');
 const store = new Map();
 const price = 1234, qty = 2;
 store.set('sos_cart', JSON.stringify([{
-  id: 'synthetic-plan', plan: 'Synthetic Authorized', bdt: price,
+  id: 'synthetic-plan', plan: 'Synthetic Authorized', plan_id: 'synthetic-authorized', bdt: price,
   name: 'Synthetic Tool', qty,
 }]));
 const localStorage = {
@@ -26,12 +26,14 @@ const context = vm.createContext({
   localStorage,
   CATALOG: { products: [{
     id: 'synthetic-plan', request_price: false,
-    plans: [{ label: 'Synthetic Authorized', bdt: price }],
+    plans: [{ plan_id: 'synthetic-authorized', label: 'Synthetic Authorized', bdt: price }],
   }] },
   document: {
     querySelectorAll: () => [],
     addEventListener: () => {},
     getElementById: id => id === 'txn' ? { value: 'SYNTHETIC-REF-001' } : null,
+    createElement: () => ({ style: {}, textContent: '' }),
+    body: { appendChild() {} },
   },
   navigator: {},
   window: { addEventListener: () => {}, open: url => { outboundUrl = url; return {}; } },
