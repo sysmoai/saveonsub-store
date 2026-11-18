@@ -10,8 +10,10 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import html as html_lib
 import json
 import re
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -45,7 +47,83 @@ def restricted_inventory() -> dict[str, set[str]]:
     return restricted
 
 
-def validate_product_html(pid: str, html: str, held_ids: set[str]) -> list[str]:
+def plan_profiles() -> dict[str, dict]:
+    """Actual raw restricted offers and exact provider-gated orderable plans."""
+    raw = json.loads(PRICEBOOK.read_text(encoding="utf-8"))["approved_products"]
+    effective = load_policy(PRICEBOOK)["approved_products"]
+    profiles = {}
+    for pid, rule in raw.items():
+        restricted = [
+            {"plan_id": p["plan_id"], "label": p["label"], "bdt": int(p["bdt"])}
+            for p in (rule.get("plans") or []) if p.get("access_type") == "shared"
+        ]
+        if not restricted:
+            continue
+        allowed = {
+            p["plan_id"]: (str(p["label"]), int(p["bdt"]))
+            for p in (effective[pid].get("plans") or [])
+        }
+        profiles[pid] = {"restricted": restricted, "allowed": allowed}
+    return profiles
+
+
+def _stale_offer_copy(markup: str, offers: list[dict]) -> list[str]:
+    """Catch a price+shared-plan sales claim without requiring a SKU ID or badge."""
+    cleaned = re.sub(r"<(script|style)\b[^>]*>.*?</\1>", " ", markup,
+                     flags=re.I | re.S)
+    cleaned = html_lib.unescape(re.sub(r"<[^>]+>", " ", cleaned))
+    cleaned = re.sub(r"\s+", " ", cleaned).casefold()
+    issues = []
+    for p in offers:
+        label = re.sub(r"\s+", " ", str(p["label"])).strip().casefold()
+        price = "৳" + format(int(p["bdt"]), ",")
+        if not label:
+            continue
+        if (re.search(re.escape(label) + r".{0,70}" + re.escape(price), cleaned) or
+                re.search(re.escape(price) + r".{0,50}" + re.escape(label), cleaned)):
+            issues.append("restricted price+plan copy visible: " + str(p["plan_id"]))
+    return issues
+
+
+class _CartActions(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.actions: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag == "button":
+            action = dict(attrs).get("onclick") or ""
+            if "cartAdd" in action:
+                self.actions.append(action)
+
+
+def _cart_action_issues(pid: str, page_html: str,
+                        allowed: dict[str, tuple[str, int]]) -> list[str]:
+    parser = _CartActions()
+    parser.feed(page_html)
+    issues = []
+    for action in parser.actions:
+        m = re.fullmatch(r"\s*cartAdd\((.*)\)\s*;?\s*", action, flags=re.S)
+        if not m:
+            issues.append(f"{pid}: malformed cartAdd action")
+            continue
+        try:
+            args = json.loads("[" + m.group(1) + "]")
+        except (TypeError, ValueError):
+            issues.append(f"{pid}: invalid cartAdd arguments")
+            continue
+        if len(args) != 5 or args[0] != pid or not isinstance(args[4], str):
+            issues.append(f"{pid}: cartAdd missing correct product or stable plan ID")
+            continue
+        approved = allowed.get(args[4])
+        if approved is None or args[1] != approved[0] or args[2] != approved[1]:
+            issues.append(f"{pid}: cartAdd quotes an unapproved plan or amount")
+    return issues
+
+
+def validate_product_html(pid: str, html: str, held_ids: set[str],
+                          restricted_offers: list[dict] | None = None,
+                          allowed_plans: dict[str, tuple[str, int]] | None = None) -> list[str]:
     issues = []
     if 'data-held-plans="1"' not in html:
         issues.append(f"{pid}: missing visible held-plan notice")
@@ -56,22 +134,48 @@ def validate_product_html(pid: str, html: str, held_ids: set[str]) -> list[str]:
             issues.append(f"{pid}: restricted SKU still present in HTML: {plan_id}")
     if re.search(r'class=["\'][^"\']*\btos\s+shared\b', html):
         issues.append(f"{pid}: shared plan access badge still present")
+    issues.extend(_stale_offer_copy(html, restricted_offers or []))
+    issues.extend(_cart_action_issues(pid, html, allowed_plans or {}))
     return issues
 
 
-def validate_price_list(html: str, locale: str) -> list[str]:
+def validate_price_list(html: str, locale: str,
+                        offers: list[dict] | None = None) -> list[str]:
     disallowed = ("শেয়ার্ড অ্যাকাউন্ট (একাধিক ব্যবহারকারী)"
                   if locale == "bn" else "Shared account (multiple users)")
-    return ([f"/{locale}/prices: shared-offer access descriptor remains"]
-            if disallowed in html else [])
+    issues = ([f"/{locale}/prices: shared-offer access descriptor remains"]
+              if disallowed in html else [])
+    issues.extend(f"/{locale}/prices: {issue}"
+                  for issue in _stale_offer_copy(html, offers or []))
+    return issues
 
 
-def validate_public_catalog(js: str) -> list[str]:
+def validate_public_catalog(js: str, restricted: dict[str, set[str]] | None = None) -> list[str]:
     issues = []
     if "SOS_COMMERCIAL_REVISION" not in js:
         issues.append("catalog.js missing governed revision marker")
-    if re.search(r'"type"\s*:\s*"shared"', js):
-        issues.append("catalog.js still contains orderable shared-access plans")
+    m = re.search(r"\bconst\s+CATALOG\s*=\s*(\{[^\n]*\});", js)
+    if not m:
+        return issues + ["catalog.js missing parseable governed CATALOG object"]
+    try:
+        products = json.loads(m.group(1)).get("products")
+        if not isinstance(products, list):
+            raise ValueError("products is not a list")
+    except (TypeError, ValueError) as exc:
+        return issues + [f"catalog.js malformed product data: {exc}"]
+    restricted = restricted or {}
+    seen = set()
+    for product in products:
+        pid = product.get("id")
+        seen.add(pid)
+        for plan in product.get("plans") or []:
+            if plan.get("type") == "shared" or plan.get("access_type") == "shared":
+                issues.append(f"catalog.js exposes shared access: {pid}")
+            if plan.get("plan_id") in restricted.get(pid, set()):
+                issues.append(f"catalog.js exposes held SKU ID: {pid}")
+    missing = set(restricted) - seen
+    if missing:
+        issues.append(f"catalog.js missing {len(missing)} affected products")
     return issues
 
 
