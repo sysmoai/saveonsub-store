@@ -10,8 +10,10 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import html as html_lib
 import json
 import re
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -45,7 +47,83 @@ def restricted_inventory() -> dict[str, set[str]]:
     return restricted
 
 
-def validate_product_html(pid: str, html: str, held_ids: set[str]) -> list[str]:
+def plan_profiles() -> dict[str, dict]:
+    """Actual raw restricted offers and exact provider-gated orderable plans."""
+    raw = json.loads(PRICEBOOK.read_text(encoding="utf-8"))["approved_products"]
+    effective = load_policy(PRICEBOOK)["approved_products"]
+    profiles = {}
+    for pid, rule in raw.items():
+        restricted = [
+            {"plan_id": p["plan_id"], "label": p["label"], "bdt": int(p["bdt"])}
+            for p in (rule.get("plans") or []) if p.get("access_type") == "shared"
+        ]
+        if not restricted:
+            continue
+        allowed = {
+            p["plan_id"]: (str(p["label"]), int(p["bdt"]))
+            for p in (effective[pid].get("plans") or [])
+        }
+        profiles[pid] = {"restricted": restricted, "allowed": allowed}
+    return profiles
+
+
+def _stale_offer_copy(markup: str, offers: list[dict]) -> list[str]:
+    """Catch a price+shared-plan sales claim without requiring a SKU ID or badge."""
+    cleaned = re.sub(r"<(script|style)\b[^>]*>.*?</\1>", " ", markup,
+                     flags=re.I | re.S)
+    cleaned = html_lib.unescape(re.sub(r"<[^>]+>", " ", cleaned))
+    cleaned = re.sub(r"\s+", " ", cleaned).casefold()
+    issues = []
+    for p in offers:
+        label = re.sub(r"\s+", " ", str(p["label"])).strip().casefold()
+        price = "৳" + format(int(p["bdt"]), ",")
+        if not label:
+            continue
+        if (re.search(re.escape(label) + r".{0,70}" + re.escape(price), cleaned) or
+                re.search(re.escape(price) + r".{0,50}" + re.escape(label), cleaned)):
+            issues.append("restricted price+plan copy visible: " + str(p["plan_id"]))
+    return issues
+
+
+class _CartActions(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.actions: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag == "button":
+            action = dict(attrs).get("onclick") or ""
+            if "cartAdd" in action:
+                self.actions.append(action)
+
+
+def _cart_action_issues(pid: str, page_html: str,
+                        allowed: dict[str, tuple[str, int]]) -> list[str]:
+    parser = _CartActions()
+    parser.feed(page_html)
+    issues = []
+    for action in parser.actions:
+        m = re.fullmatch(r"\s*cartAdd\((.*)\)\s*;?\s*", action, flags=re.S)
+        if not m:
+            issues.append(f"{pid}: malformed cartAdd action")
+            continue
+        try:
+            args = json.loads("[" + m.group(1) + "]")
+        except (TypeError, ValueError):
+            issues.append(f"{pid}: invalid cartAdd arguments")
+            continue
+        if len(args) != 5 or args[0] != pid or not isinstance(args[4], str):
+            issues.append(f"{pid}: cartAdd missing correct product or stable plan ID")
+            continue
+        approved = allowed.get(args[4])
+        if approved is None or args[1] != approved[0] or args[2] != approved[1]:
+            issues.append(f"{pid}: cartAdd quotes an unapproved plan or amount")
+    return issues
+
+
+def validate_product_html(pid: str, html: str, held_ids: set[str],
+                          restricted_offers: list[dict] | None = None,
+                          allowed_plans: dict[str, tuple[str, int]] | None = None) -> list[str]:
     issues = []
     if 'data-held-plans="1"' not in html:
         issues.append(f"{pid}: missing visible held-plan notice")
@@ -56,22 +134,48 @@ def validate_product_html(pid: str, html: str, held_ids: set[str]) -> list[str]:
             issues.append(f"{pid}: restricted SKU still present in HTML: {plan_id}")
     if re.search(r'class=["\'][^"\']*\btos\s+shared\b', html):
         issues.append(f"{pid}: shared plan access badge still present")
+    issues.extend(_stale_offer_copy(html, restricted_offers or []))
+    issues.extend(_cart_action_issues(pid, html, allowed_plans or {}))
     return issues
 
 
-def validate_price_list(html: str, locale: str) -> list[str]:
+def validate_price_list(html: str, locale: str,
+                        offers: list[dict] | None = None) -> list[str]:
     disallowed = ("শেয়ার্ড অ্যাকাউন্ট (একাধিক ব্যবহারকারী)"
                   if locale == "bn" else "Shared account (multiple users)")
-    return ([f"/{locale}/prices: shared-offer access descriptor remains"]
-            if disallowed in html else [])
+    issues = ([f"/{locale}/prices: shared-offer access descriptor remains"]
+              if disallowed in html else [])
+    issues.extend(f"/{locale}/prices: {issue}"
+                  for issue in _stale_offer_copy(html, offers or []))
+    return issues
 
 
-def validate_public_catalog(js: str) -> list[str]:
+def validate_public_catalog(js: str, restricted: dict[str, set[str]] | None = None) -> list[str]:
     issues = []
     if "SOS_COMMERCIAL_REVISION" not in js:
         issues.append("catalog.js missing governed revision marker")
-    if re.search(r'"type"\s*:\s*"shared"', js):
-        issues.append("catalog.js still contains orderable shared-access plans")
+    m = re.search(r"\bconst\s+CATALOG\s*=\s*(\{[^\n]*\});", js)
+    if not m:
+        return issues + ["catalog.js missing parseable governed CATALOG object"]
+    try:
+        products = json.loads(m.group(1)).get("products")
+        if not isinstance(products, list):
+            raise ValueError("products is not a list")
+    except (TypeError, ValueError) as exc:
+        return issues + [f"catalog.js malformed product data: {exc}"]
+    restricted = restricted or {}
+    seen = set()
+    for product in products:
+        pid = product.get("id")
+        seen.add(pid)
+        for plan in product.get("plans") or []:
+            if plan.get("type") == "shared" or plan.get("access_type") == "shared":
+                issues.append(f"catalog.js exposes shared access: {pid}")
+            if plan.get("plan_id") in restricted.get(pid, set()):
+                issues.append(f"catalog.js exposes held SKU ID: {pid}")
+    missing = set(restricted) - seen
+    if missing:
+        issues.append(f"catalog.js missing {len(missing)} affected products")
     return issues
 
 
@@ -87,14 +191,29 @@ def fetch_text(url: str) -> str:
         return response.read().decode("utf-8", errors="replace")
 
 
-def verify_one(base: str, pid: str, locale: str, ids: set[str]) -> list[str]:
+def verify_one(base: str, pid: str, locale: str, ids: set[str],
+               profiles: dict) -> list[str]:
     path = f"/bn/p/{pid}" if locale == "bn" else f"/p/{pid}"
     url = base + path
+    profile = profiles.get(pid, {"restricted": [], "allowed": {}})
     try:
         return [f"{path}: {issue}" for issue in validate_product_html(
-            pid, fetch_text(url), ids)]
+            pid, fetch_text(url), ids, profile["restricted"], profile["allowed"])]
     except Exception as exc:
         return [f"{path}: fetch/validation error: {type(exc).__name__}: {exc}"]
+
+
+def _print_outcome(label: str, failures: list[str], restricted: dict) -> int:
+    if failures:
+        print(f"[{label}] FAIL: {len(failures)} problem(s)")
+        for issue in failures[:60]:
+            print("  " + issue)
+        if len(failures) > 60:
+            print("  ... " + str(len(failures) - 60) + " additional")
+        return 1
+    print(f"[{label}] PASS: {len(restricted)} groups / "
+          f"{sum(map(len, restricted.values()))} restricted shared SKU(s)")
+    return 0
 
 
 def verify_production(base: str = "https://saveonsub.com") -> int:
@@ -102,43 +221,71 @@ def verify_production(base: str = "https://saveonsub.com") -> int:
     if not base.startswith("https://"):
         raise ValueError("Production verification requires HTTPS")
     restricted = restricted_inventory()
+    profiles = plan_profiles()
     failures = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
-        jobs = [pool.submit(verify_one, base, pid, locale, ids)
+        jobs = [pool.submit(verify_one, base, pid, locale, ids, profiles)
                 for pid, ids in sorted(restricted.items())
                 for locale in ("en", "bn")]
         for task in concurrent.futures.as_completed(jobs):
             failures.extend(task.result())
 
+    all_offers = [item for p in profiles.values() for item in p["restricted"]]
     for locale, path in (("en", "/prices"), ("bn", "/bn/prices")):
         try:
-            failures.extend(validate_price_list(fetch_text(base + path), locale))
+            failures.extend(validate_price_list(fetch_text(base + path), locale, all_offers))
         except Exception as exc:
             failures.append(f"{path}: fetch/validation error: {type(exc).__name__}: {exc}")
 
     try:
-        failures.extend(validate_public_catalog(fetch_text(base + "/assets/catalog.js")))
+        failures.extend(validate_public_catalog(fetch_text(base + "/assets/catalog.js"),
+                                                restricted))
     except Exception as exc:
         failures.append(f"/assets/catalog.js: fetch/validation error: {type(exc).__name__}: {exc}")
+    return _print_outcome("shared-release", failures, restricted)
 
-    if failures:
-        print("[shared-release] FAIL: " + str(len(failures)) + " problem(s)")
-        for issue in failures[:50]:
-            print("  " + issue)
-        if len(failures) > 50:
-            print("  ... " + str(len(failures) - 50) + " more")
-        return 1
 
-    print("[shared-release] PASS: " + str(len(restricted)) +
-          " product groups, " + str(sum(map(len, restricted.values()))) +
-          " shared SKUs held across EN/BN, price listings and browser catalog")
-    return 0
+def verify_staged_site(site: Path) -> int:
+    """Check the exact allowlisted _site artifact BEFORE any Cloudflare write."""
+    restricted = restricted_inventory()
+    profiles = plan_profiles()
+    failures = []
+    for pid, ids in sorted(restricted.items()):
+        profile = profiles.get(pid, {"restricted": [], "allowed": {}})
+        for prefix in (Path("p"), Path("bn") / "p"):
+            rel = prefix / f"{pid}.html"
+            try:
+                markup = (site / rel).read_text(encoding="utf-8")
+                failures.extend(f"{rel}: {issue}" for issue in
+                                validate_product_html(pid, markup, ids,
+                                                      profile["restricted"],
+                                                      profile["allowed"]))
+            except (OSError, UnicodeError) as exc:
+                failures.append(f"{rel}: missing/unreadable staged artifact: {exc}")
+
+    offers = [item for p in profiles.values() for item in p["restricted"]]
+    for locale, rel in (("en", Path("prices.html")), ("bn", Path("bn") / "prices.html")):
+        try:
+            failures.extend(validate_price_list((site / rel).read_text(encoding="utf-8"),
+                                                locale, offers))
+        except (OSError, UnicodeError) as exc:
+            failures.append(f"{rel}: missing/unreadable staged artifact: {exc}")
+    try:
+        failures.extend(validate_public_catalog(
+            (site / "assets" / "catalog.js").read_text(encoding="utf-8"), restricted))
+    except (OSError, UnicodeError) as exc:
+        failures.append(f"assets/catalog.js: missing/unreadable staged artifact: {exc}")
+    return _print_outcome("shared-stage", failures, restricted)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-url", default="https://saveonsub.com")
+    parser.add_argument("--site-dir", type=Path, default=None,
+                        help="Verify a local staged artifact before production deployment")
     args = parser.parse_args()
+    if args.site_dir is not None:
+        return verify_staged_site(args.site_dir)
     return verify_production(args.base_url)
 
 

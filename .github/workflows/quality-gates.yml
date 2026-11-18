@@ -68,6 +68,9 @@ jobs:
       - name: Build exact canonical candidate
         run: python build_site.py
 
+      - name: Verify every unlicensed shared SKU against the exact staged artifact
+        run: python verify_production_shared_skus.py --site-dir _site
+
       - name: Mandatory post-build held-plan and server-catalog acceptance (no skips)
         run: |
           set -euo pipefail
