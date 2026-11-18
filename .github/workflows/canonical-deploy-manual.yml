@@ -204,6 +204,12 @@ jobs:
               && ! grep -q 'SHARED · POLICY RISK' /tmp/chatgpt-plus.html 2>/dev/null \
               && grep -q '<meta name="robots" content="noindex,follow">' /tmp/checkout.html 2>/dev/null \
               && ! grep -q 'https://saveonsub.com/.*\.html' /tmp/sitemap.xml 2>/dev/null; then
+              # Do not claim production success based only on the original five
+              # manual HOLD checks. Verify EVERY shared-labelled SKU recorded
+              # in the CEO pricebook against both live product locales, both
+              # public price lists and the browser catalogue. Any failure
+              # blocks this release instead of silently accepting stale content.
+              python verify_production_shared_skus.py --base-url https://saveonsub.com
               echo "Canonical production verified for $DEPLOY_SHA; held plans remain HOLD."
               exit 0
             fi
