@@ -1,9 +1,11 @@
 """Offline synthetic validation of the live shared-SKU release acceptance gate."""
+import json
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import apply_pricing_v2
 import verify_production_shared_skus as gate
 
 
@@ -11,6 +13,39 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class LiveSharedReleaseGate(unittest.TestCase):
+    def test_shared_only_inquiry_projection_carries_held_notice_metadata(self):
+        """The 16 shared-only product groups must not lose their HOLD notice."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "ops").mkdir()
+            catalog_path = root / "catalog.json"
+            catalog_path.write_text(json.dumps({"products": [
+                {"id": "demo", "category": "ai-assistants", "plans": []}
+            ]}), encoding="utf-8")
+            policy_path = root / "ops" / "PRICING-V2-2026-09-17.json"
+            policy_path.write_text(json.dumps({
+                "revision": "fixture",
+                "ai_categories": ["ai-assistants"],
+                "commercial_hold": {
+                    "status": "SELECTIVE_UNLOCK", "authority": "synthetic",
+                    "approved_sku_count": 1
+                },
+                "approved_products": {"demo": {"mode": "fixed", "plans": [
+                    {"plan_id": "shared-demo", "label": "Demo Shared",
+                     "bdt": 10, "access_type": "shared"}
+                ]}}
+            }), encoding="utf-8")
+            (root / "ops" / "HELD-PLANS-2026-11-14.json").write_text(
+                json.dumps({"held_plans": {"demo": ["shared-demo"]}}),
+                encoding="utf-8")
+            with patch.object(apply_pricing_v2, "CATALOG_PATH", catalog_path), \
+                 patch.object(apply_pricing_v2, "POLICY_PATH", policy_path):
+                self.assertEqual(0, apply_pricing_v2.main())
+            product = json.loads(catalog_path.read_text(encoding="utf-8"))["products"][0]
+            self.assertEqual([], product["plans"])
+            self.assertTrue(product["request_price"])
+            self.assertEqual("shared-demo", product["held_plans"][0]["plan_id"])
+
     def test_current_inventory_all_shared_are_held_by_effective_policy(self):
         inventory = gate.restricted_inventory()
         self.assertEqual(43, len(inventory))
