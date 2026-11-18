@@ -9,7 +9,7 @@
     "authority": "Founder & CEO Md. Emon Hossain — written approval \"APPROVED ALL\" (2026-11-01 23:14 UTC / 2026-11-02 05:14 Asia/Dhaka, Claude project thread message cmsg_01TSmi8NsZ1znxuFP4UZMMwK9b46czYDvYWbkipfv5SvGu) of the itemized 67-product / 133-plan BDT price list sent to him in the same thread.",
     "rule": "Only plans listed in approved_products with mode=fixed may be published. Every other product stays Price on Request. Prices must match this file exactly; shared plans must be labelled as shared access.",
     "supersedes": "EXEC-010 HOLD (D1 google-ai-pro, D2 chatgpt-plus) for the approved plans only, by the same founder.",
-    "approved_sku_count": 133,
+    "approved_sku_count": 132,
     "excluded": "aips-* products (other business unit) remain Price on Request."
   },
   "positioning": {
