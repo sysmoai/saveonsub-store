@@ -177,6 +177,8 @@ jobs:
           echo "PUBLISH_METHOD=wrangler-scoped-token" >> "$GITHUB_ENV"
 
       - name: Verify canonical production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           set -euo pipefail
           echo "Publish method: ${PUBLISH_METHOD:-unknown}"
@@ -213,10 +215,29 @@ jobs:
               # public price lists and the browser catalogue. Any failure
               # blocks this release instead of silently accepting stale content.
               if python verify_production_shared_skus.py --base-url https://saveonsub.com; then
-                echo "Canonical production verified for $DEPLOY_SHA; held plans remain HOLD."
-                exit 0
+                # Content convergence is necessary but cannot attest the exact
+                # commit: query Cloudflare's authenticated canonical deployment.
+                # Read-only Pages project API. Do not log or expose the token.
+                if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+                  echo "::error::Scoped Cloudflare token missing for canonical SHA verification."
+                  exit 1
+                fi
+                PROJECT_URL="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/saveonsub"
+                if curl --fail --silent --show-error --max-time 20 \
+                  --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+                  --output /tmp/sos-postdeploy-project.json "${PROJECT_URL}"; then
+                  PREVIOUS_DEPLOYMENT_ID="$(cat /tmp/sos-previous-deployment.txt)"
+                  if python verify_cloudflare_release_provenance.py \
+                    --project-json /tmp/sos-postdeploy-project.json \
+                    --expected-sha "${DEPLOY_SHA}" \
+                    --previous-deployment-id "${PREVIOUS_DEPLOYMENT_ID}"; then
+                    echo "Canonical production verified for $DEPLOY_SHA; held plans remain HOLD."
+                    exit 0
+                  fi
+                fi
+                echo "Cloudflare canonical SHA provenance has not converged; retrying."
               fi
-              echo "Shared-SKU verification has not converged; retrying the read-only check."
+              echo "Shared-SKU or Cloudflare provenance verification pending; retrying."
             fi
             sleep 15
           done
