@@ -26,6 +26,47 @@ class EffectivePricebook(unittest.TestCase):
             self.assertEqual({h["plan_id"] for h in eff[pid]["held_plans"]}, set(ids))
             self.assertTrue(eff[pid]["plans"], f"{pid} keeps its non-held plans")
 
+    def test_all_shared_credential_offers_restricted_by_default(self):
+        """A CEO-approved price does not grant provider permission to share logins."""
+        raw = json.loads(POLICY.read_text(encoding="utf-8"))["approved_products"]
+        effective = load_policy(POLICY)["approved_products"]
+        seen_shared = 0
+        for pid, rule in raw.items():
+            shared = {p["plan_id"] for p in rule.get("plans") or []
+                      if p.get("access_type") == "shared"}
+            active = {p["plan_id"] for p in effective[pid].get("plans") or []}
+            held = {p["plan_id"] for p in effective[pid].get("held_plans") or []}
+            seen_shared += len(shared)
+            self.assertFalse(shared & active, pid)
+            self.assertTrue(shared <= held, pid)
+            if shared and not active:
+                self.assertEqual("inquiry", effective[pid]["mode"], pid)
+        self.assertGreater(seen_shared, 0)
+
+    def test_sku_count_metadata_matches_rows(self):
+        raw = json.loads(POLICY.read_text(encoding="utf-8"))
+        count = sum(len(x.get("plans") or []) for x in raw["approved_products"].values())
+        self.assertEqual(raw["commercial_hold"]["approved_sku_count"], count)
+        js = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
+        self.assertIn("planId.length>0 && pl.plan_id===planId", js)
+        self.assertNotIn("!planId || pl.plan_id===undefined", js)
+
+    def test_canonical_sku_count_mismatch_fails_closed(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            p = d / "PRICING-V2-2026-09-17.json"
+            p.write_text(json.dumps({
+                "commercial_hold": {"approved_sku_count": 2},
+                "approved_products": {"x": {"mode": "fixed", "plans": [
+                    {"plan_id": "a", "label": "A", "bdt": 1, "access_type": "shared"}
+                ]}}
+            }), encoding="utf-8")
+            (d / "HELD-PLANS-2026-11-14.json").write_text(
+                json.dumps({"held_plans": {"x": ["a"]}}), encoding="utf-8")
+            with self.assertRaisesRegex(SystemExit, "approved_sku_count mismatch"):
+                load_policy(p)
+
     def test_v40_holds_preserved_and_business_shared_held(self):
         # Four prior CEO card-A holds must remain, plus the new 17 Nov
         # provider-rights HOLD; never broaden or silently drop these IDs.
