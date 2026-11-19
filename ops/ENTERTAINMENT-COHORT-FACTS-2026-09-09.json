@@ -36,12 +36,17 @@
       "method": "direct fetch (cloud web-fetch agent) of spotify.com/bd-en/premium and the YouTube availability help article",
       "findings": "Spotify Bangladesh: Individual BDT 219, Student 109, Duo 299, Family 379/month, unchanged. The page now shows the 3-months-free Individual intro offer (new users only) ending 2026-12-31 (this file previously said 2026-09-23). YouTube help article lists Bangladesh for Premium and Premium Lite.",
       "not_reverified": "Netflix: netflix.com/bd was served US content to the automated fetcher (USD 8.99-26.99 range), so Bangladesh tiers could not be re-confirmed; the 2026-10-23 table and its caveats are carried forward unchanged and Netflix stays unverified. SaveOnSub publishes no fixed Netflix price from this file."
+    },
+    {
+      "date": "2026-11-19",
+      "method": "read-only browser read in the CEO's Chrome of Netflix's public Plans & Pricing help page (priced for Bangladesh in USD)",
+      "findings": "Netflix Bangladesh: Mobile $2.99, Basic $3.99, Standard $7.99 (+$2.99 per extra member), Premium $9.99. Unchanged from this file's table. The netflix.com/bd landing page itself shows only 'USD 2.99 to USD 9.99/month'."
     }
   ],
   "netflix": {
     "official_source": "https://www.netflix.com/bd/",
     "currency": "USD",
-    "verified_on": "2026-10-23",
+    "verified_on": "2026-11-19",
     "plans": {
       "Mobile": {
         "price_month": 2.99,
