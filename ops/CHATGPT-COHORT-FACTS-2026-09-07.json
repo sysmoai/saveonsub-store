@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-11-07",
+  "verified_on": "2026-11-23",
   "verification_log": [
     {
       "date": "2026-10-23",
@@ -19,6 +19,13 @@
       "method": "direct fetch of the official Plus help article + third-party guide (paretotalent.com, 'prices last checked 2026-10-26') + web search",
       "findings": "Plus $20/month (official help.openai.com article 6950777). Business standard seat $25/month monthly or $20 annual; Premium seat $125/$100. Pro tiers $100/$200/$500. Go $8/month (consistent across many 2026 news sources incl. openai.com launch post; localized checkout remains the authority). All match this file — no change.",
       "not_reverified": "chatgpt.com/pricing did not render the Go/Pro/Business tables to the automated fetcher, and the Go help article returned an HTTP error; those three figures rest on third-party/secondary sources this pass. Account-sharing policy page not re-fetched; carried forward."
+    },
+    {
+      "date": "2026-11-23",
+      "method": "live WebFetch of all six official_sources URLs. chatgpt.com/pricing rendered plan names, limits and seat minimum but no dollar amounts.",
+      "source": "chatgpt.com/pricing; help.openai.com 6950777, 10421635, 10471989; openai.com/index/introducing-chatgpt-go; openai.com/policies/terms-of-use",
+      "findings": "Confirmed from official pages: Plus $20/month, monthly only, API not included; Go $8 in the US with localized pricing in some markets; BDT listed for Bangladesh; credit and debit cards, no bKash listed; individual-account / no-credential-sharing policy; Business minimum 2 users, monthly and annual plans, per-user pricing; Pro shows 'Your choice of 3 usage tiers'. No CHANGED items.",
+      "not_reverified": "Pro tier dollar amounts ($100/$200/$500), Business Standard and Premium seat prices and the 2026-04-02 price cut, the Business 200-seat cap effective 2026-08-24, and Plus feature_note items (Codex, memory, ChatGPT Work, scheduled tasks, early features). Pricing page showed no dollar amounts to the fetcher."
     }
   ],
   "market": "Bangladesh",
@@ -40,7 +47,7 @@
       "published_usd_month": 20,
       "billing": "monthly",
       "api_included": false,
-      "feature_note": "Current Plus includes expanded access to advanced reasoning, deep research, Codex, memory/context, ChatGPT Work, scheduled tasks and early features, subject to limits and change."
+      "feature_note": "Plus (help.openai.com 6950777, checked 2026-11-23) includes priority access, higher limits, advanced reasoning, voice, image generation, file uploads and Deep Research, subject to change. Codex, memory, ChatGPT Work, scheduled tasks and early features are not listed on that page and are not re-verified."
     },
     "pro": {
       "published_usd_month": 200,

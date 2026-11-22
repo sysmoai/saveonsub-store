@@ -13,6 +13,14 @@
       "canva_findings": "costbench.com (last verified 2026-11-04) gives Pro $18/month or $144/year, but the same page also cites $15 and $180 in its history — the same instability recorded on 2026-10-23. canva-pro stays inquiry-only; no fixed price is published from this file.",
       "midjourney_findings": "Multiple independent 2026 aggregators consistently report four plans from $10 to $120/month (Basic $10, Standard $30, Pro $60, Mega $120), matching this file's official_plans table. No change.",
       "confidence": "Moderate: no first-party page could be read this pass. Re-check from a browser in Bangladesh when possible."
+    },
+    {
+      "date": "2026-11-23",
+      "method": "Direct fetch of every official_sources URL (5 canva, 4 midjourney) via WebFetch; curl with browser User-Agent retried on one URL of each",
+      "source": "All canva.com and docs.midjourney.com URLs listed in this file",
+      "canva_findings": "All 5 official canva.com URLs returned HTTP 403 to automated fetch. No claim confirmed or changed. canva-pro stays inquiry-only.",
+      "midjourney_findings": "All 4 official docs.midjourney.com URLs returned HTTP 403 to automated fetch. No claim confirmed or changed.",
+      "not_reverified": "Every claim in canva and midjourney sections. verified_on intentionally NOT advanced; a real browser session is required to read these pages."
     }
   ],
   "market": "Bangladesh",
