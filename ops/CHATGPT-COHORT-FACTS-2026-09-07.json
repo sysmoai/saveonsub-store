@@ -19,6 +19,12 @@
       "method": "direct fetch of the official Plus help article + third-party guide (paretotalent.com, 'prices last checked 2026-10-26') + web search",
       "findings": "Plus $20/month (official help.openai.com article 6950777). Business standard seat $25/month monthly or $20 annual; Premium seat $125/$100. Pro tiers $100/$200/$500. Go $8/month (consistent across many 2026 news sources incl. openai.com launch post; localized checkout remains the authority). All match this file — no change.",
       "not_reverified": "chatgpt.com/pricing did not render the Go/Pro/Business tables to the automated fetcher, and the Go help article returned an HTTP error; those three figures rest on third-party/secondary sources this pass. Account-sharing policy page not re-fetched; carried forward."
+    },
+    {
+      "date": "2026-11-19",
+      "method": "cloud fetch of openai.com/help pages + read-only browser read of chatgpt.com/pricing in the CEO's Chrome (OpenAI placed this browser in Indonesia, so prices showed in IDR)",
+      "findings": "Tier structure unchanged (Go, Plus, Pro 100/200/500, Business standard and premium seats; Business starts at 2 users; Go may include ads). USD confirmed from OpenAI pages: Plus $20/month (help article), Go $8/month and Pro $200/month (openai.com, 2026-01-16, US). Account-sharing policy unchanged: an account is for the individual who created it and credential sharing is not allowed. Localized IDR amounts seen (not USD): Go 75,000, Plus 349,000, Pro from 1,889,000, Business seat 421,000 monthly / 337,000 annual, Premium seat 2,105,000 / 1,685,000.",
+      "not_reverified": "USD for Pro 100 / Pro 500 and Business ($25 monthly / $20 annual) and Premium ($125 / $100) still unconfirmed because chatgpt.com does not show USD from here. verified_on intentionally NOT bumped: needs a US-located read or the CEO's own ChatGPT billing page."
     },
     {
       "date": "2026-11-23",
@@ -38,7 +44,9 @@
     "terms": "https://openai.com/policies/terms-of-use/"
   },
   "official_consumer_reference": {
-    "free": {"positioning": "trying ChatGPT"},
+    "free": {
+      "positioning": "trying ChatGPT"
+    },
     "go": {
       "published_usd_month": 8,
       "price_note": "OpenAI says some markets may use localized pricing; exact checkout price is the source of truth."
@@ -66,7 +74,10 @@
   },
   "bangladesh_billing": {
     "bdt_supported_on_web": true,
-    "all_country_web_methods": ["credit card", "debit card"],
+    "all_country_web_methods": [
+      "credit card",
+      "debit card"
+    ],
     "bkash_directly_listed_by_openai": false,
     "guidance": "Do not convert $20 with a fixed internal FX rate and call that the official Bangladesh price. Show the published $20/month reference, note that BDT is a supported web-billing currency, and tell users to verify the exact amount in their own ChatGPT checkout."
   },
@@ -78,17 +89,41 @@
   },
   "saveonsub_offer_snapshot": {
     "chatgpt-plus": [
-      {"label": "Starter Shared (6–8 users)", "bdt": 499, "access": "shared"},
-      {"label": "Premium Shared (2–3 users)", "bdt": 999, "access": "shared"},
-      {"label": "Personal (your email)", "bdt": 2990, "access": "personal/customer-specific"}
+      {
+        "label": "Starter Shared (6–8 users)",
+        "bdt": 499,
+        "access": "shared"
+      },
+      {
+        "label": "Premium Shared (2–3 users)",
+        "bdt": 999,
+        "access": "shared"
+      },
+      {
+        "label": "Personal (your email)",
+        "bdt": 2990,
+        "access": "personal/customer-specific"
+      }
     ]
   },
   "bd_serp_snapshot": {
     "verified_on": "2026-09-07",
     "observed": [
-      {"site": "Soft Office BD", "visible_price_bdt": 399, "note": "commercial guide/product positioning"},
-      {"site": "Digi Subscriber", "visible_price_bdt": "399-1499", "note": "multiple variants"},
-      {"site": "Bengali IT", "visible_price_bdt": "799-999", "note": "product page; mixed Go/Plus language"}
+      {
+        "site": "Soft Office BD",
+        "visible_price_bdt": 399,
+        "note": "commercial guide/product positioning"
+      },
+      {
+        "site": "Digi Subscriber",
+        "visible_price_bdt": "399-1499",
+        "note": "multiple variants"
+      },
+      {
+        "site": "Bengali IT",
+        "visible_price_bdt": "799-999",
+        "note": "product page; mixed Go/Plus language"
+      }
     ]
   },
   "portfolio_intent_ownership": {
@@ -103,8 +138,17 @@
         "how to buy chatgpt in bangladesh"
       ]
     },
-    "aips": {"overlap": "high", "recommended_future_role": "brand/navigational and store-offer demand rather than duplicating SaveOnSub's exact neutral comparison intent"},
-    "aitp": {"overlap": "medium", "recommended_future_role": "personal-seat/service intent and its own brand demand"},
-    "aipt": {"overlap": "low-to-medium", "recommended_future_role": "bundles/student/store-specific intent"}
+    "aips": {
+      "overlap": "high",
+      "recommended_future_role": "brand/navigational and store-offer demand rather than duplicating SaveOnSub's exact neutral comparison intent"
+    },
+    "aitp": {
+      "overlap": "medium",
+      "recommended_future_role": "personal-seat/service intent and its own brand demand"
+    },
+    "aipt": {
+      "overlap": "low-to-medium",
+      "recommended_future_role": "bundles/student/store-specific intent"
+    }
   }
 }
