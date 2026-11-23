@@ -124,6 +124,50 @@ test("validators: whole taka, paisa, signed corrections and legitimate evidence 
   assert.equal(w.db.one("SELECT amount_minor n FROM order_refunds WHERE order_id=?", id).n, 1);
 });
 
+test("status: a cross-origin status change (incl. refund) is refused before any write", async () => {
+  const { pub } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
+  const before = ledgerCounts();
+  for (const body of [{ status: "refunded", refund: REFUND }, { status: "completed" }, { status: "refunded", refund: { ...REFUND, amount_bdt: 1e-9 } }]) {
+    const r = await w.api.status("manager", pub, body, { headers: { origin: "https://evil.example" } });
+    assert.equal(r.status, 403, JSON.stringify(body));
+    assert.equal(r.body.error, "FORBIDDEN_ORIGIN");
+  }
+  assert.equal(ledgerCounts(), before);
+  assert.equal(w.order(pub).status, "delivered");
+  // Same-origin and origin-less (non-browser) requests keep working.
+  const ok = await w.api.status("manager", pub, { status: "refunded", refund: REFUND }, { headers: { origin: "https://staging.test" } });
+  assert.equal(ok.status, 200);
+  const other = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
+  assert.equal((await w.api.status("manager", other.pub, { status: "completed" })).status, 200);
+});
+
+test("costs: a supplied evidence_ref or category of the wrong type is a 400, never silently dropped", async () => {
+  const { pub } = w.seedOrder({ status: "delivered" });
+  const before = ledgerCounts();
+  const base = { supplier_label: "Supplier A", amount_bdt: 5 };
+  for (const evidence_ref of [42, true, ["r2:sos/private/../x"], { ref: "stmt:abc" }]) {
+    const r = await costs("owner", pub, { ...base, evidence_ref });
+    assert.equal(r.status, 400, JSON.stringify(evidence_ref));
+    assert.equal(r.body.error, "INVALID_EVIDENCE_REF");
+  }
+  for (const category of [7, null, ["supplier"], {}]) {
+    const r = await costs("owner", pub, { ...base, category });
+    assert.equal(r.status, 400, JSON.stringify(category));
+    assert.equal(r.body.error, "INVALID_CATEGORY");
+  }
+  for (const note of ["   ", " \u0009 ", 5]) {
+    const r = await costs("owner", pub, { ...base, entry_type: "correction", amount_bdt: -5, note });
+    assert.equal(r.status, 400, JSON.stringify(note));
+    assert.equal(r.body.error, "CORRECTION_NOTE_REQUIRED");
+  }
+  assert.equal(ledgerCounts(), before);
+  // Evidence stays optional on costs: absent, null and empty are still accepted and stored as NULL.
+  for (const extra of [{}, { evidence_ref: null }, { evidence_ref: "" }, { evidence_ref: "  " }]) {
+    assert.equal((await costs("owner", pub, { ...base, ...extra })).status, 201, JSON.stringify(extra));
+  }
+  assert.equal(w.db.one("SELECT COUNT(*) n FROM order_costs WHERE evidence_ref IS NULL").n, 4);
+});
+
 // ---------- G3 costs + margin ----------
 test("G3: only the owner records costs; manager reads; others are refused", async () => {
   const { pub } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });

@@ -54,15 +54,21 @@ export const onRequestPost: PagesFunction<OpsEnv> = async ({ request, env, param
   if (!body) return json({ error: "INVALID_JSON" }, 400);
   const entryType = body.entry_type === "correction" ? "correction" : body.entry_type === undefined || body.entry_type === "cost" ? "cost" : "";
   if (!entryType) return json({ error: "INVALID_ENTRY_TYPE" }, 400);
-  const category = typeof body.category === "string" ? body.category : "supplier";
-  if (!["supplier", "payment_fee", "other"].includes(category)) return json({ error: "INVALID_CATEGORY" }, 400);
+  // Absent means the default; a supplied value of the wrong type is refused, never defaulted.
+  const category = body.category === undefined ? "supplier" : body.category;
+  if (typeof category !== "string" || !["supplier", "payment_fee", "other"].includes(category)) return json({ error: "INVALID_CATEGORY" }, 400);
   const supplier = typeof body.supplier_label === "string" ? body.supplier_label.trim() : "";
   if (supplier.length < 2 || supplier.length > 80) return json({ error: "SUPPLIER_LABEL_REQUIRED" }, 400);
   const amountMinor = bdtToMinor(body.amount_bdt, { allowNegative: entryType === "correction" });
   if (amountMinor === null) return json({ error: "INVALID_AMOUNT" }, 400);
+  // Evidence is optional here (absent, null or blank => NULL), but a supplied non-string is refused
+  // instead of being silently stored as "no evidence".
+  if (body.evidence_ref !== undefined && body.evidence_ref !== null && typeof body.evidence_ref !== "string") {
+    return json({ error: "INVALID_EVIDENCE_REF" }, 400);
+  }
   const evidence = typeof body.evidence_ref === "string" && body.evidence_ref.trim() ? body.evidence_ref.trim() : null;
   if (evidence && !EVIDENCE_REF.test(evidence)) return json({ error: "INVALID_EVIDENCE_REF" }, 400);
-  const note = typeof body.note === "string" ? body.note.slice(0, 300) : null;
+  const note = typeof body.note === "string" && body.note.trim() ? body.note.slice(0, 300) : null;
   if (entryType === "correction" && !note) return json({ error: "CORRECTION_NOTE_REQUIRED" }, 400);
 
   let order;
