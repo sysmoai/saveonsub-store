@@ -7,5 +7,6 @@ An AI cannot claim a device was tested. The human on the device runs each step; 
 
 For each step capture: `Step | Expected | Observed | Device (Mac Safari/Chrome, iPhone Safari, width) | Time (Dhaka) | PASS/FAIL/BLOCKED | Screenshot (redacted)`.
 
+Verbal approval ("looks good") with no step-level Expected/Observed record is `BLOCKED (incomplete evidence)`, never PASS. A tester's own iPhone is a valid device if the model, iOS version and Safari width are recorded.
 Always include a negative test: a limited operator must NOT see CEO finance, payment-verification controls or other brands' data; a denied request must be denied server-side (not just hidden in the UI).
 Test mobile widths 320-430px. Do not use real customer data; use SYN- records in QA_SANDBOX only.

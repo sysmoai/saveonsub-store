@@ -9,10 +9,11 @@ Inputs: provider, exact plan/tier, access model (personal seat / team seat / sha
 
 Procedure:
 1. Find the provider's `ops/*COHORT-FACTS*.json`. Read `verified_on`, `verification_log[-1].not_reverified` and the plan fields.
-2. If the needed claim is listed in `not_reverified`, or `verified_on` is older than 14 days, result is `INQUIRY_ONLY`: say it must be re-verified; do not state the number as current.
+2. Read the last `verification_log` entry's not-reverified list (key spelling varies: `not_reverified`, `NOT_reverified`, or a `*_findings`/`confidence` note; if no such field exists, treat every claim as unverified). If the needed claim is listed there, or `verified_on` is older than 14 days, result is `INQUIRY_ONLY`: say it must be re-verified; do not state the number as current.
 3. Shared consumer credentials, or any plan whose provider terms forbid sharing, are `HOLD`. Never describe them as sellable.
 4. A CEO-approved SaveOnSub price must exist in the pricebook/catalog (`catalog_reconcile.py` is the check). No approved price -> `HOLD` for quoting.
 5. Never promise availability, speed, refunds or "official reseller" status.
 
 Output (Bangla, short): `RESULT: SELLABLE|INQUIRY_ONLY|HOLD`, the evidence file+field, the source URL and date, and the single missing item if not SELLABLE.
+A third-party or SERP snapshot (e.g. `bd_serp_snapshot`, `saveonsub_offer_snapshot`) is never an approved price.
 Escalate to Emon for any price, new SKU or rights question.

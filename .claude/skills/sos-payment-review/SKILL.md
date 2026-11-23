@@ -12,4 +12,6 @@ Procedure:
 4. If payment is unverified, fulfillment is `BLOCKED`. Tell the customer, in plain Bangla, that verification is in progress; give no delivery time guarantee.
 5. Flag duplicates (same reference on two orders) and amount mismatches to Emon.
 
+`EVIDENCE_PRESENT` means a receiving-side settlement reference entered by the authorized verifier in the private register, never the customer's claim. A human (Ripon) sends any customer message; AI only drafts.
+
 Output: `ORDER_ID | STATE | EVIDENCE_PRESENT (yes/no, no details) | NEXT_OWNER | NEXT_ACTION`.
