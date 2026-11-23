@@ -54,6 +54,76 @@ test("G6: a lost refund race writes no refund row", async () => {
   assert.equal(w.db.one("SELECT COUNT(*) n FROM order_refunds").n, 0);
 });
 
+// ---------- Shared money/evidence validators (2026-11-23) ----------
+// Amounts that round to zero minor units and r2 evidence pointers with a ".."
+// path segment must be refused with HTTP 400 BEFORE any row, audit event,
+// status change or ledger write. Synthetic data only.
+const ROUNDS_TO_ZERO = [1e-9, 0.0000004, "0.000000001", "1e-9"];
+const UNSAFE_EVIDENCE = ["r2:sos/private/../public/proof.pdf", "r2:sos/private/a/../../b.pdf",
+  "r2:sos/private/refunds/..", "r2:sos/private/../../etc"];
+const ledgerCounts = () => JSON.stringify([w.snapshot(),
+  w.db.rows("SELECT * FROM order_costs ORDER BY id"), w.db.rows("SELECT * FROM order_refunds ORDER BY id")]);
+
+test("validators: a cost amount that rounds to zero is a 400 before any write", async () => {
+  const { pub } = w.seedOrder({ status: "delivered" });
+  const before = ledgerCounts();
+  for (const amount_bdt of ROUNDS_TO_ZERO) {
+    const r = await costs("owner", pub, { supplier_label: "Supplier A", amount_bdt });
+    assert.equal(r.status, 400, String(amount_bdt));
+    assert.equal(r.body.error, "INVALID_AMOUNT", String(amount_bdt));
+  }
+  for (const amount_bdt of [-1e-9, "-0.000000001", 1e-9]) {   // signed corrections: -0 / 0 is not an amount
+    const r = await costs("owner", pub, { entry_type: "correction", supplier_label: "Supplier A", amount_bdt, note: "typo" });
+    assert.equal(r.status, 400, String(amount_bdt));
+    assert.equal(r.body.error, "INVALID_AMOUNT", String(amount_bdt));
+  }
+  assert.equal(ledgerCounts(), before);
+});
+
+test("validators: a refund amount that rounds to zero is a 400 and the order stays delivered", async () => {
+  const { pub } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
+  const before = ledgerCounts();
+  for (const amount_bdt of ROUNDS_TO_ZERO) {
+    const r = await w.api.status("manager", pub, { status: "refunded", refund: { ...REFUND, amount_bdt } });
+    assert.equal(r.status, 400, String(amount_bdt));
+    assert.equal(r.body.error, "REFUND_AMOUNT_REQUIRED", String(amount_bdt));
+  }
+  assert.equal(ledgerCounts(), before);
+  assert.equal(w.order(pub).status, "delivered");
+});
+
+test("validators: r2 evidence with a '..' path segment is a 400 on costs and refunds before any write", async () => {
+  const { pub } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
+  const before = ledgerCounts();
+  for (const evidence_ref of UNSAFE_EVIDENCE) {
+    const c = await costs("owner", pub, { supplier_label: "Supplier A", amount_bdt: 900, evidence_ref });
+    assert.equal(c.status, 400, evidence_ref);
+    assert.equal(c.body.error, "INVALID_EVIDENCE_REF", evidence_ref);
+    const r = await w.api.status("manager", pub, { status: "refunded", refund: { ...REFUND, evidence_ref } });
+    assert.equal(r.status, 400, evidence_ref);
+    assert.equal(r.body.error, "REFUND_EVIDENCE_REQUIRED", evidence_ref);
+  }
+  assert.equal(ledgerCounts(), before);
+  assert.equal(w.order(pub).status, "delivered");
+});
+
+test("validators: whole taka, paisa, signed corrections and legitimate evidence ids still pass", async () => {
+  const { pub, id } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
+  const ok = [[900, 90000, "stmt:sup-1"], [0.01, 1, "r2:sos/private/costs/2026-11/inv-001.pdf"],
+    ["12.50", 1250, "r2:sos/private/costs/inv..v2.pdf"], [1, 100, "stmt:a..b:2026-11"], [5, 500, "r2:sos/private/.well/..hidden"]];
+  for (const [amount_bdt, minor, evidence_ref] of ok) {
+    const r = await costs("owner", pub, { supplier_label: "Supplier A", amount_bdt, evidence_ref });
+    assert.equal(r.status, 201, evidence_ref);
+    assert.equal(w.db.one("SELECT amount_minor n FROM order_costs WHERE evidence_ref=?", evidence_ref).n, minor);
+  }
+  const corr = await costs("owner", pub, { entry_type: "correction", supplier_label: "Supplier A", amount_bdt: -0.01, note: "typo" });
+  assert.equal(corr.status, 201);
+  const r = await w.api.status("manager", pub, { status: "refunded",
+    refund: { amount_bdt: 0.01, channel: "bkash", evidence_ref: "r2:sos/private/refunds/2026-11/r-1.pdf" } });
+  assert.equal(r.status, 200);
+  assert.equal(w.db.one("SELECT amount_minor n FROM order_refunds WHERE order_id=?", id).n, 1);
+});
+
 // ---------- G3 costs + margin ----------
 test("G3: only the owner records costs; manager reads; others are refused", async () => {
   const { pub } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
