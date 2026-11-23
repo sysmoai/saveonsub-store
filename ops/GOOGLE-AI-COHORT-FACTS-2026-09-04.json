@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-11-19",
+  "verified_on": "2026-11-23",
   "verification_log": [
     {
       "date": "2026-10-23",
@@ -26,6 +26,14 @@
       "method": "direct fetch (cloud web-fetch agent)",
       "source": "https://gemini.google/bd/subscriptions/?hl=en and https://gemini.google/bd/students/?hl=en (both served in Bangla)",
       "findings": "Google AI Plus BDT 600/month, Google AI Pro BDT 2,500/month, Google AI Ultra from BDT 8,100/month and BDT 25,000/month. Student offer: Google AI Plus free for 1 year, redeem before 2026-12-31, then BDT 600/month; yearly eligibility verification. All unchanged from 2026-11-10. No price change made."
+    },
+    {
+      "date": "2026-11-23",
+      "method": "read-only read in real Google Chrome (not signed in, Bangladesh network, new tab), 2026-11-23; no automated fetch",
+      "source": "gemini.google/bd/subscriptions/?hl=bn ; gemini.google/bd/students/?hl=bn ; one.google.com/intl/bn_bd/about/google-ai-plans/",
+      "findings": "Confirmed in BDT for Bangladesh: AI Plus 600/month, 400 GB, 2x free usage, 200 Flow credits; AI Pro 2,500/month, 5 TB, 4x, 1,000 Flow credits; Ultra 8,100 (5x Pro) and 25,000 (20x Pro). Student offer confirmed: 1-year AI Plus free for eligible college students 18+, redeem before 2026-12-31, eligibility verified annually, auto-renews at 600/month with a valid payment method. All four verification_notes still match.",
+      "changed": "availability corrected from '140+ countries/regions'. The page now shows '160+ countries' on the AI Plus card and a footnote of '150+ countries and regions' for Plus, Pro and Ultra; the only '140+' on the page refers to Project Genie.",
+      "not_reverified": "bd_competitor_snapshot (not a provider page). Newly listed on the official pages but not recorded as facts here: YouTube Premium Lite in AI Pro (varies by country), family sharing with up to five others, plans are 18+."
     }
   ],
   "market": "Bangladesh",
@@ -42,14 +50,14 @@
       "storage": "400 GB",
       "usage_vs_free": "2x",
       "flow_credits_month": 200,
-      "availability": "140+ countries/regions"
+      "availability": "150+ countries and regions (page footnote, 2026-11-23; the AI Plus card says 160+ countries)"
     },
     "google-ai-pro": {
       "official_bdt_month": 2500,
       "storage": "5 TB",
       "usage_vs_free": "4x",
       "flow_credits_month": 1000,
-      "availability": "140+ countries/regions"
+      "availability": "150+ countries and regions (page footnote, 2026-11-23; the AI Plus card says 160+ countries)"
     }
   },
   "student_offer": {

@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-11-19",
+  "verified_on": "2026-11-23",
   "verification_log": [
     {
       "date": "2026-10-23",
@@ -27,6 +27,14 @@
       "canva_findings": "All 5 official canva.com URLs returned HTTP 403 to automated fetch. No claim confirmed or changed. canva-pro stays inquiry-only.",
       "midjourney_findings": "All 4 official docs.midjourney.com URLs returned HTTP 403 to automated fetch. No claim confirmed or changed.",
       "not_reverified": "Every claim in canva and midjourney sections. verified_on intentionally NOT advanced; a real browser session is required to read these pages."
+    },
+    {
+      "date": "2026-11-23",
+      "method": "read-only read in real Google Chrome (not signed in, Bangladesh network, new tab), 2026-11-23; no automated fetch",
+      "source": "canva.com/pricing/ ; canva.com/en_in/help/switch-from-pro-to-business/ ; canva.com/policies/terms-of-use/ ; canva.com/newsroom/news/introducing-canva-business/ ; canva.com/pro/ ; docs.midjourney.com Comparing-Midjourney-Plans, Terms-of-Service, Community-Guidelines, Using-Images-Videos-Commercially",
+      "canva_findings": "All official Canva pages loaded in the browser (the earlier 403s were bot-blocking of automated fetch). Bangladesh is billed in BDT: Pro BDT 6,400/year or 800/month for one person; Business BDT 12,000/year or 1,200/month per person; promo of 50% off the first 3 months on the monthly plan, shown as ending 2026-12-04. Confirmed: Pro is for one person, 100 GB, 5 Brand Kits, 10x AI vs Free; Business 500 GB, 100 Brand Kits, 20x AI vs Free; Teams closed to new sign-ups and upgrades, existing Teams subscribers continue; Terms of Use (effective 2026-11-16) require a unique account per person and no shared username or password; removed team members lose access to team designs. canva.com/pro/ no longer shows a price.",
+      "midjourney_findings": "All claims confirmed: Basic/Standard/Pro/Mega $10/$30/$60/$120 monthly and $96/$288/$576/$1,152 annual (20% annual discount); fast hours 3.3/15/30/60; stealth on Pro and Mega only; one user per account; no resale or redistribution of the Services or access, including account sharing; accounts may be blocked or banned; over US$1M gross revenue needs Pro or Mega.",
+      "not_reverified": "canva.official_reference.pro_yearly_usd (180) and business_yearly_usd_per_person (250): no USD price is shown to a Bangladesh browser, so these two USD reference figures remain unverified and are left unchanged. portfolio_intent_ownership and any SaveOnSub offer or SERP snapshot are not provider pages and were not checked."
     }
   ],
   "market": "Bangladesh",
