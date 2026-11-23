@@ -168,6 +168,44 @@ test("costs: a supplied evidence_ref or category of the wrong type is a 400, nev
   assert.equal(w.db.one("SELECT COUNT(*) n FROM order_costs WHERE evidence_ref IS NULL").n, 4);
 });
 
+test("origin: cross-origin payment verification, reversal and claim are refused before any write", async () => {
+  const evil = { headers: { origin: "https://evil.example", "content-type": "text/plain" } };
+  const review = w.seedOrder({ status: "payment_review", ref: "TXN12345678" });
+  const paid = w.seedOrder({ status: "payment_confirmed" });
+  const cancelled = w.seedOrder({ status: "cancelled" });
+  const before = ledgerCounts();
+  for (const [name, r] of [
+    ["verify", await w.api.verify("owner", review.pub, {}, evil)],
+    ["reverse", await w.api.reverse("owner", cancelled.pub, {}, evil)],
+    ["claim", await w.api.claim("fulfillA", paid.pub, evil)],
+  ]) {
+    assert.equal(r.status, 403, name);
+    assert.equal(r.body.error, "FORBIDDEN_ORIGIN", name);
+  }
+  assert.equal(ledgerCounts(), before);
+  assert.equal(w.order(paid.pub).status, "payment_confirmed");
+  // Roles are still decided first, and same-origin / origin-less callers keep working.
+  assert.equal((await w.api.claim("viewer", paid.pub, evil)).body.error, "FORBIDDEN");
+  assert.equal((await w.api.claim("fulfillA", paid.pub, { headers: { origin: "https://staging.test" } })).status, 200);
+  assert.notEqual((await w.api.verify("owner", review.pub, {})).body.error, "FORBIDDEN_ORIGIN");
+});
+
+test("costs: a correction note is trimmed before it is required and stored; a non-string note is refused", async () => {
+  const { pub } = w.seedOrder({ status: "delivered" });
+  const base = { supplier_label: "Supplier A", amount_bdt: -5, entry_type: "correction" };
+  const before = ledgerCounts();
+  assert.equal((await costs("owner", pub, { ...base, note: " ".repeat(300) + "real reason" })).status, 201);
+  assert.equal(w.db.one("SELECT note FROM order_costs").note, "real reason");
+  assert.notEqual(ledgerCounts(), before);
+  for (const note of [5, { a: 1 }, ["x"], true]) {
+    const r = await costs("owner", pub, { supplier_label: "Supplier A", amount_bdt: 5, note });
+    assert.equal(r.status, 400, JSON.stringify(note));
+    assert.equal(r.body.error, "INVALID_NOTE");
+  }
+  assert.equal(w.db.one("SELECT COUNT(*) n FROM order_costs").n, 1);
+  assert.equal((await costs("owner", pub, { supplier_label: "Supplier A", amount_bdt: 5, note: "   " })).status, 201);   // blank note on a normal cost => NULL
+});
+
 // ---------- G3 costs + margin ----------
 test("G3: only the owner records costs; manager reads; others are refused", async () => {
   const { pub } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });

@@ -45,6 +45,9 @@ export const onRequestPost: PagesFunction<VerifierEnv> = async ({ request, env, 
   try { operator = await requireOperator(request, env); }
   catch (e) { return authFailure(e); }
   if (!paymentVerifierRoles(env).has(operator.role)) return json({ error: "PAYMENT_VERIFICATION_FORBIDDEN" }, 403);
+  // A browser request from another origin is refused before the body is read (same rule as costs.ts).
+  const origin = request.headers.get("origin");
+  if (origin && origin !== new URL(request.url).origin) return json({ error: "FORBIDDEN_ORIGIN" }, 403);
 
   const body = await readJson(request);
   if (!body) return json({ error: "INVALID_JSON" }, 400);

@@ -68,7 +68,11 @@ export const onRequestPost: PagesFunction<OpsEnv> = async ({ request, env, param
   }
   const evidence = typeof body.evidence_ref === "string" && body.evidence_ref.trim() ? body.evidence_ref.trim() : null;
   if (evidence && !EVIDENCE_REF.test(evidence)) return json({ error: "INVALID_EVIDENCE_REF" }, 400);
-  const note = typeof body.note === "string" && body.note.trim() ? body.note.slice(0, 300) : null;
+  // Trim first, then cap, then require: 300 leading spaces must not count as (or be stored as) a note.
+  const note = typeof body.note === "string" && body.note.trim() ? body.note.trim().slice(0, 300) : null;
+  if (entryType !== "correction" && body.note !== undefined && body.note !== null && typeof body.note !== "string") {
+    return json({ error: "INVALID_NOTE" }, 400);
+  }
   if (entryType === "correction" && !note) return json({ error: "CORRECTION_NOTE_REQUIRED" }, 400);
 
   let order;
