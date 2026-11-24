@@ -24,7 +24,10 @@ class EffectivePricebook(unittest.TestCase):
             self.assertTrue(set(ids) <= raw_ids, pid)  # still in the CEO-approved file
             self.assertFalse(set(ids) & eff_ids, pid)  # gone from every build and audit
             self.assertEqual({h["plan_id"] for h in eff[pid]["held_plans"]}, set(ids))
-            self.assertTrue(eff[pid]["plans"], f"{pid} keeps its non-held plans")
+            if set(ids) == raw_ids:  # fully held product fails closed to inquiry
+                self.assertEqual("inquiry", eff[pid]["mode"], pid)
+            else:
+                self.assertTrue(eff[pid]["plans"], f"{pid} keeps its non-held plans")
 
     def test_all_shared_credential_offers_restricted_by_default(self):
         """A CEO-approved price does not grant provider permission to share logins."""
@@ -69,7 +72,8 @@ class EffectivePricebook(unittest.TestCase):
 
     def test_v40_holds_preserved_and_business_shared_held(self):
         # Four prior CEO card-A holds must remain, plus the new 17 Nov
-        # provider-rights HOLD; never broaden or silently drop these IDs.
+        # provider-rights HOLD and the nine below-cost personal plans the CEO
+        # put on HOLD on 25 Nov 2026; never broaden or silently drop these IDs.
         self.assertEqual(HELD, {
             "chatgpt-plus": [
                 "starter-shared-6-8-users-1-month",
@@ -78,6 +82,12 @@ class EffectivePricebook(unittest.TestCase):
             "chatgpt-pro": ["premium-shared-5-6-1-month"],
             "claude-pro": ["premium-shared-2-3-1-month"],
             "chatgpt-business": ["premium-shared-2-3-1-month"],
+            "runway": ["standard-personal-625-credits-1-month", "pro-personal-2250-credits-1-month", "unlimited-personal-1-month"],
+            "replit-core": ["core-personal-1-month"],
+            "notion-ai": ["business-monthly-official-notion-ai-incl-1-month"],
+            "suno": ["pro-personal-500-songs-1-month", "premier-personal-2000-songs-1-month"],
+            "github-copilot": ["pro-personal-your-github-1-month"],
+            "elevenlabs": ["starter-personal-30k-chars-1-month"],
         })
 
     def test_unknown_held_plan_fails_closed(self):

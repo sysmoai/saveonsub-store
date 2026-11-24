@@ -64,7 +64,7 @@ UNLIMITED_LABELS = ("Unlimited Personal", "Unlimited — 1 Month")
 def disable_unlimited_card(text, bn=False):
     label = next((l for l in UNLIMITED_LABELS if f'<b>{l}</b>' in text), None)
     if label is None:
-        raise SystemExit("RUNWAY COHORT ERROR — Unlimited card start missing")
+        return None  # no Unlimited card on the page (plan on commercial HOLD)
     start = text.find('<div class="pcard"', text.find(f'<b>{label}</b>') - 250)
     if start < 0:
         raise SystemExit("RUNWAY COHORT ERROR — Unlimited card start missing")
@@ -87,9 +87,9 @@ def disable_unlimited_card(text, bn=False):
 def patch_product(rel, bn=False):
     path, text = load(rel)
     desc = (
-        "Runway বাংলাদেশে SaveOnSub-এ ৳499 থেকে। Current Standard/Pro/Max pricing, credits, Unlimited→Max transition এবং access method কেনার আগে যাচাই করুন।"
+        "Runway বাংলাদেশে। Current Standard/Pro/Max pricing, credits, Unlimited→Max transition এবং access method কেনার আগে যাচাই করুন।"
         if bn else
-        "Runway in Bangladesh from ৳499 on SaveOnSub. Compare current Standard/Pro/Max pricing, credits, the Unlimited→Max transition and access method before buying."
+        "Runway in Bangladesh. Compare current Standard/Pro/Max pricing, credits, the Unlimited→Max transition and access method before buying."
     )
     text = replace_meta(text, "name", "description", desc)
     text = replace_meta(text, "property", "og:description", desc)
@@ -110,7 +110,10 @@ def patch_product(rel, bn=False):
     text = text.replace('"offerCount": 3', '"offerCount": 2').replace('"highPrice": 11362', '"highPrice": 4186')
     # Pricing V2 Unlimited price must not survive as the advertised high price.
     text = text.replace('"highPrice": 15990', '"highPrice": 5890')
-    text = disable_unlimited_card(text, bn)
+    disabled = disable_unlimited_card(text, bn)
+    if disabled is None and any(f'cartAdd(&quot;runway&quot;,&quot;{l}&quot;' in text for l in UNLIMITED_LABELS):
+        raise SystemExit("RUNWAY COHORT ERROR — Unlimited purchase action without its card")
+    text = text if disabled is None else disabled
     anchor = '<h2 class="mt3" style="font-size:22px">আপনার প্ল্যান বেছে নিন</h2>' if bn else '<h2 class="mt3" style="font-size:22px">Choose your plan</h2>'
     if anchor not in text:
         raise SystemExit(f"RUNWAY COHORT ERROR — plan anchor missing in {rel}")
@@ -129,14 +132,14 @@ guide = replace_meta(guide, "property", "og:description", guide_desc)
 guide = re.sub(r'("@type":\s*"Article".*?"description":\s*")[^"]*(")', lambda m: m.group(1) + guide_desc + m.group(2), guide, count=1, flags=re.S)
 guide = re.sub(r'PRICE SHEET · (?:UPDATED|RUNWAY VERIFIED) \d{4}-\d{2}-\d{2}', f'PRICE SHEET · RUNWAY VERIFIED {VERIFIED}', guide, count=1)
 guide = guide.replace("Every AI video tool we carry, cheapest plan, versus the wider BD market where we surveyed it. Receipts on each product page.", "Compare current SaveOnSub offers with each provider's live plan structure, credits and access method. Historical BD market ranges are secondary and should not be treated as live quotes.")
-guide = re.sub(r'<tr><td><a href="\.\./p/runway\.html".*?</tr>', '<tr data-runway-guide-facts="2026-09-09"><td><a href="../p/runway.html" style="color:var(--green2)">Runway</a></td><td>From ৳499</td><td>Official: Standard US$15 · Pro US$35 · Max US$95 monthly</td><td>Generative video + creative workflow; check credits and tier</td></tr>', guide, count=1, flags=re.S)
+guide = re.sub(r'<tr><td><a href="\.\./p/runway\.html".*?</tr>', '<tr data-runway-guide-facts="2026-09-09"><td><a href="../p/runway.html" style="color:var(--green2)">Runway</a></td><td>Price on request</td><td>Official: Standard US$15 · Pro US$35 · Max US$95 monthly</td><td>Generative video + creative workflow; check credits and tier</td></tr>', guide, count=1, flags=re.S)
 guide = guide.replace("Kling at ৳270 vs a ৳1,299+ market is not a typo.", "Historical market ranges can become stale quickly. Use the current SaveOnSub product price plus the provider's live plan page for the decision.")
 guide = guide.replace("Kling AI at ৳270/month via SAVEONSUB — dramatically below the ৳1,299–13,000 BD market range, with warranty.", "The lowest listed SaveOnSub AI-video offer can change. Compare current product pages, access type, credits and applicable warranty instead of relying on a historical market-range claim.")
 path.write_text(guide, encoding="utf-8")
 
 for rel in ["p/runway.html", "bn/p/runway.html"]:
     text = (SITE / rel).read_text(encoding="utf-8")
-    for marker in [f'data-runway-facts="{VERIFIED}"', f'data-runway-official="{VERIFIED}"', 'data-runway-legacy-unlimited="retired-new-sales"']:
+    for marker in [f'data-runway-facts="{VERIFIED}"', f'data-runway-official="{VERIFIED}"']:
         if marker not in text:
             raise SystemExit(f"RUNWAY COHORT ERROR — missing marker {marker} in {rel}")
     for stale in ["Official: ~৳1,320", "SAVE 62%"] + [f'cartAdd(&quot;runway&quot;,&quot;{l}&quot;' for l in UNLIMITED_LABELS] + [f'"name": "{l}"' for l in UNLIMITED_LABELS]:
