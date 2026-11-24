@@ -140,6 +140,36 @@
     "Yes. Claude Pro works in the official Claude app on supported Android phones and iPhones. Sign in with the Claude account that has the Pro subscription. Claude is also available in mobile browsers at claude.ai. Some features vary by device, region and app version.",
     "Android ফোন বা iPhone-এ কি Claude Pro ব্যবহার করা যায়?",
     "হ্যাঁ। Android ফোন ও iPhone-এ অফিসিয়াল Claude অ্যাপে Claude Pro ব্যবহার করা যায়। যে Claude অ্যাকাউন্টে Pro সাবস্ক্রিপশন আছে সেটিতে লগইন করতে হবে। মোবাইল ব্রাউজারে claude.ai থেকেও ব্যবহার করা যায়। ডিভাইস, দেশ ও অ্যাপ ভার্সন অনুযায়ী কিছু ফিচার আলাদা হতে পারে।"
+   ],
+   [
+    "Is Claude available in Bangladesh?",
+    "Yes. Anthropic lists Bangladesh among its supported countries and regions (checked 24 Nov 2026).",
+    "বাংলাদেশে কি Claude ব্যবহার করা যায়?",
+    "হ্যাঁ। Anthropic-এর সমর্থিত দেশের তালিকায় বাংলাদেশ আছে (২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "Does Claude Pro include Claude Code?",
+    "Yes. Anthropic lists Claude Code access among the Pro plan benefits (checked 24 Nov 2026).",
+    "Claude Pro-তে কি Claude Code আছে?",
+    "হ্যাঁ। Anthropic Pro প্ল্যানের সুবিধার মধ্যে Claude Code অ্যাক্সেস উল্লেখ করেছে (২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "Does Claude Pro include the Claude API?",
+    "No. Anthropic says the Pro plan does not include API usage through the Claude Console; API usage is paid for separately (checked 24 Nov 2026).",
+    "Claude Pro-তে কি Claude API আছে?",
+    "না। Anthropic জানিয়েছে, Pro প্ল্যানে Claude Console-এর API ব্যবহার অন্তর্ভুক্ত নয়; API-র খরচ আলাদা (২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "What are the Claude Pro usage limits?",
+    "Pro has a five-hour limit and a weekly limit that applies across all models. How many messages you can send varies with message and file length, conversation length, and the model or feature used (Anthropic help page, checked 24 Nov 2026).",
+    "Claude Pro-র ব্যবহারের সীমা কত?",
+    "Pro-তে পাঁচ ঘণ্টার সীমা এবং সব মডেল মিলিয়ে সাপ্তাহিক সীমা আছে। মেসেজ ও ফাইলের আকার, কথোপকথনের দৈর্ঘ্য এবং মডেল বা ফিচার অনুযায়ী মেসেজের সংখ্যা কমবেশি হয় (Anthropic-এর সাহায্য পেজ, ২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "Claude Pro or Claude Max: which one should I choose?",
+    "Start with Pro for regular writing, study and coding. Anthropic says Max gives five times the Pro plan's usage every five hours and every week, so it suits people who often reach the Pro limits (checked 24 Nov 2026).",
+    "Claude Pro নাকি Claude Max, কোনটা নেব?",
+    "নিয়মিত লেখা, পড়াশোনা ও কোডিংয়ের জন্য Pro দিয়ে শুরু করুন। Anthropic-এর তথ্য অনুযায়ী Max-এ প্রতি পাঁচ ঘণ্টা ও প্রতি সপ্তাহে Pro-র পাঁচ গুণ ব্যবহার মেলে; যারা প্রায়ই Pro-র সীমায় পৌঁছান তাদের জন্য এটি মানানসই (২৪ নভেম্বর ২০২৬-এ দেখা)।"
    ]
   ],
   "grammarly": [
