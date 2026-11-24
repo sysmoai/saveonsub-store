@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-11-07",
+  "verified_on": "2026-11-23",
   "verification_log": [
     {
       "date": "2026-10-23",
@@ -14,19 +14,60 @@
       "source": "https://runway.com/pricing",
       "findings": "Standard $15/mo ($12 annual-effective), Pro $35/mo ($28 annual-effective), Max $95/mo ($76 annual-effective) — unchanged from 2026-10-23.",
       "not_reverified": "Unlimited legacy-extension dates and the account-sharing policy page were not re-fetched this pass; carried forward from 2026-09-09."
+    },
+    {
+      "date": "2026-11-19",
+      "method": "direct fetch (cloud web-fetch agent)",
+      "source": "https://runway.com/pricing",
+      "findings": "Standard $15/mo ($12 annual-effective, 625 credits), Pro $35/mo ($28, 2250 credits), Max $95/mo ($76, 9500 credits; credits roll over up to 1 month). Unchanged. No price change made.",
+      "not_reverified": "The pricing page no longer mentions the Unlimited plan or its switch to Max, so the legacy-extension date (2026-11-30) and the account-sharing policy page were not re-confirmed; carried forward from 2026-09-09. Legacy Unlimited is not sold, so no public price depends on it."
+    },
+    {
+      "date": "2026-11-23",
+      "method": "direct fetch of runway.com/pricing; WebSearch snippet (help.runwayml.com domain only) for the Unlimited transition page; the 3 help-center pages returned HTTP 403 to automated fetch",
+      "source": "https://runway.com/pricing",
+      "findings": "Free 125 one-time credits; Standard $15 ($12 annual-effective, 625 credits, no rollover); Pro $35 ($28, 2250, no rollover); Max $95 ($76, 9500, up to one month rollover) - all unchanged. Search snippet of the Unlimited-to-Max page (updated 2026-08-27) states legacy Unlimited access extended through 2026-11-30, with monthly subscribers moving to Max at the same $95/month.",
+      "not_reverified": "Direct fetch of the credits, unlimited-transition and account-sharing help pages (HTTP 403). Not verified at all: unlimited.new_sales_ended 2026-06-01 and both policy statements. The account-sharing article is now titled 'Unlimited plan details (Legacy)' (slug changed) and may not contain the sharing policy. Carried forward from 2026-09-09."
+    },
+    {
+      "date": "2026-11-23",
+      "method": "read-only read in real Google Chrome (not signed in, Bangladesh network, new tab), 2026-11-23; no automated fetch; supplements the direct fetch of runway.com/pricing recorded in the previous entry",
+      "source": "help.runwayml.com articles 15124877443219 (How do credits work), 52068047744019 (Unlimited plan is switching to Max, updated 2026-08-27), 18053095835795 (now titled 'Unlimited plan details (Legacy)')",
+      "findings": "The three help pages load in a browser (the earlier 403s were bot-blocking). Confirmed: Free one-time 125 credits that do not expire; Standard 625, Pro 2250, Max 9500 credits per month; Standard and Pro credits expire on the billing date, Max rolls over up to one month; Unlimited no longer offered as of 2026-06-01; legacy Unlimited extended through 2026-11-30; monthly Unlimited subscribers move to Max at the same $95/month; sharing account credentials violates the Terms of Use and may result in termination.",
+      "changed": "official_sources.account_sharing URL updated: the old slug redirects to ...18053095835795-Unlimited-plan-details-Legacy.",
+      "not_reverified": "policy.new_individual_plans (Standard, Pro and Max single-user; use Team/Enterprise) is not stated in those words on the pages read. Runway's Terms of Use page itself was not opened because its URL is not listed in this file."
     }
   ],
   "official_sources": {
     "pricing": "https://runway.com/pricing",
     "credits": "https://help.runwayml.com/hc/en-us/articles/15124877443219-How-do-credits-work",
     "unlimited_transition": "https://help.runwayml.com/hc/en-us/articles/52068047744019-Unlimited-plan-is-switching-to-Max",
-    "account_sharing": "https://help.runwayml.com/hc/en-us/articles/18053095835795-Unlimited-plan-details"
+    "account_sharing": "https://help.runwayml.com/hc/en-us/articles/18053095835795-Unlimited-plan-details-Legacy"
   },
   "plans": {
-    "Free": {"monthly_usd": 0, "credits": 125, "credit_type": "one-time"},
-    "Standard": {"monthly_usd": 15, "annual_effective_usd_month": 12, "credits_month": 625, "rollover": false},
-    "Pro": {"monthly_usd": 35, "annual_effective_usd_month": 28, "credits_month": 2250, "rollover": false},
-    "Max": {"monthly_usd": 95, "annual_effective_usd_month": 76, "credits_month": 9500, "rollover": "up to one month"}
+    "Free": {
+      "monthly_usd": 0,
+      "credits": 125,
+      "credit_type": "one-time"
+    },
+    "Standard": {
+      "monthly_usd": 15,
+      "annual_effective_usd_month": 12,
+      "credits_month": 625,
+      "rollover": false
+    },
+    "Pro": {
+      "monthly_usd": 35,
+      "annual_effective_usd_month": 28,
+      "credits_month": 2250,
+      "rollover": false
+    },
+    "Max": {
+      "monthly_usd": 95,
+      "annual_effective_usd_month": 76,
+      "credits_month": 9500,
+      "rollover": "up to one month"
+    }
   },
   "unlimited": {
     "new_sales_ended": "2026-06-01",

@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-11-07",
+  "verified_on": "2026-11-23",
   "verification_log": [
     {
       "date": "2026-10-23",
@@ -13,6 +13,28 @@
       "canva_findings": "costbench.com (last verified 2026-11-04) gives Pro $18/month or $144/year, but the same page also cites $15 and $180 in its history — the same instability recorded on 2026-10-23. canva-pro stays inquiry-only; no fixed price is published from this file.",
       "midjourney_findings": "Multiple independent 2026 aggregators consistently report four plans from $10 to $120/month (Basic $10, Standard $30, Pro $60, Mega $120), matching this file's official_plans table. No change.",
       "confidence": "Moderate: no first-party page could be read this pass. Re-check from a browser in Bangladesh when possible."
+    },
+    {
+      "date": "2026-11-19",
+      "method": "read-only browser read in the CEO's Chrome (Bangladesh-priced Canva) + Netflix public help page",
+      "findings": "Midjourney unchanged: Basic/Standard/Pro/Mega $10/$30/$60/$120 monthly, $96/$288/$576/$1,152 annual. Canva (Bangladesh checkout, BDT): Pro BDT 6,400/year or BDT 800/month for one person; Business BDT 12,000/year or BDT 1,200/month per person; no USD shown. This differs from the USD reference in this file ($180/$250 per year) because Canva bills Bangladesh in BDT; canva-pro stays inquiry-only and no price is published from this file.",
+      "not_reverified": "Canva USD reference figures ($180 Pro / $250 Business per year) were not confirmed and should not be quoted; use the BDT figures above if Canva is mentioned."
+    },
+    {
+      "date": "2026-11-23",
+      "method": "Direct fetch of every official_sources URL (5 canva, 4 midjourney) via WebFetch; curl with browser User-Agent retried on one URL of each",
+      "source": "All canva.com and docs.midjourney.com URLs listed in this file",
+      "canva_findings": "All 5 official canva.com URLs returned HTTP 403 to automated fetch. No claim confirmed or changed. canva-pro stays inquiry-only.",
+      "midjourney_findings": "All 4 official docs.midjourney.com URLs returned HTTP 403 to automated fetch. No claim confirmed or changed.",
+      "not_reverified": "Every claim in canva and midjourney sections. verified_on intentionally NOT advanced; a real browser session is required to read these pages."
+    },
+    {
+      "date": "2026-11-23",
+      "method": "read-only read in real Google Chrome (not signed in, Bangladesh network, new tab), 2026-11-23; no automated fetch",
+      "source": "canva.com/pricing/ ; canva.com/en_in/help/switch-from-pro-to-business/ ; canva.com/policies/terms-of-use/ ; canva.com/newsroom/news/introducing-canva-business/ ; canva.com/pro/ ; docs.midjourney.com Comparing-Midjourney-Plans, Terms-of-Service, Community-Guidelines, Using-Images-Videos-Commercially",
+      "canva_findings": "All official Canva pages loaded in the browser (the earlier 403s were bot-blocking of automated fetch). Bangladesh is billed in BDT: Pro BDT 6,400/year or 800/month for one person; Business BDT 12,000/year or 1,200/month per person; promo of 50% off the first 3 months on the monthly plan, shown as ending 2026-12-04. Confirmed: Pro is for one person, 100 GB, 5 Brand Kits, 10x AI vs Free; Business 500 GB, 100 Brand Kits, 20x AI vs Free; Teams closed to new sign-ups and upgrades, existing Teams subscribers continue; Terms of Use (effective 2026-11-16) require a unique account per person and no shared username or password; removed team members lose access to team designs. canva.com/pro/ no longer shows a price.",
+      "midjourney_findings": "All claims confirmed: Basic/Standard/Pro/Mega $10/$30/$60/$120 monthly and $96/$288/$576/$1,152 annual (20% annual discount); fast hours 3.3/15/30/60; stealth on Pro and Mega only; one user per account; no resale or redistribution of the Services or access, including account sharing; accounts may be blocked or banned; over US$1M gross revenue needs Pro or Mega.",
+      "not_reverified": "canva.official_reference.pro_yearly_usd (180) and business_yearly_usd_per_person (250): no USD price is shown to a Bangladesh browser, so these two USD reference figures remain unverified and are left unchanged. portfolio_intent_ownership and any SaveOnSub offer or SERP snapshot are not provider pages and were not checked."
     }
   ],
   "market": "Bangladesh",
@@ -43,15 +65,51 @@
       "team_workspace_note": "Designs created inside a team workspace stay in that team workspace; a removed member can lose access to those team designs."
     },
     "saveonsub_offer_snapshot": [
-      {"label": "Team seat (your login)", "bdt": 299, "duration": "1 month", "required_disclosure": "Exact source plan (Canva Business or existing legacy Teams), team owner/admin control, and what happens to workspace designs if membership ends must be disclosed before payment."},
-      {"label": "Personal Pro", "bdt": 1499, "duration": "1 year", "required_disclosure": "Exact activation/source method and renewal/control terms must be disclosed before payment; do not imply that a low reseller price itself proves a direct Canva-billed subscription."}
+      {
+        "label": "Team seat (your login)",
+        "bdt": 299,
+        "duration": "1 month",
+        "required_disclosure": "Exact source plan (Canva Business or existing legacy Teams), team owner/admin control, and what happens to workspace designs if membership ends must be disclosed before payment."
+      },
+      {
+        "label": "Personal Pro",
+        "bdt": 1499,
+        "duration": "1 year",
+        "required_disclosure": "Exact activation/source method and renewal/control terms must be disclosed before payment; do not imply that a low reseller price itself proves a direct Canva-billed subscription."
+      }
     ],
     "bd_serp_snapshot": [
-      {"seller": "ToolMartBD", "visible_price_bdt": 59, "duration": "1 year", "note": "team invite/access details after payment"},
-      {"seller": "Sohan Online Shop", "visible_price_bdt": "350-2999", "note": "1-year/lifetime variants"},
-      {"seller": "NexifyBD", "visible_price_bdt": 500, "duration": "1 month", "note": "premium access"},
-      {"seller": "Daraz seller listing", "visible_price_bdt": 2999, "duration": "1 year", "note": "marketplace listing"}
-    ]
+      {
+        "seller": "ToolMartBD",
+        "visible_price_bdt": 59,
+        "duration": "1 year",
+        "note": "team invite/access details after payment"
+      },
+      {
+        "seller": "Sohan Online Shop",
+        "visible_price_bdt": "350-2999",
+        "note": "1-year/lifetime variants"
+      },
+      {
+        "seller": "NexifyBD",
+        "visible_price_bdt": 500,
+        "duration": "1 month",
+        "note": "premium access"
+      },
+      {
+        "seller": "Daraz seller listing",
+        "visible_price_bdt": 2999,
+        "duration": "1 year",
+        "note": "marketplace listing"
+      }
+    ],
+    "bangladesh_checkout_observed_2026_11_19": {
+      "currency": "BDT",
+      "pro_year": 6400,
+      "pro_month": 800,
+      "business_year_per_person": 12000,
+      "business_month_per_person": 1200
+    }
   },
   "midjourney": {
     "official_sources": {
@@ -61,10 +119,34 @@
       "commercial_use": "https://docs.midjourney.com/hc/en-us/articles/27870375276557-Using-Images-Videos-Commercially"
     },
     "official_plans": {
-      "Basic": {"monthly_usd": 10, "annual_usd": 96, "fast_gpu": "3.3 hr/month", "relax": "none", "stealth": false},
-      "Standard": {"monthly_usd": 30, "annual_usd": 288, "fast_gpu": "15 hr/month", "relax": "unlimited images", "stealth": false},
-      "Pro": {"monthly_usd": 60, "annual_usd": 576, "fast_gpu": "30 hr/month", "relax": "unlimited images + SD video", "stealth": true},
-      "Mega": {"monthly_usd": 120, "annual_usd": 1152, "fast_gpu": "60 hr/month", "relax": "unlimited images + SD video", "stealth": true}
+      "Basic": {
+        "monthly_usd": 10,
+        "annual_usd": 96,
+        "fast_gpu": "3.3 hr/month",
+        "relax": "none",
+        "stealth": false
+      },
+      "Standard": {
+        "monthly_usd": 30,
+        "annual_usd": 288,
+        "fast_gpu": "15 hr/month",
+        "relax": "unlimited images",
+        "stealth": false
+      },
+      "Pro": {
+        "monthly_usd": 60,
+        "annual_usd": 576,
+        "fast_gpu": "30 hr/month",
+        "relax": "unlimited images + SD video",
+        "stealth": true
+      },
+      "Mega": {
+        "monthly_usd": 120,
+        "annual_usd": 1152,
+        "fast_gpu": "60 hr/month",
+        "relax": "unlimited images + SD video",
+        "stealth": true
+      }
     },
     "annual_discount_pct": 20,
     "account_policy": {
@@ -75,8 +157,19 @@
     },
     "commercial_use_note": "General commercial terms apply to subscribed users, but a company with more than US$1,000,000 in annual gross revenue must use Pro or Mega for company commercial use.",
     "bd_serp_snapshot": [
-      {"seller": "MARTsoon", "basic_bdt": 1550, "standard_bdt": 4350, "pro_bdt": 8750, "mega_bdt": 16500},
-      {"seller": "Any AI Pro", "standard_personal_bdt": 3700, "standard_shared_bdt": 1500, "note": "shared option advertised"}
+      {
+        "seller": "MARTsoon",
+        "basic_bdt": 1550,
+        "standard_bdt": 4350,
+        "pro_bdt": 8750,
+        "mega_bdt": 16500
+      },
+      {
+        "seller": "Any AI Pro",
+        "standard_personal_bdt": 3700,
+        "standard_shared_bdt": 1500,
+        "note": "shared option advertised"
+      }
     ]
   },
   "portfolio_intent_ownership": {
@@ -92,8 +185,17 @@
         "midjourney shared vs personal risk"
       ]
     },
-    "aips": {"overlap": "medium", "recommended_future_role": "store-brand and use-case demand, not duplicate exact generic comparison pages"},
-    "aitp": {"overlap": "high for Canva/use-case content", "recommended_future_role": "personal-seat and workflow/tutorial intent"},
-    "aipt": {"overlap": "high for Midjourney shared/student intent", "recommended_future_role": "student bundles and brand-specific demand"}
+    "aips": {
+      "overlap": "medium",
+      "recommended_future_role": "store-brand and use-case demand, not duplicate exact generic comparison pages"
+    },
+    "aitp": {
+      "overlap": "high for Canva/use-case content",
+      "recommended_future_role": "personal-seat and workflow/tutorial intent"
+    },
+    "aipt": {
+      "overlap": "high for Midjourney shared/student intent",
+      "recommended_future_role": "student bundles and brand-specific demand"
+    }
   }
 }

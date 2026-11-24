@@ -1,5 +1,5 @@
 {
-  "verified_on": "2026-11-07",
+  "verified_on": "2026-11-23",
   "verification_log": [
     {
       "date": "2026-10-23",
@@ -30,17 +30,51 @@
       "method": "direct fetch of the Spotify Bangladesh Premium page + netflixindex.com/country/bangladesh (third-party, 'as of October 2026') + direct fetch of netflix.com/bd (served US content to the US-located fetcher)",
       "findings": "Spotify Bangladesh: Individual BDT 219, Student 109, Duo 299, Family 379/month — unchanged. Netflix Bangladesh: Mobile $2.99, Basic $3.99, Standard $7.99, Premium $9.99 (USD-billed), 'prices have not changed in the past year' — matches this file. YouTube: no price is published by this cohort (checkout is the authority); availability/household rules carried forward.",
       "not_reverified": "netflix.com/bd geo-served US prices ($8.99–$26.99) to the automated fetcher, so the Bangladesh figures rest on a third-party index this pass. YouTube help pages not re-fetched; carried forward from 2026-10-23."
+    },
+    {
+      "date": "2026-11-19",
+      "method": "direct fetch (cloud web-fetch agent) of spotify.com/bd-en/premium and the YouTube availability help article",
+      "findings": "Spotify Bangladesh: Individual BDT 219, Student 109, Duo 299, Family 379/month, unchanged. The page now shows the 3-months-free Individual intro offer (new users only) ending 2026-12-31 (this file previously said 2026-09-23). YouTube help article lists Bangladesh for Premium and Premium Lite.",
+      "not_reverified": "Netflix: netflix.com/bd was served US content to the automated fetcher (USD 8.99-26.99 range), so Bangladesh tiers could not be re-confirmed; the 2026-10-23 table and its caveats are carried forward unchanged and Netflix stays unverified. SaveOnSub publishes no fixed Netflix price from this file."
+    },
+    {
+      "date": "2026-11-19",
+      "method": "read-only browser read in the CEO's Chrome of Netflix's public Plans & Pricing help page (priced for Bangladesh in USD)",
+      "findings": "Netflix Bangladesh: Mobile $2.99, Basic $3.99, Standard $7.99 (+$2.99 per extra member), Premium $9.99. Unchanged from this file's table. The netflix.com/bd landing page itself shows only 'USD 2.99 to USD 9.99/month'."
+    },
+    {
+      "date": "2026-11-23",
+      "method": "live WebFetch of the five official URLs listed in this file (netflix.com/bd, spotify.com/bd-en/premium, three support.google.com/youtube pages); no third-party sources",
+      "source": "https://www.netflix.com/bd/ ; https://www.spotify.com/bd-en/premium/ ; https://support.google.com/youtube/answer/6307365 ; /answer/12156000 ; /answer/10239146",
+      "findings": "Spotify BD Individual 219, Student 109, Duo 299, Family 379 unchanged; same-address rule confirmed; promo end date changed 2026-09-23 -> 2026-12-31 (page: offer only for users who have not tried Premium). Netflix BD page states USD billing and 'USD 2.99 to USD 9.99/month' (range endpoints match). YouTube Premium listed for Bangladesh; family same residential address and 30-day electronic check confirmed; no price published.",
+      "not_reverified": "Netflix per-plan names, Basic 3.99 / Standard 7.99 prices, quality and screen counts: official page does not state them (netflix.verified_on left at 2026-10-23). Netflix no-BDT billing note not explicitly stated. Fetch tool returns summarised excerpts. Actual YouTube BDT checkout price not checked."
     }
   ],
   "netflix": {
     "official_source": "https://www.netflix.com/bd/",
     "currency": "USD",
-    "verified_on": "2026-10-23",
+    "verified_on": "2026-11-19",
     "plans": {
-      "Mobile": {"price_month": 2.99, "quality": "480p", "devices": "1 screen, phone/tablet"},
-      "Basic": {"price_month": 3.99, "quality": "720p (HD)", "devices": "1 screen, phone/tablet/laptop/TV"},
-      "Standard": {"price_month": 7.99, "quality": "1080p (Full HD)", "devices": "2 screens, phone/tablet/laptop/TV"},
-      "Premium": {"price_month": 9.99, "quality": "4K UHD + HDR", "devices": "4 screens, phone/tablet/laptop/TV"}
+      "Mobile": {
+        "price_month": 2.99,
+        "quality": "480p",
+        "devices": "1 screen, phone/tablet"
+      },
+      "Basic": {
+        "price_month": 3.99,
+        "quality": "720p (HD)",
+        "devices": "1 screen, phone/tablet/laptop/TV"
+      },
+      "Standard": {
+        "price_month": 7.99,
+        "quality": "1080p (Full HD)",
+        "devices": "2 screens, phone/tablet/laptop/TV"
+      },
+      "Premium": {
+        "price_month": 9.99,
+        "quality": "4K UHD + HDR",
+        "devices": "4 screens, phone/tablet/laptop/TV"
+      }
     },
     "billing_note": "Netflix does not bill Bangladesh in BDT; accounts are charged in USD, so the exact BDT amount depends on card/bank FX conversion at the time of billing."
   },
@@ -57,8 +91,9 @@
     "promo": {
       "eligible_new_individual_months": 3,
       "price_bdt": 0,
-      "ends": "2026-09-23"
-    }
+      "ends": "2026-12-31"
+    },
+    "verified_on": "2026-11-19"
   },
   "youtube": {
     "availability_source": "https://support.google.com/youtube/answer/6307365?hl=en-EN",
@@ -67,6 +102,7 @@
     "premium_available_bangladesh": true,
     "family_same_residential_address": true,
     "family_electronic_check_days": 30,
-    "price_policy": "Use live YouTube checkout as authority; verified official help confirms Bangladesh availability and household rules but this cohort does not publish an unverified exact BDT checkout price."
+    "price_policy": "Use live YouTube checkout as authority; verified official help confirms Bangladesh availability and household rules but this cohort does not publish an unverified exact BDT checkout price.",
+    "verified_on": "2026-11-19"
   }
 }
