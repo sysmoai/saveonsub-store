@@ -12,7 +12,7 @@ import html
 import json
 import re
 from pathlib import Path
-from urllib.parse import quote as urlquote
+from urllib.parse import quote as urlquote, unquote as urlunquote
 from pricebook import load_policy
 
 ROOT = Path(__file__).resolve().parent
@@ -189,7 +189,9 @@ def sanitize_common(text: str) -> str:
     # rewrite_product_page() afterwards; this just makes every other instance
     # (checkout, non-AI product pages, blog posts, etc.) safe in the meantime.
     def _fab_to_anchor(m: "re.Match") -> str:
-        raw_message = html.unescape(m.group(1))
+        # The onclick URL is already percent-encoded ("Hi!%20I%20want…"); decode it
+        # first so quoting below yields "%20", not the customer-visible "%2520".
+        raw_message = urlunquote(html.unescape(m.group(1)))
         href = f"https://wa.me/8801305869242?text={urlquote(raw_message, safe='')}"
         return f'<a class="fab fab-wa" href="{esc(href)}" target="_blank" rel="noopener" aria-label="WhatsApp">💬 WhatsApp</a>'
 
@@ -255,7 +257,9 @@ def product_main(product: dict, bn: bool) -> str:
     plans = product.get("plans") or []
     request_price = bool(product.get("request_price")) or not plans
     official_url = product.get("official_url") or product.get("url") or ""
-    official_usd = product.get("official_usd")
+    # Fail closed for provider USD figures the fact files could not confirm.
+    from conversion_upgrade import UNVERIFIED_PROVIDER_USD
+    official_usd = None if product.get("id") in UNVERIFIED_PROVIDER_USD else product.get("official_usd")
     prefix = "../.." if bn else ".."
     home = f"{prefix}/bn.html" if bn else f"{prefix}/index.html"
     all_link = f"{prefix}/all.html"

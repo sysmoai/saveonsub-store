@@ -92,6 +92,17 @@ def kinds_of(plans: list[dict]) -> list[str]:
     return seen
 
 
+# Provider USD list prices that the dated fact files could NOT confirm for a
+# Bangladesh buyer (2026-11-19 / 2026-11-23 reads). Fail closed: no USD row,
+# no "becomes $X at checkout" maths, until a fact file confirms the figure.
+#   chatgpt-business: seat USD not confirmed (OpenAI showed localized prices)
+#   canva-pro:        Bangladesh checkout bills BDT; USD reference unconfirmed
+#   netflix, spotify, google-ai-pro: Bangladesh facts differ from the USD shown
+UNVERIFIED_PROVIDER_USD = frozenset({
+    "chatgpt-business", "canva-pro", "netflix", "spotify", "google-ai-pro",
+})
+
+
 def official_refs() -> dict[str, dict]:
     try:
         data = json.loads(CATALOG_SRC.read_text(encoding="utf-8"))
@@ -101,7 +112,8 @@ def official_refs() -> dict[str, dict]:
     out = {}
     for p in items if isinstance(items, list) else []:
         if isinstance(p, dict) and p.get("id"):
-            out[p["id"]] = {"usd": p.get("official_usd"), "url": p.get("official_url") or p.get("url")}
+            usd = None if p["id"] in UNVERIFIED_PROVIDER_USD else p.get("official_usd")
+            out[p["id"]] = {"usd": usd, "url": p.get("official_url") or p.get("url")}
     return out
 
 
