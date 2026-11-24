@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import vm from "node:vm";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const site = path.resolve(process.argv[2] || path.join(root, "_site"));
@@ -20,7 +20,7 @@ vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(path.join(site, "assets/catalog.js"), "utf8"), ctx);
 try { vm.runInContext(fs.readFileSync(path.join(site, "assets/app.js"), "utf8"), ctx); } catch (e) { /* DOM-only tail */ }
 const catalog = vm.runInContext("CATALOG", ctx);
-const { resolveGovernedPlan } = await import(path.join(root, "functions/lib/order-os/catalog-policy.ts"));
+const { resolveGovernedPlan } = await import(pathToFileURL(path.join(root, "functions/lib/order-os/catalog-policy.ts")).href);
 
 const page = (loc, id) => { try { return fs.readFileSync(path.join(site, loc, `${id}.html`), "utf8"); } catch { return ""; } };
 const rows = [];
