@@ -20,6 +20,86 @@
     "Yes. ChatGPT Plus works on supported Android phones and iPhones through the official ChatGPT app. Sign in with the ChatGPT account associated with your subscription to access its available features. You can also use ChatGPT through a supported mobile web browser.",
     "মোবাইলে কি ChatGPT Plus ব্যবহার করা যায়?",
     "হ্যাঁ। Android ফোন ও iPhone-এ অফিসিয়াল ChatGPT অ্যাপ দিয়ে ChatGPT Plus ব্যবহার করা যায়। যে ChatGPT অ্যাকাউন্টে Plus সাবস্ক্রিপশন রয়েছে, সেই অ্যাকাউন্টে লগইন করলেই উপলব্ধ ফিচারগুলো ব্যবহার করতে পারবেন। চাইলে মোবাইলের সাপোর্টেড ব্রাউজার দিয়েও ChatGPT ব্যবহার করা যায়।"
+   ],
+   [
+    "ChatGPT Go or Plus: which one should I choose?",
+    "Go suits everyday chat with higher image, file and data analysis limits than Free. OpenAI says some advanced products and higher-tier features may require Plus. Plus offers advanced reasoning options, Deep Research where available, and priority access in busy periods (OpenAI help pages, checked 24 Nov 2026).",
+    "ChatGPT Go নাকি Plus: কোনটা নেবেন?",
+    "সাধারণ চ্যাটের সঙ্গে ফ্রির চেয়ে বেশি ছবি, ফাইল ও ডেটা বিশ্লেষণের সীমা চাইলে Go। OpenAI জানিয়েছে, কিছু উন্নত ফিচারের জন্য Plus লাগতে পারে। Plus-এ উন্নত রিজনিং, Deep Research (যেখানে আছে) ও ব্যস্ত সময়ে অগ্রাধিকার থাকে (OpenAI-এর সাহায্য পেজ, ২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "Can I pay OpenAI directly with bKash for ChatGPT Plus?",
+    "OpenAI's billing page lists credit and debit cards for all countries and does not list bKash (checked 24 Nov 2026). It lists BDT as a billing currency for Bangladesh, and says localized prices may differ from a conversion of the US price.",
+    "ChatGPT Plus-এর জন্য OpenAI-কে কি সরাসরি bKash-এ টাকা দেওয়া যায়?",
+    "OpenAI-এর বিলিং পেজে সব দেশের জন্য ক্রেডিট ও ডেবিট কার্ডের কথা আছে, bKash-এর কথা নেই (২৪ নভেম্বর ২০২৬-এ দেখা)। বাংলাদেশের জন্য BDT বিলিং কারেন্সি হিসেবে আছে; স্থানীয় দাম ডলারের হিসাব থেকে আলাদা হতে পারে।"
+   ],
+   [
+    "Does ChatGPT Plus include the OpenAI API?",
+    "No. OpenAI says API usage is not included in ChatGPT Plus and is billed separately (checked 24 Nov 2026).",
+    "ChatGPT Plus-এ কি OpenAI API আছে?",
+    "না। OpenAI জানিয়েছে, ChatGPT Plus-এ API ব্যবহার অন্তর্ভুক্ত নয়; API-র বিল আলাদা (২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "Is there a yearly ChatGPT Plus plan?",
+    "No. OpenAI says it does not support annual billing or paying for several months in advance for ChatGPT Plus (checked 24 Nov 2026).",
+    "ChatGPT Plus-এর কি বার্ষিক প্ল্যান আছে?",
+    "না। OpenAI জানিয়েছে, ChatGPT Plus-এ বার্ষিক বিলিং বা একসাথে কয়েক মাসের অগ্রিম পেমেন্ট নেই (২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "Does ChatGPT Plus have usage limits?",
+    "Yes. OpenAI says Plus may include limits such as message caps, especially during high demand, and that they can vary with system conditions (checked 24 Nov 2026).",
+    "ChatGPT Plus-এ কি ব্যবহারের সীমা আছে?",
+    "হ্যাঁ। OpenAI জানিয়েছে, Plus-এ মেসেজের মতো সীমা থাকতে পারে, বিশেষ করে বেশি চাপের সময়; অবস্থা অনুযায়ী সীমা বদলায় (২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ]
+  ],
+  "chatgpt-go": [
+   [
+    "What is ChatGPT Go?",
+    "ChatGPT Go is OpenAI's low-cost paid ChatGPT plan. It includes everything in Free, with more image generation, file uploads and data analysis, and longer memory. Usage is subject to plan limits (checked 24 Nov 2026).",
+    "ChatGPT Go কী?",
+    "ChatGPT Go হলো OpenAI-এর কম খরচের পেইড ChatGPT প্ল্যান। এতে ফ্রির সবকিছুর সঙ্গে ছবি তৈরি, ফাইল আপলোড ও ডেটা বিশ্লেষণের বেশি সুযোগ এবং দীর্ঘ মেমরি থাকে। ব্যবহারের সীমা আছে (২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "Can I get ChatGPT Go in Bangladesh?",
+    "OpenAI says Go is available in every country where ChatGPT is supported, and its billing page lists BDT for Bangladesh (checked 24 Nov 2026).",
+    "বাংলাদেশে কি ChatGPT Go পাওয়া যায়?",
+    "OpenAI জানিয়েছে, ChatGPT সমর্থিত সব দেশে Go পাওয়া যায়; বিলিং পেজে বাংলাদেশের জন্য BDT আছে (২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "What is the difference between ChatGPT Free and Go?",
+    "Both have unlimited everyday text chats, subject to abuse safeguards. Go has higher limits for features such as image generation, file uploads and data analysis. Voice limits are the same as Free (checked 24 Nov 2026).",
+    "ChatGPT Free ও Go-এর পার্থক্য কী?",
+    "দুটিতেই দৈনন্দিন টেক্সট চ্যাট আনলিমিটেড, তবে অপব্যবহার ঠেকানোর নিয়ম আছে। Go-তে ছবি তৈরি, ফাইল আপলোড ও ডেটা বিশ্লেষণের সীমা বেশি। ভয়েসের সীমা ফ্রির সমান (২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "ChatGPT Go or Plus: which one should I choose?",
+    "Go suits everyday chat with higher image, file and data analysis limits than Free. OpenAI says some advanced products and higher-tier features may require Plus. Plus offers advanced reasoning options, Deep Research where available, and priority access in busy periods (OpenAI help pages, checked 24 Nov 2026).",
+    "ChatGPT Go নাকি Plus: কোনটা নেবেন?",
+    "সাধারণ চ্যাটের সঙ্গে ফ্রির চেয়ে বেশি ছবি, ফাইল ও ডেটা বিশ্লেষণের সীমা চাইলে Go। OpenAI জানিয়েছে, কিছু উন্নত ফিচারের জন্য Plus লাগতে পারে। Plus-এ উন্নত রিজনিং, Deep Research (যেখানে আছে) ও ব্যস্ত সময়ে অগ্রাধিকার থাকে (OpenAI-এর সাহায্য পেজ, ২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "Does ChatGPT Go show ads?",
+    "OpenAI says ads are being tested with eligible Go users in select regions (checked 24 Nov 2026).",
+    "ChatGPT Go-তে কি বিজ্ঞাপন থাকে?",
+    "OpenAI জানিয়েছে, নির্দিষ্ট কিছু অঞ্চলে কিছু Go ব্যবহারকারীর কাছে বিজ্ঞাপন পরীক্ষা করা হচ্ছে (২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "Can I pay OpenAI directly with bKash for ChatGPT Go?",
+    "OpenAI's billing page lists credit and debit cards for all countries and does not list bKash (checked 24 Nov 2026). It lists BDT as a billing currency for Bangladesh, and says localized prices may differ from a conversion of the US price.",
+    "ChatGPT Go-এর জন্য OpenAI-কে কি সরাসরি bKash-এ টাকা দেওয়া যায়?",
+    "OpenAI-এর বিলিং পেজে সব দেশের জন্য ক্রেডিট ও ডেবিট কার্ডের কথা আছে, bKash-এর কথা নেই (২৪ নভেম্বর ২০২৬-এ দেখা)। বাংলাদেশের জন্য BDT বিলিং কারেন্সি হিসেবে আছে; স্থানীয় দাম ডলারের হিসাব থেকে আলাদা হতে পারে।"
+   ],
+   [
+    "Does ChatGPT Go include the OpenAI API?",
+    "No. OpenAI says API usage is not included in ChatGPT Go and is billed separately (checked 24 Nov 2026).",
+    "ChatGPT Go-এ কি OpenAI API আছে?",
+    "না। OpenAI জানিয়েছে, ChatGPT Go-এ API ব্যবহার অন্তর্ভুক্ত নয়; API-র বিল আলাদা (২৪ নভেম্বর ২০২৬-এ দেখা)।"
+   ],
+   [
+    "Is there a yearly ChatGPT Go plan?",
+    "No. OpenAI says it does not support annual billing or paying for several months in advance for ChatGPT Go (checked 24 Nov 2026).",
+    "ChatGPT Go-এর কি বার্ষিক প্ল্যান আছে?",
+    "না। OpenAI জানিয়েছে, ChatGPT Go-এ বার্ষিক বিলিং বা একসাথে কয়েক মাসের অগ্রিম পেমেন্ট নেই (২৪ নভেম্বর ২০২৬-এ দেখা)।"
    ]
   ],
   "google-ai-pro": [
