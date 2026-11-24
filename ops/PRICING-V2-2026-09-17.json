@@ -135,7 +135,7 @@
         {
           "plan_id": "team-seat-personal-1-month",
           "label": "Team Seat — Personal",
-          "bdt": 3990,
+          "bdt": 4290,
           "duration": "1 month",
           "access_type": "personal"
         }
@@ -405,14 +405,14 @@
         {
           "plan_id": "creator-personal-100k-chars-1-month",
           "label": "Creator Personal (100K chars)",
-          "bdt": 3289,
+          "bdt": 3790,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
           "plan_id": "pro-personal-500k-chars-1-month",
           "label": "Pro Personal (500K chars)",
-          "bdt": 14802,
+          "bdt": 16800,
           "duration": "1 month",
           "access_type": "personal"
         }
@@ -475,7 +475,7 @@
         {
           "plan_id": "pro-personal-1500-reqs-1-month",
           "label": "Pro+ Personal (1500 reqs)",
-          "bdt": 5831,
+          "bdt": 6690,
           "duration": "1 month",
           "access_type": "personal"
         }

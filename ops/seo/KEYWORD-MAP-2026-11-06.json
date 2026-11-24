@@ -868,8 +868,8 @@
     "github copilot pro kivabe kinbo",
     "github copilot pro bd taka"
    ],
-   "lowest_bdt": 590,
-   "plans": 2
+   "lowest_bdt": 6690,
+   "plans": 1
   },
   {
    "id": "replit-core",
@@ -906,8 +906,8 @@
     "replit core kivabe kinbo",
     "replit core bd taka"
    ],
-   "lowest_bdt": 500,
-   "plans": 1
+   "lowest_bdt": null,
+   "plans": 0
   },
   {
    "id": "adobe-creative-cloud",
@@ -1316,8 +1316,8 @@
     "runway kivabe kinbo",
     "runway bd taka"
    ],
-   "lowest_bdt": 499,
-   "plans": 3
+   "lowest_bdt": null,
+   "plans": 0
   },
   {
    "id": "elevenlabs",
@@ -1355,8 +1355,8 @@
     "elevenlabs kivabe kinbo",
     "elevenlabs bd taka"
    ],
-   "lowest_bdt": 499,
-   "plans": 3
+   "lowest_bdt": 3790,
+   "plans": 2
   },
   {
    "id": "otter",
@@ -1431,8 +1431,8 @@
     "suno ai kivabe kinbo",
     "suno ai bd taka"
    ],
-   "lowest_bdt": 499,
-   "plans": 2
+   "lowest_bdt": null,
+   "plans": 0
   },
   {
    "id": "coursera-plus",
@@ -1819,8 +1819,8 @@
     "notion business + ai kivabe kinbo",
     "notion business + ai bd taka"
    ],
-   "lowest_bdt": 800,
-   "plans": 2
+   "lowest_bdt": 4800,
+   "plans": 1
   },
   {
    "id": "mistral-pro",

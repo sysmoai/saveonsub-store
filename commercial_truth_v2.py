@@ -344,8 +344,8 @@ def product_main(product: dict, bn: bool) -> str:
     held = product.get("held_plans") or []
     if held:
         # No plan label or price here: the notice must not re-advertise what is on hold.
-        caveat += ('<div class="notice mt2" data-held-plans="1">এই পণ্যের আগের শেয়ার্ড প্ল্যানগুলো এখন নতুন অর্ডার নিচ্ছে না। এখন কী পাওয়া যায় তা WhatsApp-এ জিজ্ঞেস করুন।</div>' if bn else
-                   '<div class="notice mt2" data-held-plans="1">The earlier shared plans for this product are not taking new orders right now. Ask on WhatsApp what is available.</div>')
+        caveat += ('<div class="notice mt2" data-held-plans="1">এই পণ্যের কিছু প্ল্যান এখন নতুন অর্ডার নিচ্ছে না। এখন কী পাওয়া যায় তা WhatsApp-এ জিজ্ঞেস করুন।</div>' if bn else
+                   '<div class="notice mt2" data-held-plans="1">Some plans for this product are not taking new orders right now. Ask on WhatsApp what is available.</div>')
 
     items = "".join(f"<li>{esc(x)}</li>" for x in how_items)
     # Price-on-request (HOLD) pages carry no checkout path at all.

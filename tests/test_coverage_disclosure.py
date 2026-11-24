@@ -32,7 +32,9 @@ class CoverageDisclosure(unittest.TestCase):
                     self.assertIn(f'href="{up}warranty"', blk)
                     self.assertNotIn(".html", blk)  # clean URLs only (link_hygiene)
                     n += 1
-        self.assertGreaterEqual(n, 100)
+        priced = sum(1 for p in cat.values() if p.get("plans"))
+        self.assertGreater(priced, 40)  # an emptied catalog must not pass
+        self.assertEqual(n, 2 * priced)  # exactly one EN and one BN page each
 
     def test_no_invented_period_or_guarantee(self):
         cfg = json.loads((ROOT / "ops/seo/control/coverage-periods.json").read_text(encoding="utf-8"))
