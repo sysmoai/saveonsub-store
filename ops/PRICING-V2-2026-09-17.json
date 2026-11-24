@@ -517,21 +517,21 @@
         {
           "plan_id": "business-monthly-official-notion-ai-incl-1-month",
           "label": "Business Monthly (official, Notion AI incl.)",
-          "bdt": 800,
+          "bdt": 4090,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
           "plan_id": "business-6-month-one-time-4-800-6-months",
-          "label": "Business 6-Month (one-time ৳4,800)",
-          "bdt": 4800,
+          "label": "Business 6-Month (6 monthly renewals, paid once)",
+          "bdt": 24450,
           "duration": "6 months",
           "access_type": "personal"
         }
       ],
       "approved_by": "CEO Emon Hossain",
-      "approved_on": "2026-11-02",
-      "official_usd": 20
+      "approved_on": "2026-11-25",
+      "official_usd": 24
     },
     "grammarly": {
       "mode": "fixed",

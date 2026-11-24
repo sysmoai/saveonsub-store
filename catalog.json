@@ -3628,11 +3628,11 @@
       "faq": [
         {
           "q": "Why Cursor?",
-          "a": "The AI-native editor — $20/mo official buys $20 of API-rate usage (2026 model). Agent mode writes whole features. Our ৳2,990 personal is your own account, full credits."
+          "a": "An AI-native code editor whose agent mode can write whole features. Cursor now sells new subscriptions only through its own website (pricing page read 25 November 2026), so we are not taking new Cursor orders."
         },
         {
           "q": "Shared caveat?",
-          "a": "Usage limits pool across shared users; solo pros should take Personal."
+          "a": "We do not sell shared Cursor access."
         },
         {
           "q": "Is GitHub Copilot really free for students in Bangladesh?",
@@ -4646,7 +4646,7 @@
       "name": "Notion Business + AI",
       "category": "Workspace & Productivity",
       "icon": "📝",
-      "official_usd": 20,
+      "official_usd": 24,
       "official_url": "https://www.notion.com/pricing",
       "price_source": "aips-live-jul26",
       "plans": [],
@@ -4661,7 +4661,7 @@
       "faq": [
         {
           "q": "What's included?",
-          "a": "Notion Plus workspace + AI writing/Q&A across your notes. Your account, your data."
+          "a": "Notion Business plan with Notion AI in your own workspace."
         },
         {
           "q": "Free enough?",
@@ -4677,7 +4677,7 @@
         },
         {
           "q": "Can I use Notion AI for team collaboration in Bangladesh?",
-          "a": "Yes — Notion is excellent for BD startup teams and university group projects. The free tier covers personal use. Paid plans add unlimited blocks, team workspaces, and Notion AI features (summarize, generate, Q&A from your notes). At ৳800 personal, it replaces 3-4 separate tools."
+          "a": "Yes — Notion is excellent for BD startup teams and university group projects. The free tier covers personal use. Paid plans add unlimited blocks, team workspaces, and Notion AI features (summarize, generate, Q&A from your notes)."
         }
       ],
       "bundles": [],
