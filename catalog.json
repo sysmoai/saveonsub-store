@@ -720,7 +720,7 @@
       "faq": [
         {
           "q": "Who is Max for?",
-          "a": "Developers running Claude Code all day — Max 5x is $100/mo official, Max 20x $200/mo (verified Jul 2026). Our managed personal setups mirror those tiers."
+          "a": "Developers running Claude Code all day — Anthropic lists Max at $100/month and Ultra at $200/month (pricing page read 24 November 2026)."
         },
         {
           "q": "Personal only?",
@@ -740,7 +740,7 @@
         },
         {
           "q": "When should I choose Claude Max over Claude Pro?",
-          "a": "Max is Anthropic's high-capacity tier — $100 and $200/mo official. Designed for developers running Claude Code all day or researchers processing massive documents. Our managed personal setups mirror those tiers at BD-friendly rates."
+          "a": "Choose Max ($100/month at Anthropic) or Ultra ($200/month) when Pro usage limits stop your work, for example when running Claude Code all day. Both cost more than Pro."
         }
       ],
       "bundles": [],

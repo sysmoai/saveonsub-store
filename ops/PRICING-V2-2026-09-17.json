@@ -149,15 +149,15 @@
       "plans": [
         {
           "plan_id": "max-5x-personal-1-month",
-          "label": "Max 5x Personal",
-          "bdt": 14950,
+          "label": "Max Personal",
+          "bdt": 16950,
           "duration": "1 month",
           "access_type": "personal"
         },
         {
           "plan_id": "max-20x-personal-1-month",
-          "label": "Max 20x Personal",
-          "bdt": 29900,
+          "label": "Ultra Personal",
+          "bdt": 33900,
           "duration": "1 month",
           "access_type": "personal"
         }
