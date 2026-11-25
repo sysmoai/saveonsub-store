@@ -6,6 +6,8 @@ const CORE = ['/', '/index.html', '/all.html', '/offline.html',
 // Only these responses are safe to persist: a 404/5xx body written into the
 // cache would be replayed offline instead of offline.html.
 const cacheable = r => r && r.ok && r.type === 'basic';
+// Network-first (cache only as the offline fallback).
+const FRESH = new Set(['/assets/catalog.js', '/assets/app.js']);
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE).catch(()=>{})).then(()=>self.skipWaiting()));
 });
@@ -15,12 +17,16 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
-  if (req.mode === 'navigate') {
+  // Price-governing scripts must match the page they run on. A stale
+  // catalog.js next to a fresh page makes the cart guard refuse the new
+  // price, so the first "Add to cart" after a price release did nothing.
+  const fresh = FRESH.has(new URL(req.url).pathname);
+  if (req.mode === 'navigate' || fresh) {
     // network-first for pages (fresh prices), fall back to cache, then offline page
     e.respondWith(fetch(req).then(r => {
       if (cacheable(r)) { const cp=r.clone(); caches.open(CACHE).then(c=>c.put(req,cp)).catch(()=>{}); }
       return r;
-    }).catch(() => caches.match(req).then(r => r || caches.match('/offline.html'))));
+    }).catch(() => caches.match(req).then(r => r || (fresh ? Response.error() : caches.match('/offline.html')))));
   } else {
     // stale-while-revalidate: serve instantly, but always refresh in the
     // background so a price/catalog change lands on the next view rather
