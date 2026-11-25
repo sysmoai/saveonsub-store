@@ -84,7 +84,7 @@ class EffectivePricebook(unittest.TestCase):
             "chatgpt-business": ["premium-shared-2-3-1-month"],
             "runway": ["standard-personal-625-credits-1-month", "pro-personal-2250-credits-1-month", "unlimited-personal-1-month"],
             "replit-core": ["core-personal-1-month"],
-            "cursor": ["pro-personal-1-month", "pro-personal-3x-credits-1-month"],
+            "cursor": ["cursor-pro-personal-1-month", "pro-personal-3x-credits-1-month"],
             "suno": ["pro-personal-500-songs-1-month", "premier-personal-2000-songs-1-month"],
             "github-copilot": ["pro-personal-your-github-1-month"],
             "elevenlabs": ["starter-personal-30k-chars-1-month"],
