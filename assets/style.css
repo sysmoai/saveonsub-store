@@ -1468,3 +1468,19 @@ section > .wrap > .pill { border-color: rgba(46, 240, 210, .35); color: var(--gr
   summary { min-height: 44px; padding-block: 10px; box-sizing: border-box; }
   main p > a[href^="http"][target="_blank"] { padding-block: 6px; }
 }
+
+/* V22: narrow-phone header (≤420px). The Track label is plain text, so the older
+   `.navtrack span` rule never hid it and the logo wordmark overlapped it. Make the
+   Track link icon-only (its text stays for screen readers) and keep the logo from
+   being squeezed; the approved lockup is only scaled proportionally (height:auto). */
+@media (max-width: 420px) {
+  .navin .logo { flex-shrink: 0; }
+  .navtrack { font-size: 0; padding: 6px 8px; min-width: 40px; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; }
+  .navtrack::before { content: "📦"; font-size: 17px; line-height: 1; }
+}
+@media (max-width: 360px) {
+  .wrap.navin { padding-left: 16px; padding-right: 16px; gap: 8px; }
+  .navin .logo img[data-brand-lock] { width: 92px !important; }
+  .navin .logo img[data-brand-symbol] { width: 26px !important; height: 26px !important; margin-right: 5px !important; }
+  .navright { gap: 6px; }
+}

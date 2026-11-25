@@ -79,7 +79,7 @@ def home(path: Path, bn: bool, items: list[tuple[str, str]], cats: int) -> tuple
 
 def sw_version(text: str) -> str:
     digest = hashlib.sha256()
-    for name in ("assets/style.css", "assets/app.js", "assets/catalog.js"):
+    for name in ("assets/style.css", "assets/app.js", "assets/catalog.js", "assets/search.js"):
         f = SITE / name
         if f.is_file():
             digest.update(f.read_bytes())
