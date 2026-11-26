@@ -33,6 +33,9 @@ export const onRequestPost: PagesFunction<Env>=async ({request,env})=>{
   let actor;
   try{actor=await requireOperator(request,env);}catch{return json({error:"UNAUTHORIZED"},401);}
   if(actor.role==="viewer")return json({error:"UPLOAD_FORBIDDEN"},403);
+  // Same rule as costs.ts / service-period.ts: a browser request from another origin is refused before the body is read.
+  const origin=request.headers.get("origin");
+  if(origin && origin!==new URL(request.url).origin) return json({error:"FORBIDDEN_ORIGIN"},403);
   const mime=(request.headers.get("content-type")||"").split(";")[0].toLowerCase();
   if(!SUPPORTED.has(mime))return json({error:"VIDEO_TYPE_UNSUPPORTED"},415);
   const length=Number(request.headers.get("content-length")||0);

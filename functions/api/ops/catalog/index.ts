@@ -53,6 +53,9 @@ export const onRequestPost: PagesFunction<OpsEnv> = async ({request,env}) => {
   const actor=await authorize(request,env);
   if(!actor) return json({error:"UNAUTHORIZED"},401);
   if(actor.role==="viewer") return json({error:"NOT_ALLOWED_TO_DRAFT"},403);
+  // Same rule as costs.ts / service-period.ts: a browser request from another origin is refused before the body is read.
+  const origin=request.headers.get("origin");
+  if(origin && origin!==new URL(request.url).origin) return json({error:"FORBIDDEN_ORIGIN"},403);
   if(!(request.headers.get("content-type")||"").toLowerCase().startsWith("application/json"))
     return json({error:"JSON_REQUIRED"},415);
   let input:Record<string,unknown>;
