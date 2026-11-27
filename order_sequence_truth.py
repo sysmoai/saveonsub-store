@@ -36,7 +36,7 @@ NUM_BN = "+৮৮০ ১৩০৫-৮৬৯২৪২"
 
 PAGES = {
     "how-to-order.html": {
-        "title": "How to Order with bKash, Nagad or Rocket — Step by Step | SAVEONSUB",
+        "title": "How to Order with bKash, Nagad or Rocket | SAVEONSUB",
         "desc": "Choose a plan, get the access method, total and timing confirmed in writing on WhatsApp, then pay. We verify the payment before fulfilling your order.",
         "h1": 'First time? <span class="grad-text">Here is the order, step by step.</span>',
         "steps": [
@@ -55,7 +55,7 @@ PAGES = {
         "howto_names": ["Pick your product", "Confirm on WhatsApp before you pay", "Pay after the written confirmation", "We verify the incoming payment", "Delivery and support"],
     },
     "bn/how-to-order.html": {
-        "title": "বিকাশ, নগদ বা রকেটে কীভাবে অর্ডার করবেন — ধাপে ধাপে | SAVEONSUB",
+        "title": "বিকাশ, নগদ বা রকেটে কীভাবে অর্ডার করবেন | SAVEONSUB",
         "desc": "প্ল্যান বাছুন, WhatsApp-এ অ্যাক্সেস পদ্ধতি, মোট দাম ও সময় লিখিতভাবে নিশ্চিত করুন, তারপর পেমেন্ট করুন। পেমেন্ট যাচাইয়ের পরই অর্ডার পূরণ হয়।",
         "h1": 'প্রথমবার? <span class="grad-text">অর্ডারের ধাপগুলো এক নজরে।</span>',
         "steps": [
