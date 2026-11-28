@@ -72,8 +72,8 @@ class EffectivePricebook(unittest.TestCase):
 
     def test_v40_holds_preserved_and_business_shared_held(self):
         # Four prior CEO card-A holds must remain, plus the new 17 Nov
-        # provider-rights HOLD and the nine below-cost personal plans the CEO
-        # put on HOLD on 25 Nov 2026; never broaden or silently drop these IDs.
+        # provider-rights HOLD and the eight below-cost personal plans and two
+        # Cursor plans closed to new customers (25 Nov 2026); never broaden or silently drop these IDs.
         self.assertEqual(HELD, {
             "chatgpt-plus": [
                 "starter-shared-6-8-users-1-month",
@@ -84,7 +84,7 @@ class EffectivePricebook(unittest.TestCase):
             "chatgpt-business": ["premium-shared-2-3-1-month"],
             "runway": ["standard-personal-625-credits-1-month", "pro-personal-2250-credits-1-month", "unlimited-personal-1-month"],
             "replit-core": ["core-personal-1-month"],
-            "notion-ai": ["business-monthly-official-notion-ai-incl-1-month"],
+            "cursor": ["cursor-pro-personal-1-month", "pro-personal-3x-credits-1-month"],
             "suno": ["pro-personal-500-songs-1-month", "premier-personal-2000-songs-1-month"],
             "github-copilot": ["pro-personal-your-github-1-month"],
             "elevenlabs": ["starter-personal-30k-chars-1-month"],

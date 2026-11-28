@@ -830,8 +830,8 @@
     "cursor pro kivabe kinbo",
     "cursor pro bd taka"
    ],
-   "lowest_bdt": 590,
-   "plans": 2
+   "lowest_bdt": null,
+   "plans": 0
   },
   {
    "id": "github-copilot",
@@ -1819,8 +1819,8 @@
     "notion business + ai kivabe kinbo",
     "notion business + ai bd taka"
    ],
-   "lowest_bdt": 4800,
-   "plans": 1
+   "lowest_bdt": 4090,
+   "plans": 2
   },
   {
    "id": "mistral-pro",

@@ -1,5 +1,5 @@
 {
-  "_note": "Plans listed here are not taking new orders. CEO-approved BDT prices may remain recorded in Pricing V2, but approval of a price does not authorize provider-restricted credential sharing, resale or fulfillment. 2026-11-17: ChatGPT Business Premium Shared (2-3) added to commercial HOLD pending verified provider rights, documented commercial feasibility and CEO fulfillment/release signoff. pricebook.py removes held plans in memory for build and audit. No silent unlock. 2026-11-25: CEO Emon Hossain ordered HOLD on nine personal plans (runway x3, replit-core, notion-ai monthly, suno x2, github-copilot Pro, elevenlabs Starter) whose price is below provider list cost plus 15% VAT, until a lawful purchase cost is evidenced.",
+  "_note": "Plans listed here are not taking new orders. CEO-approved BDT prices may remain recorded in Pricing V2, but approval of a price does not authorize provider-restricted credential sharing, resale or fulfillment. 2026-11-17: ChatGPT Business Premium Shared (2-3) added to commercial HOLD pending verified provider rights, documented commercial feasibility and CEO fulfillment/release signoff. pricebook.py removes held plans in memory for build and audit. No silent unlock. 2026-11-25: CEO Emon Hossain ordered HOLD on nine personal plans (runway x3, replit-core, notion-ai monthly, suno x2, github-copilot Pro, elevenlabs Starter) whose price is below provider list cost plus 15% VAT, until a lawful purchase cost is evidenced. 2026-11-25 (later): notion-ai monthly released from HOLD after CEO ordered repricing (Notion lists Business at $24/seat billed monthly). cursor Pro and Pro+ held: Cursor sells these only to existing subscribers and its pricing FAQ authorizes no resellers or third-party sellers.",
   "held_plans": {
     "chatgpt-plus": [
       "starter-shared-6-8-users-1-month",
@@ -22,9 +22,6 @@
     "replit-core": [
       "core-personal-1-month"
     ],
-    "notion-ai": [
-      "business-monthly-official-notion-ai-incl-1-month"
-    ],
     "suno": [
       "pro-personal-500-songs-1-month",
       "premier-personal-2000-songs-1-month"
@@ -34,6 +31,10 @@
     ],
     "elevenlabs": [
       "starter-personal-30k-chars-1-month"
+    ],
+    "cursor": [
+      "cursor-pro-personal-1-month",
+      "pro-personal-3x-credits-1-month"
     ]
   }
 }
