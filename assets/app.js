@@ -26,7 +26,13 @@ function cartAdd(id, planLabel, bdt, name, planId){
   const stablePlanId = planId || '';
   const ex = c.find(i=>i.id===id && i.plan===planLabel && (i.plan_id||'')===stablePlanId);
   if(ex){ ex.qty++; } else { c.push({id, plan:planLabel, plan_id:stablePlanId, bdt:Number(bdt), name, qty:1}); }
-  cartSet(c); toast(`✅ ${name} added — ৳${bdt}`);
+  cartSet(c); toast(`✅ ${name} added — ৳${bdt}`, checkoutAction());
+}
+/* The next step after "Add to cart". None on checkout itself (add-on deals). */
+function checkoutAction(){
+  if(/\/checkout(?:\.html)?$/i.test(String(location.pathname||''))) return null;
+  const bn=String((document.documentElement&&document.documentElement.lang)||'').indexOf('bn')===0;
+  return bn ? {href:'/bn/checkout', label:'চেকআউটে যান →'} : {href:'/checkout', label:'Checkout →'};
 }
 function cartRemove(idx){ const c=cartGet(); c.splice(idx,1); cartSet(c); if(window.renderCart)renderCart(); }
 function cartTotal(){ return cartGet().reduce((s,i)=>s+i.bdt*i.qty,0); }
@@ -34,11 +40,18 @@ function cartCount(){ return cartGet().reduce((s,i)=>s+i.qty,0); }
 function cartBadge(){ document.querySelectorAll('.cartn').forEach(el=>{ el.textContent=cartCount(); el.style.display=cartCount()?'block':'none'; }); }
 
 /* ---------- Toast ---------- */
-function toast(msg){
+function toast(msg, action){
   let t=document.getElementById('toast');
   if(!t){ t=document.createElement('div'); t.id='toast'; document.body.appendChild(t); }
   t.textContent=msg; t.style.display='block';
-  clearTimeout(t._h); t._h=setTimeout(()=>t.style.display='none', 2400);
+  // The centred toast would otherwise shrink to half the screen on phones.
+  t.style.width=action?'max-content':''; t.style.maxWidth=action?'calc(100vw - 32px)':'';
+  if(action && t.appendChild){ // the cart test harnesses stub elements without it
+    const a=document.createElement('a'); a.href=action.href; a.textContent=action.label;
+    a.style.cssText='display:inline-block;margin-left:14px;padding:10px 0;margin-top:-10px;margin-bottom:-10px;color:inherit;text-decoration:underline';
+    t.appendChild(a);
+  }
+  clearTimeout(t._h); t._h=setTimeout(()=>t.style.display='none', action?6000:2400);
 }
 
 /* ---------- Order ID ---------- */
