@@ -77,8 +77,11 @@
         if(d && d['@type'] === 'Product'){
           out.name = String(d.name || '');
           out.category = String(d.category || '');
-          const o = d.offers || {};
-          out.value = Number(o.lowPrice || o.price) || 0;
+          // offers is one object or an array (product_rich_results.py: one per plan).
+          const prices = [].concat(d.offers || [])
+            .map(function(o){ return Number(o && (o.lowPrice || o.price)) || 0; })
+            .filter(function(n){ return n > 0; });
+          out.value = prices.length ? Math.min.apply(null, prices) : 0;
         }
       } catch(e){}
     });
