@@ -60,7 +60,11 @@
   }
 
   function cartItems(){
-    try { return JSON.parse(localStorage.getItem('sos_cart') || '[]') || []; } catch(e){ return []; }
+    // The same validated cart checkout shows, so dropped or stale items are not counted.
+    try {
+      if(typeof window.cartGet === 'function') return window.cartGet();
+      return JSON.parse(localStorage.getItem('sos_cart') || '[]') || [];
+    } catch(e){ return []; }
   }
   function cartValue(items){
     return items.reduce(function(s, i){ return s + (Number(i.bdt) || 0) * (Number(i.qty) || 1); }, 0);

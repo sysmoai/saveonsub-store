@@ -56,6 +56,7 @@ STEPS = [
     "order_sequence_truth.py",
     "checkout_sequence_truth.py",
     "bn_buyer_copy.py",
+    "store_ux_polish.py",
     "audit_commercial_truth_v2.py",
     "exec003_claims_guard.py",
     "shared_copy_check.py",

@@ -183,13 +183,11 @@ function pick(k,v) {
     const modeId = MODE_MAP[v] || 'aips-student-essentials';
     const p = CATALOG.products.find(function(p){return p.id===modeId});
     if(!p) return;
-    const frm = Math.min.apply(null,p.plans.map(function(pl){return pl.bdt}));
     const area = document.getElementById('qarea');
     area.innerHTML = '<div class="rec" style="text-align:center">'+
       '<span class="icon" style="font-size:48px">'+p.icon+'</span>'+
       '<h2 style="margin:8px 0">'+p.name.replace('🎁 ','')+'</h2>'+
-      '<div style="font-size:28px;font-weight:900;color:var(--green2)">৳'+frm.toLocaleString()+'</div>'+
-      '<p class="sub" style="font-size:14px;margin:8px 0 14px">'+(p.faq[0]?p.faq[0].a.split('.')[0]:'Your recommended Mode')+'</p>'+
+      '<p class="sub" style="font-size:14px;margin:8px 0 14px">'+(p.faq&&p.faq[0]?p.faq[0].a.split('.')[0]:'Your recommended Mode')+'</p>'+
       '<div class="heroctas" style="justify-content:center">'+
       '<a class="btn btn-primary" href="modes/'+p.id+'.html">View '+p.name.replace('🎁 ','')+' →</a>'+
       '<a class="btn btn-ghost" href="https://wa.me/8801305869242?text=I+want+'+encodeURIComponent(p.name)+'">💬 Activate</a></div>'+

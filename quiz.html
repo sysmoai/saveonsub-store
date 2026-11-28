@@ -159,7 +159,7 @@ function resolve(a){
   // risk override: own-account → force personal-capable pick
   if(a.risk==="own"){
     const p=byId(pick);
-    const hasPersonal=p&&p.plans.some(pl=>pl.tos==="personal"||pl.tos==="official");
+    const hasPersonal=p&&p.plans.some(pl=>pl.type==="personal"||pl.type==="official");
     if(!hasPersonal){
       const map={"bundle-research":"claude-pro","bundle-creator":"midjourney","bundle-video":"invideo","bundle-starter":"chatgpt-plus","bundle-dev":"github-copilot","spotify":"spotify"};
       pick=map[pick]||pick;
@@ -169,6 +169,10 @@ function resolve(a){
   // heavy usage upsell note
   if(a.usage==="heavy") why+=" Heavy daily use? Personal plans avoid shared usage limits.";
   if(a.usage==="light" && a.goal!=="fun") why+=" Light use? Honestly, try the FREE tier first — upgrade when you hit limits.";
+  // Say so plainly when every published price of the suggestion is above the chosen budget.
+  const cap={low:500, mid:1000}[a.budget], chosen=byId(pick);
+  const prices=((chosen&&chosen.plans)||[]).map(pl=>Number(pl.bdt)).filter(n=>n>0);
+  if(cap && prices.length && Math.min.apply(null,prices)>cap) why+=" Note: its published price is above the budget you chose. Check the product page, or ask us about a lower-cost option.";
   return {pick, alt, why};
 }
 

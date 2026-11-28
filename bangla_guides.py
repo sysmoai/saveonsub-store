@@ -208,7 +208,7 @@ def add_to_index(guides: list[dict]) -> None:
         f'<span class="go" style="color:var(--green2);font-weight:700;font-size:13px">গাইড পড়ুন →</span></a>'
         for g in guides
     )
-    anchor = 'grid-template-columns:repeat(2,1fr);gap:16px">'
+    anchor = 'grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">'
     if anchor not in text:
         raise SystemExit("[bangla-guides] blog index grid not found")
     idx.write_text(text.replace(anchor, anchor + cards, 1), encoding="utf-8")

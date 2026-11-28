@@ -171,7 +171,7 @@
 <script src="../assets/app.js"></script>
 <script>
 let PAY='bKash';
-const OID=orderId();
+const OID=checkoutOrderId();
 
 function renderCart(){
   const c=cartGet();
@@ -181,13 +181,15 @@ function renderCart(){
   document.getElementById('totalrow').style.display=has?'flex':'none';
   document.getElementById('paybox').style.display=has?'block':'none';
   list.innerHTML=c.map((i,x)=>`<div class="citem">
-    <span><b>${i.name}</b><br><span style="color:var(--muted);font-size:12.5px">${i.plan} ×${i.qty}</span></span>
+    <span><b>${i.name}</b><br><span style="color:var(--muted);font-size:12.5px">${i.plan} ×${i.qty}</span><br>
+    <span class="qty"><button type="button" onclick="cartStep(${x},-1)" aria-label="পরিমাণ কমান"${i.qty<2?' disabled':''}>−</button><b>${i.qty}</b><button type="button" onclick="cartStep(${x},1)" aria-label="পরিমাণ বাড়ান">+</button></span></span>
     <span style="display:flex;align-items:center;gap:10px"><b>৳${(i.bdt*i.qty).toLocaleString()}</b>
     <button class="rm" onclick="cartRemove(${x})" aria-label="Remove">✕</button></span></div>`).join('');
   document.getElementById('total').textContent='৳'+cartTotal().toLocaleString();
   document.getElementById('payamount').textContent='৳'+cartTotal().toLocaleString();
   document.getElementById('oid').textContent=OID;
   document.getElementById('oid2').textContent=OID;
+  checkoutEmptyNote();
   upsell();
 }
 function setPay(m){
@@ -210,18 +212,22 @@ function recordOrder(kind, txn){
 function confirmWA(){
   if(!cartGet().length){toast('Cart is empty');return;}
   const txn=document.getElementById('txn').value.trim();
+  // কার্ট অক্ষত থাকতেই হোয়াটসঅ্যাপ বার্তা তৈরি করতে হবে: recordOrder() কার্ট খালি করে,
+  // তাই পরে বানালে বার্তায় কোনো আইটেম থাকে না এবং মোট ৳0 যায়।
+  const orderLink = waOrder({oid:OID,method:PAY,txn:txn});
   recordOrder('order', txn);
-  window.open(waOrder({oid:OID,method:PAY,txn:txn}), '_blank');
+  window.open(orderLink, '_blank');
   location.href='order.html';
 }
 function upsell(){
+  if(typeof CATALOG==='undefined') return;
   const inCart=new Set(cartGet().map(i=>i.id));
   const picks=CATALOG.products.filter(p=>['canva-pro','perplexity-pro','spotify'].includes(p.id)&&!inCart.has(p.id)&&!p.request_price&&Array.isArray(p.plans)&&p.plans.length).slice(0,3);
   document.getElementById('upsell').innerHTML=picks.map(p=>{
     const ch=p.plans.reduce((a,b)=>a.bdt<b.bdt?a:b);
     return `<div class="citem"><span>${p.icon} <b>${p.name}</b><br><span style="color:var(--muted);font-size:12px">${ch.label}</span></span>
-    <button class="btn btn-primary btn-sm" onclick="cartAdd('${p.id}','${ch.label.replace(/'/g,"\\'")}',${ch.bdt},'${p.name.replace(/'/g,"\\'")}');renderCart()">+৳${ch.bdt}</button></div>`;
-  }).join('')||'<p style="color:var(--muted);font-size:13px">You have great taste — cart covers our best picks!</p>';
+    <button class="btn btn-primary btn-sm" onclick="cartAdd('${p.id}','${ch.label.replace(/'/g,"\\'")}',${ch.bdt},'${p.name.replace(/'/g,"\\'")}','${ch.plan_id}');renderCart()">+৳${ch.bdt}</button></div>`;
+  }).join('')||'<p style="color:var(--muted);font-size:13px">আমাদের সেরা পছন্দগুলো আপনার কার্টে আছে।</p>';
 }
 document.addEventListener('DOMContentLoaded',renderCart);
 </script>

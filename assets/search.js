@@ -31,7 +31,10 @@
    'bd bangladesh bangla price prices dam taka tk buy kinbo kena best cheap cheapest sasta ' +
    'subscription subscriptions plan plans month monthly year 2025 2026 bkash nagad rocket ' +
    'shared share reseller account accounts vs review worth ' +
-   'দাম টাকা কিনব কেনা কিনতে সস্তা বাংলাদেশ বিকাশ নগদ সাবস্ক্রিপশন প্ল্যান কত কীভাবে কিভাবে')
+   // Everyday "I want / I need" words, so "chatgpt lagbe" or "আমার ক্যানভা লাগবে" still match.
+   'lagbe lagbo chai chaibo chacchi kinte kinbo er ar ami amar amake jonno koro korbo korte dorkar nibo nite ' +
+   'দাম টাকা কিনব কেনা কিনতে সস্তা বাংলাদেশ বিকাশ নগদ সাবস্ক্রিপশন প্ল্যান কত কীভাবে কিভাবে ' +
+   'লাগবে চাই চাচ্ছি আমি আমার আমাকে জন্য করব করতে বানানো বানাতে দরকার নিব নিতে এর')
     .split(' ').forEach(function (w) { rawTokens(w).forEach(function (t) { STOP[t] = 1; }); });
 
   function tokens(s) { return rawTokens(s).filter(function (t) { return !STOP[t]; }); }
@@ -411,8 +414,11 @@
 
     function draw() {
       var o = { category: state.category, avail: state.avail, type: state.type, maxBdt: state.maxBdt, sort: state.sort };
-      var res = search(index, state.q, o).filter(function (d) { return !d.bundle; });
+      var found = search(index, state.q, o);
+      var res = found.filter(function (d) { return !d.bundle; });
       var shownQ = state.q.replace(/[<>&"']/g, '').slice(0, 80);
+      // "bundle" or "combo" matches only packs: show them instead of "no match".
+      if (state.q && !res.length) res = found;
       grid.innerHTML = res.length ? res.map(card).join('') : emptyState(shownQ);
       if (countEl) {
         var n = res.length, nb = index.filter(function (d) { return d.bundle; }).length;
