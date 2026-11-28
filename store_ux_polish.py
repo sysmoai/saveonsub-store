@@ -132,6 +132,8 @@ def add_switch(text: str, rel: str, pages: set[str]) -> str:
     if twin is None or (bangla and not is_bn_path(rel)):
         twin = "index.html" if bangla else "bn.html"
     href = relative_url(twin, rel)
+    if rel == "404.html":  # served at any depth, so its links must be root-absolute
+        href = "/" + href.removeprefix("./")
     if bangla:
         link = f'<a class="langsw" href="{href}" lang="en" hreflang="en-BD">English</a>'
     else:

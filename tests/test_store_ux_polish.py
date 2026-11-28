@@ -34,6 +34,9 @@ class StoreUxPolishTest(unittest.TestCase):
         bangla_guide = '<html lang="bn">' + NAV
         self.assertIn('href="../" lang="en"', ux.add_switch(bangla_guide, "blog/bangla-guide.html", PAGES))
 
+    def test_not_found_page_switch_is_root_absolute(self):
+        self.assertIn('href="/bn" lang="bn"', ux.add_switch(NAV, "404.html", PAGES))
+
     def test_bangla_page_links_stay_bangla(self):
         page = ('<a href="../all#bundles">B</a><a href="../../p/demo?x=1">D</a>'
                 '<button onclick="location.href=\'../checkout\'">C</button>'
