@@ -21,23 +21,65 @@ function cartGet(){
 }
 function cartSet(c){ localStorage.setItem('sos_cart', JSON.stringify(c)); cartBadge(); }
 function cartAdd(id, planLabel, bdt, name, planId){
-  if(!cartPlanOk(id, planLabel, bdt, planId)){ toast('This plan is price on request — please confirm on WhatsApp'); return; }
+  if(!cartPlanOk(id, planLabel, bdt, planId)){
+    toast(isBangla() ? 'এই প্ল্যানের দাম হোয়াটসঅ্যাপে জেনে নিন' : 'This plan is price on request — please confirm on WhatsApp'); return;
+  }
   const c = cartGet();
   const stablePlanId = planId || '';
   const ex = c.find(i=>i.id===id && i.plan===planLabel && (i.plan_id||'')===stablePlanId);
   if(ex){ ex.qty++; } else { c.push({id, plan:planLabel, plan_id:stablePlanId, bdt:Number(bdt), name, qty:1}); }
-  cartSet(c); toast(`✅ ${name} added — ৳${bdt}`, checkoutAction());
+  cartSet(c); toast(isBangla() ? `✅ ${name} কার্টে যোগ হয়েছে — ৳${bdt}` : `✅ ${name} added — ৳${bdt}`, checkoutAction());
 }
+function isBangla(){ return String((typeof document!=='undefined'&&document.documentElement&&document.documentElement.lang)||'').indexOf('bn')===0; }
 /* The next step after "Add to cart". None on checkout itself (add-on deals). */
 function checkoutAction(){
   if(/\/checkout(?:\.html)?$/i.test(String(location.pathname||''))) return null;
-  const bn=String((document.documentElement&&document.documentElement.lang)||'').indexOf('bn')===0;
-  return bn ? {href:'/bn/checkout', label:'চেকআউটে যান →'} : {href:'/checkout', label:'Checkout →'};
+  return isBangla() ? {href:'/bn/checkout', label:'চেকআউটে যান →'} : {href:'/checkout', label:'Checkout →'};
 }
 function cartRemove(idx){ const c=cartGet(); c.splice(idx,1); cartSet(c); if(window.renderCart)renderCart(); }
+/* Quantity buttons on checkout: one step at a time, between 1 and 20 (✕ removes a line). */
+function cartStep(idx, delta){
+  const c=cartGet(); if(!c[idx]) return;
+  c[idx].qty=Math.min(20, Math.max(1, c[idx].qty+(delta>0?1:-1))); cartSet(c); if(window.renderCart)renderCart();
+}
 function cartTotal(){ return cartGet().reduce((s,i)=>s+i.bdt*i.qty,0); }
 function cartCount(){ return cartGet().reduce((s,i)=>s+i.qty,0); }
-function cartBadge(){ document.querySelectorAll('.cartn').forEach(el=>{ el.textContent=cartCount(); el.style.display=cartCount()?'block':'none'; }); }
+function cartStored(){ try{ const c=JSON.parse(localStorage.getItem('sos_cart')||'[]'); return Array.isArray(c)?c:[]; }catch(e){ return []; } }
+/* Guides, categories and help pages do not load the catalog, so the cart cannot be
+   validated there. The badge then shows the stored quantity; checkout still validates. */
+function cartBadge(){
+  const known=typeof CATALOG!=='undefined' && CATALOG;
+  const n=known ? cartCount() : cartStored().reduce((s,i)=>s+(i&&Number.isInteger(i.qty)&&i.qty>0?i.qty:0),0);
+  document.querySelectorAll('.cartn').forEach(el=>{ el.textContent=n; el.style.display=n?'block':'none'; });
+}
+
+/* ---------- Checkout helpers ---------- */
+/* One order ID per checkout attempt: a reload must not change an ID the buyer already copied. */
+function checkoutOrderId(){
+  try{
+    const last=lastOrder(); let id=sessionStorage.getItem('sos_checkout_oid');
+    if(!id || (last && last.oid===id)){ id=orderId(); sessionStorage.setItem('sos_checkout_oid', id); }
+    return id;
+  }catch(e){ return orderId(); }
+}
+/* Explain an empty checkout: a price or plan changed, or the order was already saved. */
+function checkoutEmptyNote(){
+  const box=document.getElementById('empty'); if(!box || !box.prepend) return;
+  const old=document.getElementById('emptynote'); if(old && old.remove) old.remove();
+  const bn=isBangla(), last=lastOrder();
+  let text='', link=null;
+  if(cartStored().length && !cartGet().length){
+    text=bn ? 'কার্টের কোনো প্ল্যান বা দাম বদলেছে। অনুগ্রহ করে প্রোডাক্ট পেজ থেকে আবার যোগ করুন।'
+            : 'A plan or price in your cart has changed. Please add it again from the product page.';
+  } else if(last && /^SOS-\d{6}-\d{4}$/.test(String(last.oid||''))){
+    text=bn ? `আপনার অর্ডার ${last.oid} এই ডিভাইসে সেভ আছে। ` : `Your order ${last.oid} is saved on this device. `;
+    link={href:bn?'/bn/order':'/order', label:bn?'অর্ডার দেখুন →':'View it →'};
+  }
+  if(!text) return;
+  const p=document.createElement('p'); p.id='emptynote'; p.className='notice'; p.setAttribute('role','status'); p.textContent=text;
+  if(link){ const a=document.createElement('a'); a.href=link.href; a.textContent=link.label; a.style.cssText='color:var(--green2);font-weight:800'; p.appendChild(a); }
+  box.prepend(p);
+}
 
 /* ---------- Toast ---------- */
 function toast(msg, action){
@@ -103,7 +145,19 @@ function startTicker(){
 function copyText(txt,label){ navigator.clipboard&&navigator.clipboard.writeText(txt).then(()=>toast(`📋 ${label||'Copied'}!`)); }
 
 /* ---------- Mobile nav ---------- */
-function navToggle(){ const l=document.querySelector('.navlinks'); if(l) l.classList.toggle('open'); }
+function navToggle(force){
+  const l=document.querySelector('.navlinks'); if(!l) return;
+  const open=typeof force==='boolean' ? force : !l.classList.contains('open');
+  l.classList.toggle('open', open);
+  const b=document.querySelector('.hamb'); if(b&&b.setAttribute) b.setAttribute('aria-expanded', String(open));
+}
+/* The open menu covers the page: close it on a link tap, a tap outside, or Escape. */
+document.addEventListener('click', (e)=>{
+  const t=e.target; if(!t || !t.closest || t.closest('.hamb') || t.closest('.dropbtn')) return;
+  if(!document.querySelector('.navlinks.open')) return;
+  if(!t.closest('.navlinks') || t.closest('a')) navToggle(false);
+});
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && document.querySelector('.navlinks.open')) navToggle(false); });
 
 /* ---------- PWA: register service worker (offline resilience) ---------- */
 if('serviceWorker' in navigator){

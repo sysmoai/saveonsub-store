@@ -1267,8 +1267,32 @@ td a:not(.btn) {
   .scrollbar-top { display: none; }
 }
 .hgrid > div { min-width: 0; }
-.hgrid .pcard .price { white-space: nowrap; font-size: clamp(16px, 1.5vw, 21px); }
+/* Long prices ("From ৳3,390", "Confirm current price…") wrap instead of being cut off. */
+.hgrid .pcard { min-width: 0; }
+.hgrid .pcard .price { overflow-wrap: break-word; line-height: 1.25; font-size: clamp(16px, 1.25vw, 20px); }
 .hgrid .pcard .tos { line-height: 1.35; }
+@media (min-width: 761px) { .hgrid .pcard { padding: 16px; } }
+/* Language switch (every page), home search, and a full-width empty search result. */
+.navlinks .langsw { color: var(--gold); font-weight: 800; }
+.homesearch { display: flex; gap: 8px; margin: 18px 0 4px; max-width: 520px; }
+.homesearch input { flex: 1; min-width: 0; min-height: 46px; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-size: 16px; }
+.homesearch input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.homesearch .btn { flex: none; }
+.sos-empty { grid-column: 1 / -1; }
+/* Checkout: quantity buttons and a finger-sized remove button. */
+.citem .qty { display: inline-flex; align-items: center; gap: 10px; margin-top: 6px; }
+.citem .qty button { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg3); color: var(--ink); font-size: 20px; cursor: pointer; }
+.citem .qty button:disabled { opacity: .4; cursor: default; }
+.citem button.rm { min-width: 44px; min-height: 44px; }
+/* White on coral was 2.5:1; dark text is readable. */
+.cartn { color: #1a0508; }
+/* The category list opens on hover, which phones do not have: show it inside the open menu. */
+@media (max-width: 900px) {
+  .navlinks.open { max-height: calc(100vh - 70px); overflow-y: auto; }
+  .navlinks.open .navdrop { text-align: center; }
+  .navlinks.open .dropmenu { display: grid; grid-template-columns: 1fr 1fr; position: static; box-shadow: none; min-width: 0; padding: 4px 0; }
+  .navlinks.open .dropmenu a { padding: 9px 8px; white-space: normal; }
+}
 @media (max-width: 760px) { .trustbar { font-size: 12px; padding: 8px 0; } .trustbar span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; } }
 /* category / listing grids: two cards per row on phones instead of one long column */
 @media (max-width: 760px) {

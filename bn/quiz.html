@@ -133,36 +133,40 @@ function resolve(a){
   // goal → base pick (id, or bundle); budget/usage/risk adjust
   let pick, alt, why;
   if(a.goal==="content"){
-    if(a.budget==="low") {pick="chatgpt-plus"; alt="bundle-starter"; why="ChatGPT writes scripts/captions; add Canva later via the Starter Bundle.";}
-    else if(a.budget==="mid"){pick="bundle-creator"; alt="bundle-video"; why="Grok for ideas + Midjourney for visuals — a full content pipeline.";}
-    else {pick="bundle-video"; alt="heygen"; why="Invideo generates the video, CapCut Pro polishes it — the Reels machine BD channels use.";}
+    if(a.budget==="low") {pick="chatgpt-plus"; alt="bundle-starter"; why="ChatGPT স্ক্রিপ্ট ও ক্যাপশন লিখে দেয়; পরে স্টার্টার বান্ডেল থেকে Canva যোগ করতে পারেন।";}
+    else if(a.budget==="mid"){pick="bundle-creator"; alt="bundle-video"; why="আইডিয়ার জন্য Grok আর ছবির জন্য Midjourney — কন্টেন্ট তৈরির পূর্ণ ব্যবস্থা।";}
+    else {pick="bundle-video"; alt="heygen"; why="Invideo ভিডিও বানায়, CapCut Pro তা ঘষামাজা করে — রিলস বানানোর জুটি।";}
   } else if(a.goal==="study"){
-    if(a.budget==="low"){pick="bundle-research"; alt="perplexity-pro"; why="Perplexity finds cited sources, ChatGPT drafts — a solid research pairing.";}
-    else {pick="claude-pro"; alt="bundle-research"; why="Claude is strong at long PDFs and careful academic writing.";}
+    if(a.budget==="low"){pick="bundle-research"; alt="perplexity-pro"; why="Perplexity সূত্রসহ তথ্য খুঁজে দেয়, ChatGPT খসড়া লেখে — রিসার্চের ভালো জুটি।";}
+    else {pick="claude-pro"; alt="bundle-research"; why="বড় PDF ও যত্ন করে একাডেমিক লেখায় Claude ভালো।";}
   } else if(a.goal==="business"){
-    if(a.budget==="low"){pick="google-ai-pro"; alt="canva-pro"; why="Gemini in Google AI Pro plus Google storage — Google lists it at ৳2,500/month in Bangladesh.";}
-    else if(a.budget==="mid"){pick="supergrok"; alt="bundle-creator"; why="Real-time market data + strong reasoning for business decisions.";}
-    else {pick="chatgpt-business"; alt="jasper"; why="Admin workspace + team seats — built for client work.";}
+    if(a.budget==="low"){pick="google-ai-pro"; alt="canva-pro"; why="Google AI Pro-তে Gemini ও Google স্টোরেজ — বাংলাদেশে Google-এর তালিকা দাম মাসে ৳2,500।";}
+    else if(a.budget==="mid"){pick="supergrok"; alt="bundle-creator"; why="হালনাগাদ বাজারের তথ্য ও ব্যবসার সিদ্ধান্তে ভালো বিশ্লেষণ।";}
+    else {pick="chatgpt-business"; alt="jasper"; why="অ্যাডমিন ওয়ার্কস্পেস ও টিম সিট — ক্লায়েন্টের কাজের জন্য।";}
   } else if(a.goal==="code"){
-    if(a.budget==="low"){pick="github-copilot"; alt="windsurf"; why="Copilot Personal on YOUR own GitHub. Students get it FREE via Student Pack.";}
-    else {pick="bundle-dev"; alt="cursor"; why="Cursor agent-mode + Copilot autocomplete — a common dev pairing.";}
+    if(a.budget==="low"){pick="github-copilot"; alt="windsurf"; why="আপনার নিজের GitHub-এ Copilot Personal। শিক্ষার্থীরা Student Pack-এ বিনামূল্যে পান।";}
+    else {pick="bundle-dev"; alt="cursor"; why="Cursor-এর এজেন্ট মোড ও Copilot অটোকমপ্লিট — ডেভেলপারদের পরিচিত জুটি।";}
   } else { // fun
-    if(a.budget==="low"){pick="spotify"; alt="youtube-premium"; why="Spotify Premium is sold officially in Bangladesh (Individual ৳219/month, verified 2026-10-23).";}
-    else {pick="netflix"; alt="prime-video"; why="Netflix — confirm the access method and current price in writing before paying.";}
+    if(a.budget==="low"){pick="spotify"; alt="youtube-premium"; why="বাংলাদেশে Spotify Premium অফিসিয়ালি বিক্রি হয় (Individual মাসে ৳219, যাচাই 2026-10-23)।";}
+    else {pick="netflix"; alt="prime-video"; why="Netflix — পেমেন্টের আগে অ্যাক্সেস পদ্ধতি ও বর্তমান দাম লিখিতভাবে নিশ্চিত করুন।";}
   }
   // risk override: own-account → force personal-capable pick
   if(a.risk==="own"){
     const p=byId(pick);
-    const hasPersonal=p&&p.plans.some(pl=>pl.tos==="personal"||pl.tos==="official");
+    const hasPersonal=p&&p.plans.some(pl=>pl.type==="personal"||pl.type==="official");
     if(!hasPersonal){
       const map={"bundle-research":"claude-pro","bundle-creator":"midjourney","bundle-video":"invideo","bundle-starter":"chatgpt-plus","bundle-dev":"github-copilot","spotify":"spotify"};
       pick=map[pick]||pick;
-      why+=" You chose own-account-only — ask support to confirm a customer-specific access method in writing.";
-    } else { why+=" Prefer a customer-specific access method to avoid sharing risk."; }
+      why+=" আপনি শুধু নিজের অ্যাকাউন্ট বেছেছেন — আপনার জন্য আলাদা অ্যাক্সেস পদ্ধতি লিখিতভাবে নিশ্চিত করে নিন।";
+    } else { why+=" শেয়ারিংয়ের ঝুঁকি এড়াতে আপনার জন্য আলাদা অ্যাক্সেস বেছে নিন।"; }
   }
   // heavy usage upsell note
-  if(a.usage==="heavy") why+=" Heavy daily use? Personal plans avoid shared usage limits.";
-  if(a.usage==="light" && a.goal!=="fun") why+=" Light use? Honestly, try the FREE tier first — upgrade when you hit limits.";
+  if(a.usage==="heavy") why+=" প্রতিদিন অনেক ব্যবহার? পার্সোনাল প্ল্যানে শেয়ার্ড লিমিটের ঝামেলা নেই।";
+  if(a.usage==="light" && a.goal!=="fun") why+=" অল্প ব্যবহার? আগে ফ্রি ভার্সন চেষ্টা করুন — লিমিটে আটকালে আপগ্রেড করুন।";
+  // Say so plainly when every published price of the suggestion is above the chosen budget.
+  const cap={low:500, mid:1000}[a.budget], chosen=byId(pick);
+  const prices=((chosen&&chosen.plans)||[]).map(pl=>Number(pl.bdt)).filter(n=>n>0);
+  if(cap && prices.length && Math.min.apply(null,prices)>cap) why+=" খেয়াল করুন: এর প্রকাশিত দাম আপনার বাছাই করা বাজেটের বেশি। প্রোডাক্ট পেজ দেখুন, অথবা কম খরচের বিকল্প জানতে আমাদের জিজ্ঞাসা করুন।";
   return {pick, alt, why};
 }
 
@@ -173,7 +177,7 @@ function draw(){
     const q=QS[step];
     area.innerHTML=`<h2 style="font-size:21px;margin-bottom:18px">${step+1}. ${q.q}</h2>`+
       q.opts.map(o=>`<button class="qopt" onclick="pick('${q.k}','${o[0]}')">${o[1]}</button>`).join('')+
-      (step>0?`<button class="btn btn-ghost btn-sm mt2" onclick="step--;draw()">← Back</button>`:'');
+      (step>0?`<button class="btn btn-ghost btn-sm mt2" onclick="step--;draw()">← পেছনে</button>`:'');
   } else {
     const r=resolve(ans), p=byId(r.pick), alt=byId(r.alt);
     // EXEC-010 HOLD: the quiz recommends a product but never quotes a price or adds to cart.
@@ -185,11 +189,11 @@ function draw(){
       <div class="why">💡 ${r.why}</div>
       <div class="heroctas" style="justify-content:center">
         <a class="btn btn-primary" href="${waLink('Quiz suggested '+p.name+' — please confirm the current price, exact tier and access method.')}" target="_blank" rel="noopener">WhatsApp-এ মূল্য জানুন</a>
-        <a class="btn btn-ghost" href="../p/${p.id}.html">Full details</a>
+        <a class="btn btn-ghost" href="p/${p.id}.html">বিস্তারিত দেখুন</a>
       </div>
-      ${alt?`<p style="font-size:13.5px;color:var(--muted);margin-top:14px">Also consider: <a href="../p/${alt.id}.html" style="color:var(--green2);font-weight:700">${alt.name.replace('🎁 ','')}</a></p>`:''}
-      <p style="font-size:13px;color:var(--muted);margin-top:10px">Still unsure? <a href="${waLink('Quiz said '+p.name+' — can we talk it through?')}" style="color:var(--green2)">Ask a human →</a></p>
-      <button class="btn btn-ghost btn-sm mt2" onclick="step=0;ans={};draw()">↻ Restart quiz</button>
+      ${alt?`<p style="font-size:13.5px;color:var(--muted);margin-top:14px">এটিও দেখতে পারেন: <a href="p/${alt.id}.html" style="color:var(--green2);font-weight:700">${alt.name.replace('🎁 ','')}</a></p>`:''}
+      <p style="font-size:13px;color:var(--muted);margin-top:10px">এখনও দ্বিধা? <a href="${waLink('Quiz said '+p.name+' — can we talk it through?')}" style="color:var(--green2)">মানুষের সাথে কথা বলুন →</a></p>
+      <button class="btn btn-ghost btn-sm mt2" onclick="step=0;ans={};draw()">↻ আবার শুরু করুন</button>
     </div>`;
   }
 }

@@ -293,7 +293,8 @@ def product_main(product: dict, bn: bool) -> str:
                                      ["No payment until SaveOnSub confirms the price and access method in writing"])
 
     provider_ref = ""
-    if official_url:
+    # Bundles carry our own address as "official_url": that is not a provider reference.
+    if official_url and "saveonsub.com" not in official_url:
         ref = f"{provider_text} ↗"
         usd = (f" · প্রোভাইডারের তালিকা মূল্য: ${official_usd:g}" if bn else f" · provider list reference: ${official_usd:g}") if isinstance(official_usd, (int, float)) else ""
         provider_ref = f'<a href="{esc(official_url)}" target="_blank" rel="noopener nofollow" style="font-size:13px;color:var(--muted);text-decoration:underline;display:inline-block;padding:6px 0">{esc(ref)}</a>{esc(usd)}'
@@ -507,7 +508,8 @@ def hold_projection(text: str, bn: bool) -> str:
 
 
 def home_body(governed: dict, bn: bool) -> str:
-    picks = ["chatgpt-plus", "claude-pro", "google-ai-pro", "midjourney", "runway", "github-copilot"]
+    # Featured cards should be orderable; Runway is on HOLD, so Canva Pro takes its slot.
+    picks = ["chatgpt-plus", "claude-pro", "google-ai-pro", "midjourney", "canva-pro", "github-copilot"]
     cards = []
     for pid in picks:
         product = governed.get(pid)

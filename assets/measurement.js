@@ -96,9 +96,20 @@
   }
   if(typeof window.cartAdd === 'function'){
     const originalCartAdd = window.cartAdd;
-    window.cartAdd = function(id, planLabel, bdt, name){
-      track('add_to_cart', {product_id: clean(id), plan: clean(planLabel), value_bdt: Number(bdt) || 0});
-      return originalCartAdd.apply(this, arguments);
+    // Count only adds the cart accepted: a refused plan is not an add_to_cart.
+    const cartUnits = function(){
+      try {
+        return (JSON.parse(localStorage.getItem('sos_cart') || '[]') || [])
+          .reduce(function(s, i){ return s + (Number(i && i.qty) || 0); }, 0);
+      } catch(e){ return 0; }
+    };
+    window.cartAdd = function(id, planLabel, bdt){
+      const before = cartUnits();
+      const result = originalCartAdd.apply(this, arguments);
+      if(cartUnits() > before){
+        track('add_to_cart', {product_id: clean(id), plan: clean(planLabel), value_bdt: Number(bdt) || 0});
+      }
+      return result;
     };
   }
 

@@ -34,7 +34,7 @@ for (const [pathname, lang, href, label] of [
 ]) {
   const p = page(pathname, lang);
   p.run(ADD);
-  assert.strictEqual(p.toast().textContent, '✅ Demo added — ৳100');
+  assert.strictEqual(p.toast().textContent, lang === 'bn' ? '✅ Demo কার্টে যোগ হয়েছে — ৳100' : '✅ Demo added — ৳100');
   assert.strictEqual(links(p).length, 1, pathname + ': checkout link missing');
   assert.strictEqual(links(p)[0].href, href);
   assert.strictEqual(links(p)[0].textContent, label);
