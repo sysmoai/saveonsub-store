@@ -11,7 +11,7 @@ NAV = ('<nav><div class="navlinks">\n  <a href="all">Subscriptions</a>\n'
        '</div><div class="navright"></div></nav>')
 HOME = NAV + '<div class="heroctas"><a href="all">Browse</a></div>'
 PAGES = {"index.html", "bn.html", "all.html", "bn/all.html", "checkout.html", "bn/checkout.html",
-         "p/demo.html", "bn/p/demo.html", "faq.html", "blog/index.html", "blog/bangla-guide.html"}
+         "p/demo.html", "bn/p/demo.html", "refund.html", "bn/refund.html", "faq.html", "blog/index.html", "blog/bangla-guide.html"}
 
 
 class StoreUxPolishTest(unittest.TestCase):
@@ -48,6 +48,10 @@ class StoreUxPolishTest(unittest.TestCase):
         self.assertIn('href="../faq"', out)  # no Bangla twin staged: unchanged
         self.assertIn('href="https://wa.me/1"', out)
         self.assertIn('href="../all" lang="en"', out)
+
+    def test_policy_links_are_left_alone(self):
+        page = '<a href="../../refund">R</a>'
+        self.assertEqual(ux.keep_bangla(page, "bn/p/demo.html", PAGES), page)
 
     def test_english_pages_are_not_rewritten(self):
         page = '<html lang="en"><a href="all">A</a>'

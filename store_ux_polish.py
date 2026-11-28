@@ -5,7 +5,8 @@
    any other page could not change language. Every page with the main menu now
    links to its counterpart (or to that language's home page when none exists).
 2. Bangla pages stay in Bangla: links, the cart button and policy links that
-   pointed at an English page now point at its Bangla twin when one is staged.
+   pointed at an English page now point at its Bangla twin when one is staged
+   (policy pages are left alone).
 3. Home search: both home pages get a search box that opens the product list with
    the query (the list already reads ``?q=``). It works without JavaScript.
 
@@ -29,6 +30,8 @@ HOMES = {"index.html": False, "bn.html": True}
 ANCHOR = re.compile(r"<a\b[^>]*>")
 HREF = re.compile(r'(\bhref=")([^"]*)(")')
 CART = re.compile(r"(onclick=\"location\.href=')([^']*)('\")")
+# Policy pages stay as the page linked them: the governed English text is authoritative.
+POLICY_PAGES = {"refund.html", "warranty.html", "terms.html", "privacy.html"}
 LANG_BN = re.compile(r"<html\b[^>]*\blang=\"bn", re.I)
 
 
@@ -86,7 +89,7 @@ def resolve(href: str, page: str, pages: set[str]) -> str | None:
 
 def bangla_href(href: str, page: str, pages: set[str]) -> str:
     target = resolve(href, page, pages)
-    if target is None or is_bn_path(target):
+    if target is None or is_bn_path(target) or target in POLICY_PAGES:
         return href
     twin = twin_of(target, pages)
     if twin is None:
