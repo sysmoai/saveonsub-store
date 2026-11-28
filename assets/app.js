@@ -87,7 +87,7 @@ function toast(msg, action){
   if(!t){ t=document.createElement('div'); t.id='toast'; document.body.appendChild(t); }
   t.textContent=msg; t.style.display='block';
   // The centred toast would otherwise shrink to half the screen on phones.
-  t.style.width=action?'max-content':''; t.style.maxWidth=action?'calc(100vw - 32px)':'';
+  t.style.width='max-content'; t.style.maxWidth='calc(100vw - 32px)';
   if(action && t.appendChild){ // the cart test harnesses stub elements without it
     const a=document.createElement('a'); a.href=action.href; a.textContent=action.label;
     a.style.cssText='display:inline-block;margin-left:14px;padding:10px 0;margin-top:-10px;margin-bottom:-10px;color:inherit;text-decoration:underline';

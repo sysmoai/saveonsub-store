@@ -1284,6 +1284,8 @@ td a:not(.btn) {
 .citem .qty button { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg3); color: var(--ink); font-size: 20px; cursor: pointer; }
 .citem .qty button:disabled { opacity: .4; cursor: default; }
 .citem button.rm { min-width: 44px; min-height: 44px; }
+/* Bangla vowel signs need more line height than Latin headlines. */
+@media (max-width: 760px) { html[lang^="bn"] .hero h1 { font-size: clamp(26px, 7.4vw, 34px); line-height: 1.35; } }
 /* White on coral was 2.5:1; dark text is readable. */
 .cartn { color: #1a0508; }
 /* The category list opens on hover, which phones do not have: show it inside the open menu. */
