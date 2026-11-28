@@ -35,6 +35,9 @@ export const onRequestPost:PagesFunction<Env>=async ({request,env})=>{
   if(!env.DB||!env.MEDIA_BUCKET)return json({error:"MEDIA_BACKEND_NOT_CONFIGURED"},503);
   const actor=await operatorFor(request,env);if(!actor)return json({error:"UNAUTHORIZED"},401);
   if(actor.role==="viewer")return json({error:"UPLOAD_FORBIDDEN"},403);
+  // Same rule as costs.ts / service-period.ts: a browser request from another origin is refused before the body is read.
+  const origin=request.headers.get("origin");
+  if(origin && origin!==new URL(request.url).origin) return json({error:"FORBIDDEN_ORIGIN"},403);
   const mime=(request.headers.get("content-type")||"").split(";")[0].toLowerCase();
   if(!["image/png","image/jpeg","image/webp"].includes(mime))return json({error:"IMAGE_TYPE_REQUIRED"},415);
   const length=Number(request.headers.get("content-length")||0);
