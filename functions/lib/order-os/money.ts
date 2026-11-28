@@ -1,6 +1,7 @@
 // Small shared validators for the lifecycle/finance endpoints (G3, G4, G6).
 
-export const EVIDENCE_REF = /^(stmt:[A-Za-z0-9._:-]{3,120}|r2:sos\/private\/[A-Za-z0-9._\/-]{3,200})$/;
+// An r2 pointer may not contain a ".." path segment (names such as "inv..v2.pdf" stay valid).
+export const EVIDENCE_REF = /^(stmt:[A-Za-z0-9._:-]{3,120}|r2:sos\/private\/(?!(?:.*\/)?\.\.(?:\/|$))[A-Za-z0-9._\/-]{3,200})$/;
 
 // Whole taka or paisa precision only; returns minor units or null.
 export function bdtToMinor(value: unknown, { allowNegative = false } = {}): number | null {
@@ -8,7 +9,8 @@ export function bdtToMinor(value: unknown, { allowNegative = false } = {}): numb
   if (!Number.isFinite(n) || n === 0) return null;
   if (!allowNegative && n < 0) return null;
   const minor = Math.round(n * 100);
-  if (Math.abs(minor - n * 100) > 1e-6 || Math.abs(minor) > 100_000_000_00) return null;
+  // minor === 0 also covers -0: a value that rounds to zero paisa is not an amount.
+  if (minor === 0 || Math.abs(minor - n * 100) > 1e-6 || Math.abs(minor) > 100_000_000_00) return null;
   return minor;
 }
 

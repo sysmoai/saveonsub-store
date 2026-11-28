@@ -7,6 +7,9 @@ export const onRequestPost: PagesFunction<OpsEnv> = async ({ request, env, param
   let operator;
   try { operator = await requireOperator(request, env); }
   catch (e) { return authFailure(e); }
+  // Same rule as costs.ts / service-period.ts: a browser request from another origin is refused.
+  const origin = request.headers.get("origin");
+  if (origin && origin !== new URL(request.url).origin) return json({ error: "FORBIDDEN_ORIGIN" }, 403);
 
   const body = await readJson(request);
   if (!body) return json({ error: "INVALID_JSON" }, 400);

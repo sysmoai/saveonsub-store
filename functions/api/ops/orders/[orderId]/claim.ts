@@ -9,6 +9,9 @@ export const onRequestPost: PagesFunction<OpsEnv> = async ({ request, env, param
   try { operator = await requireOperator(request, env); }
   catch (e) { return authFailure(e); }
   if (!canClaim(operator.role)) return json({ error: "FORBIDDEN" }, 403);
+  // A browser request from another origin is refused before the body is read (same rule as costs.ts).
+  const origin = request.headers.get("origin");
+  if (origin && origin !== new URL(request.url).origin) return json({ error: "FORBIDDEN_ORIGIN" }, 403);
 
   const orderId = String(params.orderId || "");
   const ts = nowIso();

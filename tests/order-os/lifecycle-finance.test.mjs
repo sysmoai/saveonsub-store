@@ -54,6 +54,158 @@ test("G6: a lost refund race writes no refund row", async () => {
   assert.equal(w.db.one("SELECT COUNT(*) n FROM order_refunds").n, 0);
 });
 
+// ---------- Shared money/evidence validators (2026-11-23) ----------
+// Amounts that round to zero minor units and r2 evidence pointers with a ".."
+// path segment must be refused with HTTP 400 BEFORE any row, audit event,
+// status change or ledger write. Synthetic data only.
+const ROUNDS_TO_ZERO = [1e-9, 0.0000004, "0.000000001", "1e-9"];
+const UNSAFE_EVIDENCE = ["r2:sos/private/../public/proof.pdf", "r2:sos/private/a/../../b.pdf",
+  "r2:sos/private/refunds/..", "r2:sos/private/../../etc"];
+const ledgerCounts = () => JSON.stringify([w.snapshot(),
+  w.db.rows("SELECT * FROM order_costs ORDER BY id"), w.db.rows("SELECT * FROM order_refunds ORDER BY id")]);
+
+test("validators: a cost amount that rounds to zero is a 400 before any write", async () => {
+  const { pub } = w.seedOrder({ status: "delivered" });
+  const before = ledgerCounts();
+  for (const amount_bdt of ROUNDS_TO_ZERO) {
+    const r = await costs("owner", pub, { supplier_label: "Supplier A", amount_bdt });
+    assert.equal(r.status, 400, String(amount_bdt));
+    assert.equal(r.body.error, "INVALID_AMOUNT", String(amount_bdt));
+  }
+  for (const amount_bdt of [-1e-9, "-0.000000001", 1e-9]) {   // signed corrections: -0 / 0 is not an amount
+    const r = await costs("owner", pub, { entry_type: "correction", supplier_label: "Supplier A", amount_bdt, note: "typo" });
+    assert.equal(r.status, 400, String(amount_bdt));
+    assert.equal(r.body.error, "INVALID_AMOUNT", String(amount_bdt));
+  }
+  assert.equal(ledgerCounts(), before);
+});
+
+test("validators: a refund amount that rounds to zero is a 400 and the order stays delivered", async () => {
+  const { pub } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
+  const before = ledgerCounts();
+  for (const amount_bdt of ROUNDS_TO_ZERO) {
+    const r = await w.api.status("manager", pub, { status: "refunded", refund: { ...REFUND, amount_bdt } });
+    assert.equal(r.status, 400, String(amount_bdt));
+    assert.equal(r.body.error, "REFUND_AMOUNT_REQUIRED", String(amount_bdt));
+  }
+  assert.equal(ledgerCounts(), before);
+  assert.equal(w.order(pub).status, "delivered");
+});
+
+test("validators: r2 evidence with a '..' path segment is a 400 on costs and refunds before any write", async () => {
+  const { pub } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
+  const before = ledgerCounts();
+  for (const evidence_ref of UNSAFE_EVIDENCE) {
+    const c = await costs("owner", pub, { supplier_label: "Supplier A", amount_bdt: 900, evidence_ref });
+    assert.equal(c.status, 400, evidence_ref);
+    assert.equal(c.body.error, "INVALID_EVIDENCE_REF", evidence_ref);
+    const r = await w.api.status("manager", pub, { status: "refunded", refund: { ...REFUND, evidence_ref } });
+    assert.equal(r.status, 400, evidence_ref);
+    assert.equal(r.body.error, "REFUND_EVIDENCE_REQUIRED", evidence_ref);
+  }
+  assert.equal(ledgerCounts(), before);
+  assert.equal(w.order(pub).status, "delivered");
+});
+
+test("validators: whole taka, paisa, signed corrections and legitimate evidence ids still pass", async () => {
+  const { pub, id } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
+  const ok = [[900, 90000, "stmt:sup-1"], [0.01, 1, "r2:sos/private/costs/2026-11/inv-001.pdf"],
+    ["12.50", 1250, "r2:sos/private/costs/inv..v2.pdf"], [1, 100, "stmt:a..b:2026-11"], [5, 500, "r2:sos/private/.well/..hidden"]];
+  for (const [amount_bdt, minor, evidence_ref] of ok) {
+    const r = await costs("owner", pub, { supplier_label: "Supplier A", amount_bdt, evidence_ref });
+    assert.equal(r.status, 201, evidence_ref);
+    assert.equal(w.db.one("SELECT amount_minor n FROM order_costs WHERE evidence_ref=?", evidence_ref).n, minor);
+  }
+  const corr = await costs("owner", pub, { entry_type: "correction", supplier_label: "Supplier A", amount_bdt: -0.01, note: "typo" });
+  assert.equal(corr.status, 201);
+  const r = await w.api.status("manager", pub, { status: "refunded",
+    refund: { amount_bdt: 0.01, channel: "bkash", evidence_ref: "r2:sos/private/refunds/2026-11/r-1.pdf" } });
+  assert.equal(r.status, 200);
+  assert.equal(w.db.one("SELECT amount_minor n FROM order_refunds WHERE order_id=?", id).n, 1);
+});
+
+test("status: a cross-origin status change (incl. refund) is refused before any write", async () => {
+  const { pub } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
+  const before = ledgerCounts();
+  for (const body of [{ status: "refunded", refund: REFUND }, { status: "completed" }, { status: "refunded", refund: { ...REFUND, amount_bdt: 1e-9 } }]) {
+    const r = await w.api.status("manager", pub, body, { headers: { origin: "https://evil.example" } });
+    assert.equal(r.status, 403, JSON.stringify(body));
+    assert.equal(r.body.error, "FORBIDDEN_ORIGIN");
+  }
+  assert.equal(ledgerCounts(), before);
+  assert.equal(w.order(pub).status, "delivered");
+  // Same-origin and origin-less (non-browser) requests keep working.
+  const ok = await w.api.status("manager", pub, { status: "refunded", refund: REFUND }, { headers: { origin: "https://staging.test" } });
+  assert.equal(ok.status, 200);
+  const other = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
+  assert.equal((await w.api.status("manager", other.pub, { status: "completed" })).status, 200);
+});
+
+test("costs: a supplied evidence_ref or category of the wrong type is a 400, never silently dropped", async () => {
+  const { pub } = w.seedOrder({ status: "delivered" });
+  const before = ledgerCounts();
+  const base = { supplier_label: "Supplier A", amount_bdt: 5 };
+  for (const evidence_ref of [42, true, ["r2:sos/private/../x"], { ref: "stmt:abc" }]) {
+    const r = await costs("owner", pub, { ...base, evidence_ref });
+    assert.equal(r.status, 400, JSON.stringify(evidence_ref));
+    assert.equal(r.body.error, "INVALID_EVIDENCE_REF");
+  }
+  for (const category of [7, null, ["supplier"], {}]) {
+    const r = await costs("owner", pub, { ...base, category });
+    assert.equal(r.status, 400, JSON.stringify(category));
+    assert.equal(r.body.error, "INVALID_CATEGORY");
+  }
+  for (const note of ["   ", " \u0009 ", 5]) {
+    const r = await costs("owner", pub, { ...base, entry_type: "correction", amount_bdt: -5, note });
+    assert.equal(r.status, 400, JSON.stringify(note));
+    assert.equal(r.body.error, "CORRECTION_NOTE_REQUIRED");
+  }
+  assert.equal(ledgerCounts(), before);
+  // Evidence stays optional on costs: absent, null and empty are still accepted and stored as NULL.
+  for (const extra of [{}, { evidence_ref: null }, { evidence_ref: "" }, { evidence_ref: "  " }]) {
+    assert.equal((await costs("owner", pub, { ...base, ...extra })).status, 201, JSON.stringify(extra));
+  }
+  assert.equal(w.db.one("SELECT COUNT(*) n FROM order_costs WHERE evidence_ref IS NULL").n, 4);
+});
+
+test("origin: cross-origin payment verification, reversal and claim are refused before any write", async () => {
+  const evil = { headers: { origin: "https://evil.example", "content-type": "text/plain" } };
+  const review = w.seedOrder({ status: "payment_review", ref: "TXN12345678" });
+  const paid = w.seedOrder({ status: "payment_confirmed" });
+  const cancelled = w.seedOrder({ status: "cancelled" });
+  const before = ledgerCounts();
+  for (const [name, r] of [
+    ["verify", await w.api.verify("owner", review.pub, {}, evil)],
+    ["reverse", await w.api.reverse("owner", cancelled.pub, {}, evil)],
+    ["claim", await w.api.claim("fulfillA", paid.pub, evil)],
+  ]) {
+    assert.equal(r.status, 403, name);
+    assert.equal(r.body.error, "FORBIDDEN_ORIGIN", name);
+  }
+  assert.equal(ledgerCounts(), before);
+  assert.equal(w.order(paid.pub).status, "payment_confirmed");
+  // Roles are still decided first, and same-origin / origin-less callers keep working.
+  assert.equal((await w.api.claim("viewer", paid.pub, evil)).body.error, "FORBIDDEN");
+  assert.equal((await w.api.claim("fulfillA", paid.pub, { headers: { origin: "https://staging.test" } })).status, 200);
+  assert.notEqual((await w.api.verify("owner", review.pub, {})).body.error, "FORBIDDEN_ORIGIN");
+});
+
+test("costs: a correction note is trimmed before it is required and stored; a non-string note is refused", async () => {
+  const { pub } = w.seedOrder({ status: "delivered" });
+  const base = { supplier_label: "Supplier A", amount_bdt: -5, entry_type: "correction" };
+  const before = ledgerCounts();
+  assert.equal((await costs("owner", pub, { ...base, note: " ".repeat(300) + "real reason" })).status, 201);
+  assert.equal(w.db.one("SELECT note FROM order_costs").note, "real reason");
+  assert.notEqual(ledgerCounts(), before);
+  for (const note of [5, { a: 1 }, ["x"], true]) {
+    const r = await costs("owner", pub, { supplier_label: "Supplier A", amount_bdt: 5, note });
+    assert.equal(r.status, 400, JSON.stringify(note));
+    assert.equal(r.body.error, "INVALID_NOTE");
+  }
+  assert.equal(w.db.one("SELECT COUNT(*) n FROM order_costs").n, 1);
+  assert.equal((await costs("owner", pub, { supplier_label: "Supplier A", amount_bdt: 5, note: "   " })).status, 201);   // blank note on a normal cost => NULL
+});
+
 // ---------- G3 costs + margin ----------
 test("G3: only the owner records costs; manager reads; others are refused", async () => {
   const { pub } = w.seedOrder({ status: "delivered", assignee: OPERATORS.fulfillA.id });
